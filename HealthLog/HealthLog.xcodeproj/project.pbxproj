@@ -13,7 +13,6 @@
 		1894013B2C528B2000533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013A2C528B2000533E0A /* Base */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
-		CEE8BC372C65ACAF00E1D94F /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC362C65ACAF00E1D94F /* Realm */; };
 		CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; };
 		CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */; };
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
@@ -46,7 +45,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */,
-				CEE8BC372C65ACAF00E1D94F /* Realm in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,6 +70,7 @@
 		189401322C528B2000533E0A /* HealthLog */ = {
 			isa = PBXGroup;
 			children = (
+				CEE8BC6B2C65F2D500E1D94F /* ViewModel */,
 				CEE8BC342C65AB2900E1D94F /* Model */,
 				189401332C528B2000533E0A /* AppDelegate.swift */,
 				189401352C528B2000533E0A /* SceneDelegate.swift */,
@@ -97,6 +96,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		CEE8BC6B2C65F2D500E1D94F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -114,7 +120,6 @@
 			);
 			name = HealthLog;
 			packageProductDependencies = (
-				CEE8BC362C65ACAF00E1D94F /* Realm */,
 				CEE8BC382C65ACAF00E1D94F /* RealmSwift */,
 			);
 			productName = HealthLog;
@@ -427,11 +432,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CEE8BC362C65ACAF00E1D94F /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CEE8BC352C65ACAF00E1D94F /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
-		};
 		CEE8BC382C65ACAF00E1D94F /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CEE8BC352C65ACAF00E1D94F /* XCRemoteSwiftPackageReference "realm-swift" */;

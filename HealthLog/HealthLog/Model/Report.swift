@@ -22,7 +22,7 @@ class Report: Object {
 
 class ReportBodyPart: Object {
     @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
-    @Persisted var bodyPart: BodyPart // 부위 1:1 - 이름
+    @Persisted var bodyPart: BodyPart? // 부위 1:1 - 이름
     @Persisted var exercises: List<ReportBodyPartExercise> // 운동 1:M
     
     convenience init(bodyPart: BodyPart, exercises: [ReportBodyPartExercise]) {
@@ -33,7 +33,7 @@ class ReportBodyPart: Object {
 }
 
 class ReportBodyPartExercise: Object {
-    @Persisted var exercise: Exercise // 운동 1:M - 이름
+    @Persisted var exercise: Exercise? // 운동 1:M - 이름
     @Persisted var setsCount: Int // 세트 수
     @Persisted var completedReps: Int // 완료한 횟수
     @Persisted var minWeight: Int // 최소 무게

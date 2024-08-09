@@ -23,7 +23,7 @@ class Routine: Object {
 
 class RoutineExercise: Object {
     @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
-    @Persisted var exercise: Exercise // 운동 리스트 1:1
+    @Persisted var exercise: Exercise? // 운동 리스트 1:1
     @Persisted var sets: List<RoutineExerciseSet> // 세트 1:M
     
     convenience init(exercise: Exercise, sets: [RoutineExerciseSet]) {
@@ -34,7 +34,7 @@ class RoutineExercise: Object {
 }
 
 class RoutineExerciseSet: EmbeddedObject {
-    @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
+//    @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
     @Persisted var order: Int // 순서
     @Persisted var weight: Int // 무게
     @Persisted var reps: Int // 횟수

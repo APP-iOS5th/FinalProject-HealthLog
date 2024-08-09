@@ -25,7 +25,7 @@ class Schedule: Object {
 
 class ScheduleExercise: Object {
     @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
-    @Persisted var exercise: Exercise // 운동 - id, 이름, 부위
+    @Persisted var exercise: Exercise? // 운동 - id, 이름, 부위
     @Persisted var order: Int // 운동 순서
     @Persisted var isCompleted: Bool // 운동 완료 여부
     @Persisted var sets: List<ScheduleExerciseSet> // 운동 세트
@@ -40,7 +40,7 @@ class ScheduleExercise: Object {
 }
 
 class ScheduleExerciseSet: EmbeddedObject {
-    @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
+//    @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
     @Persisted var order: Int // 세트 순서
     @Persisted var weight: Int // 무게
     @Persisted var reps: Int // 횟수
@@ -57,7 +57,7 @@ class ScheduleExerciseSet: EmbeddedObject {
 
 class HighlightedBodyPart : Object {
     @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
-    @Persisted var bodyPart: BodyPart // 부위 1:1
+    @Persisted var bodyPart: BodyPart? // 부위 1:1
     @Persisted var step: Int // 단계
     
     convenience init(bodyPart: BodyPart, step: Int) {
