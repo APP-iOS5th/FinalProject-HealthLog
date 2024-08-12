@@ -9,21 +9,32 @@ import UIKit
 
 class RoutinesViewController: UIViewController {
 
+    private lazy var textLabel: UILabel = {
+        let label = UILabel()
+        label.text = "추가된 루틴이 없습니다."
+        label.font = UIFont.systemFont(ofSize: 20)
+        label.textColor = .lightGray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setupView()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func setupView() {
+        self.view.addSubview(textLabel)
+        
+        let safeArea = self.view.safeAreaLayoutGuide
+        
+        NSLayoutConstraint.activate([
+            self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 115),
+            self.textLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 108),
+        ])
+        
     }
-    */
-
 }
