@@ -34,16 +34,14 @@ class ExerciseViewModel: ObservableObject {
                 case .initial(let collection):
                     print("results.observe - initial")
                     self?.exercises = Array(collection)
-                    print(self?.exercises ?? "")
+                    print(collection)
                 case .update(let collection, _, _, _):
                     print("results.observe - update")
                     self?.exercises = Array(collection)
-                    print(self?.exercises ?? "")
                 case .error(let error):
                     print("results.observe - error: \(error)")
             }
         }
     }
-    
     
 }

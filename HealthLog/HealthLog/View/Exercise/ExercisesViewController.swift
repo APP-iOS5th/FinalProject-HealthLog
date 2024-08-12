@@ -11,14 +11,14 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     // MARK: - Declare
     
-    //    let viewModel = ExerciseViewModel()
+    let viewModel = ExerciseViewModel()
     
     let searchBar = UISearchBar()
     let dividerView = UIView()
     let tableView = UITableView()
     
     // 샘플 데이터
-    var data = ["Apple", "Banana", "Cherry", "Date", "Fig", "Grape", "Kiwi"]
+    var data = ["Apple", "Banana", "Cherry", "Date",]
     var filteredData: [String] = []
     
     //MARK: - Init
@@ -62,6 +62,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         searchBar.delegate = self
         searchBar.sizeToFit()
         searchBar.placeholder = "검색어 입력"
+        searchBar.backgroundColor = .black
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBar)
         
@@ -86,8 +87,10 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     }
     
     func setupTableView() {
+        tableView.backgroundColor = .black
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.register(ExerciseListCell.self, forCellReuseIdentifier: "ExerciseCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
@@ -113,12 +116,13 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredData.count
+        return viewModel.exercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
-        cell.textLabel?.text = filteredData[indexPath.row]
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
+        cell.configure(with: viewModel.exercises[indexPath.row])
         return cell
     }
     
