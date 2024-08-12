@@ -6,20 +6,19 @@
 //
 
 import UIKit
-import RealmSwift
+import Combine
 
 class ViewController: UIViewController {
 
+    // MARK: - declare
+    
+    private var viewModel = ScheduleViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Realm 초기화
-        let realm = try! Realm()
-        print("Realm file path: \(realm.configuration.fileURL!)") // 경로
-        
-        let exerciseList = realm.objects(Exercise.self).sorted(byKeyPath: "name")
-        print(exerciseList)
+        print("viewDidLoad")
     }
-
+    
 }
 
