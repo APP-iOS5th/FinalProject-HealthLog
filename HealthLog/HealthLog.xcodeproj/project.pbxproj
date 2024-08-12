@@ -97,8 +97,8 @@
 		7566B31F2C69AC8300BDF142 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CEE29B9E2C69D43000D82571 /* Exercise */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
-				7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */,
 				7566B3232C69C4E300BDF142 /* ReportsViewController.swift */,
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
 			);
@@ -112,6 +112,14 @@
 				7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */,
 			);
 			path = Schedule;
+			sourceTree = "<group>";
+		};
+		CEE29B9E2C69D43000D82571 /* Exercise */ = {
+			isa = PBXGroup;
+			children = (
+				7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */,
+			);
+			path = Exercise;
 			sourceTree = "<group>";
 		};
 		CEE8BC342C65AB2900E1D94F /* Model */ = {
