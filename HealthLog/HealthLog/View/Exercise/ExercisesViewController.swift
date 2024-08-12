@@ -7,14 +7,19 @@
 
 import UIKit
 
-class ExercisesViewController: UIViewController, UITableViewDataSource {
-
+class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+    
     // MARK: - Declare
     
-    let viewModel = ExerciseViewModel()
+    //    let viewModel = ExerciseViewModel()
     
-    let searchBarView = UISearchBar()
+    let searchBar = UISearchBar()
+    let dividerView = UIView()
     let tableView = UITableView()
+    
+    // 샘플 데이터
+    var data = ["Apple", "Banana", "Cherry", "Date", "Fig", "Grape", "Kiwi"]
+    var filteredData: [String] = []
     
     //MARK: - Init
     
@@ -30,18 +35,106 @@ class ExercisesViewController: UIViewController, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = .black
         
+        setupNavigationBar()
+        setupSearchBarView()
+        setupDivider()
+        setupTableView()
+    }
+    
+    // MARK: - Setup
+    
+    func setupNavigationBar() {
+        title = "운동 목록"
+        
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = UIColor.white
+        
+        let rightBarButton = UIBarButtonItem(
+            barButtonSystemItem: .add, target: self,
+            action: #selector(addButtonTapped)
+        )
+        navigationItem.rightBarButtonItem = rightBarButton
+    }
+    
+    func setupSearchBarView() {
+        searchBar.delegate = self
+        searchBar.sizeToFit()
+        searchBar.placeholder = "검색어 입력"
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchBar)
+        
+        NSLayoutConstraint.activate([
+            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+    }
+    
+    func setupDivider() {
+        dividerView.backgroundColor = UIColor.lightGray // 구분선 색상 설정
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(dividerView)
+        
+        NSLayoutConstraint.activate([
+            dividerView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dividerView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+    }
+    
+    func setupTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
+    // MARK: - UISearchBarDelegate
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            filteredData = data
+        } else {
+            filteredData = data.filter { $0.lowercased().contains(searchText.lowercased()) }
+        }
+        tableView.reloadData()
     }
     
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        return filteredData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell") ?? UITableViewCell(style: .default, reuseIdentifier: "cell")
+        cell.textLabel?.text = filteredData[indexPath.row]
+        return cell
     }
-
+    
+    // MARK: - UITableViewDelegate
+    
+    // MARK: Methods
+    
+    @objc func addButtonTapped() {
+        print("addButtonTapped!")
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        filteredData = data
+        tableView.reloadData()
+        searchBar.resignFirstResponder()
+    }
+    
 }

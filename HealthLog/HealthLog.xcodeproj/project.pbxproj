@@ -19,6 +19,7 @@
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
+		CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */; };
 		CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; };
 		CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */; };
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
@@ -43,6 +44,7 @@
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
+		CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesListCell.swift; sourceTree = "<group>"; };
 		CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPart.swift; sourceTree = "<group>"; };
 		CEE8BC612C65B1B800E1D94F /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		CEE8BC632C65B25B00E1D94F /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */,
+				CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
+				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

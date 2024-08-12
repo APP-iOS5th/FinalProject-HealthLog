@@ -5,4 +5,8 @@
 //  Created by user on 8/12/24.
 //
 
-import Foundation
+import UIKit
+
+class ExercisesListCell: UITableViewCell {
+    
+}
