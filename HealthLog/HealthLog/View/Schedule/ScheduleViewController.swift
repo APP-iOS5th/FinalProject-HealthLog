@@ -8,17 +8,25 @@
 import UIKit
 import Combine
 
-class ScheduleViewController: UIViewController {
+class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
     // MARK: - declare
     private var viewModel = ScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     lazy var calendarView: UICalendarView = {
-        var calendar = UICalendarView()
+        let calendar = UICalendarView()
         calendar.translatesAutoresizingMaskIntoConstraints = false
         calendar.wantsDateDecorations = true
         calendar.backgroundColor = UIColor(named: "supportColor")
         return calendar
+    }()
+    
+    lazy var tableView: UITableView = {
+        let table = UITableView()
+        table.register(ExerciseCheckCell.self, forCellReuseIdentifier: ExerciseCheckCell.identifier)
+        table.backgroundColor = UIColor(named: "supportColor")
+        return table
     }()
     
     override func viewDidLoad() {
@@ -27,27 +35,49 @@ class ScheduleViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
         view.backgroundColor = .systemBackground
         
-        applyConstraints()
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        setupUI()
     }
     
-    fileprivate func applyConstraints() {
+    fileprivate func setupUI() {
         view.addSubview(calendarView)
+        view.addSubview(tableView)
         
         let safeArea = view.safeAreaLayoutGuide
         
-        let calendarViewConstraints = [
-            calendarView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+        NSLayoutConstraint.activate([
+            calendarView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 13),
             calendarView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             calendarView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-//            calendarView.heightAnchor.constraint(equalToConstant: 200),
-        ]
-        
-        NSLayoutConstraint.activate(calendarViewConstraints)
+            tableView.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 26),
+            tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+        ])
     }
     // MARK: - Methods
     @objc func addSchedule() {
         let addScheduleViewController = AddScheduleViewController()
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
+    
+    // MARK: - UITableViewDataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: ExerciseCheckCell.identifier, for: indexPath) as! ExerciseCheckCell
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+    
+    // MARK: - UITableViewDelegate
+    
 }
 
