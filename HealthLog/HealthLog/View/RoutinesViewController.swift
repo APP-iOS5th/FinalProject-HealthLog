@@ -18,8 +18,12 @@ class RoutinesViewController: UIViewController {
         return label
     }()
     
-    private let addButton: UIBarButtonItem = {
-        let buttonAction = UIAction{ _ in print("addButton 클릭") }
+    private lazy var addButton: UIBarButtonItem = {
+        let buttonAction = UIAction{ _ in
+            print("addButton 클릭")
+            let routineAddNameViewController = RoutineAddNameViewController()
+            self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
+        }
         let barButton = UIBarButtonItem(image:UIImage(systemName: "plus"), primaryAction: buttonAction)
         
        return barButton
