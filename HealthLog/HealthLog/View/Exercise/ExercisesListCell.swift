@@ -31,7 +31,12 @@ class ExerciseListCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .darkGray
+        backgroundColor = .blue
+        contentView.backgroundColor = .brown
+        contentView.layer.cornerRadius = 12
+        contentView.layer.masksToBounds = true
+        separatorInset = UIEdgeInsets(
+            top: 30, left: 30, bottom: 30, right: 30)
         setupTopStackView()
         setupDivider()
         setupBottomStackView()
