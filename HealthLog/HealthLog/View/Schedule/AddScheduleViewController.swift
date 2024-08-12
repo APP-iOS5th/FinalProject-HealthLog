@@ -9,7 +9,7 @@ import UIKit
 
 class AddScheduleViewController: UIViewController {
     
-    let searchBar = UISearchBar()
+    let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let getRoutineButton = UIButton()
     let dividerView = UIView()
     
@@ -27,21 +27,30 @@ class AddScheduleViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem?.tintColor = .white
         
-        searchBar.placeholder = "운동명 검색"
-        searchBar.searchBarStyle = .minimal
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
+        // UISearchController 설정
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "운동명 검색"
+        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.tintColor = .white
+        searchController.searchBar.barTintColor = .white
+        searchController.hidesNavigationBarDuringPresentation = false
+        
+        if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             textField.attributedPlaceholder = NSAttributedString(
-                string: searchBar.placeholder ?? "",
+                string: searchController.searchBar.placeholder ?? "",
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor(hexCode: "656565")]
             )
+            
+            textField.textColor = .white
             
             if let leftView = textField.leftView as? UIImageView {
                 leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
                 leftView.tintColor = .white
             }
         }
-        view.addSubview(searchBar)
+        
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
         
         dividerView.backgroundColor = UIColor(hexCode: "29292A")
         dividerView.translatesAutoresizingMaskIntoConstraints = false
@@ -60,8 +69,18 @@ class AddScheduleViewController: UIViewController {
         view.backgroundColor = UIColor(hexCode: "1E1E1E")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     @objc func dismissView() {
-        self.dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
     
     @objc func routineButtonTapped() {
@@ -72,15 +91,9 @@ class AddScheduleViewController: UIViewController {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            // 서치바 여백 수정 필요
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
-            searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            searchBar.widthAnchor.constraint(equalTo: getRoutineButton.widthAnchor),
-            searchBar.heightAnchor.constraint(equalToConstant: 36),
-            
-            dividerView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 13),
-            dividerView.leadingAnchor.constraint(equalTo: getRoutineButton.leadingAnchor),
-            dividerView.trailingAnchor.constraint(equalTo: getRoutineButton.trailingAnchor),
+            dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
+            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
             
             getRoutineButton.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
@@ -91,7 +104,7 @@ class AddScheduleViewController: UIViewController {
     }
 }
 
-// UIColor extension 하여 Hex 변경해주는 코드 (다같이 사용하면 좋을 듯)
+// UIColor extension 삭제 예정
 extension UIColor {
     convenience init(hexCode: String, alpha: CGFloat = 1.0) {
         var hexFormatted: String = hexCode.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).uppercased()
