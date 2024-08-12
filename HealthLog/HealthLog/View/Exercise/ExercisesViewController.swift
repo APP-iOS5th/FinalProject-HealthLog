@@ -93,10 +93,6 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         tableView.register(ExerciseListCell.self, forCellReuseIdentifier: "ExerciseCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
-        tableView.separatorStyle = .none // 기본 구분선 제거
-        tableView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20) // 셀 간의 여백 설정
-        tableView.separatorInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30) // 셀 간의 여백 설정
-        
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
@@ -132,11 +128,6 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     }
     
     // MARK: - UITableViewDelegate
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        let margin: CGFloat = 10
-//        cell.contentView.frame = cell.contentView.frame.inset(by: UIEdgeInsets(top: margin, left: margin, bottom: margin, right: margin))
-    }
     
     // MARK: Methods
     

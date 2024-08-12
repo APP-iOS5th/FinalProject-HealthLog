@@ -34,7 +34,6 @@ class ExerciseViewModel: ObservableObject {
                 case .initial(let collection):
                     print("results.observe - initial")
                     self?.exercises = Array(collection)
-                    print(collection)
                 case .update(let collection, _, _, _):
                     print("results.observe - update")
                     self?.exercises = Array(collection)

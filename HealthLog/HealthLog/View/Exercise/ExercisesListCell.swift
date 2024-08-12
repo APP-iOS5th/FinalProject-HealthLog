@@ -31,8 +31,8 @@ class ExerciseListCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .blue
-        contentView.backgroundColor = .brown
+        backgroundColor = .black
+        contentView.backgroundColor = .darkGray
         contentView.layer.cornerRadius = 12
         contentView.layer.masksToBounds = true
         separatorInset = UIEdgeInsets(
@@ -44,6 +44,11 @@ class ExerciseListCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8))
     }
     
     // MARK: - Setup UI
