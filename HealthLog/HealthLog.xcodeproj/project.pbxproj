@@ -16,6 +16,7 @@
 		184A58AF2C69ED3D009F2848 /* Pretendard-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 184A58A62C69ED3D009F2848 /* Pretendard-Light.otf */; };
 		184A58B02C69ED3D009F2848 /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 184A58A72C69ED3D009F2848 /* Pretendard-ExtraLight.otf */; };
 		184A58B12C69ED3D009F2848 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 184A58A82C69ED3D009F2848 /* Pretendard-ExtraBold.otf */; };
+		184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B22C6A3409009F2848 /* ExercisesViewController.swift */; };
 		189401342C528B2000533E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401332C528B2000533E0A /* AppDelegate.swift */; };
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
@@ -23,7 +24,6 @@
 		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
 		7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */; };
 		7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3232C69C4E300BDF142 /* ReportsViewController.swift */; };
-		7566B3282C69C4E300BDF142 /* ExercisesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */; };
 		7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
@@ -50,6 +50,7 @@
 		184A58A62C69ED3D009F2848 /* Pretendard-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-Light.otf"; sourceTree = "<group>"; };
 		184A58A72C69ED3D009F2848 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
 		184A58A82C69ED3D009F2848 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
+		184A58B22C6A3409009F2848 /* ExercisesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExercisesViewController.swift; sourceTree = "<group>"; };
 		189401302C528B2000533E0A /* HealthLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189401332C528B2000533E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		189401352C528B2000533E0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,7 +60,6 @@
 		7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewController.swift; sourceTree = "<group>"; };
 		7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutinesViewController.swift; sourceTree = "<group>"; };
 		7566B3232C69C4E300BDF142 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
-		7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExercisesViewController.swift; sourceTree = "<group>"; };
 		7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
@@ -146,13 +146,10 @@
 		7566B31F2C69AC8300BDF142 /* View */ = {
 			isa = PBXGroup;
 			children = (
-
 				CEE29BA52C6A026D00D82571 /* Temp */,
 				CEE29B9E2C69D43000D82571 /* Exercise */,
 				184A589E2C69E42B009F2848 /* Reports */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
-				7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */,
-
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
 			);
 			path = View;
@@ -170,9 +167,9 @@
 		CEE29B9E2C69D43000D82571 /* Exercise */ = {
 			isa = PBXGroup;
 			children = (
-				7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */,
 				CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */,
 				CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */,
+				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -298,7 +295,6 @@
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
-				7566B3282C69C4E300BDF142 /* ExercisesViewController.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
@@ -307,6 +303,7 @@
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
+				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
