@@ -17,6 +17,7 @@
 		184A58B02C69ED3D009F2848 /* Pretendard-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 184A58A72C69ED3D009F2848 /* Pretendard-ExtraLight.otf */; };
 		184A58B12C69ED3D009F2848 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 184A58A82C69ED3D009F2848 /* Pretendard-ExtraBold.otf */; };
 		184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B22C6A3409009F2848 /* ExercisesViewController.swift */; };
+		184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B42C6A3CEA009F2848 /* ExerciseCheckCell.swift */; };
 		189401342C528B2000533E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401332C528B2000533E0A /* AppDelegate.swift */; };
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		184A58A72C69ED3D009F2848 /* Pretendard-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraLight.otf"; sourceTree = "<group>"; };
 		184A58A82C69ED3D009F2848 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		184A58B22C6A3409009F2848 /* ExercisesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExercisesViewController.swift; sourceTree = "<group>"; };
+		184A58B42C6A3CEA009F2848 /* ExerciseCheckCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExerciseCheckCell.swift; sourceTree = "<group>"; };
 		189401302C528B2000533E0A /* HealthLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189401332C528B2000533E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		189401352C528B2000533E0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			children = (
 				7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */,
 				7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */,
+				184A58B42C6A3CEA009F2848 /* ExerciseCheckCell.swift */,
 				7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */,
 				7590C0002C69FE05004CB285 /* SearchResultCell.swift */,
 			);
@@ -298,6 +301,7 @@
 			files = (
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */,
+				184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
@@ -313,12 +317,9 @@
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
-
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
-
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
 				CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */,
-
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
