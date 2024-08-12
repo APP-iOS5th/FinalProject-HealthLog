@@ -17,10 +17,14 @@ class ScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "스케줄"
+        navigationItem.title = "운동 일정"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
         view.backgroundColor = .systemBackground
-        print("viewDidLoad")
     }
     
+    @objc func addSchedule() {
+        let addScheduleViewController = AddScheduleViewController()
+        navigationController?.pushViewController(addScheduleViewController, animated: true)
+    }
 }
 
