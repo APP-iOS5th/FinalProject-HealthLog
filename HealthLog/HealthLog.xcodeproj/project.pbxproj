@@ -83,7 +83,6 @@
 			isa = PBXGroup;
 			children = (
 				7566B31F2C69AC8300BDF142 /* View */,
-				CEE29B8B2C699F6200D82571 /* InitSampleData */,
 				CEE8BC6B2C65F2D500E1D94F /* ViewModel */,
 				CEE8BC342C65AB2900E1D94F /* Model */,
 				189401332C528B2000533E0A /* AppDelegate.swift */,
@@ -113,16 +112,6 @@
 				7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */,
 			);
 			path = Schedule;
-			sourceTree = "<group>";
-		};
-		CEE29B8B2C699F6200D82571 /* InitSampleData */ = {
-			isa = PBXGroup;
-			children = (
-				CEE29B8C2C699F8800D82571 /* BodyPart.json */,
-				CEE29B8E2C69A02E00D82571 /* Exercise.json */,
-				CEE29B922C69A3D000D82571 /* JsonDataModel.swift */,
-			);
-			path = InitSampleData;
 			sourceTree = "<group>";
 		};
 		CEE8BC342C65AB2900E1D94F /* Model */ = {
@@ -229,8 +218,6 @@
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
 				7566B3282C69C4E300BDF142 /* ExercisesViewController.swift in Sources */,
-				CEE29B932C69A3D000D82571 /* JsonDataModel.swift in Sources */,
-				189401382C528B2000533E0A /* ViewController.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,

@@ -25,20 +25,17 @@ class AddScheduleViewController: UIViewController {
         ]
         self.navigationController?.navigationBar.titleTextAttributes = textAttributes
         
-        // 취소 버튼 색상 설정
         self.navigationItem.leftBarButtonItem?.tintColor = .white
         
         searchBar.placeholder = "운동명 검색"
         searchBar.searchBarStyle = .minimal
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            // Placeholder 색상 설정
             textField.attributedPlaceholder = NSAttributedString(
                 string: searchBar.placeholder ?? "",
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor(hexCode: "656565")]
             )
             
-            // 돋보기 아이콘 색상 변경
             if let leftView = textField.leftView as? UIImageView {
                 leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
                 leftView.tintColor = .white
@@ -46,12 +43,10 @@ class AddScheduleViewController: UIViewController {
         }
         view.addSubview(searchBar)
         
-        // 디바이더 설정
         dividerView.backgroundColor = UIColor(hexCode: "29292A")
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dividerView)
         
-        // "루틴 불러오기" 버튼 설정
         getRoutineButton.setTitle("루틴 불러오기", for: .normal)
         getRoutineButton.backgroundColor = UIColor(hexCode: "6500FF")
         getRoutineButton.layer.cornerRadius = 12
@@ -77,7 +72,7 @@ class AddScheduleViewController: UIViewController {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            // 서치바 여백 왜 안 없어지냐
+            // 서치바 여백 수정 필요
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
             searchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             searchBar.widthAnchor.constraint(equalTo: getRoutineButton.widthAnchor),
