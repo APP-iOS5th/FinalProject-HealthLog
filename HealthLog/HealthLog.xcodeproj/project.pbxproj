@@ -13,6 +13,7 @@
 		1894013B2C528B2000533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013A2C528B2000533E0A /* Base */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
+		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B8D2C699F8800D82571 /* BodyPart.json in Resources */ = {isa = PBXBuildFile; fileRef = CEE29B8C2C699F8800D82571 /* BodyPart.json */; };
 		CEE29B8F2C69A02E00D82571 /* Exercise.json in Resources */ = {isa = PBXBuildFile; fileRef = CEE29B8E2C69A02E00D82571 /* Exercise.json */; };
@@ -36,6 +37,7 @@
 		1894013C2C528B2100533E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1894013F2C528B2100533E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewController.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B8C2C699F8800D82571 /* BodyPart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BodyPart.json; sourceTree = "<group>"; };
 		CEE29B8E2C69A02E00D82571 /* Exercise.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Exercise.json; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 		189401322C528B2000533E0A /* HealthLog */ = {
 			isa = PBXGroup;
 			children = (
+				7566B31F2C69AC8300BDF142 /* View */,
 				CEE29B8B2C699F6200D82571 /* InitSampleData */,
 				CEE8BC6B2C65F2D500E1D94F /* ViewModel */,
 				CEE8BC342C65AB2900E1D94F /* Model */,
@@ -92,6 +95,14 @@
 				189401412C528B2100533E0A /* Info.plist */,
 			);
 			path = HealthLog;
+			sourceTree = "<group>";
+		};
+		7566B31F2C69AC8300BDF142 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		CEE29B8B2C699F6200D82571 /* InitSampleData */ = {
@@ -216,6 +227,7 @@
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
+				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
