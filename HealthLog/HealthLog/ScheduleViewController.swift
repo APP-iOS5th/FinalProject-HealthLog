@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class ViewController: UIViewController {
+class ScheduleViewController: UIViewController {
 
     // MARK: - declare
     
@@ -17,6 +17,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "스케줄"
+        view.backgroundColor = .systemBackground
         print("viewDidLoad")
     }
     

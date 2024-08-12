@@ -13,10 +13,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        self.window = UIWindow(windowScene: windowScene)
+        
+        let scheduleViewController = ScheduleViewController()
+        let firstNC = UINavigationController(rootViewController: scheduleViewController)
+        
+        let routinesViewController = RoutinesViewController()
+        let secondNC = UINavigationController(rootViewController: routinesViewController)
+        
+        let exercisesViewController = ExercisesViewController()
+        let thirdNC = UINavigationController(rootViewController: exercisesViewController)
+        
+        let reportsViewController = ReportsViewController()
+        let fourthNC = UINavigationController(rootViewController: reportsViewController)
+        
+        
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [firstNC, secondNC, thirdNC, fourthNC]
+        
+        firstNC.tabBarItem = UITabBarItem(title: "스케줄", image: UIImage(systemName: "calendar"), tag: 0)
+        secondNC.tabBarItem = UITabBarItem(title: "루틴", image: UIImage(systemName: "repeat"), tag: 1)
+        thirdNC.tabBarItem = UITabBarItem(title: "운동리스트", image: UIImage(systemName: "repeat"), tag: 2)
+        fourthNC.tabBarItem = UITabBarItem(title: "리포트", image: UIImage(systemName: "chart.xyaxis.line"), tag: 3)
+        
+        self.window?.rootViewController = tabBarController
+        self.window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
