@@ -70,7 +70,7 @@ class AddScheduleViewController: UIViewController {
     }
     
     @objc func routineButtonTapped() {
-        let routineVC = RoutineViewController()
+        let routineVC = RoutinesViewController()
         routineVC.modalPresentationStyle = .pageSheet
         self.present(routineVC, animated: true, completion: nil)
     }
@@ -93,13 +93,6 @@ class AddScheduleViewController: UIViewController {
             getRoutineButton.widthAnchor.constraint(equalToConstant: 345),
             getRoutineButton.heightAnchor.constraint(equalToConstant: 44)
         ])
-    }
-}
-
-class RoutineViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
     }
 }
 
