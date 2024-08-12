@@ -11,6 +11,7 @@
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
+		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
 		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
 		7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */; };
 		7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3232C69C4E300BDF142 /* ReportsViewController.swift */; };
@@ -35,6 +36,7 @@
 		1894013C2C528B2100533E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1894013F2C528B2100533E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddNameViewController.swift; sourceTree = "<group>"; };
 		7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewController.swift; sourceTree = "<group>"; };
 		7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutinesViewController.swift; sourceTree = "<group>"; };
 		7566B3232C69C4E300BDF142 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */,
 				7566B3232C69C4E300BDF142 /* ReportsViewController.swift */,
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
+				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
+				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
