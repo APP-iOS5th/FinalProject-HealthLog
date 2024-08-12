@@ -12,33 +12,33 @@ import Foundation
 // ViewModel 정의
 class ExerciseViewModel: ObservableObject {
     private var realm: Realm
-    private var scheduleNotificationToken: NotificationToken?
+    private var exercisesNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var schedules: [Schedule] = []
+    @Published var exercises: [Exercise] = []
     
     init() {
-        realm = try! Realm()
-        print("open \(realm.configuration.fileURL!)")
-        initializeRealmData()
+        realm = RealmManager.shared.realm
         observeRealmData()
     }
     
     deinit {
-        scheduleNotificationToken?.invalidate()
+        exercisesNotificationToken?.invalidate()
     }
     
     private func observeRealmData() {
-        let results = realm.objects(Schedule.self)
+        let results = realm.objects(Exercise.self)
         
-        scheduleNotificationToken = results.observe { [weak self] changes in
+        exercisesNotificationToken = results.observe { [weak self] changes in
             switch changes {
                 case .initial(let collection):
                     print("results.observe - initial")
-                    self?.schedules = Array(collection)
+                    self?.exercises = Array(collection)
+                    print(self?.exercises ?? "")
                 case .update(let collection, _, _, _):
                     print("results.observe - update")
-                    self?.schedules = Array(collection)
+                    self?.exercises = Array(collection)
+                    print(self?.exercises ?? "")
                 case .error(let error):
                     print("results.observe - error: \(error)")
             }
@@ -46,8 +46,4 @@ class ExerciseViewModel: ObservableObject {
     }
     
     
-}
-
-extension ExerciseViewModel {
-    func initializeRealmData() {}
 }

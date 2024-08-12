@@ -17,10 +17,8 @@
 		7566B3282C69C4E300BDF142 /* ExercisesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */; };
 		7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
-		CEE29B8D2C699F8800D82571 /* BodyPart.json in Resources */ = {isa = PBXBuildFile; fileRef = CEE29B8C2C699F8800D82571 /* BodyPart.json */; };
-		CEE29B8F2C69A02E00D82571 /* Exercise.json in Resources */ = {isa = PBXBuildFile; fileRef = CEE29B8E2C69A02E00D82571 /* Exercise.json */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
-		CEE29B932C69A3D000D82571 /* JsonDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B922C69A3D000D82571 /* JsonDataModel.swift */; };
+		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
 		CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; };
 		CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */; };
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
@@ -43,10 +41,8 @@
 		7566B3242C69C4E300BDF142 /* ExercisesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExercisesViewController.swift; sourceTree = "<group>"; };
 		7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
-		CEE29B8C2C699F8800D82571 /* BodyPart.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BodyPart.json; sourceTree = "<group>"; };
-		CEE29B8E2C69A02E00D82571 /* Exercise.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Exercise.json; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
-		CEE29B922C69A3D000D82571 /* JsonDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDataModel.swift; sourceTree = "<group>"; };
+		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPart.swift; sourceTree = "<group>"; };
 		CEE8BC612C65B1B800E1D94F /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		CEE8BC632C65B25B00E1D94F /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
@@ -145,6 +141,7 @@
 		CEE8BC6B2C65F2D500E1D94F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				CEE29B942C69A90B00D82571 /* RealmManager.swift */,
 				CEE29B892C69950900D82571 /* ScheduleViewModel.swift */,
 				CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */,
 			);
@@ -217,8 +214,6 @@
 			files = (
 				1894013D2C528B2100533E0A /* Assets.xcassets in Resources */,
 				189401402C528B2100533E0A /* Base in Resources */,
-				CEE29B8D2C699F8800D82571 /* BodyPart.json in Resources */,
-				CEE29B8F2C69A02E00D82571 /* Exercise.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,11 +224,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
 				7566B3282C69C4E300BDF142 /* ExercisesViewController.swift in Sources */,
 				CEE29B932C69A3D000D82571 /* JsonDataModel.swift in Sources */,
+				189401382C528B2000533E0A /* ViewController.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
