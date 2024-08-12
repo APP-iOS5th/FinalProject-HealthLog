@@ -1,0 +1,41 @@
+[
+    {
+        "name": "chest"
+    },
+    {
+        "name": "back"
+    },
+    {
+        "name": "shoulders"
+    },
+    {
+        "name": "triceps"
+    },
+    {
+        "name": "biceps"
+    },
+    {
+        "name": "abs"
+    },
+    {
+        "name": "quadriceps"
+    },
+    {
+        "name": "hamstrings"
+    },
+    {
+        "name": "glutes"
+    },
+    {
+        "name": "adductors"
+    },
+    {
+        "name": "abductors"
+    },
+    {
+        "name": "calves"
+    },
+    {
+        "name": "other"
+    }
+]

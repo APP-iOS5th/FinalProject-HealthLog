@@ -1,0 +1,311 @@
+[
+    {
+        "name": "Push-up",
+        "bodyParts": [
+            {"name": "chest"},
+            {"name": "triceps"}
+        ],
+        "descriptionText": "A basic exercise for upper body strength.",
+        "image": null,
+        "totalReps": 20,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": false
+    },
+    {
+        "name": "Squat",
+        "bodyParts": [
+            {"name": "quadriceps"},
+            {"name": "glutes"}
+        ],
+        "descriptionText": "An exercise targeting the lower body.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 50,
+        "maxWeight": 100,
+        "isCustom": true
+    },
+    {
+        "name": "Bench Press",
+        "bodyParts": [
+            {"name": "chest"},
+            {"name": "triceps"},
+            {"name": "shoulders"}
+        ],
+        "descriptionText": "An exercise for chest and arm strength.",
+        "image": null,
+        "totalReps": 12,
+        "recentWeight": 70,
+        "maxWeight": 120,
+        "isCustom": false
+    },
+    {
+        "name": "Deadlift",
+        "bodyParts": [
+            {"name": "hamstrings"},
+            {"name": "glutes"},
+            {"name": "back"}
+        ],
+        "descriptionText": "A compound exercise for the posterior chain.",
+        "image": null,
+        "totalReps": 10,
+        "recentWeight": 100,
+        "maxWeight": 180,
+        "isCustom": true
+    },
+    {
+        "name": "Shoulder Press",
+        "bodyParts": [
+            {"name": "shoulders"},
+            {"name": "triceps"}
+        ],
+        "descriptionText": "An exercise for shoulder strength.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 30,
+        "maxWeight": 60,
+        "isCustom": false
+    },
+    {
+        "name": "Lunges",
+        "bodyParts": [
+            {"name": "quadriceps"},
+            {"name": "glutes"},
+            {"name": "hamstrings"}
+        ],
+        "descriptionText": "A lower body exercise focusing on legs.",
+        "image": null,
+        "totalReps": 20,
+        "recentWeight": 20,
+        "maxWeight": 40,
+        "isCustom": false
+    },
+    {
+        "name": "Pull-up",
+        "bodyParts": [
+            {"name": "back"},
+            {"name": "biceps"}
+        ],
+        "descriptionText": "An upper body exercise for back and arms.",
+        "image": null,
+        "totalReps": 10,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": true
+    },
+    {
+        "name": "Crunch",
+        "bodyParts": [
+            {"name": "abs"}
+        ],
+        "descriptionText": "A core exercise for abdominal muscles.",
+        "image": null,
+        "totalReps": 25,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": false
+    },
+    {
+        "name": "Dumbbell Row",
+        "bodyParts": [
+            {"name": "back"},
+            {"name": "biceps"}
+        ],
+        "descriptionText": "An exercise targeting back and arm muscles.",
+        "image": null,
+        "totalReps": 12,
+        "recentWeight": 40,
+        "maxWeight": 80,
+        "isCustom": true
+    },
+    {
+        "name": "Leg Press",
+        "bodyParts": [
+            {"name": "quadriceps"},
+            {"name": "glutes"},
+            {"name": "hamstrings"}
+        ],
+        "descriptionText": "A lower body exercise using a machine.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 150,
+        "maxWeight": 250,
+        "isCustom": false
+    },
+    {
+        "name": "Tricep Dips",
+        "bodyParts": [
+            {"name": "triceps"},
+            {"name": "chest"}
+        ],
+        "descriptionText": "An exercise focusing on triceps strength.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": false
+    },
+    {
+        "name": "Bicep Curls",
+        "bodyParts": [
+            {"name": "biceps"}
+        ],
+        "descriptionText": "An exercise for strengthening biceps.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 25,
+        "maxWeight": 50,
+        "isCustom": true
+    },
+    {
+        "name": "Calf Raises",
+        "bodyParts": [
+            {"name": "calves"}
+        ],
+        "descriptionText": "An exercise targeting the calf muscles.",
+        "image": null,
+        "totalReps": 20,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": false
+    },
+    {
+        "name": "Lat Pulldown",
+        "bodyParts": [
+            {"name": "back"},
+            {"name": "biceps"}
+        ],
+        "descriptionText": "An exercise focusing on the back and arms.",
+        "image": null,
+        "totalReps": 12,
+        "recentWeight": 60,
+        "maxWeight": 100,
+        "isCustom": true
+    },
+    {
+        "name": "Chest Fly",
+        "bodyParts": [
+            {"name": "chest"},
+            {"name": "shoulders"}
+        ],
+        "descriptionText": "An exercise to target the chest muscles.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 30,
+        "maxWeight": 60,
+        "isCustom": false
+    },
+    {
+        "name": "Plank",
+        "bodyParts": [
+            {"name": "abs"},
+            {"name": "back"}
+        ],
+        "descriptionText": "A core exercise to strengthen the abs and back.",
+        "image": null,
+        "totalReps": 1,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": false
+    },
+    {
+        "name": "Mountain Climbers",
+        "bodyParts": [
+            {"name": "abs"},
+            {"name": "shoulders"}
+        ],
+        "descriptionText": "A full-body exercise focusing on cardio and core.",
+        "image": null,
+        "totalReps": 30,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": true
+    },
+    {
+        "name": "Russian Twists",
+        "bodyParts": [
+            {"name": "abs"}
+        ],
+        "descriptionText": "A core exercise to improve oblique strength.",
+        "image": null,
+        "totalReps": 20,
+        "recentWeight": 0,
+        "maxWeight": 0,
+        "isCustom": false
+    },
+    {
+        "name": "Leg Curls",
+        "bodyParts": [
+            {"name": "hamstrings"}
+        ],
+        "descriptionText": "An exercise for the hamstring muscles.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 40,
+        "maxWeight": 80,
+        "isCustom": true
+    },
+    {
+        "name": "Leg Extensions",
+        "bodyParts": [
+            {"name": "quadriceps"}
+        ],
+        "descriptionText": "An exercise for the front of the thigh.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 50,
+        "maxWeight": 100,
+        "isCustom": false
+    },
+    {
+        "name": "Hip Thrusts",
+        "bodyParts": [
+            {"name": "glutes"}
+        ],
+        "descriptionText": "An exercise focusing on the glute muscles.",
+        "image": null,
+        "totalReps": 12,
+        "recentWeight": 70,
+        "maxWeight": 140,
+        "isCustom": true
+    },
+    {
+        "name": "Cable Rows",
+        "bodyParts": [
+            {"name": "back"},
+            {"name": "biceps"}
+        ],
+        "descriptionText": "An exercise for back and arm strength.",
+        "image": null,
+        "totalReps": 12,
+        "recentWeight": 50,
+        "maxWeight": 100,
+        "isCustom": false
+    },
+    {
+        "name": "Chest Press",
+        "bodyParts": [
+            {"name": "chest"},
+            {"name": "triceps"},
+            {"name": "shoulders"}
+        ],
+        "descriptionText": "An exercise for chest and arm muscles.",
+        "image": null,
+        "totalReps": 12,
+        "recentWeight": 80,
+        "maxWeight": 140,
+        "isCustom": false
+    },
+    {
+        "name": "Barbell Curl",
+        "bodyParts": [
+            {"name": "biceps"}
+        ],
+        "descriptionText": "An exercise to isolate the biceps.",
+        "image": null,
+        "totalReps": 15,
+        "recentWeight": 30,
+        "maxWeight": 60,
+        "isCustom": true
+    }
+]
