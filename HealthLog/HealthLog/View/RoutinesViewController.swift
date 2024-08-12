@@ -18,22 +18,36 @@ class RoutinesViewController: UIViewController {
         return label
     }()
     
+    private let addButton: UIBarButtonItem = {
+        let buttonAction = UIAction{ _ in print("addButton 클릭") }
+        let barButton = UIBarButtonItem(image:UIImage(systemName: "plus"), primaryAction: buttonAction)
+        
+       return barButton
+    }()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         setupView()
     }
     
     func setupView() {
+        
+        self.view.backgroundColor = .systemBackground
+        self.title = "루틴"
+        
+        //MARK: - addSubview
         self.view.addSubview(textLabel)
         
-        let safeArea = self.view.safeAreaLayoutGuide
         
+        self.navigationItem.rightBarButtonItem = self.addButton
+        
+        let safeArea = self.view.safeAreaLayoutGuide
+        //MARK: - NSLayoutconstraint
         NSLayoutConstraint.activate([
             self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 115),
-            self.textLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 108),
+            self.textLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
         
     }
