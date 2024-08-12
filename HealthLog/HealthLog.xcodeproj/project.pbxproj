@@ -21,6 +21,7 @@
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
 		CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */; };
 		CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */; };
+		CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29BA32C6A01F100D82571 /* TempViewController.swift */; };
 		CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; };
 		CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */; };
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
@@ -47,6 +48,7 @@
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesListCell.swift; sourceTree = "<group>"; };
 		CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyPartLabel.swift; sourceTree = "<group>"; };
+		CEE29BA32C6A01F100D82571 /* TempViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempViewController.swift; sourceTree = "<group>"; };
 		CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPart.swift; sourceTree = "<group>"; };
 		CEE8BC612C65B1B800E1D94F /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		CEE8BC632C65B25B00E1D94F /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 		7566B31F2C69AC8300BDF142 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CEE29BA52C6A026D00D82571 /* Temp */,
 				CEE29B9E2C69D43000D82571 /* Exercise */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
 				7566B3232C69C4E300BDF142 /* ReportsViewController.swift */,
@@ -126,6 +129,14 @@
 				CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */,
 			);
 			path = Exercise;
+			sourceTree = "<group>";
+		};
+		CEE29BA52C6A026D00D82571 /* Temp */ = {
+			isa = PBXGroup;
+			children = (
+				CEE29BA32C6A01F100D82571 /* TempViewController.swift */,
+			);
+			path = Temp;
 			sourceTree = "<group>";
 		};
 		CEE8BC342C65AB2900E1D94F /* Model */ = {
@@ -230,6 +241,7 @@
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
+				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
 				7566B3282C69C4E300BDF142 /* ExercisesViewController.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,

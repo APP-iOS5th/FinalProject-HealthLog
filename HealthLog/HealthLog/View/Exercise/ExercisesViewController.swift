@@ -133,6 +133,8 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     @objc func addButtonTapped() {
         print("addButtonTapped!")
+        let vc = TempViewController()
+        navigationController?.pushViewController(vc, animated: false)
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
