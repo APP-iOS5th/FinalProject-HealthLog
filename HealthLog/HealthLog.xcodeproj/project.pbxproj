@@ -23,6 +23,7 @@
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
+		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
 		7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */; };
 		7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3232C69C4E300BDF142 /* ReportsViewController.swift */; };
@@ -63,6 +64,7 @@
 		1894013F2C528B2100533E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddNameViewController.swift; sourceTree = "<group>"; };
+		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewController.swift; sourceTree = "<group>"; };
 		7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutinesViewController.swift; sourceTree = "<group>"; };
 		7566B3232C69C4E300BDF142 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				184A589E2C69E42B009F2848 /* Reports */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
+				4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */,
 				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
 			);
 			path = View;
@@ -313,6 +316,7 @@
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
+				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
 				CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */,
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
@@ -320,7 +324,6 @@
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
-
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
@@ -469,7 +472,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 59FP2PXRXK;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -501,7 +504,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 59FP2PXRXK;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
