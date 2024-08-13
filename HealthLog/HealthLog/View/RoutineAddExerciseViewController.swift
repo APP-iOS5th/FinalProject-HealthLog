@@ -30,7 +30,7 @@ class RoutineAddExerciseViewController: UIViewController {
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.attributedPlaceholder = NSAttributedString(
                 string: searchBar.placeholder ?? "",
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor(hexCode: "656565")]
+                attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray]
             )
             textField.textColor = .white
 
