@@ -12,7 +12,7 @@ extension UINavigationController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
         
-        appearance.titleTextAttributes = [.font: UIFont(name: "Pretendard-SemilBold", size: 20) ?? UIFont.systemFont(ofSize: 20),
+        appearance.titleTextAttributes = [.font: UIFont.font(.pretendardSemiBold, ofSize: 20),
                                           .foregroundColor: UIColor.white]
         
         appearance.backgroundColor = UIColor(named: "ColorPrimary")

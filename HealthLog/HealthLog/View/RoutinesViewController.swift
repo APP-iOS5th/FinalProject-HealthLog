@@ -9,11 +9,11 @@ import UIKit
 
 class RoutinesViewController: UIViewController {
     
-
+    
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "추가된 루틴이 없습니다."
-        label.font =  UIFont(name: "Pretendard-SemilBold", size: 20)
+        label.font =  UIFont.font(.pretendardSemiBold, ofSize: 20)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,17 +34,25 @@ class RoutinesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
     func setupView() {
         
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         self.title = "루틴"
         self.view.tintColor = .white
         
+    
+        
         let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backbarButtonItem
+        
         //MARK: - addSubview
         self.view.addSubview(textLabel)
         

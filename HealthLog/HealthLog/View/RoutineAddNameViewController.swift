@@ -11,7 +11,7 @@ class RoutineAddNameViewController: UIViewController {
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "루틴 이름을 정해주세요."
-        label.font =  UIFont(name: "Pretendard-bold", size: 20)
+        label.font =  UIFont.font(.pretendardSemiBold, ofSize: 20)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,7 +25,7 @@ class RoutineAddNameViewController: UIViewController {
         // 더 좋은 방법 있으면 수정
         textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
         textField.textColor = .white
-        textField.font = UIFont(name: "Pretendard-Medium", size: 14)
+        textField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         return textField
         
     }()
@@ -33,7 +33,7 @@ class RoutineAddNameViewController: UIViewController {
     private lazy var subTextLabel: UILabel = {
         let label = UILabel()
         label.text = "이미 존재하는 이름 입니다."
-        label.font = UIFont(name: "Pretendard-Medium", size: 14)
+        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .red
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -46,27 +46,30 @@ class RoutineAddNameViewController: UIViewController {
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 17, leading: 0, bottom: 17, trailing: 0)
         let button = UIButton(configuration: configuration,
                               primaryAction: UIAction { _ in
+            let routineAddExerciseViewController = RoutineAddExerciseViewController()
+            self.navigationController?.pushViewController(routineAddExerciseViewController, animated: true)
             print("확인 버튼 눌림")
         })
         button.translatesAutoresizingMaskIntoConstraints = false
+        
         button.tintColor = UIColor(named: "ColorAccent")
-        button.titleLabel?.font = UIFont(name: "Pretendard-bold", size: 16)
         return button
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("addName")
         setupView()
         
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        tabBarController?.tabBar.isHidden = false
-    }
+
     
     func setupView() {
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        
+        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        self.navigationItem.backBarButtonItem = backbarButtonItem
         
         navigationController?.setupBarAppearance()
         //MARK: - addSubview
