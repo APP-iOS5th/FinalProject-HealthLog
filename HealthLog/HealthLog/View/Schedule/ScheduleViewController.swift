@@ -18,21 +18,26 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         let calendar = UICalendarView()
         calendar.translatesAutoresizingMaskIntoConstraints = false
         calendar.wantsDateDecorations = true
-        calendar.backgroundColor = UIColor(named: "supportColor")
+        calendar.backgroundColor = UIColor(named: "ColorSecondary")
+        calendar.tintColor = UIColor(named: "ColorAccent")
+        
+        customizeCalendarTextColor()
+        
         return calendar
     }()
     
     lazy var tableView: UITableView = {
         let table = UITableView()
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.dataSource = self
+        table.delegate = self
         table.register(ExerciseCheckCell.self, forCellReuseIdentifier: ExerciseCheckCell.identifier)
-        table.backgroundColor = UIColor(named: "supportColor")
+        table.backgroundColor = UIColor(named: "ColorSecondary")
         return table
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = self
-        tableView.delegate = self
         
         setupUI()
     }
@@ -45,7 +50,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationItem.title = "운동 일정"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
         view.backgroundColor = UIColor(named: "ColorPrimary")
-
+        
         view.addSubview(calendarView)
         view.addSubview(tableView)
         
@@ -67,6 +72,21 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
     
+    private func customizeCalendarTextColor() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.changeSubviewTextColor(self.calendarView, color: .white)
+        }
+    }
+    
+    private func changeSubviewTextColor(_ view: UIView, color: UIColor) {
+        for subview in view.subviews {
+            if let label = subview as? UILabel {
+                label.textColor = color
+            } else {
+                changeSubviewTextColor(subview, color: color)
+            }
+        }
+    }
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1

@@ -13,6 +13,7 @@ class ExerciseCheckCell: UITableViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "운동 타이틀"
+        label.textColor = .white
         
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -32,10 +33,13 @@ class ExerciseCheckCell: UITableViewCell {
         
         let setNumber = UILabel()
         setNumber.text = "1 세트"
+        setNumber.textColor = .white
         let weightLabel = UILabel()
         weightLabel.text = "10 kg"
+        weightLabel.textColor = .white
         let repsLabel = UILabel()
         repsLabel.text = "10 회"
+        repsLabel.textColor = .white
         let checkbox = UISwitch()
         checkbox.isOn = false
         checkbox.addTarget(ExerciseCheckCell.self, action: #selector(didToggleCheckbox(_:)), for: .valueChanged)
@@ -54,10 +58,10 @@ class ExerciseCheckCell: UITableViewCell {
             setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             setNumber.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            weightLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            weightLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
             weightLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            repsLabel.leadingAnchor.constraint(equalTo: weightLabel.trailingAnchor, constant: 16),
+            repsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 200),
             repsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             checkbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -70,6 +74,9 @@ class ExerciseCheckCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        contentView.backgroundColor = UIColor(named: "ColorSecondary")
+        
+        setsContainer.addArrangedSubview(setView)
         contentView.addSubview(nameLabel)
         contentView.addSubview(setsContainer)
         
@@ -81,6 +88,10 @@ class ExerciseCheckCell: UITableViewCell {
             setsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             setsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -25),
+            setView.topAnchor.constraint(equalTo: setsContainer.topAnchor),
+            setView.leadingAnchor.constraint(equalTo: setsContainer.leadingAnchor),
+            setView.trailingAnchor.constraint(equalTo: setsContainer.trailingAnchor),
+            setView.bottomAnchor.constraint(equalTo: setsContainer.bottomAnchor),
         ])
     }
     
@@ -90,18 +101,6 @@ class ExerciseCheckCell: UITableViewCell {
     
     // MARK: - Methods
     @objc private func didToggleCheckbox(_ sender: UISwitch) {
-        print("checkbox")
+//        print("checkbox")
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }
