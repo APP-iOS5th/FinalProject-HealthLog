@@ -8,6 +8,7 @@
 import UIKit
 
 class RoutinesViewController: UIViewController {
+    
 
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -33,7 +34,6 @@ class RoutinesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupView()
     }
     
