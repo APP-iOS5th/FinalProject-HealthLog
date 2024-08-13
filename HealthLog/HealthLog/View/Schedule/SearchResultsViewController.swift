@@ -33,6 +33,10 @@ class SearchResultsViewController: UITableViewController {
         cell.configure(with: exercise)
         cell.addButtonTapped = { [weak self] in
             self?.onExerciseSelected?(exercise.name)
+            if let searchController = self?.parent as? UISearchController {
+                searchController.searchBar.text = ""
+            }
+            self?.dismiss(animated: true, completion: nil)
         }
         return cell
     }

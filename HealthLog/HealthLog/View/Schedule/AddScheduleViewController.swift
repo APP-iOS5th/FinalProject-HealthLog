@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddScheduleViewController: UIViewController {
+class AddScheduleViewController: UIViewController, UISearchBarDelegate {
     
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
@@ -34,6 +34,7 @@ class AddScheduleViewController: UIViewController {
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.delegate = self
         
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
@@ -98,7 +99,7 @@ class AddScheduleViewController: UIViewController {
             dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
-    
+            
             tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
@@ -128,6 +129,17 @@ class AddScheduleViewController: UIViewController {
     
     @objc func doneTapped() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("typing~")
+        navigationItem.rightBarButtonItem?.isHidden = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        print("typing done~")
+        navigationItem.rightBarButtonItem?.isHidden = false
+        // 사용자가 모든 정보 입력했을 때 누를 수 있도록 수정필요
     }
 }
 
