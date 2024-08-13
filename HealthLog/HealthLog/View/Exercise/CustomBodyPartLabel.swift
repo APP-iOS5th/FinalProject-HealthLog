@@ -24,12 +24,11 @@ class CustomBodyPartLabel: UILabel {
     // MARK: - Setup
     
     private func setup() {
-        self.textColor = .white
-        self.font = UIFont.systemFont(ofSize: 14)
-        self.textAlignment = .center
-        self.backgroundColor = .gray
-        self.layer.cornerRadius = 4
-        self.layer.masksToBounds = true
-        self.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .colorPrimary
+        textColor = .white
+        font = UIFont.systemFont(ofSize: 14)
+        textAlignment = .center
+        layer.cornerRadius = 11
+        layer.masksToBounds = true
     }
 }

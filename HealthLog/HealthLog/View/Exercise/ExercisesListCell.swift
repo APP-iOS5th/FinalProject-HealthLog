@@ -25,18 +25,13 @@ class ExerciseListCell: UITableViewCell {
     let bottomRightStackView = UIStackView()
     let bodypartStackView = UIStackView()
     var bodypartLabels: [CustomBodyPartLabel] = []
-    let descriptionLabel = UILabel()
+    let descriptionTextView = UITextView()
     
     // MARK: - Init
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = .black
-        contentView.backgroundColor = .darkGray
-        contentView.layer.cornerRadius = 12
-        contentView.layer.masksToBounds = true
-        separatorInset = UIEdgeInsets(
-            top: 30, left: 30, bottom: 30, right: 30)
+        setupCell()
         setupTopStackView()
         setupDivider()
         setupBottomStackView()
@@ -48,10 +43,20 @@ class ExerciseListCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8))
+        contentView.frame = contentView.frame.inset(
+            by: UIEdgeInsets(top: 13, left: 10, bottom: 0, right: 10))
     }
     
     // MARK: - Setup UI
+    
+    private func setupCell() {
+        backgroundColor = .black
+        contentView.backgroundColor = .colorSecondary
+        contentView.layer.cornerRadius = 12
+        contentView.layer.masksToBounds = true
+        separatorInset = UIEdgeInsets(
+            top: 30, left: 30, bottom: 30, right: 30)
+    }
     
     private func setupTopStackView() {
         // MARK: topStackView
@@ -64,7 +69,7 @@ class ExerciseListCell: UITableViewCell {
         NSLayoutConstraint.activate([
             topStackView.topAnchor.constraint(
                 equalTo: contentView.topAnchor, 
-                constant: 8),
+                constant: 13),
             topStackView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor, 
                 constant: 16),
@@ -75,16 +80,17 @@ class ExerciseListCell: UITableViewCell {
         
         // MARK: titleLabel
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        titleLabel.textColor = .white
         topStackView.addArrangedSubview(titleLabel)
         
         // MARK: detailButton
-        detailButton.setTitle("자세히 보기 >", for: .normal)
+        detailButton.setTitle("자세히 보기 ❯", for: .normal)
         detailButton.setTitleColor(.lightGray, for: .normal)
         topStackView.addArrangedSubview(detailButton)
     }
     
     func setupDivider() {
-        dividerView.backgroundColor = UIColor.lightGray // 구분선 색상 설정
+        dividerView.backgroundColor = .color1E1E1E
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dividerView)
         NSLayoutConstraint.activate([
@@ -92,9 +98,11 @@ class ExerciseListCell: UITableViewCell {
                 equalTo: topStackView.bottomAnchor,
                 constant: 13),
             dividerView.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor),
+                equalTo: contentView.leadingAnchor, 
+                constant: 16),
             dividerView.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor),
+                equalTo: contentView.trailingAnchor, 
+                constant: -16),
             dividerView.heightAnchor.constraint(
                 equalToConstant: 1)
         ])
@@ -127,7 +135,7 @@ class ExerciseListCell: UITableViewCell {
         // MARK: exerciseImageView
         exerciseImageView.contentMode = .scaleAspectFill
         exerciseImageView.clipsToBounds = true
-        exerciseImageView.backgroundColor = .lightGray
+        exerciseImageView.backgroundColor = .color3E3E3E
         exerciseImageView.layer.borderColor = UIColor.black.cgColor
         exerciseImageView.layer.borderWidth = 2.0
         exerciseImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -145,32 +153,39 @@ class ExerciseListCell: UITableViewCell {
         
         // MARK: bodypartStackView
         bodypartStackView.axis = .horizontal
-        bodypartStackView.distribution = .fillProportionally
-        bodypartStackView.spacing = 4
+        bodypartStackView.distribution = .fill
+        bodypartStackView.spacing = 8
         bodypartStackView.translatesAutoresizingMaskIntoConstraints = false
+        bodypartStackView.clipsToBounds = true
         bottomRightStackView.addArrangedSubview(bodypartStackView)
         
         // MARK: descriptionLabel
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
-        bottomRightStackView.addArrangedSubview(descriptionLabel)
+        descriptionTextView.font = UIFont.systemFont(ofSize: 14)
+        descriptionTextView.backgroundColor = .clear
+        descriptionTextView.textColor = .color767676
+        descriptionTextView.isEditable = false
+        descriptionTextView.isScrollEnabled = false
+        bottomRightStackView.addArrangedSubview(descriptionTextView)
     }
     
     // MARK: - Configure
     
     func configure(with exercise: Exercise) {
+        // exercise.name
         titleLabel.text = exercise.name
         
+        // exercise.Image
         exerciseImageView.image = UIImage(data: exercise.image ?? Data())
         
-        bodypartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        // exercise.bodyParts
         for part in exercise.bodyParts {
             let label = CustomBodyPartLabel()
             label.text = part.name.rawValue
             bodypartStackView.addArrangedSubview(label)
         }
         
-        descriptionLabel.text = exercise.descriptionText
+        // exercise.descriptionText
+        descriptionTextView.text = exercise.descriptionText
     }
     
 }

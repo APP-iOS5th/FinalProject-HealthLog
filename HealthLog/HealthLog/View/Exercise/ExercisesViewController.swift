@@ -86,10 +86,16 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         view.addSubview(dividerView)
         
         NSLayoutConstraint.activate([
-            dividerView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dividerView.heightAnchor.constraint(equalToConstant: 1)
+            dividerView.topAnchor.constraint(
+                equalTo: searchBar.bottomAnchor),
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1)
         ])
     }
     
@@ -131,6 +137,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
         cell.configure(with: viewModel.exercises[indexPath.row])
+        cell.selectionStyle = .none
         return cell
     }
     
