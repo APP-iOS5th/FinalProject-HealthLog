@@ -9,18 +9,18 @@ import Combine
 import RealmSwift
 import Foundation
 
-// ViewModel 정의
 class ExerciseViewModel: ObservableObject {
     private var realm: Realm
     private var exercisesNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
-    var exercises: [Exercise] = []
+    @Published var exercises: [Exercise] = []
     @Published var filteredExercises: [Exercise] = []
     
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
+        exercisesSubject()
     }
     
     deinit {
@@ -35,15 +35,18 @@ class ExerciseViewModel: ObservableObject {
                 case .initial(let collection):
                     print("results.observe - initial")
                     self?.exercises = Array(collection)
-                    self?.filteredExercises = Array(collection)
                 case .update(let collection, _, _, _):
                     print("results.observe - update")
                     self?.exercises = Array(collection)
-                    self?.filteredExercises = Array(collection)
                 case .error(let error):
                     print("results.observe - error: \(error)")
             }
         }
+    }
+    
+    func exercisesSubject() {
+        // realm의 observe가 exercises를 변경시 마다 assign
+        $exercises.assign(to: &$filteredExercises)
     }
     
     func filterExercises(by searchText: String) {
@@ -53,7 +56,6 @@ class ExerciseViewModel: ObservableObject {
             filteredExercises = exercises.filter {
                 $0.name.lowercased().contains(searchText.lowercased())
             }
-            print("viewmodel - filterExercises - count - \(filteredExercises.count)")
         }
     }
     

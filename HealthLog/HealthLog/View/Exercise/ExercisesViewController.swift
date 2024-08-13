@@ -124,30 +124,29 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     }
     
     func setupBinding() {
-        viewModel.$filteredExercises.sink { [weak self] _ in
-            print("filteredExercises 변경, reload")
-            self?.tableView.reloadData()
-        }.store(in: &cancellables)
+        // 바인딩 - 검색시 테이블 리로드 실행
+        viewModel.$filteredExercises
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }.store(in: &cancellables)
     }
     
     // MARK: - UISearchBarDelegate
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("UISearchBarDelegate")
         viewModel.filterExercises(by: searchText)
     }
     
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("tableView - count - \(viewModel.filteredExercises.count)")
         return viewModel.filteredExercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
-        print("row - \(indexPath.row)")
         cell.configure(with: viewModel.filteredExercises[indexPath.row])
         cell.selectionStyle = .none
         return cell
