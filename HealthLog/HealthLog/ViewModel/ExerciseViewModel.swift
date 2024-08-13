@@ -15,7 +15,8 @@ class ExerciseViewModel: ObservableObject {
     private var exercisesNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var exercises: [Exercise] = []
+    var exercises: [Exercise] = []
+    @Published var filteredExercises: [Exercise] = []
     
     init() {
         realm = RealmManager.shared.realm
@@ -34,12 +35,25 @@ class ExerciseViewModel: ObservableObject {
                 case .initial(let collection):
                     print("results.observe - initial")
                     self?.exercises = Array(collection)
+                    self?.filteredExercises = Array(collection)
                 case .update(let collection, _, _, _):
                     print("results.observe - update")
                     self?.exercises = Array(collection)
+                    self?.filteredExercises = Array(collection)
                 case .error(let error):
                     print("results.observe - error: \(error)")
             }
+        }
+    }
+    
+    func filterExercises(by searchText: String) {
+        if searchText.isEmpty {
+            filteredExercises = exercises
+        } else {
+            filteredExercises = exercises.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+            print("viewmodel - filterExercises - count - \(filteredExercises.count)")
         }
     }
     
