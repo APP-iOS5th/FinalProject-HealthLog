@@ -5,12 +5,13 @@
 //  Created by youngwoo_ahn on 8/12/24.
 //
 
+import Combine
 import UIKit
 
 class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Declare
-    
+    private var cancellables = Set<AnyCancellable>()
     let viewModel = ExerciseViewModel()
     
     let addButton = UIButton(type: .custom)
@@ -21,6 +22,8 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     // 샘플 데이터
     var data = ["Apple", "Banana", "Cherry", "Date",]
     var filteredData: [String] = []
+    
+    var filteredExercises: [Exercise] = []
     
     //MARK: - Init
     
@@ -38,10 +41,17 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         super.viewDidLoad()
         view.backgroundColor = .black
         
+        filteredExercises = viewModel.exercises
+        
         setupNavigationBar()
         setupSearchBarView()
         setupDivider()
         setupTableView()
+        
+        viewModel.$exercises.sink { [weak self] _ in
+            self?.filteredExercises = self?.viewModel.exercises ?? []
+            self?.tableView.reloadData()
+        }.store(in: &cancellables)
     }
     
     // MARK: - Setup
@@ -127,9 +137,15 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredData = data
+            // 검색어가 비어있을 때 모든 데이터를 보여줌
+            print("searchBar - empty")
+            filteredExercises = viewModel.exercises
         } else {
-            filteredData = data.filter { $0.lowercased().contains(searchText.lowercased()) }
+            // 검색어에 해당하는 데이터만 필터링
+            print("searchBar - filter")
+            filteredExercises = viewModel.exercises.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
         }
         tableView.reloadData()
     }
@@ -137,13 +153,13 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.exercises.count
+        return filteredExercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
-        cell.configure(with: viewModel.exercises[indexPath.row])
+        cell.configure(with: filteredExercises[indexPath.row])
         cell.selectionStyle = .none
         return cell
     }
