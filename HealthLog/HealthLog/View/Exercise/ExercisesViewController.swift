@@ -59,11 +59,18 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     }
     
     func setupSearchBarView() {
-        searchBar.delegate = self
-        searchBar.sizeToFit()
-        searchBar.placeholder = "검색어 입력"
-        searchBar.backgroundColor = .black
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.delegate = self
+//        searchBar.searchBarStyle = .minimal
+        searchBar.sizeToFit()
+        searchBar.barTintColor = .black
+        searchBar.searchTextField.backgroundColor = .colorSecondary
+        searchBar.searchTextField.textColor = .white
+        let placeHolder = NSAttributedString(
+            string: "검색어 입력",
+            attributes: [NSAttributedString.Key.foregroundColor:
+                            UIColor.lightGray])
+        searchBar.searchTextField.attributedPlaceholder = placeHolder
         view.addSubview(searchBar)
         
         NSLayoutConstraint.activate([
