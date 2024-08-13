@@ -24,7 +24,6 @@
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
-		4B89D35D2C6B21DD0094C852 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
 		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
@@ -55,7 +54,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4B89D35D2C6B21DD0094C852 /* RealmSwift in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
