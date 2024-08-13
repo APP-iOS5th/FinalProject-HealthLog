@@ -18,6 +18,8 @@
 		184A58B12C69ED3D009F2848 /* Pretendard-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 184A58A82C69ED3D009F2848 /* Pretendard-ExtraBold.otf */; };
 		184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B22C6A3409009F2848 /* ExercisesViewController.swift */; };
 		184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B42C6A3CEA009F2848 /* ExerciseCheckCell.swift */; };
+		184A58B72C6B28C9009F2848 /* ExerciseRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */; };
+		184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */; };
 		189401342C528B2000533E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401332C528B2000533E0A /* AppDelegate.swift */; };
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
@@ -32,6 +34,8 @@
 		7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */; };
 		7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */; };
 		7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0002C69FE05004CB285 /* SearchResultCell.swift */; };
+		7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */; };
+		7590C0042C6AF94C004CB285 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
@@ -48,12 +52,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4B89D35E2C6B21DD0094C852 /* Embed Frameworks */ = {
+
+		7590C0052C6AF94C004CB285 /* Embed Frameworks */ = {
+
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+
+				7590C0042C6AF94C004CB285 /* RealmSwift in Embed Frameworks */,
+
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,6 +81,8 @@
 		184A58A82C69ED3D009F2848 /* Pretendard-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pretendard-ExtraBold.otf"; sourceTree = "<group>"; };
 		184A58B22C6A3409009F2848 /* ExercisesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExercisesViewController.swift; sourceTree = "<group>"; };
 		184A58B42C6A3CEA009F2848 /* ExerciseCheckCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExerciseCheckCell.swift; sourceTree = "<group>"; };
+		184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseRecordViewController.swift; sourceTree = "<group>"; };
+		184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightRecordViewController.swift; sourceTree = "<group>"; };
 		189401302C528B2000533E0A /* HealthLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189401332C528B2000533E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		189401352C528B2000533E0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -88,6 +99,7 @@
 		7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		7590C0002C69FE05004CB285 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedExerciseCell.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
@@ -118,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				7566B3232C69C4E300BDF142 /* ReportsViewController.swift */,
+				184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */,
+				184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */,
 			);
 			path = Reports;
 			sourceTree = "<group>";
@@ -194,6 +208,7 @@
 				184A58B42C6A3CEA009F2848 /* ExerciseCheckCell.swift */,
 				7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */,
 				7590C0002C69FE05004CB285 /* SearchResultCell.swift */,
+				7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */,
 			);
 			path = Schedule;
 			sourceTree = "<group>";
@@ -249,7 +264,9 @@
 				1894012C2C528B2000533E0A /* Sources */,
 				1894012D2C528B2000533E0A /* Frameworks */,
 				1894012E2C528B2000533E0A /* Resources */,
-				4B89D35E2C6B21DD0094C852 /* Embed Frameworks */,
+
+				7590C0052C6AF94C004CB285 /* Embed Frameworks */,
+
 			);
 			buildRules = (
 			);
@@ -325,6 +342,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */,
 				184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */,
@@ -343,6 +361,7 @@
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
+				184A58B72C6B28C9009F2848 /* ExerciseRecordViewController.swift in Sources */,
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
@@ -350,6 +369,7 @@
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
 				CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */,
+				7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */,
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
