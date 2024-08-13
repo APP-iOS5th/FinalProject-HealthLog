@@ -22,6 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let routinesViewController = RoutinesViewController()
         let secondNC = UINavigationController(rootViewController: routinesViewController)
+        secondNC.setupBarAppearance()
         
         let exercisesViewController = ExercisesViewController()
         let thirdNC = UINavigationController(rootViewController: exercisesViewController)
