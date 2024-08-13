@@ -42,6 +42,12 @@ class SearchResultCell: UITableViewCell {
     }
     
     @objc func addTapped() {
+        // 뭐든 추가되었다고 알려주는 기능이 필요할 듯
+        let originalBackgroundColor = contentView.backgroundColor
+        contentView.backgroundColor = UIColor(named: "ColorAccent")?.withAlphaComponent(0.2)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.contentView.backgroundColor = originalBackgroundColor
+        }
         addButtonTapped?()
     }
     

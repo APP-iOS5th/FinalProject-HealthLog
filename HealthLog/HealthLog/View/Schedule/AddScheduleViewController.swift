@@ -144,6 +144,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
         let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath)
         cell.textLabel?.text = selectedExercises[indexPath.row]
         cell.textLabel?.textColor = .white
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.backgroundColor = UIColor(named: "ColorSecondary")
         return cell
     }
