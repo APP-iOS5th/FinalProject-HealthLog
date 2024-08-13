@@ -12,8 +12,8 @@ class ExerciseCheckCell: UITableViewCell {
 
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "운동 타이틀"
         label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -22,26 +22,62 @@ class ExerciseCheckCell: UITableViewCell {
     private let setsContainer: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 8
+        stack.spacing = 13
         
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
     
-    private let setView: UIView = {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.backgroundColor = UIColor(named: "ColorSecondary")
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(setsContainer)
+        
+        NSLayoutConstraint.activate([
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            setsContainer.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 13),
+            setsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            setsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -25),
+        ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Methods
+    func configure(with scheduleExercise: ScheduleExercise) {
+        print("here")
+        nameLabel.text = scheduleExercise.exercise?.name
+        setsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        for set in scheduleExercise.sets {
+            let setView = createSetView(set: set)
+            setsContainer.addArrangedSubview(setView)
+        }
+    }
+    
+    private func createSetView(set: ScheduleExerciseSet) -> UIView {
         let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         
         let setNumber = UILabel()
-        setNumber.text = "1 세트"
+        setNumber.text = "\(set.order) 세트"
         setNumber.textColor = .white
         let weightLabel = UILabel()
-        weightLabel.text = "10 kg"
+        weightLabel.text = "\(set.weight) kg"
         weightLabel.textColor = .white
         let repsLabel = UILabel()
-        repsLabel.text = "10 회"
+        repsLabel.text = "\(set.reps) 회"
         repsLabel.textColor = .white
         let checkbox = UISwitch()
-        checkbox.isOn = false
+        checkbox.isOn = set.isCompleted
+        checkbox.onTintColor = .white
         checkbox.addTarget(ExerciseCheckCell.self, action: #selector(didToggleCheckbox(_:)), for: .valueChanged)
         
         view.addSubview(setNumber)
@@ -55,6 +91,8 @@ class ExerciseCheckCell: UITableViewCell {
         checkbox.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalToConstant: 30),
+            
             setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             setNumber.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
@@ -69,37 +107,8 @@ class ExerciseCheckCell: UITableViewCell {
         ])
 
         return view
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        contentView.backgroundColor = UIColor(named: "ColorSecondary")
-        
-        setsContainer.addArrangedSubview(setView)
-        contentView.addSubview(nameLabel)
-        contentView.addSubview(setsContainer)
-        
-        NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            setsContainer.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 13),
-            setsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            setsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -25),
-            setView.topAnchor.constraint(equalTo: setsContainer.topAnchor),
-            setView.leadingAnchor.constraint(equalTo: setsContainer.leadingAnchor),
-            setView.trailingAnchor.constraint(equalTo: setsContainer.trailingAnchor),
-            setView.bottomAnchor.constraint(equalTo: setsContainer.bottomAnchor),
-        ])
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Methods
     @objc private func didToggleCheckbox(_ sender: UISwitch) {
 //        print("checkbox")
     }

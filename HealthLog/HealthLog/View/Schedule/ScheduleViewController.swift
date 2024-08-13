@@ -6,15 +6,19 @@
 //
 
 import UIKit
+import RealmSwift
 import Combine
 
 class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - declare
+    let realm = try! Realm()
     var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
+    
+    private var schedules: Results<Schedule>?
     
     private let today = Calendar.current.startOfDay(for: Date())
     private var selectedDate: Date?
@@ -50,6 +54,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         
         setupUI()
+        loadTodaySchedule()
         customizeCalendarTextColor()
     }
     
@@ -78,6 +83,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         ])
     }
     // MARK: - Methods
+    private func loadTodaySchedule() {
+        todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
+        
+        if todaySchedule == nil {
+            // no today schedule
+        }
+    }
+    
     @objc func addSchedule() {
         let addScheduleViewController = AddScheduleViewController()
         navigationController?.pushViewController(addScheduleViewController, animated: true)
@@ -142,6 +155,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ExerciseCheckCell.identifier, for: indexPath) as! ExerciseCheckCell
+        
+        if let schedule = todaySchedule?.exercises[indexPath.row] {
+            cell.configure(with: schedule)
+        }
         return cell
     }
     
@@ -174,6 +191,8 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents, let date = dateComponents.date else { return }
         selectedDate = date
+        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
+        tableView.reloadData()
         customizeCalendarTextColor()
     }
     
