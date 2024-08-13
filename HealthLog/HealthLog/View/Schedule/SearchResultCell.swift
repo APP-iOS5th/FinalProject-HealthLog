@@ -11,6 +11,7 @@ class SearchResultCell: UITableViewCell {
     
     var addButtonTapped: (() -> Void)?
     
+    let titleLabel = UILabel()
     let addButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
@@ -24,12 +25,15 @@ class SearchResultCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        titleLabel.textColor = .white
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(titleLabel)
         contentView.addSubview(addButton)
         contentView.backgroundColor = UIColor(named: "ColorSecondary")
         addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             addButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
             addButton.widthAnchor.constraint(equalToConstant: 28),
@@ -43,6 +47,10 @@ class SearchResultCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(with exercise: Exercise) {
+        titleLabel.text = exercise.name
     }
     
 }

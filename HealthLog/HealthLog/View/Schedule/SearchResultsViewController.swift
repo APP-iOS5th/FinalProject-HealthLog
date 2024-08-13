@@ -9,6 +9,7 @@ import UIKit
 
 class SearchResultsViewController: UITableViewController {
     
+    let viewModel = ExerciseViewModel()
     var onExerciseSelected: ((String) -> Void)?
     
     override func viewDidLoad() {
@@ -23,16 +24,15 @@ class SearchResultsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10 // 개수 수정 필요
+        return viewModel.exercises.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultCell", for: indexPath) as! SearchResultCell
-        cell.textLabel?.text = "운동이름 \(indexPath.row)"
-        cell.textLabel?.textColor = .white
+        let exercise = viewModel.exercises[indexPath.row]
+        cell.configure(with: exercise)
         cell.addButtonTapped = { [weak self] in
-            let exerciseName = cell.textLabel?.text ?? "운동이름"
-            self?.onExerciseSelected?(exerciseName)
+            self?.onExerciseSelected?(exercise.name)
         }
         return cell
     }

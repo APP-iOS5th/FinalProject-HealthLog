@@ -10,7 +10,6 @@ import UIKit
 class AddScheduleViewController: UIViewController {
     
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
-    let getRoutineButton = UIButton()
     let dividerView = UIView()
     let tableView = UITableView()
     
@@ -21,17 +20,9 @@ class AddScheduleViewController: UIViewController {
         
         self.title = "오늘 할 운동 추가"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissView))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneTapped))
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        
-        
-//        let textAttributes = [
-//            NSAttributedString.Key.foregroundColor: UIColor.white,
-//            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20, weight: .semibold)
-//        ]
-//        self.navigationController?.navigationBar.titleTextAttributes = textAttributes
-        
         self.navigationItem.leftBarButtonItem?.tintColor = .white
-
         
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exerciseName in
@@ -58,14 +49,6 @@ class AddScheduleViewController: UIViewController {
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dividerView)
         
-        getRoutineButton.setTitle("루틴 불러오기", for: .normal)
-        getRoutineButton.backgroundColor = UIColor(named: "ColorAccent")
-        getRoutineButton.layer.cornerRadius = 12
-        getRoutineButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        getRoutineButton.translatesAutoresizingMaskIntoConstraints = false
-        getRoutineButton.addTarget(self, action: #selector(routineButtonTapped), for: .touchUpInside)
-        view.addSubview(getRoutineButton)
-        
         setupTableView()
         setupConstraints()
         
@@ -79,6 +62,28 @@ class AddScheduleViewController: UIViewController {
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
+        
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
+        headerView.backgroundColor = .clear
+        
+        let getRoutineButton = UIButton(type: .system)
+        getRoutineButton.setTitle("루틴 불러오기", for: .normal)
+        getRoutineButton.backgroundColor = UIColor(named: "ColorAccent")
+        getRoutineButton.layer.cornerRadius = 12
+        getRoutineButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        getRoutineButton.tintColor = .white
+        getRoutineButton.translatesAutoresizingMaskIntoConstraints = false
+        getRoutineButton.addTarget(self, action: #selector(routineButtonTapped), for: .touchUpInside)
+        headerView.addSubview(getRoutineButton)
+        
+        NSLayoutConstraint.activate([
+            getRoutineButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            getRoutineButton.topAnchor.constraint(equalTo: headerView.topAnchor),
+            getRoutineButton.widthAnchor.constraint(equalToConstant: 345),
+            getRoutineButton.heightAnchor.constraint(equalToConstant: 44),
+        ])
+        
+        tableView.tableHeaderView = headerView
         view.addSubview(tableView)
     }
     
@@ -89,17 +94,12 @@ class AddScheduleViewController: UIViewController {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
+            dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
-            
-            getRoutineButton.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
-            getRoutineButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            getRoutineButton.widthAnchor.constraint(equalToConstant: 345),
-            getRoutineButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            tableView.topAnchor.constraint(equalTo: getRoutineButton.bottomAnchor, constant: 13),
+    
+            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -125,10 +125,13 @@ class AddScheduleViewController: UIViewController {
         routineVC.modalPresentationStyle = .pageSheet
         self.present(routineVC, animated: true, completion: nil)
     }
+    
+    @objc func doneTapped() {
+        navigationController?.popViewController(animated: true)
+    }
 }
 
 extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource {
-    // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedExercises.count
     }
