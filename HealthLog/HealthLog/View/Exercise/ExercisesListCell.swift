@@ -226,6 +226,7 @@ class ExerciseListCell: UITableViewCell {
         exerciseImageView.image = UIImage(data: exercise.image ?? Data())
         
         // exercise.bodyParts
+        bodypartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         for part in exercise.bodyParts {
             let label = CustomBodyPartLabel()
             label.text = part.name.rawValue
