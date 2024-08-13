@@ -174,8 +174,8 @@ class ReportsViewController: UIViewController {
             viewController.view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 viewController.view.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
-                viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+                viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
                 viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
         }
