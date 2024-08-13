@@ -2,7 +2,7 @@
 //  ExerciseViewController.swift
 //  HealthLog
 //
-//  Created by Jungjin Park on 8/12/24.
+//  Created by youngwoo_ahn on 8/12/24.
 //
 
 import UIKit
@@ -13,6 +13,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     let viewModel = ExerciseViewModel()
     
+    let addButton = UIButton(type: .custom)
     let searchBar = UISearchBar()
     let dividerView = UIView()
     let tableView = UITableView()
@@ -47,21 +48,27 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     func setupNavigationBar() {
         title = "운동 목록"
-        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
-        let rightBarButton = UIBarButtonItem(
-            barButtonSystemItem: .add, target: self,
-            action: #selector(addButtonTapped)
-        )
+        // MARK: addButton
+        
+        var buttonConfig = UIButton.Configuration.filled()
+        buttonConfig.title = "+"
+        buttonConfig.baseBackgroundColor = .colorAccent
+        buttonConfig.baseForegroundColor = .white
+        buttonConfig.cornerStyle = .fixed
+        buttonConfig.contentInsets = NSDirectionalEdgeInsets(
+            top: 2, leading: 8, bottom: 2, trailing: 8)
+        addButton.configuration = buttonConfig
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        let rightBarButton = UIBarButtonItem(customView: addButton)
         navigationItem.rightBarButtonItem = rightBarButton
     }
     
     func setupSearchBarView() {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.delegate = self
-//        searchBar.searchBarStyle = .minimal
         searchBar.sizeToFit()
         searchBar.barTintColor = .black
         searchBar.searchTextField.backgroundColor = .colorSecondary
