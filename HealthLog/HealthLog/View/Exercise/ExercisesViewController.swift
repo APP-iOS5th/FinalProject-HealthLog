@@ -2,24 +2,24 @@
 //  ExerciseViewController.swift
 //  HealthLog
 //
-//  Created by Jungjin Park on 8/12/24.
+//  Created by youngwoo_ahn on 8/12/24.
 //
 
+import Combine
 import UIKit
 
 class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Declare
-    
+    private var cancellables = Set<AnyCancellable>()
     let viewModel = ExerciseViewModel()
     
+    let addButton = UIButton(type: .custom)
     let searchBar = UISearchBar()
     let dividerView = UIView()
     let tableView = UITableView()
     
-    // 샘플 데이터
-    var data = ["Apple", "Banana", "Cherry", "Date",]
-    var filteredData: [String] = []
+    var filteredExercises: [Exercise] = []
     
     //MARK: - Init
     
@@ -41,29 +41,43 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         setupSearchBarView()
         setupDivider()
         setupTableView()
+        setupBinding()
     }
     
     // MARK: - Setup
     
     func setupNavigationBar() {
         title = "운동 목록"
-        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
-        let rightBarButton = UIBarButtonItem(
-            barButtonSystemItem: .add, target: self,
-            action: #selector(addButtonTapped)
-        )
+        // MARK: addButton
+        
+        var buttonConfig = UIButton.Configuration.filled()
+        buttonConfig.title = "+"
+        buttonConfig.baseBackgroundColor = .colorAccent
+        buttonConfig.baseForegroundColor = .white
+        buttonConfig.cornerStyle = .fixed
+        buttonConfig.contentInsets = NSDirectionalEdgeInsets(
+            top: 2, leading: 8, bottom: 2, trailing: 8)
+        addButton.configuration = buttonConfig
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        let rightBarButton = UIBarButtonItem(customView: addButton)
         navigationItem.rightBarButtonItem = rightBarButton
     }
     
     func setupSearchBarView() {
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.delegate = self
         searchBar.sizeToFit()
-        searchBar.placeholder = "검색어 입력"
-        searchBar.backgroundColor = .black
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.barTintColor = .black
+        searchBar.searchTextField.backgroundColor = .colorSecondary
+        searchBar.searchTextField.textColor = .white
+        let placeHolder = NSAttributedString(
+            string: "검색어 입력",
+            attributes: [NSAttributedString.Key.foregroundColor:
+                            UIColor.lightGray])
+        searchBar.searchTextField.attributedPlaceholder = placeHolder
         view.addSubview(searchBar)
         
         NSLayoutConstraint.activate([
@@ -79,10 +93,16 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         view.addSubview(dividerView)
         
         NSLayoutConstraint.activate([
-            dividerView.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dividerView.heightAnchor.constraint(equalToConstant: 1)
+            dividerView.topAnchor.constraint(
+                equalTo: searchBar.bottomAnchor),
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1)
         ])
     }
     
@@ -103,27 +123,32 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         ])
     }
     
+    func setupBinding() {
+        // 바인딩 - 검색시 테이블 리로드 실행
+        viewModel.$filteredExercises
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }.store(in: &cancellables)
+    }
+    
     // MARK: - UISearchBarDelegate
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            filteredData = data
-        } else {
-            filteredData = data.filter { $0.lowercased().contains(searchText.lowercased()) }
-        }
-        tableView.reloadData()
+        viewModel.filterExercises(by: searchText)
     }
     
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.exercises.count
+        return viewModel.filteredExercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
-        cell.configure(with: viewModel.exercises[indexPath.row])
+        cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        cell.selectionStyle = .none
         return cell
     }
     
@@ -139,8 +164,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
-        filteredData = data
-        tableView.reloadData()
+        viewModel.filterExercises(by: "")
         searchBar.resignFirstResponder()
     }
     
