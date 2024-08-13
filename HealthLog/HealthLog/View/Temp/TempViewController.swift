@@ -25,27 +25,29 @@ class TempViewController: UIViewController {
         title = "스텝퍼"
         
         // 배경색 변경
-        view.backgroundColor = UIColor(named: "ColorPrimary") // 배경색 테스트
+        view.backgroundColor = UIColor(named: "ColorPrimary")
         
         // Stepper 레이블 설정
         stepperLabel.text = "세트 수"
         stepperLabel.textColor = .white
-        stepperLabel.font = UIFont(name: "Pretendard-Black", size: 14) //폰트 테스트
+        stepperLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
         
         // Stepper 카운트 레이블 설정
         stepperCountLabel.text = "4"
         stepperCountLabel.textColor = .white
-        stepperCountLabel.font = UIFont(name: "Pretendard-Black", size: 14) //폰트 테스트
+        stepperCountLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
         
         // Stepper 설정
         stepper.minimumValue = 1  // 최소값
-        stepper.maximumValue = 6  // 최대값
+        stepper.maximumValue = 10  // 최대값
         stepper.value = 4 // 기본값
         stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
         stepper.layer.cornerRadius = 8
         stepper.backgroundColor = UIColor(named: "ColorAccent")  // 색 적용 테스트
-        
+        stepper.tintColor = .white  // 틴트 컬러 적용 안됨
+
         // 컨테이너 뷰 설정
+        containerView.backgroundColor = UIColor(named: "ColorSecondary")
         containerView.layer.cornerRadius = 10
         containerView.clipsToBounds = true
         
@@ -110,33 +112,55 @@ class TempViewController: UIViewController {
         }
     }
     
-    // 세트 무게, 횟수 입력 뷰
+    // 세트 무게, 횟수 입력 설정
     func createSetInputView(setNumber: Int) -> UIView {
         let setView = UIView()
         
         let setLabel = UILabel()
-        setLabel.text = "세트 \(setNumber)"
+        setLabel.text = "\(setNumber) 세트 "
+        setLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
         setLabel.textColor = .white
         
         let weightTextField = UITextField()
-        weightTextField.backgroundColor = UIColor(named: "ColorASecondary")  // 색 적용 테스트
+        weightTextField.font = UIFont(name: "Pretendard-Medium", size: 14)
+        weightTextField.textColor = .white
+        weightTextField.textAlignment = .center
+        weightTextField.backgroundColor = UIColor(named: "ColorSecondary")
+        weightTextField.layer.cornerRadius = 10
+        
+        // Placeholder 폰트, 색상 변경
         weightTextField.attributedPlaceholder = NSAttributedString(
             string: "무게",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray]
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.systemGray,
+                NSAttributedString.Key.font: UIFont(name: "Pretendard-Medium", size: 14) ?? UIFont.systemFont(ofSize: 14)
+            ]
         )
-
+        
         let weightLabel = UILabel()
         weightLabel.text = "kg"
+        weightLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
         weightLabel.textColor = .white
         
         let repsTextField = UITextField()
-        repsTextField.backgroundColor = UIColor(named: "ColorASecondary")  // 색 적용 테스트
+        repsTextField.font = UIFont(name: "Pretendard-Medium", size: 14)
+        repsTextField.textColor = .white
+        repsTextField.textAlignment = .center
+        repsTextField.backgroundColor = UIColor(named: "ColorSecondary")
+        repsTextField.layer.cornerRadius = 10
+        
+        // Placeholder 폰트, 색상 변경
         repsTextField.attributedPlaceholder = NSAttributedString(
             string: "횟수",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray]
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.systemGray,
+                NSAttributedString.Key.font: UIFont(name: "Pretendard-Medium", size: 14) ?? UIFont.systemFont(ofSize: 14)
+            ]
         )
+        
         let repsLabel = UILabel()
         repsLabel.text = "회"
+        repsLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
         repsLabel.textColor = .white
         
         // setView에 추가
@@ -155,7 +179,7 @@ class TempViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             
-            setView.heightAnchor.constraint(equalToConstant: 50),
+            setView.heightAnchor.constraint(equalToConstant: 35),
 
             setLabel.leadingAnchor.constraint(equalTo: setView.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
