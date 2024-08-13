@@ -9,12 +9,15 @@ import UIKit
 
 class SearchResultCell: UITableViewCell {
     
+    var addButtonTapped: (() -> Void)?
+    
     let addButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("+", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(hexCode: "6500FF")
-        button.layer.cornerRadius = 20
+        let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        button.setImage(plusImage, for: .normal)
+        button.backgroundColor = UIColor(named: "ColorAccent")
+        button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -23,14 +26,19 @@ class SearchResultCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(addButton)
-        contentView.backgroundColor = .gray
+        contentView.backgroundColor = UIColor(named: "ColorSecondary")
+        addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             addButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
-            addButton.widthAnchor.constraint(equalToConstant: 40),
-            addButton.heightAnchor.constraint(equalToConstant: 40)
+            addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
+            addButton.widthAnchor.constraint(equalToConstant: 28),
+            addButton.heightAnchor.constraint(equalToConstant: 28),
         ])
+    }
+    
+    @objc func addTapped() {
+        addButtonTapped?()
     }
     
     required init?(coder: NSCoder) {
