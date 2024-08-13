@@ -26,7 +26,7 @@ class ExerciseListCell: UITableViewCell {
     let bodypartScrollView = UIScrollView()
     let bodypartStackView = UIStackView()
     var bodypartLabels: [CustomBodyPartLabel] = []
-    let descriptionTextView = UITextView()
+    let descriptionTextView = UILabel()
     
     // MARK: - Init
     
@@ -143,8 +143,10 @@ class ExerciseListCell: UITableViewCell {
         exerciseImageView.translatesAutoresizingMaskIntoConstraints = false
         bottomStackView.addArrangedSubview(exerciseImageView)
         NSLayoutConstraint.activate([
-            exerciseImageView.widthAnchor.constraint(equalToConstant: 90),
-            exerciseImageView.heightAnchor.constraint(equalToConstant: 90)
+            exerciseImageView.widthAnchor.constraint(
+                equalToConstant: 90),
+            exerciseImageView.heightAnchor.constraint(
+                equalToConstant: 90),
         ])
         
         // MARK: bottomRightStackView
@@ -152,29 +154,66 @@ class ExerciseListCell: UITableViewCell {
         bottomRightStackView.distribution = .fill
         bottomRightStackView.spacing = 4
         bottomStackView.addArrangedSubview(bottomRightStackView)
+        NSLayoutConstraint.activate([
+            bottomRightStackView.heightAnchor.constraint(
+                equalToConstant: 90),
+            bottomRightStackView.leadingAnchor.constraint(
+                equalTo: exerciseImageView.trailingAnchor),
+            bottomRightStackView.trailingAnchor.constraint(
+                equalTo: bottomStackView.trailingAnchor),
+        ])
         
         // MARK: bodypartScrollView
-        bodypartScrollView.translatesAutoresizingMaskIntoConstraints = false
         bodypartScrollView.showsHorizontalScrollIndicator = false
         bodypartScrollView.showsVerticalScrollIndicator = false
         bodypartScrollView.translatesAutoresizingMaskIntoConstraints = false
         bottomRightStackView.addSubview(bodypartScrollView)
+        NSLayoutConstraint.activate([
+            bodypartScrollView.heightAnchor.constraint(
+                equalToConstant: 30),
+            bodypartScrollView.leadingAnchor.constraint(
+                equalTo: bottomRightStackView.leadingAnchor),
+            bodypartScrollView.trailingAnchor.constraint(
+                equalTo: bottomRightStackView.trailingAnchor),
+        ])
         
         // MARK: bodypartStackView
         bodypartStackView.axis = .horizontal
-        bodypartStackView.distribution = .fill
+        bodypartStackView.distribution = .equalSpacing
         bodypartStackView.spacing = 8
-        bodypartStackView.translatesAutoresizingMaskIntoConstraints = false
         bodypartStackView.clipsToBounds = true
+        bodypartStackView.translatesAutoresizingMaskIntoConstraints = false
         bodypartScrollView.addSubview(bodypartStackView)
+        NSLayoutConstraint.activate([
+            bodypartStackView.topAnchor.constraint(
+                equalTo: bodypartScrollView.topAnchor),
+            bodypartStackView.bottomAnchor.constraint(
+                equalTo: bodypartScrollView.bottomAnchor),
+            bodypartStackView.leadingAnchor.constraint(
+                equalTo: bodypartScrollView.leadingAnchor),
+            bodypartStackView.trailingAnchor.constraint(
+                equalTo: bodypartScrollView.trailingAnchor),
+            bodypartStackView.heightAnchor.constraint(
+                equalTo: bodypartScrollView.heightAnchor)
+        ])
         
         // MARK: descriptionLabel
         descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 14)
         descriptionTextView.backgroundColor = .clear
         descriptionTextView.textColor = .color767676
-        descriptionTextView.isEditable = false
-        descriptionTextView.isScrollEnabled = false
+        descriptionTextView.numberOfLines = 0
         bottomRightStackView.addArrangedSubview(descriptionTextView)
+        
+//        descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 14)
+//        descriptionTextView.backgroundColor = .clear
+//        descriptionTextView.textColor = .color767676
+//        descriptionTextView.isEditable = false
+//        descriptionTextView.isScrollEnabled = false
+//        descriptionTextView.scrollsToTop = false
+//        descriptionTextView.contentInset = UIEdgeInsets.zero
+//        descriptionTextView.showsHorizontalScrollIndicator = false
+//        descriptionTextView.showsVerticalScrollIndicator = false
+//        bottomRightStackView.addArrangedSubview(descriptionTextView)
     }
     
     // MARK: - Configure
