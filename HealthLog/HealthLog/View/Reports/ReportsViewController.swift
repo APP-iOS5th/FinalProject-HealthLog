@@ -9,22 +9,36 @@ import UIKit
 
 class ReportsViewController: UIViewController {
     
-    private var testLabel01: UILabel = {
+    private lazy var titleStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        return stackView
+        
+    }()
+    
+    private lazy var moveToPreviousMonthButton: UIButton = {
+        let button = createMonthButton(action: UIAction {[weak self] _ in
+            self?.didTapPreviousMonth()
+        }, imageName: "chevron.left")
+        return button
+    }()
+    
+    private lazy var titleMonthLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Black", size: 16)
-        label.textColor = UIColor(named: "ColorAccent")
-        label.text = "폰트 테스트: Pretendard-Black"
-        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "2024년 7월 리포트"
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 20)
+        label.textColor = .white
         return label
     }()
     
-    private var testLabel02: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Thin", size: 16)
-        label.textColor = UIColor(named: "ColorAccent")
-        label.text = "폰트 테스트: Pretendard-Thin"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    
+    private lazy var moveToNextMonthButton: UIButton = {
+        let button = createMonthButton(action: UIAction {[weak self] _ in
+            self?.didTapNextMonth()
+        }, imageName: "chevron.right")
+        return button
     }()
     
     
@@ -32,26 +46,66 @@ class ReportsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        //배경색 테스트
-        view.backgroundColor = UIColor(named: "ColorPrimary")
-
+        self.view.backgroundColor = UIColor(named: "ColorPrimary")
         
-        view.addSubview(testLabel01)
-        view.addSubview(testLabel02)
+        titleStackView.addArrangedSubview(moveToPreviousMonthButton)
+        titleStackView.addArrangedSubview(titleMonthLabel)
+        titleStackView.addArrangedSubview(moveToNextMonthButton)
     
+        self.view.addSubview(titleStackView)
         
+        let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            testLabel01.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            testLabel01.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            testLabel02.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            testLabel02.topAnchor.constraint(equalTo: testLabel01.bottomAnchor)
-            
+            titleStackView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            titleStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            titleStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24)
         ])
         
+        
+        
+        setTranslatesAutoresizing()
     }
+    
+    private func createMonthButton(action: UIAction, imageName: String) -> UIButton {
+        let button = UIButton(type: .custom)
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .black)
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: imageName, withConfiguration: symbolConfig)
+        config.baseForegroundColor = .white
+        button.configuration = config
+        
+        button.addAction(action, for: .touchUpInside)
+        return button
+    }
+    
+    // MARK: Set translatesAutoresizingMaskIntoConstraints
+    private func setTranslatesAutoresizing() {
+        titleStackView.translatesAutoresizingMaskIntoConstraints = false
+        moveToPreviousMonthButton.translatesAutoresizingMaskIntoConstraints = false
+        titleMonthLabel.translatesAutoresizingMaskIntoConstraints = false
+        moveToNextMonthButton.translatesAutoresizingMaskIntoConstraints = false
+        
+    }
+    
+    
+    
+    private func didTapPreviousMonth() {
+        print("이전 달로 이동")
+        // TODO: 이전 달로 이동 버튼 구현
+        
+    }
+    
+    private func didTapNextMonth() {
+        print("다음 달로 이동")
+        // TODO: 다음 달로 이동 버튼 구현
+    }
+    
+    
 
 }
+
+
 
 
