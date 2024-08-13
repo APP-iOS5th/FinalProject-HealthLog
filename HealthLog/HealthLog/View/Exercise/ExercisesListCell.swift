@@ -79,12 +79,13 @@ class ExerciseListCell: UITableViewCell {
         ])
         
         // MARK: titleLabel
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
+        titleLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         titleLabel.textColor = .white
         topStackView.addArrangedSubview(titleLabel)
         
         // MARK: detailButton
         detailButton.setTitle("자세히 보기 ❯", for: .normal)
+        detailButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 12)
         detailButton.setTitleColor(.lightGray, for: .normal)
         topStackView.addArrangedSubview(detailButton)
     }
@@ -160,7 +161,7 @@ class ExerciseListCell: UITableViewCell {
         bottomRightStackView.addArrangedSubview(bodypartStackView)
         
         // MARK: descriptionLabel
-        descriptionTextView.font = UIFont.systemFont(ofSize: 14)
+        descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 14)
         descriptionTextView.backgroundColor = .clear
         descriptionTextView.textColor = .color767676
         descriptionTextView.isEditable = false

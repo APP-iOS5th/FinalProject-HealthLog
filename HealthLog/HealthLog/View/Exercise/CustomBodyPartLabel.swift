@@ -26,7 +26,7 @@ class CustomBodyPartLabel: UILabel {
     private func setup() {
         backgroundColor = .colorPrimary
         textColor = .white
-        font = UIFont.systemFont(ofSize: 14)
+        font = UIFont(name: "Pretendard-Medium", size: 12)
         textAlignment = .center
         layer.cornerRadius = 11
         layer.masksToBounds = true
