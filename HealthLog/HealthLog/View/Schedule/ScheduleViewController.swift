@@ -31,10 +31,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "운동 일정"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
-        view.backgroundColor = .systemBackground
-        
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -42,6 +38,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     fileprivate func setupUI() {
+        let titleColor = UIColor.white
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
+        
+        navigationItem.title = "운동 일정"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
+        view.backgroundColor = UIColor(named: "ColorPrimary")
+
         view.addSubview(calendarView)
         view.addSubview(tableView)
         
