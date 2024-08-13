@@ -125,6 +125,7 @@ class TempViewController: UIViewController {
         weightTextField.font = UIFont(name: "Pretendard-Medium", size: 14)
         weightTextField.textColor = .white
         weightTextField.textAlignment = .center
+        weightTextField.keyboardType = .numberPad  // 키보드패드 숫자패드로 변경
         weightTextField.backgroundColor = UIColor(named: "ColorSecondary")
         weightTextField.layer.cornerRadius = 10
         
@@ -146,6 +147,7 @@ class TempViewController: UIViewController {
         repsTextField.font = UIFont(name: "Pretendard-Medium", size: 14)
         repsTextField.textColor = .white
         repsTextField.textAlignment = .center
+        repsTextField.keyboardType = .numberPad  // 키보드패드 숫자패드로 변경
         repsTextField.backgroundColor = UIColor(named: "ColorSecondary")
         repsTextField.layer.cornerRadius = 10
         
