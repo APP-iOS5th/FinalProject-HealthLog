@@ -9,11 +9,14 @@ import UIKit
 
 class SearchResultsViewController: UITableViewController {
     
+    let viewModel = ExerciseViewModel()
+    var onExerciseSelected: ((String) -> Void)?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.register(SearchResultCell.self, forCellReuseIdentifier: "searchResultCell")
-        tableView.backgroundColor = UIColor(hexCode: "1E1E1E")
+        tableView.backgroundColor = UIColor(named: "ColorPrimary")
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -21,13 +24,20 @@ class SearchResultsViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return viewModel.exercises.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultCell", for: indexPath) as! SearchResultCell
-        cell.textLabel?.text = "운동이름"
-        cell.textLabel?.textColor = .white
+        let exercise = viewModel.exercises[indexPath.row]
+        cell.configure(with: exercise)
+        cell.addButtonTapped = { [weak self] in
+            self?.onExerciseSelected?(exercise.name)
+            if let searchController = self?.parent as? UISearchController {
+                searchController.searchBar.text = ""
+            }
+            self?.dismiss(animated: true, completion: nil)
+        }
         return cell
     }
 }
