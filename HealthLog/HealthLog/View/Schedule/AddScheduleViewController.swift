@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddScheduleViewController: UIViewController, UISearchBarDelegate {
+class AddScheduleViewController: UIViewController {
     
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
@@ -19,10 +19,23 @@ class AddScheduleViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         
         self.title = "오늘 할 운동 추가"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissView))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneTapped))
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        self.navigationItem.leftBarButtonItem?.tintColor = .white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any]
+        
+        let leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissView))
+        leftBarButtonItem.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "Pretendard-Semibold", size: 16) as Any,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        
+        let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneTapped))
+        rightBarButtonItem.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "Pretendard-Semibold", size: 16) as Any,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
+        self.navigationItem.rightBarButtonItem?.isHidden = true
+
         
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exerciseName in
@@ -34,7 +47,6 @@ class AddScheduleViewController: UIViewController, UISearchBarDelegate {
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.hidesNavigationBarDuringPresentation = false
-        searchController.searchBar.delegate = self
         
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
@@ -71,7 +83,7 @@ class AddScheduleViewController: UIViewController, UISearchBarDelegate {
         getRoutineButton.setTitle("루틴 불러오기", for: .normal)
         getRoutineButton.backgroundColor = UIColor(named: "ColorAccent")
         getRoutineButton.layer.cornerRadius = 12
-        getRoutineButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        getRoutineButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         getRoutineButton.tintColor = .white
         getRoutineButton.translatesAutoresizingMaskIntoConstraints = false
         getRoutineButton.addTarget(self, action: #selector(routineButtonTapped), for: .touchUpInside)
@@ -91,6 +103,8 @@ class AddScheduleViewController: UIViewController, UISearchBarDelegate {
     func addSelectedExercise(_ exerciseName: String) {
         selectedExercises.append(exerciseName)
         tableView.reloadData()
+        // 세트횟수무게 입력해야 보이게 처리해줘야 함~
+        navigationItem.rightBarButtonItem?.isHidden = false
     }
     
     func setupConstraints() {
@@ -129,17 +143,6 @@ class AddScheduleViewController: UIViewController, UISearchBarDelegate {
     
     @objc func doneTapped() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("typing~")
-        navigationItem.rightBarButtonItem?.isHidden = true
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("typing done~")
-        navigationItem.rightBarButtonItem?.isHidden = false
-        // 사용자가 모든 정보 입력했을 때 누를 수 있도록 수정필요
     }
 }
 
