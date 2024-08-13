@@ -44,7 +44,13 @@ class TempViewController: UIViewController {
         stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
         stepper.layer.cornerRadius = 8
         stepper.backgroundColor = UIColor(named: "ColorAccent")  // 색 적용 테스트
-        stepper.tintColor = .white  // 틴트 컬러 적용 안됨
+        
+        // Stepper의 + 와 - 버튼의 색상 변경
+        let config = UIImage.SymbolConfiguration(scale: .medium)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        let minusImage = UIImage(systemName: "minus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        stepper.setIncrementImage(plusImage, for: .normal)
+        stepper.setDecrementImage(minusImage, for: .normal)
 
         // 컨테이너 뷰 설정
         containerView.backgroundColor = UIColor(named: "ColorSecondary")
