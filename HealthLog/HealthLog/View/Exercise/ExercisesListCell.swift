@@ -23,6 +23,7 @@ class ExerciseListCell: UITableViewCell {
     let bottomStackView = UIStackView()
     var exerciseImageView = UIImageView()
     let bottomRightStackView = UIStackView()
+    let bodypartScrollView = UIScrollView()
     let bodypartStackView = UIStackView()
     var bodypartLabels: [CustomBodyPartLabel] = []
     let descriptionTextView = UITextView()
@@ -152,13 +153,20 @@ class ExerciseListCell: UITableViewCell {
         bottomRightStackView.spacing = 4
         bottomStackView.addArrangedSubview(bottomRightStackView)
         
+        // MARK: bodypartScrollView
+        bodypartScrollView.translatesAutoresizingMaskIntoConstraints = false
+        bodypartScrollView.showsHorizontalScrollIndicator = false
+        bodypartScrollView.showsVerticalScrollIndicator = false
+        bodypartScrollView.translatesAutoresizingMaskIntoConstraints = false
+        bottomRightStackView.addSubview(bodypartScrollView)
+        
         // MARK: bodypartStackView
         bodypartStackView.axis = .horizontal
         bodypartStackView.distribution = .fill
         bodypartStackView.spacing = 8
         bodypartStackView.translatesAutoresizingMaskIntoConstraints = false
         bodypartStackView.clipsToBounds = true
-        bottomRightStackView.addArrangedSubview(bodypartStackView)
+        bodypartScrollView.addSubview(bodypartStackView)
         
         // MARK: descriptionLabel
         descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 14)
