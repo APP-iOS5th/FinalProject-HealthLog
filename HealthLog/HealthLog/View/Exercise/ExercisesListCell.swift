@@ -169,12 +169,10 @@ class ExerciseListCell: UITableViewCell {
         bodypartScrollView.translatesAutoresizingMaskIntoConstraints = false
         bottomRightStackView.addSubview(bodypartScrollView)
         NSLayoutConstraint.activate([
-            bodypartScrollView.heightAnchor.constraint(
-                equalToConstant: 30),
-            bodypartScrollView.leadingAnchor.constraint(
-                equalTo: bottomRightStackView.leadingAnchor),
-            bodypartScrollView.trailingAnchor.constraint(
-                equalTo: bottomRightStackView.trailingAnchor),
+            bodypartScrollView.topAnchor.constraint(equalTo: bottomRightStackView.topAnchor),
+            bodypartScrollView.leadingAnchor.constraint(equalTo: bottomRightStackView.leadingAnchor),
+            bodypartScrollView.trailingAnchor.constraint(equalTo: bottomRightStackView.trailingAnchor),
+            bodypartScrollView.heightAnchor.constraint(equalToConstant: 30)
         ])
         
         // MARK: bodypartStackView
