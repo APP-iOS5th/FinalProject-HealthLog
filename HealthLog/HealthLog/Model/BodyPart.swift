@@ -23,11 +23,18 @@ enum BodyPart: String, PersistableEnum {
     case other = "기타"
 }
 
-//class BodyPart: Object {
-//    @Persisted(primaryKey: true) var name: BodyPartType
-//    
-//    convenience init(name: BodyPartType) {
-//        self.init()
-//        self.name = name
-//    }
-//}
+enum BodyPartOption {
+    case all
+    case bodyPart(BodyPart)
+    
+    var name: String {
+        switch self {
+            case .all: return "전체"
+            case .bodyPart(let bodyPart): return bodyPart.rawValue
+        }
+    }
+    
+    static var allName: [String] {
+        return [BodyPartOption.all.name] + BodyPart.allCases.map { $0.rawValue }
+    }
+}
