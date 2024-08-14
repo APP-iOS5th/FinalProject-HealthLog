@@ -134,6 +134,10 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
     
     // MARK: - UISearchBarDelegate
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.filterExercises(by: searchText)
     }
