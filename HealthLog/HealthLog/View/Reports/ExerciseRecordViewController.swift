@@ -14,8 +14,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorColor = UIColor(named: "Color525252")
-//        tableView.separatorStyle = .singleLine
-//        tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         return tableView
     }()
     
@@ -31,6 +29,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.delegate = self
         
         exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
+        exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
+        exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
         
         self.view.addSubview(exerciseRecordTableView)
         
@@ -60,15 +60,67 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        4
+        switch section {
+        case 0:
+            return 1
+        case 1:
+            return 4
+        case 2:
+            return 2
+        case 3:
+            return 2
+        default:
+            return 0
+        }
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
-        cell.backgroundColor = UIColor(named: "ColorSecondary")
-        cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
         
-        return cell
+        switch indexPath.section {
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
+            cell.backgroundColor = UIColor(named: "ColorSecondary")
+            cell.selectionStyle = .none
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+            
+            return cell
+            
+        case 2:
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "mostPerform", for: indexPath) as! MostPerformedTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                return cell
+            }
+        default :
+            let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
+            cell.backgroundColor = UIColor(named: "ColorSecondary")
+            cell.selectionStyle = .none
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+            
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 2:
+            if indexPath.row == 0 {
+                return 42
+            } else {
+                return 80
+            }
+            
+        default:
+            return 40
+        }
     }
 }

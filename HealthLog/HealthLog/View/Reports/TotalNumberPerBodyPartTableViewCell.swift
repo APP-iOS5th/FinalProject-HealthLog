@@ -65,15 +65,11 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         label1.text = "test label 1"
         let label2 = UILabel()
         label2.text = "test label 2"
-        let label3 = UILabel()
-        label3.text = "test label 3"
-        let label4 = UILabel()
-        label4.text = "test label 4"
+        
         
         stackView.addArrangedSubview(label1)
         stackView.addArrangedSubview(label2)
-        stackView.addArrangedSubview(label3)
-        stackView.addArrangedSubview(label4)
+
         
         return stackView
     }()
