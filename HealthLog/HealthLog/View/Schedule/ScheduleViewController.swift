@@ -87,7 +87,22 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
         
         if todaySchedule == nil {
-            // no today schedule
+            let exercises = realm.objects(Exercise.self)
+            let scheduleExerciseSet1 = ScheduleExerciseSet(order: 1, weight: 10, reps: 10, isCompleted: true)
+            let scheduleExerciseSet2 = ScheduleExerciseSet(order: 2, weight: 11, reps: 10, isCompleted: true)
+            let scheduleExerciseSet3 = ScheduleExerciseSet(order: 3, weight: 12, reps: 10, isCompleted: false)
+            let scheduleExerciseSet4 = ScheduleExerciseSet(order: 1, weight: 10, reps: 12, isCompleted: true)
+            let scheduleExerciseSet5 = ScheduleExerciseSet(order: 2, weight: 12, reps: 12, isCompleted: false)
+            let scheduleExerciseSet6 = ScheduleExerciseSet(order: 3, weight: 14, reps: 12, isCompleted: false)
+            
+            let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
+            let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
+            
+            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.chest), step: 6)
+            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.triceps), step: 3)
+            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.shoulders), step: 3)
+            
+            todaySchedule = Schedule(date: Date(), exercises: [scheduleExercise1, scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
         }
     }
     
@@ -150,14 +165,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return todaySchedule?.exercises.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ExerciseCheckCell.identifier, for: indexPath) as! ExerciseCheckCell
         
-        if let schedule = todaySchedule?.exercises[indexPath.row] {
-            cell.configure(with: schedule)
+        if let scheduleExercise = todaySchedule?.exercises[indexPath.row] {
+            cell.configure(with: scheduleExercise)
         }
         return cell
     }
