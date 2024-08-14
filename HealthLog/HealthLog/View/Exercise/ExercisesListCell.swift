@@ -227,7 +227,7 @@ class ExerciseListCell: UITableViewCell {
         bodypartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         for part in exercise.bodyParts {
             let label = CustomBodyPartLabel()
-            label.text = part.name.rawValue
+            label.text = part.rawValue
             bodypartStackView.addArrangedSubview(label)
         }
         
