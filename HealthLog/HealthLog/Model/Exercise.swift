@@ -14,7 +14,7 @@ class Exercise: Object {
     @Persisted var name: String // 운동 이름
     @Persisted var bodyParts: List<BodyPart>  // 운동 부위 - 부위 이름
     @Persisted var descriptionText: String = "" // 운동 설명 (옵션)
-    @Persisted var image: Data? = Data() // 운동 이미지 (옵션)
+    @Persisted var image: Data? = nil // 운동 이미지 (옵션)
     @Persisted var totalReps: Int = 0 // 총 운동 횟수 (옵션)
     @Persisted var recentWeight: Int = 0 // 최근 무게 (옵션)
     @Persisted var maxWeight: Int = 0 // 최대 무게 (옵션)

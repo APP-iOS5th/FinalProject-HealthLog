@@ -8,18 +8,17 @@
 import Combine
 import UIKit
 
-class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
-    
+class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDataSource, UITableViewDelegate {
+
     // MARK: - Declare
+    
     private var cancellables = Set<AnyCancellable>()
-    let viewModel = ExerciseViewModel()
+    private let viewModel = ExerciseViewModel()
+    private let searchController = UISearchController(searchResultsController: nil)
     
-    let addButton = UIButton(type: .custom)
-    let searchBar = UISearchBar()
-    let dividerView = UIView()
-    let tableView = UITableView()
-    
-    var filteredExercises: [Exercise] = []
+    private let addButton = UIButton(type: .custom)
+    private let dividerView = UIView()
+    private let tableView = UITableView()
     
     //MARK: - Init
     
@@ -38,6 +37,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         view.backgroundColor = .black
         
         setupNavigationBar()
+        setupSearchController()
         setupSearchBarView()
         setupDivider()
         setupTableView()
@@ -66,25 +66,49 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         navigationItem.rightBarButtonItem = rightBarButton
     }
     
-    func setupSearchBarView() {
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.delegate = self
-        searchBar.sizeToFit()
-        searchBar.barTintColor = .black
-        searchBar.searchTextField.backgroundColor = .colorSecondary
-        searchBar.searchTextField.textColor = .white
-        let placeHolder = NSAttributedString(
-            string: "검색어 입력",
-            attributes: [NSAttributedString.Key.foregroundColor:
-                            UIColor.lightGray])
-        searchBar.searchTextField.attributedPlaceholder = placeHolder
-        view.addSubview(searchBar)
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.delegate = self
+        searchController.searchBar.scopeButtonTitles = BodyPartOption.allName
+        navigationItem.searchController = searchController
+//        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        searchController.searchBar.showsScopeBar = true
+//        tableView.tableHeaderView = searchController.searchBar
         
-        NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+        let searchBar = searchController.searchBar
+        searchBar.delegate = self
+        searchBar.scopeButtonTitles = BodyPartOption.allName
+        searchBar.showsScopeBar = true
+        let placeHolder = NSAttributedString(
+            string: "운동명 입력",
+            attributes: [NSAttributedString.Key.foregroundColor:
+                            UIColor.lightGray]
+        )
+        searchBar.searchTextField.attributedPlaceholder = placeHolder
+        searchBar.searchTextField.textColor = .white
+    }
+    
+    func setupSearchBarView() {
+//        searchBar.translatesAutoresizingMaskIntoConstraints = false
+//        searchBar.delegate = self
+//        searchBar.sizeToFit()
+//        searchBar.barTintColor = .black
+//        searchBar.searchTextField.backgroundColor = .colorSecondary
+//        searchBar.searchTextField.textColor = .white
+//        let placeHolder = NSAttributedString(
+//            string: "검색어 입력",
+//            attributes: [NSAttributedString.Key.foregroundColor:
+//                            UIColor.lightGray])
+//        searchBar.searchTextField.attributedPlaceholder = placeHolder
+//        view.addSubview(searchBar)
+//        
+//        NSLayoutConstraint.activate([
+//            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//        ])
     }
     
     func setupDivider() {
@@ -94,7 +118,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(
-                equalTo: searchBar.bottomAnchor),
+                equalTo: view.safeAreaLayoutGuide.topAnchor),
             dividerView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
                 constant: 10),
@@ -128,19 +152,41 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         viewModel.$filteredExercises
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
+                
+                print("tableView - reload")
                 self?.tableView.reloadData()
             }.store(in: &cancellables)
     }
     
     // MARK: - UISearchBarDelegate
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.filterExercises(by: searchText)
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        let selectedOption: BodyPartOption
+        if selectedScope == 0 {
+            selectedOption = .all
+        } else {
+            let bodyPart = BodyPart.allCases[selectedScope - 1]
+            selectedOption = .bodyPart(bodyPart)
+        }
+        print("searchBar selectedScope - \(selectedOption.name)")
+        viewModel.selectedOption = selectedOption
+    }
+    
+    // MARK: - UISearchResultsUpdating
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let searchText = searchController.searchBar.text else { return }
+        viewModel.updateSearchText(to: searchText)
     }
     
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("tableView Count - \(viewModel.filteredExercises.count)")
         return viewModel.filteredExercises.count
     }
     
@@ -162,10 +208,10 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UITableVie
         navigationController?.pushViewController(vc, animated: false)
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        viewModel.filterExercises(by: "")
-        searchBar.resignFirstResponder()
-    }
+//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        searchBar.text = ""
+//        viewModel.filterExercises(by: "")
+//        searchBar.resignFirstResponder()
+//    }
     
 }
