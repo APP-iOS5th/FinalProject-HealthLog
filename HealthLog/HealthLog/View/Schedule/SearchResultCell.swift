@@ -12,6 +12,7 @@ class SearchResultCell: UITableViewCell {
     var addButtonTapped: (() -> Void)?
     
     let titleLabel = UILabel()
+    
     let addButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
@@ -31,7 +32,11 @@ class SearchResultCell: UITableViewCell {
         contentView.addSubview(addButton)
         contentView.backgroundColor = UIColor(named: "ColorSecondary")
         addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
-        
+        backgroundColor = .clear
+        contentView.backgroundColor = .colorSecondary
+        contentView.layer.cornerRadius = 12
+        contentView.layer.masksToBounds = true
+  
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             addButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -41,9 +46,12 @@ class SearchResultCell: UITableViewCell {
         ])
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 13, right: 0))
+    }
+    
     @objc func addTapped() {
-        // 뭐든 추가되었다고 알려주는 기능이 필요할 듯
-
         addButtonTapped?()
     }
     

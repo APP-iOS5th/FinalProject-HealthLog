@@ -7,30 +7,72 @@
 
 import UIKit
 
-class SearchResultsViewController: UITableViewController {
+class SearchResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let viewModel = ExerciseViewModel()
     var onExerciseSelected: ((String) -> Void)?
     
+    let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+    
+    let dividerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(named: "ColorSecondary")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupTableView()
+        setupDividerView()
+        setupConstraints()
+    }
+    
+    private func setupDividerView() {
+        view.addSubview(dividerView)
+    }
+    
+    private func setupTableView() {
         tableView.register(SearchResultCell.self, forCellReuseIdentifier: "searchResultCell")
-        tableView.backgroundColor = UIColor(named: "ColorPrimary")
+        tableView.backgroundColor = .colorPrimary
+        tableView.separatorStyle = .none
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = false
+        view.addSubview(tableView)
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        107
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            dividerView.heightAnchor.constraint(equalToConstant: 1),
+            
+            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.exercises.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 117
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultCell", for: indexPath) as! SearchResultCell
         let exercise = viewModel.exercises[indexPath.row]
         cell.configure(with: exercise)
+        cell.selectionStyle = .none
         cell.addButtonTapped = { [weak self] in
             self?.onExerciseSelected?(exercise.name)
             if let searchController = self?.parent as? UISearchController {
