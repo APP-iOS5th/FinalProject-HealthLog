@@ -39,7 +39,6 @@ class RoutineAddExerciseViewController: UIViewController {
         searchBar.placeholder = "운동명 검색"
         searchBar.searchBarStyle = .minimal
         searchBar.tintColor = .white
-        searchBar.showsCancelButton = true
         searchBar.barTintColor = .white
         searchBar.delegate = self
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -138,10 +137,17 @@ extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewData
 extension RoutineAddExerciseViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        tableView.isHidden = false
+        self.tableView.isHidden = false
+        self.searchBar.setShowsCancelButton(true, animated: true)
+
+        tableView.reloadData()
     }
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        tableView.isHidden = true
+        self.tableView.isHidden = true
+        
+        self.searchBar.setShowsCancelButton(false, animated: true)
+
+
     }
     
     
