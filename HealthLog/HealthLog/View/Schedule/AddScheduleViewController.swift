@@ -12,14 +12,26 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    
     var selectedExercises = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigationBar()
+        setupSearchController()
+        setupDividerView()
+        setupTableView()
+        setupConstraints()
+        
+        view.backgroundColor = .colorPrimary
+    }
+    
+    private func setupNavigationBar() {
         self.title = "오늘 할 운동 추가"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any]
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.white,
+            .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
+        ]
         
         let leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissView))
         leftBarButtonItem.setTitleTextAttributes([
@@ -35,8 +47,9 @@ class AddScheduleViewController: UIViewController {
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
         self.navigationItem.rightBarButtonItem?.isHidden = true
-
-        
+    }
+    
+    private func setupSearchController() {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exerciseName in
                 self?.addSelectedExercise(exerciseName)
@@ -46,42 +59,41 @@ class AddScheduleViewController: UIViewController {
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
         
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
-                leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
                 leftView.tintColor = .white
             }
         }
         
         navigationItem.searchController = searchController
         definesPresentationContext = true
-        
-        dividerView.backgroundColor = UIColor(named: "ColorSecondary")
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(dividerView)
-        
-        setupTableView()
-        setupConstraints()
-        
-        view.backgroundColor = UIColor(named: "ColorPrimary")
     }
     
-    func setupTableView() {
+    private func setupDividerView() {
+        dividerView.backgroundColor = .colorSecondary
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(dividerView)
+    }
+    
+    private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
+        //tableView.rowHeight = UITableView.automaticDimension
+        //tableView.estimatedRowHeight = 340
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
         headerView.backgroundColor = .clear
         
         let getRoutineButton = UIButton(type: .system)
         getRoutineButton.setTitle("루틴 불러오기", for: .normal)
-        getRoutineButton.backgroundColor = UIColor(named: "ColorAccent")
+        getRoutineButton.backgroundColor = .colorAccent
         getRoutineButton.layer.cornerRadius = 12
         getRoutineButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         getRoutineButton.tintColor = .white
@@ -91,7 +103,7 @@ class AddScheduleViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             getRoutineButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
-            getRoutineButton.topAnchor.constraint(equalTo: headerView.topAnchor),
+            getRoutineButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 13),
             getRoutineButton.widthAnchor.constraint(equalToConstant: 345),
             getRoutineButton.heightAnchor.constraint(equalToConstant: 44),
         ])
@@ -100,21 +112,14 @@ class AddScheduleViewController: UIViewController {
         view.addSubview(tableView)
     }
     
-    func addSelectedExercise(_ exerciseName: String) {
-        selectedExercises.append(exerciseName)
-        tableView.reloadData()
-        // 세트횟수무게 입력해야 보이게 처리해줘야 함~
-        navigationItem.rightBarButtonItem?.isHidden = false
-    }
-    
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
             
-            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
+            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -144,6 +149,12 @@ class AddScheduleViewController: UIViewController {
     @objc func doneTapped() {
         navigationController?.popViewController(animated: true)
     }
+    
+    func addSelectedExercise(_ exerciseName: String) {
+        selectedExercises.append(exerciseName)
+        tableView.reloadData()
+        navigationItem.rightBarButtonItem?.isHidden = false
+    }
 }
 
 extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource {
@@ -152,15 +163,15 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        307
+        return 310
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath)
-        cell.textLabel?.text = selectedExercises[indexPath.row]
-        cell.textLabel?.textColor = .white
-        cell.selectionStyle = UITableViewCell.SelectionStyle.none
-        cell.backgroundColor = UIColor(named: "ColorSecondary")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
+        let exerciseName = selectedExercises[indexPath.row]
+        cell.configure(with: exerciseName)
+        cell.selectionStyle = .none
+        cell.backgroundColor = .clear
         return cell
     }
 }
