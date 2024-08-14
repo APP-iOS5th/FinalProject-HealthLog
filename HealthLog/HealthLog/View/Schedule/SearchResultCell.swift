@@ -40,7 +40,7 @@ class SearchResultCell: UITableViewCell {
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
         let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
         button.setImage(plusImage, for: .normal)
-        button.backgroundColor = UIColor(named: "ColorAccent")
+        button.backgroundColor = .colorAccent
         button.layer.cornerRadius = 8
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

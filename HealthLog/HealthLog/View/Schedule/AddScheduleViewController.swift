@@ -23,7 +23,7 @@ class AddScheduleViewController: UIViewController {
         setupTableView()
         setupConstraints()
         
-        view.backgroundColor = UIColor(named: "ColorPrimary")
+        view.backgroundColor = .colorPrimary
     }
     
     private func setupNavigationBar() {
@@ -73,7 +73,7 @@ class AddScheduleViewController: UIViewController {
     }
     
     private func setupDividerView() {
-        dividerView.backgroundColor = UIColor(named: "ColorSecondary")
+        dividerView.backgroundColor = .colorSecondary
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dividerView)
     }
@@ -85,6 +85,8 @@ class AddScheduleViewController: UIViewController {
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
+        //tableView.rowHeight = UITableView.automaticDimension
+        //tableView.estimatedRowHeight = 340
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
         headerView.backgroundColor = .clear
@@ -161,15 +163,15 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 307
+        return 310
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath)
-        cell.textLabel?.text = selectedExercises[indexPath.row]
-        cell.textLabel?.textColor = .white
+        let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
+        let exerciseName = selectedExercises[indexPath.row]
+        cell.configure(with: exerciseName)
         cell.selectionStyle = .none
-        cell.backgroundColor = UIColor(named: "ColorSecondary")
+        cell.backgroundColor = .clear
         return cell
     }
 }

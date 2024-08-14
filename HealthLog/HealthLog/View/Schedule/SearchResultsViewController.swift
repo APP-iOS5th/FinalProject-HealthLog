@@ -20,7 +20,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     let dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "ColorSecondary")
+        view.backgroundColor = .colorSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
