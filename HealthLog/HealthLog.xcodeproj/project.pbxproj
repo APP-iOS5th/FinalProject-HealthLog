@@ -52,17 +52,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-
 		7590C0052C6AF94C004CB285 /* Embed Frameworks */ = {
-
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-
 				7590C0042C6AF94C004CB285 /* RealmSwift in Embed Frameworks */,
-
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,9 +260,7 @@
 				1894012C2C528B2000533E0A /* Sources */,
 				1894012D2C528B2000533E0A /* Frameworks */,
 				1894012E2C528B2000533E0A /* Resources */,
-
 				7590C0052C6AF94C004CB285 /* Embed Frameworks */,
-
 			);
 			buildRules = (
 			);
