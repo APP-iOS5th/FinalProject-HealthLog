@@ -8,8 +8,9 @@
 import UIKit
 
 class RoutineAddExerciseViewController: UIViewController {
-    var data = ["Apple", "Banana", "Cherry", "Date", "Fig", "Grape"]
-    var filteredData: [String]!
+    
+    let viewModel = ExerciseViewModel()
+    
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -21,13 +22,13 @@ class RoutineAddExerciseViewController: UIViewController {
     }()
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = UIColor(named: "ColorPrimary")
+        tableView.backgroundColor = .colorPrimary
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(RoutineExerciseListTableViewCell.self, forCellReuseIdentifier: RoutineExerciseListTableViewCell.cellId)
         return tableView
         
     }()
@@ -69,7 +70,6 @@ class RoutineAddExerciseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addExercise")
-        filteredData = data
         setupUI()
     }
     
@@ -111,15 +111,24 @@ class RoutineAddExerciseViewController: UIViewController {
 }
 
 extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 107
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredData.count
+        return viewModel.filteredExercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = filteredData[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
+        
+                cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        cell.selectionStyle = .none
         return cell
     }
+    
+   
     
     
     
@@ -137,18 +146,14 @@ extension RoutineAddExerciseViewController: UISearchBarDelegate {
     
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            filteredData = data
-        } else {
-            filteredData = data.filter { $0.lowercased().contains(searchText.lowercased()) }
-        }
+        viewModel.filterExercises(by: searchText)
         tableView.reloadData()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
-        filteredData = data
+        viewModel.filterExercises(by: "")
         tableView.reloadData()
     }
 
