@@ -7,7 +7,7 @@
 
 import RealmSwift
 
-enum BodyPartType: String, PersistableEnum {
+enum BodyPart: String, PersistableEnum {
     case chest = "가슴"
     case back = "등"
     case shoulders = "어깨"
@@ -23,11 +23,11 @@ enum BodyPartType: String, PersistableEnum {
     case other = "기타"
 }
 
-class BodyPart: Object {
-    @Persisted(primaryKey: true) var name: BodyPartType
-    
-    convenience init(name: BodyPartType) {
-        self.init()
-        self.name = name
-    }
-}
+//class BodyPart: Object {
+//    @Persisted(primaryKey: true) var name: BodyPartType
+//    
+//    convenience init(name: BodyPartType) {
+//        self.init()
+//        self.name = name
+//    }
+//}
