@@ -53,7 +53,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
             dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
             
-            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13),
+            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -65,7 +65,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 117
+        return 120
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
