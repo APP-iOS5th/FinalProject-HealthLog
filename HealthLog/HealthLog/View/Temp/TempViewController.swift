@@ -25,17 +25,17 @@ class TempViewController: UIViewController {
         title = "스텝퍼"
         
         // 배경색 변경
-        view.backgroundColor = UIColor(named: "ColorPrimary")
+        view.backgroundColor = .colorPrimary
         
         // Stepper 레이블 설정
         stepperLabel.text = "세트 수"
         stepperLabel.textColor = .white
-        stepperLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
-        
+        stepperLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+
         // Stepper 카운트 레이블 설정
         stepperCountLabel.text = "4"
         stepperCountLabel.textColor = .white
-        stepperCountLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
+        stepperCountLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         
         // Stepper 설정
         stepper.minimumValue = 1  // 최소값
@@ -43,7 +43,7 @@ class TempViewController: UIViewController {
         stepper.value = 4 // 기본값
         stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
         stepper.layer.cornerRadius = 8
-        stepper.backgroundColor = UIColor(named: "ColorAccent")  // 색 적용 테스트
+        stepper.backgroundColor = .colorAccent
         
         // Stepper의 + 와 - 버튼의 색상 변경
         let config = UIImage.SymbolConfiguration(scale: .medium)
@@ -53,7 +53,7 @@ class TempViewController: UIViewController {
         stepper.setDecrementImage(minusImage, for: .normal)
 
         // 컨테이너 뷰 설정
-        containerView.backgroundColor = UIColor(named: "ColorSecondary")
+        containerView.backgroundColor = .colorSecondary
         containerView.layer.cornerRadius = 10
         containerView.clipsToBounds = true
         
@@ -124,15 +124,15 @@ class TempViewController: UIViewController {
         
         let setLabel = UILabel()
         setLabel.text = "\(setNumber) 세트 "
-        setLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
+        setLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         setLabel.textColor = .white
         
         let weightTextField = UITextField()
-        weightTextField.font = UIFont(name: "Pretendard-Medium", size: 14)
+        weightTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightTextField.textColor = .white
         weightTextField.textAlignment = .center
         weightTextField.keyboardType = .numberPad  // 키보드패드 숫자패드로 변경
-        weightTextField.backgroundColor = UIColor(named: "ColorSecondary")
+        weightTextField.backgroundColor = .colorSecondary
         weightTextField.layer.cornerRadius = 10
         
         // Placeholder 폰트, 색상 변경
@@ -140,21 +140,21 @@ class TempViewController: UIViewController {
             string: "무게",
             attributes: [
                 NSAttributedString.Key.foregroundColor: UIColor.systemGray,
-                NSAttributedString.Key.font: UIFont(name: "Pretendard-Medium", size: 14) ?? UIFont.systemFont(ofSize: 14)
+                NSAttributedString.Key.font: UIFont.font(.pretendardMedium, ofSize: 14)
             ]
         )
         
         let weightLabel = UILabel()
         weightLabel.text = "kg"
-        weightLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightLabel.textColor = .white
         
         let repsTextField = UITextField()
-        repsTextField.font = UIFont(name: "Pretendard-Medium", size: 14)
+        repsTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsTextField.textColor = .white
         repsTextField.textAlignment = .center
         repsTextField.keyboardType = .numberPad  // 키보드패드 숫자패드로 변경
-        repsTextField.backgroundColor = UIColor(named: "ColorSecondary")
+        repsTextField.backgroundColor = .colorSecondary
         repsTextField.layer.cornerRadius = 10
         
         // Placeholder 폰트, 색상 변경
@@ -162,13 +162,13 @@ class TempViewController: UIViewController {
             string: "횟수",
             attributes: [
                 NSAttributedString.Key.foregroundColor: UIColor.systemGray,
-                NSAttributedString.Key.font: UIFont(name: "Pretendard-Medium", size: 14) ?? UIFont.systemFont(ofSize: 14)
+                NSAttributedString.Key.font: UIFont.font(.pretendardMedium, ofSize: 14)
             ]
         )
         
         let repsLabel = UILabel()
         repsLabel.text = "회"
-        repsLabel.font = UIFont(name: "Pretendard-Medium", size: 14)
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.textColor = .white
         
         // setView에 추가
@@ -203,7 +203,7 @@ class TempViewController: UIViewController {
             repsTextField.leadingAnchor.constraint(equalTo: weightLabel.trailingAnchor, constant: 38),
             repsTextField.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             repsTextField.widthAnchor.constraint(equalToConstant: 58),
-            repsTextField.heightAnchor.constraint(equalToConstant: 35), 
+            repsTextField.heightAnchor.constraint(equalToConstant: 35),
             
             repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
             repsLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
