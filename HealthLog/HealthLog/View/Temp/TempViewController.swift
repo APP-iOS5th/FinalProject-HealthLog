@@ -194,14 +194,16 @@ class TempViewController: UIViewController {
             
             weightTextField.leadingAnchor.constraint(equalTo: setLabel.trailingAnchor, constant: 45),
             weightTextField.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
-            weightTextField.widthAnchor.constraint(equalToConstant: 60),
+            weightTextField.widthAnchor.constraint(equalToConstant: 58),
+            weightTextField.heightAnchor.constraint(equalToConstant: 35),
             
             weightLabel.leadingAnchor.constraint(equalTo: weightTextField.trailingAnchor, constant: 8),
             weightLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             
             repsTextField.leadingAnchor.constraint(equalTo: weightLabel.trailingAnchor, constant: 38),
             repsTextField.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
-            repsTextField.widthAnchor.constraint(equalToConstant: 60),
+            repsTextField.widthAnchor.constraint(equalToConstant: 58),
+            repsTextField.heightAnchor.constraint(equalToConstant: 35), 
             
             repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
             repsLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
