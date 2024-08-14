@@ -63,6 +63,16 @@ class ExerciseViewModel: ObservableObject {
         .store(in: &cancellables)
     }
     
+    func filterExercises(by searchText: String) {
+        if searchText.isEmpty {
+            filteredExercises = exercises
+        } else {
+            filteredExercises = exercises.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
     private func filterExercises() {
         // 검색어와 부위를 기반으로 운동리스트를 필터링
         filteredExercises = exercises.filter { exercise in

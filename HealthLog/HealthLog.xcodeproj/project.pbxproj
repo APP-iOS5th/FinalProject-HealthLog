@@ -61,7 +61,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				7590C0042C6AF94C004CB285 /* RealmSwift in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,7 +91,7 @@
 		1894013F2C528B2100533E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddNameViewController.swift; sourceTree = "<group>"; };
-		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
+		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/View/Extension/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIFont.swift"; sourceTree = "<group>"; };
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
 		4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineExerciseListTableViewCell.swift; sourceTree = "<group>"; };
@@ -132,12 +131,8 @@
 		184A589E2C69E42B009F2848 /* Reports */ = {
 			isa = PBXGroup;
 			children = (
-				7566B3232C69C4E300BDF142 /* ReportsViewController.swift */,
-				184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */,
-				184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */,
-				184A58BC2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift */,
-				184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */,
-				184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */,
+				CEE623B82C6CAACC00863699 /* ViewController */,
+				CEE623B72C6CAA9A00863699 /* TableCell */,
 			);
 			path = Reports;
 			sourceTree = "<group>";
@@ -193,16 +188,12 @@
 		7566B31F2C69AC8300BDF142 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CEE623BA2C6CAAF600863699 /* Extension */,
+				CEE623B92C6CAAEB00863699 /* Routine */,
 				CEE29BA52C6A026D00D82571 /* Temp */,
 				CEE29B9E2C69D43000D82571 /* Exercise */,
 				184A589E2C69E42B009F2848 /* Reports */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
-				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
-				4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */,
-				4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */,
-				4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */,
-				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
-				4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -236,6 +227,46 @@
 				CEE29BA32C6A01F100D82571 /* TempViewController.swift */,
 			);
 			path = Temp;
+			sourceTree = "<group>";
+		};
+		CEE623B72C6CAA9A00863699 /* TableCell */ = {
+			isa = PBXGroup;
+			children = (
+				184A58BC2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift */,
+				184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */,
+				184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */,
+			);
+			path = TableCell;
+			sourceTree = "<group>";
+		};
+		CEE623B82C6CAACC00863699 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				7566B3232C69C4E300BDF142 /* ReportsViewController.swift */,
+				184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */,
+				184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		CEE623B92C6CAAEB00863699 /* Routine */ = {
+			isa = PBXGroup;
+			children = (
+				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
+				4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */,
+				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
+				4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */,
+			);
+			path = Routine;
+			sourceTree = "<group>";
+		};
+		CEE623BA2C6CAAF600863699 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */,
+				4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		CEE8BC342C65AB2900E1D94F /* Model */ = {
