@@ -116,7 +116,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 return 42
             } else {
-                return 80
+                return 79
             }
             
         default:

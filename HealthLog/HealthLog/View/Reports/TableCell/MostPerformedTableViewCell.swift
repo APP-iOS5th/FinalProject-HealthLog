@@ -12,29 +12,29 @@ class MostPerformedTableViewCell: UITableViewCell {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-//        stackView.spacing = 13
-//        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        
+        stackView.alignment = .fill
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
         return stackView
     }()
+    
+    private lazy var performedExerciseInfoView1 = PerformedExerciseInfoView()
+    private lazy var performedExerciseInfoView2 = PerformedExerciseInfoView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        let exerciseInfoView1 = PerformedExerciseInfoView()
-        let exerciseInfoView2 = PerformedExerciseInfoView()
+        stackView.addArrangedSubview(performedExerciseInfoView1)
+        stackView.addArrangedSubview(performedExerciseInfoView2)
         
-        stackView.addArrangedSubview(exerciseInfoView1)
-        stackView.addArrangedSubview(exerciseInfoView2)
         
         self.contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 13),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
         ])
@@ -51,6 +51,7 @@ class MostPerformedTableViewCell: UITableViewCell {
 }
 
 class PerformedExerciseInfoView: UIView {
+    
     
     private let exerciseIndexLabel: UILabel = {
         let label = UILabel()
@@ -109,24 +110,27 @@ class PerformedExerciseInfoView: UIView {
         
         NSLayoutConstraint.activate([
             
+            
             exerciseIndexLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             exerciseIndexLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            
-            exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 20),
+    
+            exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 8),
             exerciseNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             
-            setsLabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 20),
+            setsLabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
             setsLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             
             dayLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             dayLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            heightAnchor.constraint(equalToConstant: 20)
+            exerciseIndexLabel.heightAnchor.constraint(equalToConstant: 20),
+            exerciseNameLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
+            setsLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
+            dayLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor)
         ])
-        
     }
     
 }
