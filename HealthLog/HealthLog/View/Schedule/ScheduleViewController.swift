@@ -193,9 +193,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
             let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
             
-            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.chest), step: 6)
-            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.triceps), step: 3)
-            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.shoulders), step: 3)
+            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
+            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
+            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3) // (영우:bodyPart를 타입에 맞게 수정했습니다 정진님)
             
             todaySchedule = Schedule(date: Date(), exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
         }

@@ -144,7 +144,7 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
         
         for part in exercise.bodyParts {
             let label = CustomBodyPartLabel()
-            label.text = part.name.rawValue
+            label.text = part.rawValue
             bodypartStackView.addArrangedSubview(label)
         }
         
