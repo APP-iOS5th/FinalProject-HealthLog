@@ -23,6 +23,22 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     private let today = Calendar.current.startOfDay(for: Date())
     private var selectedDate: Date?
     
+    private var tableViewHeightConstraint: NSLayoutConstraint?
+    
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    lazy var contentView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 26
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     lazy var calendarView: UICalendarView = {
         let calendar = UICalendarView()
         calendar.translatesAutoresizingMaskIntoConstraints = false
@@ -47,6 +63,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         table.delegate = self
         table.register(ExerciseCheckCell.self, forCellReuseIdentifier: ExerciseCheckCell.identifier)
         table.backgroundColor = UIColor(named: "ColorSecondary")
+        table.isScrollEnabled = false
         return table
     }()
     
@@ -67,22 +84,47 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
         view.backgroundColor = UIColor(named: "ColorPrimary")
         
-        view.addSubview(calendarView)
-        view.addSubview(tableView)
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addArrangedSubview(calendarView)
+        contentView.addArrangedSubview(tableView)
         
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            calendarView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 13),
-            calendarView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            calendarView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 26),
-            tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            calendarView.heightAnchor.constraint(equalToConstant: 600),
+            
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])
+        
+        tableViewHeightConstraint =
+        tableView.heightAnchor.constraint(equalToConstant: 100)
+        tableViewHeightConstraint?.isActive = true
     }
     // MARK: - Methods
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableViewHeight()
+    }
+    
+    private func updateTableViewHeight() {
+            tableView.layoutIfNeeded()
+            let height = self.tableView.contentSize.height
+            tableViewHeightConstraint?.constant = height
+            view.layoutIfNeeded()
+    }
+    
     private func loadTodaySchedule() {
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
         
@@ -102,8 +144,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.triceps), step: 3)
             let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: BodyPart(name: BodyPartType.shoulders), step: 3)
             
-            todaySchedule = Schedule(date: Date(), exercises: [scheduleExercise1, scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
+            todaySchedule = Schedule(date: Date(), exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
         }
+        tableView.reloadData()
+        updateTableViewHeight()
     }
     
     @objc func addSchedule() {
@@ -178,6 +222,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
     

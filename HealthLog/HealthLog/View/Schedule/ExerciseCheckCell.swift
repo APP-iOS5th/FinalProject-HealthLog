@@ -22,7 +22,7 @@ class ExerciseCheckCell: UITableViewCell {
     private let setsContainer: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 13
+//        stack.spacing = 13
         
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -39,10 +39,11 @@ class ExerciseCheckCell: UITableViewCell {
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            setsContainer.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 13),
+            setsContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
             setsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             setsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -25),
+            setsContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
         ])
     }
     
@@ -52,7 +53,6 @@ class ExerciseCheckCell: UITableViewCell {
     
     // MARK: - Methods
     func configure(with scheduleExercise: ScheduleExercise) {
-        print("here")
         nameLabel.text = scheduleExercise.exercise?.name
         setsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
@@ -69,41 +69,42 @@ class ExerciseCheckCell: UITableViewCell {
         let setNumber = UILabel()
         setNumber.text = "\(set.order) 세트"
         setNumber.textColor = .white
+        
         let weightLabel = UILabel()
         weightLabel.text = "\(set.weight) kg"
         weightLabel.textColor = .white
+        
         let repsLabel = UILabel()
         repsLabel.text = "\(set.reps) 회"
         repsLabel.textColor = .white
+        
         let checkbox = UISwitch()
         checkbox.isOn = set.isCompleted
         checkbox.onTintColor = .white
-        checkbox.addTarget(ExerciseCheckCell.self, action: #selector(didToggleCheckbox(_:)), for: .valueChanged)
+        checkbox.addTarget(self, action: #selector(didToggleCheckbox(_:)), for: .valueChanged)
         
-        view.addSubview(setNumber)
-        view.addSubview(weightLabel)
-        view.addSubview(repsLabel)
-        view.addSubview(checkbox)
+        [setNumber, weightLabel, repsLabel, checkbox].forEach {
+            $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        }
+        let stackView = UIStackView(arrangedSubviews: [
+            setNumber, weightLabel, repsLabel, checkbox
+        ])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        stackView.spacing = 20
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        setNumber.translatesAutoresizingMaskIntoConstraints = false
-        weightLabel.translatesAutoresizingMaskIntoConstraints = false
-        repsLabel.translatesAutoresizingMaskIntoConstraints = false
-        checkbox.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            view.heightAnchor.constraint(equalToConstant: 30),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            setNumber.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            weightLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
-            weightLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            repsLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 200),
-            repsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            checkbox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            checkbox.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            view.heightAnchor.constraint(equalToConstant: 50),
         ])
 
         return view
