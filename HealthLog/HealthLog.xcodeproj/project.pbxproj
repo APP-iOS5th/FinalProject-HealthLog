@@ -24,6 +24,7 @@
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
+		3C55C10E2C6C3257008B7D04 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3C55C10D2C6C3257008B7D04 /* RealmSwift */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
@@ -35,14 +36,12 @@
 		7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */; };
 		7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0002C69FE05004CB285 /* SearchResultCell.swift */; };
 		7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */; };
-		7590C0042C6AF94C004CB285 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
 		CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */; };
 		CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */; };
 		CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29BA32C6A01F100D82571 /* TempViewController.swift */; };
-		CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = CEE8BC382C65ACAF00E1D94F /* RealmSwift */; };
 		CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */; };
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
 		CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC632C65B25B00E1D94F /* Routine.swift */; };
@@ -115,7 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEE8BC392C65ACAF00E1D94F /* RealmSwift in Frameworks */,
+				3C55C10E2C6C3257008B7D04 /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +267,7 @@
 			);
 			name = HealthLog;
 			packageProductDependencies = (
-				CEE8BC382C65ACAF00E1D94F /* RealmSwift */,
+				3C55C10D2C6C3257008B7D04 /* RealmSwift */,
 			);
 			productName = HealthLog;
 			productReference = 189401302C528B2000533E0A /* HealthLog.app */;
@@ -600,9 +599,8 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CEE8BC382C65ACAF00E1D94F /* RealmSwift */ = {
+		3C55C10D2C6C3257008B7D04 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CEE8BC352C65ACAF00E1D94F /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
