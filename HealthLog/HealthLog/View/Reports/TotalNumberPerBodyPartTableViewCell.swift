@@ -22,6 +22,14 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         view.trackTintColor = UIColor(named: "Color5A5A5A")
         view.progressTintColor = UIColor(named: "ColorAccent")
         view.progress = 0.5
+        // 모서리값 하드코딩 안하는 방법..?
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
+        
+        // 안쪽 게이지 둥글게
+        view.layer.sublayers![1].cornerRadius = 5
+        view.subviews[1].clipsToBounds = true
+        
         return view
     }()
     
@@ -33,24 +41,81 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         return label
     }()
     
-    private lazy var foldingButton: UIButton = {
-        let button = UIButton()
-        var config = UIButton.Configuration.plain()
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .black)
-        config.image = UIImage(systemName: "chevron.down", withConfiguration: symbolConfig)
-        config.baseForegroundColor = .white
-        button.configuration = config
-        button.addAction(UIAction { _ in
-            print("did tap foldingbutton")
-                                     
-        }, for: .touchUpInside)
+    private lazy var foldingImage: UIImageView = {
+        let imageView = UIImageView()
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .black)
+        // cell 클릭시 아래 이름 변경
+        let symbolName = "chevron.down"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
         
-        return button
+        imageView.image = symbol
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    private lazy var detailView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        stackView.alignment = .fill
+        stackView.isHidden = true
+        
+        let label1 = UILabel()
+        label1.text = "test label 1"
+        let label2 = UILabel()
+        label2.text = "test label 2"
+        let label3 = UILabel()
+        label3.text = "test label 3"
+        let label4 = UILabel()
+        label4.text = "test label 4"
+        
+        stackView.addArrangedSubview(label1)
+        stackView.addArrangedSubview(label2)
+        stackView.addArrangedSubview(label3)
+        stackView.addArrangedSubview(label4)
+        
+        return stackView
     }()
     
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(bodyPartLabel)
+        contentView.addSubview(progressView)
+        contentView.addSubview(totalNumberPerBodyPartLabel)
+        contentView.addSubview(foldingImage)
+        
+        // detailView 작업
+        contentView.addSubview(detailView)
+        
+        bodyPartLabel.translatesAutoresizingMaskIntoConstraints = false
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        totalNumberPerBodyPartLabel.translatesAutoresizingMaskIntoConstraints = false
+        foldingImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        detailView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            bodyPartLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            
+            progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
+            progressView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 82),
+            progressView.widthAnchor.constraint(equalToConstant: 158),
+            progressView.heightAnchor.constraint(equalToConstant: 10),
+            
+            totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
+            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
+            
+            foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
+            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
+            
+            detailView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
+            detailView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20)
+            
+        ])
         
     }
     
@@ -58,5 +123,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
 }
