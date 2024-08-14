@@ -59,13 +59,13 @@ class RoutineAddNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addName")
-        setupView()
+        setupUI()
         
     }
     
 
     
-    func setupView() {
+    func setupUI() {
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         
         let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)

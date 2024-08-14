@@ -35,14 +35,14 @@ class RoutinesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupView()
+        setupUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
     }
-    func setupView() {
+    func setupUI() {
         
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         self.title = "루틴"
