@@ -10,7 +10,7 @@ import UIKit
 class ExerciseCheckCell: UITableViewCell {
     static let identifier = "ExerciseCheckCell"
 
-    private let nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 20)
@@ -19,11 +19,16 @@ class ExerciseCheckCell: UITableViewCell {
         return label
     }()
     
-    private let setsContainer: UIStackView = {
+    lazy var separatorLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorSecondary
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var setsContainer: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-//        stack.spacing = 13
-        
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -31,19 +36,26 @@ class ExerciseCheckCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.backgroundColor = UIColor(named: "ColorSecondary")
+        contentView.backgroundColor = .colorPrimary
         contentView.addSubview(nameLabel)
+        contentView.addSubview(separatorLine)
         contentView.addSubview(setsContainer)
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            setsContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
+            
+            separatorLine.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
+            separatorLine.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            separatorLine.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            separatorLine.heightAnchor.constraint(equalToConstant: 2),
+            
+            setsContainer.topAnchor.constraint(equalTo: separatorLine.bottomAnchor, constant: 10),
             setsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             setsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -25),
-            setsContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
+            setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            setsContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
         ])
     }
     
@@ -112,5 +124,21 @@ class ExerciseCheckCell: UITableViewCell {
     
     @objc private func didToggleCheckbox(_ sender: UISwitch) {
 //        print("checkbox")
+    }
+}
+
+extension ExerciseCheckCell {
+    func addSeparator() {
+        let separator = UIView()
+        separator.backgroundColor = .colorSecondary
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(separator)
+        
+        NSLayoutConstraint.activate([
+            separator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            separator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 2),
+        ])
     }
 }

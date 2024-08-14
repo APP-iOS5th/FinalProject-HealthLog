@@ -12,7 +12,9 @@ import Combine
 class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - declare
-    let realm = try! Realm()
+//    let realm = try! Realm()
+    let realm = RealmManager.shared.realm
+    
     var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
@@ -43,9 +45,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         let calendar = UICalendarView()
         calendar.translatesAutoresizingMaskIntoConstraints = false
         calendar.wantsDateDecorations = true
-        calendar.backgroundColor = UIColor(named: "ColorSecondary")
+        calendar.backgroundColor = .colorSecondary
         // color of arrows and background of selected date
-        calendar.tintColor = UIColor(named: "ColorAccent")
+        calendar.tintColor = .colorAccent
         
         calendar.delegate = self
         
@@ -56,13 +58,57 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         return calendar
     }()
     
+    lazy var labelContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let label = UILabel()
+        label.text = "오늘 할 운동"
+        label.textColor = .white
+        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
+        let button = UIButton()
+        button.setTitle("루틴으로 저장", for: .normal)
+        button.backgroundColor = .colorAccent
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 7
+        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        button.addTarget(self, action: #selector(addToRoutine), for: .touchUpInside)
+        
+        let stackView = UIStackView(arrangedSubviews: [label, button])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = 12
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            view.heightAnchor.constraint(equalToConstant: 60),
+        ])
+
+        return view
+    }()
+    
+    lazy var separatorLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorSecondary
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
         table.dataSource = self
         table.delegate = self
         table.register(ExerciseCheckCell.self, forCellReuseIdentifier: ExerciseCheckCell.identifier)
-        table.backgroundColor = UIColor(named: "ColorSecondary")
         table.isScrollEnabled = false
         return table
     }()
@@ -82,11 +128,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         navigationItem.title = "운동 일정"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
-        view.backgroundColor = UIColor(named: "ColorPrimary")
+        view.backgroundColor = .colorPrimary
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addArrangedSubview(calendarView)
+        contentView.addArrangedSubview(labelContainer)
+        contentView.addArrangedSubview(separatorLine)
         contentView.addArrangedSubview(tableView)
         
         let safeArea = view.safeAreaLayoutGuide
@@ -102,7 +150,12 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
             calendarView.heightAnchor.constraint(equalToConstant: 600),
+            
+            labelContainer.heightAnchor.constraint(equalToConstant: 50),
+            
+            separatorLine.heightAnchor.constraint(equalToConstant: 2),
             
             tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -155,6 +208,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
     
+    @objc func addToRoutine() {
+        // add today schedule to routine
+    }
+    
     private func customizeCalendarTextColor() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.changeHeaderTextColor(self.calendarView)
@@ -181,7 +238,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
                        Calendar.current.isDate(labelDate, inSameDayAs: selectedDate) {
                         label.textColor = .white
                     } else {
-                         label.textColor = UIColor(named: "ColorAccent")
+                        label.textColor = .colorAccent
                     }
                 } else {
                     label.textColor = .white
@@ -218,6 +275,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         if let scheduleExercise = todaySchedule?.exercises[indexPath.row] {
             cell.configure(with: scheduleExercise)
         }
+        
+        cell.addSeparator()
+        
         return cell
     }
     
@@ -240,7 +300,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         // today text color
         if Calendar.current.isDate(date, inSameDayAs: today) {
-            return .default(color: UIColor(named: "ColorAccent"), size: .large)
+            return .default(color: .colorAccent, size: .large)
         }
         
         // selecteed date color
