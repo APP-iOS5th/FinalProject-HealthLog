@@ -12,7 +12,6 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    
     var selectedExercises = [String]()
     
     override func viewDidLoad() {
