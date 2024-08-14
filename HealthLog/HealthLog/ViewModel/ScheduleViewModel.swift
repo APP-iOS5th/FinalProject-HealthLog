@@ -11,7 +11,7 @@ import Foundation
 
 // ViewModel 정의
 class ScheduleViewModel: ObservableObject {
-    var realm: Realm
+    private var realm: Realm
     private var scheduleNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
