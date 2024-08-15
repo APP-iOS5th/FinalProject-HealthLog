@@ -20,14 +20,15 @@ class MostPerformedTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    private lazy var performedExerciseInfoView1 = PerformedExerciseInfoView()
-    private lazy var performedExerciseInfoView2 = PerformedExerciseInfoView()
+    // test sample
+    let testView1 = PerformedExerciseInfoView()
+    let testView2 = PerformedExerciseInfoView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        stackView.addArrangedSubview(performedExerciseInfoView1)
-        stackView.addArrangedSubview(performedExerciseInfoView2)
+        stackView.addArrangedSubview(testView1)
+        stackView.addArrangedSubview(testView2)
         
         
         self.contentView.addSubview(stackView)

@@ -31,6 +31,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
         exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
         exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
+        exerciseRecordTableView.register(MostChangedTableViewCell.self, forCellReuseIdentifier: "mostChanged")
         
         self.view.addSubview(exerciseRecordTableView)
         
@@ -100,6 +101,20 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 return cell
             }
+        case 3:
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "mostChanged", for: indexPath) as! MostChangedTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                return cell
+            }
         default :
             let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
             cell.backgroundColor = UIColor(named: "ColorSecondary")
@@ -117,6 +132,12 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 return 42
             } else {
                 return 79
+            }
+        case 3:
+            if indexPath.row == 0 {
+                return 42
+            } else {
+                return 142
             }
             
         default:
