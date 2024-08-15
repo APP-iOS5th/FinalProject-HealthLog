@@ -14,17 +14,17 @@ class ExerciseViewModel: ObservableObject {
     private var exercisesNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var searchText: String = ""
-    @Published var selectedOption: BodyPartOption = .all
+    @Published private(set) var searchText: String = ""
+    @Published private(set) var selectedOption: BodyPartOption = .all
     
-    @Published var exercises: [Exercise] = []
-    @Published var filteredExercises: [Exercise] = []
+    @Published private(set) var exercises: [Exercise] = []
+    @Published private(set) var filteredExercises: [Exercise] = []
     
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
-        exercisesSubject()
-        searchExercisesSubject()
+        subjectExercises()
+        subjectSearchExercises()
     }
     
     deinit {
@@ -48,15 +48,16 @@ class ExerciseViewModel: ObservableObject {
         }
     }
     
-    private func exercisesSubject() {
+    private func subjectExercises() {
         // realm의 observe가 exercises를 갱신시 assign
         $exercises.assign(to: &$filteredExercises)
     }
     
-    private func searchExercisesSubject() {
+    private func subjectSearchExercises() {
         Publishers.CombineLatest(
-            $searchText
-                .throttle(for: .milliseconds(99), scheduler: RunLoop.main, latest: true),
+            $searchText.throttle(
+                for: .milliseconds(99), 
+                scheduler: RunLoop.main, latest: true),
             $selectedOption
         )
         .sink { [weak self] _ in self?.filterExercises() }
@@ -73,7 +74,7 @@ class ExerciseViewModel: ObservableObject {
         }
     }
     
-    private func filterExercises() {
+    func filterExercises() {
         // 검색어와 부위를 기반으로 운동리스트를 필터링
         filteredExercises = exercises.filter { exercise in
             
@@ -92,7 +93,7 @@ class ExerciseViewModel: ObservableObject {
                     isBodyPart = exercise.bodyParts.contains(bodyPart)
             }
             
-            // 이 운동이 검색어, 운동 부위에 해당하는가
+            // 이 운동이 검색어와 선택한 운동 부위에 해당하는가
             return isSearchText && isBodyPart
         }
         
@@ -101,10 +102,12 @@ class ExerciseViewModel: ObservableObject {
     
     func updateOption(to option: BodyPartOption) {
         selectedOption = option
+//        filterExercises()
     }
     
     func updateSearchText(to text: String) {
         searchText = text
+//        filterExercises()
     }
     
 }

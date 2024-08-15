@@ -173,7 +173,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
             selectedOption = .bodyPart(bodyPart)
         }
         print("searchBar selectedScope - \(selectedOption.name)")
-        viewModel.selectedOption = selectedOption
+        viewModel.updateOption(to: selectedOption)
     }
     
     // MARK: - UISearchResultsUpdating
