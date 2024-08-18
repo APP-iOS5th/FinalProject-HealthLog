@@ -15,6 +15,11 @@ class WeightRecordViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .colorSecondary
         button.layer.cornerRadius = 12
+        
+        // 커스텀 폰트 적용
+        let customfont = UIFont.font(.pretendardSemiBold, ofSize: 18)
+        button.titleLabel?.font = customfont
+        
         return button
     }()
     
