@@ -9,8 +9,7 @@ import UIKit
 import RealmSwift
 import Combine
 
-class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
+class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate {
     // MARK: - declare
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
@@ -77,8 +76,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         let stackView = UIStackView(arrangedSubviews: [label, button])
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.distribution = .fill
-        stackView.spacing = 12
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
@@ -287,11 +286,18 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         if let scheduleExercise = todaySchedule?.exercises[indexPath.row] {
             cell.configure(with: scheduleExercise)
+            cell.delegate = self
         }
         
         cell.addSeparator()
         
         return cell
+    }
+    
+    func didTapEditExercise(_ exercise: ScheduleExercise) {
+        let editExerciseVC = EditExerciseViewController(scheduleExercise: exercise)
+        let navigationController = UINavigationController(rootViewController: editExerciseVC)
+        present(navigationController, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
