@@ -55,6 +55,8 @@
 		CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC652C65B3EB00E1D94F /* Schedule.swift */; };
 		CEE8BC682C65B43500E1D94F /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* Report.swift */; };
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
+		CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */; };
+		CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -119,6 +121,8 @@
 		CEE8BC652C65B3EB00E1D94F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		CEE8BC672C65B43500E1D94F /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
 		CEE8BC692C65B45100E1D94F /* InBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBody.swift; sourceTree = "<group>"; };
+		CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesAddViewController.swift; sourceTree = "<group>"; };
+		CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesUpdateViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,6 +227,8 @@
 				CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */,
 				CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */,
 				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
+				CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */,
+				CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -401,6 +407,7 @@
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
+				CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */,
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
 				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
 				CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */,
@@ -409,6 +416,7 @@
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
 				184A58B72C6B28C9009F2848 /* ExerciseRecordViewController.swift in Sources */,
+				CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */,
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
