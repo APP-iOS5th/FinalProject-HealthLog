@@ -12,7 +12,7 @@ import Combine
 class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - declare
-    let realm = try! Realm()
+    let realm = RealmManager.shared.realm
     var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
