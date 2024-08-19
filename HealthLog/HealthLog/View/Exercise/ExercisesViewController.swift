@@ -22,7 +22,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     
     let testView = UIView()
     
-    //MARK: - Init
+    // MARK: - Init
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -65,6 +65,11 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         let rightBarButton = UIBarButtonItem(customView: addButton)
         navigationItem.rightBarButtonItem = rightBarButton
+        
+        // MARK: tempStepperButton
+        
+        let tempStepperButton = UIBarButtonItem(title: "Stepper", style: .plain, target: self, action: #selector(tempStepperButtonTapped))
+        self.navigationItem.leftBarButtonItem = tempStepperButton
     }
     
     private func setupSearchController() {
@@ -185,6 +190,12 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     
     @objc func addButtonTapped() {
         print("addButtonTapped!")
+        let vc = ExercisesAddViewController()
+        navigationController?.pushViewController(vc, animated: false)
+    }
+    
+    @objc func tempStepperButtonTapped() {
+        print("tempButtonTapped!")
         let vc = TempViewController()
         navigationController?.pushViewController(vc, animated: false)
     }
