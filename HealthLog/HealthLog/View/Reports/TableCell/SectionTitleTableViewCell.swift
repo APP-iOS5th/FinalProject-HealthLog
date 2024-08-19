@@ -21,6 +21,19 @@ class SectionTitleTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private lazy var titleBackgroundImage: UIImageView = {
+        let imageView = UIImageView()
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .black)
+        let symbolName = "trophy"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        
+        imageView.image = symbol
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "가장 많이 한 운동"
@@ -32,15 +45,22 @@ class SectionTitleTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        contentView.addSubview(titleBackgroundImage)
         contentView.addSubview(titleImage)
         contentView.addSubview(titleLabel)
         
+        
         titleImage.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleBackgroundImage.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            titleImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            titleBackgroundImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            titleBackgroundImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            
+            titleImage.centerYAnchor.constraint(equalTo: titleBackgroundImage.centerYAnchor),
+            titleImage.centerXAnchor.constraint(equalTo: titleBackgroundImage.centerXAnchor),
+            
             
             titleLabel.centerYAnchor.constraint(equalTo: titleImage.centerYAnchor),
             titleLabel.leadingAnchor.constraint(equalTo: titleImage.trailingAnchor, constant: 31)

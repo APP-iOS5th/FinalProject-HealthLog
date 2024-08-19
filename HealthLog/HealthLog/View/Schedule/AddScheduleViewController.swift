@@ -6,24 +6,37 @@
 //
 
 import UIKit
+import Combine
 
 class AddScheduleViewController: UIViewController {
-    
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
     var selectedExercises = [String]()
     
+    private var viewModel = ExerciseViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupNavigationBar()
         setupSearchController()
         setupDividerView()
         setupTableView()
         setupConstraints()
-        
         view.backgroundColor = .colorPrimary
+        
+        searchController.searchBar.delegate = self
+        bindViewModel()
+    }
+    
+    private func bindViewModel() {
+        viewModel.$filteredExercises
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                (self?.searchController.searchResultsController as? SearchResultsViewController)?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
     }
     
     private func setupNavigationBar() {
@@ -54,6 +67,7 @@ class AddScheduleViewController: UIViewController {
             searchResultsController.onExerciseSelected = { [weak self] exerciseName in
                 self?.addSelectedExercise(exerciseName)
             }
+            searchResultsController.viewModel = viewModel
         }
         
         searchController.obscuresBackgroundDuringPresentation = false
@@ -155,15 +169,20 @@ class AddScheduleViewController: UIViewController {
         tableView.reloadData()
         navigationItem.rightBarButtonItem?.isHidden = false
     }
+    
+    func removeSelectedExercise(at index: Int) {
+        selectedExercises.remove(at: index)
+        tableView.reloadData()
+        
+        if selectedExercises.isEmpty {
+            navigationItem.rightBarButtonItem?.isHidden = true
+        }
+    }
 }
 
-extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource {
+extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedExercises.count
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 310
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -172,6 +191,24 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
         cell.configure(with: exerciseName)
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
+        cell.deleteButtonTapped = { [weak self] in
+            self?.removeSelectedExercise(at: indexPath.row)
+        }
+        cell.heightDidChange = { [weak self] in
+            self?.tableView.reloadData()
+        }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 310 // 초기 예상 높이
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.updateSearchText(to: searchText)
     }
 }

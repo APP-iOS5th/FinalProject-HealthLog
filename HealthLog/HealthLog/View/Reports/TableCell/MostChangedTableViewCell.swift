@@ -1,5 +1,5 @@
 //
-//  MostPerformedTableViewCell.swift
+//  MostChangedTableViewCell.swift
 //  HealthLog
 //
 //  Created by wonyoul heo on 8/14/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MostPerformedTableViewCell: UITableViewCell {
+class MostChangedTableViewCell: UITableViewCell {
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -20,15 +20,16 @@ class MostPerformedTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    // test sample
-    let testView1 = PerformedExerciseInfoView()
-    let testView2 = PerformedExerciseInfoView()
+    let testView1 = ExerciseRankingInfoView()
+    let testView2 = ExerciseRankingInfoView()
+    let testView3 = ExerciseRankingInfoView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         stackView.addArrangedSubview(testView1)
         stackView.addArrangedSubview(testView2)
+        stackView.addArrangedSubview(testView3)
         
         
         self.contentView.addSubview(stackView)
@@ -47,13 +48,11 @@ class MostPerformedTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
 
 }
 
-class PerformedExerciseInfoView: UIView {
-    
-    
+
+class ExerciseRankingInfoView: UIView {
     private let exerciseIndexLabel: UILabel = {
         let label = UILabel()
         label.text = "1."
@@ -62,8 +61,6 @@ class PerformedExerciseInfoView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    
     
     private let exerciseNameLabel: UILabel = {
         let label = UILabel()
@@ -74,24 +71,48 @@ class PerformedExerciseInfoView: UIView {
         return label
     }()
     
-    private let setsLabel: UILabel = {
+    private let previousWeightlabel: UILabel = {
         let label = UILabel()
-        label.text = "30세트"
+        label.text = "40KG"
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    
-    private let dayLabel: UILabel = {
+    private let heaviestWeightlabel: UILabel = {
         let label = UILabel()
-        label.text = "7일"
+        label.text = "70KG"
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private lazy var rightArrow: UIImageView = {
+        let imageView = UIImageView()
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+        let symbolName = "arrow.forward"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        
+        imageView.image = symbol
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var squareView: UIView = {
+        let sqView = UIView()
+        sqView.backgroundColor = UIColor.colorAccent
+        sqView.layer.cornerRadius = 10
+        sqView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return sqView
+        
+    }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -106,31 +127,37 @@ class PerformedExerciseInfoView: UIView {
     private func setupView() {
         addSubview(exerciseIndexLabel)
         addSubview(exerciseNameLabel)
-        addSubview(setsLabel)
-        addSubview(dayLabel)
+        addSubview(previousWeightlabel)
+        addSubview(rightArrow)
+        addSubview(squareView)
+        addSubview(heaviestWeightlabel)
+        
+        
+        
         
         NSLayoutConstraint.activate([
-            
             
             exerciseIndexLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             exerciseIndexLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-    
             exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 8),
             exerciseNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
+            previousWeightlabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
+            previousWeightlabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            setsLabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
-            setsLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            rightArrow.leadingAnchor.constraint(equalTo: previousWeightlabel.trailingAnchor, constant: 8),
+            rightArrow.centerYAnchor.constraint(equalTo: centerYAnchor),
             
+            heaviestWeightlabel.leadingAnchor.constraint(equalTo: rightArrow.trailingAnchor, constant: 22),
+            heaviestWeightlabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            dayLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            dayLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            squareView.centerYAnchor.constraint(equalTo: heaviestWeightlabel.centerYAnchor),
+            squareView.centerXAnchor.constraint(equalTo: heaviestWeightlabel.centerXAnchor),
             
-            exerciseIndexLabel.heightAnchor.constraint(equalToConstant: 20),
-            exerciseNameLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
-            setsLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
-            dayLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor)
+            squareView.heightAnchor.constraint(equalToConstant: 30),
+            squareView.widthAnchor.constraint(equalToConstant: 50),
+           
         ])
     }
     
