@@ -185,10 +185,6 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         return selectedExercises.count
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 310
-    }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
         let exerciseName = selectedExercises[indexPath.row]
@@ -198,7 +194,18 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
+        cell.heightDidChange = { [weak self] in
+            self?.tableView.reloadData()
+        }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 310 // 초기 예상 높이
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

@@ -31,7 +31,7 @@ class TempViewController: UIViewController, UITextFieldDelegate {
         stepperLabel.text = "세트 수"
         stepperLabel.textColor = .white
         stepperLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-
+        
         // Stepper 카운트 레이블 설정
         stepperCountLabel.text = "4"
         stepperCountLabel.textColor = .white
@@ -51,7 +51,7 @@ class TempViewController: UIViewController, UITextFieldDelegate {
         let minusImage = UIImage(systemName: "minus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
         stepper.setIncrementImage(plusImage, for: .normal)
         stepper.setDecrementImage(minusImage, for: .normal)
-
+        
         // 컨테이너 뷰 설정
         containerView.backgroundColor = .colorSecondary
         containerView.layer.cornerRadius = 10
@@ -181,7 +181,7 @@ class TempViewController: UIViewController, UITextFieldDelegate {
         setView.addSubview(weightLabel)
         setView.addSubview(repsTextField)
         setView.addSubview(repsLabel)
-
+        
         // Auto Layout 설정
         setLabel.translatesAutoresizingMaskIntoConstraints = false
         weightTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -192,7 +192,7 @@ class TempViewController: UIViewController, UITextFieldDelegate {
         NSLayoutConstraint.activate([
             
             setView.heightAnchor.constraint(equalToConstant: 35),
-
+            
             setLabel.leadingAnchor.constraint(equalTo: setView.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             
@@ -214,9 +214,9 @@ class TempViewController: UIViewController, UITextFieldDelegate {
             repsLabel.trailingAnchor.constraint(equalTo: setView.trailingAnchor, constant: -8)
             
         ])
-    
-    return setView
-
+        
+        return setView
+        
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
