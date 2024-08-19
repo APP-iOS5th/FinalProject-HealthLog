@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TempViewController: UIViewController {
+class TempViewController: UIViewController, UITextFieldDelegate {
     
     private let stepperLabel = UILabel()
     private let stepperCountLabel = UILabel()
@@ -166,6 +166,10 @@ class TempViewController: UIViewController {
             ]
         )
         
+        // textfield delegate 설정
+        weightTextField.delegate = self
+        repsTextField.delegate = self
+        
         let repsLabel = UILabel()
         repsLabel.text = "회"
         repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
@@ -213,5 +217,11 @@ class TempViewController: UIViewController {
     
     return setView
 
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        return newText.count <= 3
     }
 }
