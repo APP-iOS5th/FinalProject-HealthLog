@@ -62,7 +62,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             exerciseTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             exerciseTitleLabel.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),
             
-            deleteButton.topAnchor.constraint(equalTo: exerciseTitleLabel.topAnchor, constant: 2),
+            deleteButton.centerYAnchor.constraint(equalTo: exerciseTitleLabel.centerYAnchor),
             deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             deleteButton.widthAnchor.constraint(equalToConstant: 14),
             deleteButton.heightAnchor.constraint(equalToConstant: 14),
@@ -72,7 +72,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             containerView.heightAnchor.constraint(equalToConstant: 50),
             
-            stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 10),
+            stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)

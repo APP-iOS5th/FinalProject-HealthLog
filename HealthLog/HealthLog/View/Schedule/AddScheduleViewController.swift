@@ -28,6 +28,8 @@ class AddScheduleViewController: UIViewController {
         
         searchController.searchBar.delegate = self
         bindViewModel()
+        setupKeyboard()
+        hideKeyBoardWhenTappedScreen()
     }
     
     private func bindViewModel() {
@@ -178,6 +180,44 @@ class AddScheduleViewController: UIViewController {
             navigationItem.rightBarButtonItem?.isHidden = true
         }
     }
+    
+    private func setupKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+        
+        let keyboardHeight = keyboardFrame.height
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+        
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+        
+        // 현재 선택된 텍스트 필드를 키보드 위로 이동
+        if let activeField = view.currentFirstResponder() {
+            let rect = tableView.convert(activeField.frame, from: activeField.superview)
+            tableView.scrollRectToVisible(rect, animated: true)
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    func hideKeyBoardWhenTappedScreen() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc func tapHandler() {
+        self.view.endEditing(true)
+    }
 }
 
 extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
@@ -210,5 +250,21 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.updateSearchText(to: searchText)
+    }
+}
+
+// 현재 선택된 UITextField를 찾는 메서드
+extension UIView {
+    func currentFirstResponder() -> UIView? {
+        if self.isFirstResponder {
+            return self
+        }
+        
+        for subview in self.subviews {
+            if let firstResponder = subview.currentFirstResponder() {
+                return firstResponder
+            }
+        }
+        return nil
     }
 }
