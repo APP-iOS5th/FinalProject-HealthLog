@@ -25,6 +25,13 @@ class EditExerciseViewController: UIViewController {
         return stepperView
     }()
     
+    lazy var setsContainer: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
     init(scheduleExercise: ScheduleExercise) {
         self.scheduleExercise = scheduleExercise
         super.init(nibName: nil, bundle: nil)
@@ -50,6 +57,7 @@ class EditExerciseViewController: UIViewController {
         
         view.addSubview(nameLabel)
         view.addSubview(setCountContainer)
+        view.addSubview(setsContainer)
         
         let safeArea = view.safeAreaLayoutGuide
         
@@ -62,9 +70,63 @@ class EditExerciseViewController: UIViewController {
             setCountContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             setCountContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             setCountContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            setsContainer.topAnchor.constraint(equalTo: setCountContainer.bottomAnchor, constant: 10),
+            setsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            setsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            setsContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
+//            setsContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
         ])
+        
+        print("ScheduleExercise: \(scheduleExercise)")
+        for set in scheduleExercise.sets {
+            let setView = createSetView(set: set)
+            setsContainer.addArrangedSubview(setView)
+        }
     }
     
+    private func createSetView(set: ScheduleExerciseSet) -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let setNumber = UILabel()
+        setNumber.text = "\(set.order) 세트"
+        setNumber.textColor = .white
+        
+        let weightLabel = UILabel()
+        weightLabel.text = "\(set.weight) kg"
+        weightLabel.textColor = .white
+        
+        let repsLabel = UILabel()
+        repsLabel.text = "\(set.reps) 회"
+        repsLabel.textColor = .white
+        
+        [setNumber, weightLabel, repsLabel].forEach {
+            $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        }
+        let stackView = UIStackView(arrangedSubviews: [
+            setNumber, weightLabel, repsLabel
+        ])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            view.heightAnchor.constraint(equalToConstant: 50),
+        ])
+
+        return view
+    }
     @objc private func cancelEdit() {
         dismiss(animated: true)
     }
