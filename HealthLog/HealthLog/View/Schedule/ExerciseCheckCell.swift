@@ -7,16 +7,48 @@
 
 import UIKit
 
+protocol ExerciseCheckCellDelegate: AnyObject {
+    func didTapEditExercise(_ exercise: ScheduleExercise)
+}
+
 class ExerciseCheckCell: UITableViewCell {
     static let identifier = "ExerciseCheckCell"
-
-    lazy var nameLabel: UILabel = {
+    
+    weak var delegate: ExerciseCheckCellDelegate?
+    private var currentExercise: ScheduleExercise?
+    
+    lazy var exerciseNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 20)
-        
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    lazy var exerciseEditContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorSecondary
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var exerciseEditButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("수정", for: .normal)
+        button.backgroundColor = .colorAccent
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 7
+        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    lazy var exerciseCompletedSwitch: UISwitch = {
+        let checkbox = UISwitch()
+        checkbox.onTintColor = .white
+        checkbox.addTarget(self, action: #selector(didToggleCheckboxExercise(_:)), for: .valueChanged)
+        checkbox.translatesAutoresizingMaskIntoConstraints = false
+        return checkbox
     }()
     
     lazy var separatorLine: UIView = {
@@ -37,16 +69,21 @@ class ExerciseCheckCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.backgroundColor = .colorPrimary
-        contentView.addSubview(nameLabel)
+        contentView.addSubview(exerciseNameLabel)
+        contentView.addSubview(exerciseEditContainer)
         contentView.addSubview(separatorLine)
         contentView.addSubview(setsContainer)
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            exerciseNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            exerciseNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            exerciseNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            separatorLine.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
+            exerciseEditContainer.topAnchor.constraint(equalTo: exerciseNameLabel.bottomAnchor, constant: 13),
+            exerciseEditContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            exerciseEditContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            separatorLine.topAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor, constant: 13),
             separatorLine.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             separatorLine.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             separatorLine.heightAnchor.constraint(equalToConstant: 2),
@@ -65,13 +102,44 @@ class ExerciseCheckCell: UITableViewCell {
     
     // MARK: - Methods
     func configure(with scheduleExercise: ScheduleExercise) {
-        nameLabel.text = scheduleExercise.exercise?.name
+        currentExercise = scheduleExercise
+        exerciseNameLabel.text = scheduleExercise.exercise?.name
+        createExerciseEditView(scheduleExercise)
         setsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         for set in scheduleExercise.sets {
             let setView = createSetView(set: set)
             setsContainer.addArrangedSubview(setView)
         }
+    }
+    
+    private func createExerciseEditView(_ scheduleExercise: ScheduleExercise) {
+        exerciseEditButton.addTarget(self, action: #selector(editExercise), for: .touchUpInside)
+        exerciseCompletedSwitch.isOn = scheduleExercise.isCompleted
+        [exerciseEditButton, exerciseCompletedSwitch].forEach {
+            $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        }
+        let stackView = UIStackView(arrangedSubviews: [
+            exerciseEditButton, exerciseCompletedSwitch
+        ])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        exerciseEditContainer.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: exerciseEditContainer.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: exerciseEditContainer.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor),
+            
+            exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100),
+            exerciseCompletedSwitch.widthAnchor.constraint(greaterThanOrEqualToConstant: 51),
+        ])
     }
     
     private func createSetView(set: ScheduleExerciseSet) -> UIView {
@@ -93,7 +161,7 @@ class ExerciseCheckCell: UITableViewCell {
         let checkbox = UISwitch()
         checkbox.isOn = set.isCompleted
         checkbox.onTintColor = .white
-        checkbox.addTarget(self, action: #selector(didToggleCheckbox(_:)), for: .valueChanged)
+        checkbox.addTarget(self, action: #selector(didToggleCheckboxSet(_:)), for: .valueChanged)
         
         [setNumber, weightLabel, repsLabel, checkbox].forEach {
             $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -122,7 +190,14 @@ class ExerciseCheckCell: UITableViewCell {
         return view
     }
     
-    @objc private func didToggleCheckbox(_ sender: UISwitch) {
+    @objc private func didToggleCheckboxSet(_ sender: UISwitch) {
+//        print("checkbox")
+    }
+    @objc private func editExercise() {
+        guard let exercise = currentExercise else { return }
+        delegate?.didTapEditExercise(exercise)
+    }
+    @objc private func didToggleCheckboxExercise(_ sender: UISwitch) {
 //        print("checkbox")
     }
 }
