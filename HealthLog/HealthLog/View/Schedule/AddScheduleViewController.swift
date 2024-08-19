@@ -6,24 +6,37 @@
 //
 
 import UIKit
+import Combine
 
 class AddScheduleViewController: UIViewController {
-    
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
     var selectedExercises = [String]()
     
+    private var viewModel = ExerciseViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupNavigationBar()
         setupSearchController()
         setupDividerView()
         setupTableView()
         setupConstraints()
-        
         view.backgroundColor = .colorPrimary
+        
+        searchController.searchBar.delegate = self
+        bindViewModel()
+    }
+    
+    private func bindViewModel() {
+        viewModel.$filteredExercises
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                (self?.searchController.searchResultsController as? SearchResultsViewController)?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
     }
     
     private func setupNavigationBar() {
@@ -54,6 +67,7 @@ class AddScheduleViewController: UIViewController {
             searchResultsController.onExerciseSelected = { [weak self] exerciseName in
                 self?.addSelectedExercise(exerciseName)
             }
+            searchResultsController.viewModel = viewModel
         }
         
         searchController.obscuresBackgroundDuringPresentation = false
@@ -157,7 +171,7 @@ class AddScheduleViewController: UIViewController {
     }
 }
 
-extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource {
+extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return selectedExercises.count
     }
@@ -173,5 +187,9 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         return cell
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.updateSearchText(to: searchText)
     }
 }

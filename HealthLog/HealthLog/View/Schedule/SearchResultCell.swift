@@ -35,6 +35,22 @@ class SearchResultCell: UITableViewCell {
         return label
     }()
     
+    let bodyPartsScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    let bodyPartsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     let addButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
@@ -56,6 +72,8 @@ class SearchResultCell: UITableViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(recentWeightLabel)
         contentView.addSubview(maxWeightLabel)
+        contentView.addSubview(bodyPartsScrollView)
+        bodyPartsScrollView.addSubview(bodyPartsStackView)
         contentView.addSubview(addButton)
         addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
         
@@ -64,10 +82,20 @@ class SearchResultCell: UITableViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
             
             recentWeightLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            recentWeightLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 1),
+            recentWeightLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
             
             maxWeightLabel.leadingAnchor.constraint(equalTo: recentWeightLabel.trailingAnchor, constant: 4),
             maxWeightLabel.topAnchor.constraint(equalTo: recentWeightLabel.topAnchor),
+            
+            bodyPartsScrollView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            bodyPartsScrollView.topAnchor.constraint(equalTo: recentWeightLabel.bottomAnchor, constant: 6),
+            bodyPartsScrollView.trailingAnchor.constraint(equalTo: addButton.leadingAnchor, constant: -8),
+            bodyPartsScrollView.heightAnchor.constraint(equalToConstant: 33),
+            
+            bodyPartsStackView.leadingAnchor.constraint(equalTo: bodyPartsScrollView.leadingAnchor),
+            bodyPartsStackView.topAnchor.constraint(equalTo: bodyPartsScrollView.topAnchor),
+            bodyPartsStackView.trailingAnchor.constraint(equalTo: bodyPartsScrollView.trailingAnchor),
+            bodyPartsStackView.bottomAnchor.constraint(equalTo: bodyPartsScrollView.bottomAnchor),
             
             addButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             addButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
@@ -93,6 +121,23 @@ class SearchResultCell: UITableViewCell {
         titleLabel.text = exercise.name
         recentWeightLabel.text = "최근 무게: \(exercise.recentWeight)kg"
         maxWeightLabel.text = "최대 무게: \(exercise.maxWeight)kg"
+        
+        bodyPartsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        exercise.bodyParts.forEach { bodyPart in
+            let label = UILabel()
+            label.text = bodyPart.rawValue
+            label.font = UIFont.font(.pretendardMedium, ofSize: 13)
+            label.textColor = .white
+            label.backgroundColor = .colorPrimary
+            label.layer.cornerRadius = 12
+            label.layer.masksToBounds = true
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.widthAnchor.constraint(equalToConstant: label.intrinsicContentSize.width + 16).isActive = true
+            label.heightAnchor.constraint(equalToConstant: 33).isActive = true
+            
+            bodyPartsStackView.addArrangedSubview(label)
+        }
     }
-    
 }
