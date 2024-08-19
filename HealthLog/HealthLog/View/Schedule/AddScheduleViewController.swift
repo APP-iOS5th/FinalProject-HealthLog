@@ -169,6 +169,15 @@ class AddScheduleViewController: UIViewController {
         tableView.reloadData()
         navigationItem.rightBarButtonItem?.isHidden = false
     }
+    
+    func removeSelectedExercise(at index: Int) {
+        selectedExercises.remove(at: index)
+        tableView.reloadData()
+        
+        if selectedExercises.isEmpty {
+            navigationItem.rightBarButtonItem?.isHidden = true
+        }
+    }
 }
 
 extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
@@ -186,6 +195,9 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         cell.configure(with: exerciseName)
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
+        cell.deleteButtonTapped = { [weak self] in
+            self?.removeSelectedExercise(at: indexPath.row)
+        }
         return cell
     }
     
