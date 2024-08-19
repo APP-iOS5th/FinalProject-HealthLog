@@ -34,6 +34,7 @@
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
 		4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */; };
+		75187B4C2C6C887400B9F84A /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 75187B4B2C6C887400B9F84A /* RealmSwift */; };
 		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
 		7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */; };
 		7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3232C69C4E300BDF142 /* ReportsViewController.swift */; };
@@ -41,6 +42,7 @@
 		7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */; };
 		7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0002C69FE05004CB285 /* SearchResultCell.swift */; };
 		7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */; };
+		75F636212C6C89AB00A9B2E4 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 75187B4B2C6C887400B9F84A /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
@@ -62,6 +64,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				75F636212C6C89AB00A9B2E4 /* RealmSwift in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,7 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C55C10E2C6C3257008B7D04 /* RealmSwift in Frameworks */,
+				75187B4C2C6C887400B9F84A /* RealmSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,7 +316,7 @@
 			);
 			name = HealthLog;
 			packageProductDependencies = (
-				3C55C10D2C6C3257008B7D04 /* RealmSwift */,
+				75187B4B2C6C887400B9F84A /* RealmSwift */,
 			);
 			productName = HealthLog;
 			productReference = 189401302C528B2000533E0A /* HealthLog.app */;
@@ -344,7 +347,7 @@
 			);
 			mainGroup = 189401272C528B2000533E0A;
 			packageReferences = (
-				CEE8BC352C65ACAF00E1D94F /* XCRemoteSwiftPackageReference "realm-swift" */,
+				75187B4A2C6C887400B9F84A /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 189401312C528B2000533E0A /* Products */;
 			projectDirPath = "";
@@ -559,7 +562,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2G8RK4H3ZB;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -593,7 +596,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2G8RK4H3ZB;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HealthLog/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -643,9 +646,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CEE8BC352C65ACAF00E1D94F /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+		75187B4A2C6C887400B9F84A /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/realm-swift.git";
+			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -654,8 +657,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3C55C10D2C6C3257008B7D04 /* RealmSwift */ = {
+		75187B4B2C6C887400B9F84A /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 75187B4A2C6C887400B9F84A /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

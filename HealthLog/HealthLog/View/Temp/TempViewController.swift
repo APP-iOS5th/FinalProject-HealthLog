@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TempViewController: UIViewController {
+class TempViewController: UIViewController, UITextFieldDelegate {
     
     private let stepperLabel = UILabel()
     private let stepperCountLabel = UILabel()
@@ -31,7 +31,7 @@ class TempViewController: UIViewController {
         stepperLabel.text = "세트 수"
         stepperLabel.textColor = .white
         stepperLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-
+        
         // Stepper 카운트 레이블 설정
         stepperCountLabel.text = "4"
         stepperCountLabel.textColor = .white
@@ -51,7 +51,7 @@ class TempViewController: UIViewController {
         let minusImage = UIImage(systemName: "minus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
         stepper.setIncrementImage(plusImage, for: .normal)
         stepper.setDecrementImage(minusImage, for: .normal)
-
+        
         // 컨테이너 뷰 설정
         containerView.backgroundColor = .colorSecondary
         containerView.layer.cornerRadius = 10
@@ -80,8 +80,8 @@ class TempViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             containerView.heightAnchor.constraint(equalToConstant: 50),
             
             stepperLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
@@ -166,6 +166,10 @@ class TempViewController: UIViewController {
             ]
         )
         
+        // textfield delegate 설정
+        weightTextField.delegate = self
+        repsTextField.delegate = self
+        
         let repsLabel = UILabel()
         repsLabel.text = "회"
         repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
@@ -177,7 +181,7 @@ class TempViewController: UIViewController {
         setView.addSubview(weightLabel)
         setView.addSubview(repsTextField)
         setView.addSubview(repsLabel)
-
+        
         // Auto Layout 설정
         setLabel.translatesAutoresizingMaskIntoConstraints = false
         weightTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -188,7 +192,7 @@ class TempViewController: UIViewController {
         NSLayoutConstraint.activate([
             
             setView.heightAnchor.constraint(equalToConstant: 35),
-
+            
             setLabel.leadingAnchor.constraint(equalTo: setView.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             
@@ -210,8 +214,14 @@ class TempViewController: UIViewController {
             repsLabel.trailingAnchor.constraint(equalTo: setView.trailingAnchor, constant: -8)
             
         ])
+        
+        return setView
+        
+    }
     
-    return setView
-
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        return newText.count <= 3
     }
 }

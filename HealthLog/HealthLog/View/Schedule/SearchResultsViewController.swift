@@ -9,7 +9,7 @@ import UIKit
 
 class SearchResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    let viewModel = ExerciseViewModel()
+    var viewModel = ExerciseViewModel()
     var onExerciseSelected: ((String) -> Void)?
     
     let tableView: UITableView = {
@@ -61,7 +61,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.exercises.count
+        return viewModel.filteredExercises.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -70,7 +70,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "searchResultCell", for: indexPath) as! SearchResultCell
-        let exercise = viewModel.exercises[indexPath.row]
+        let exercise = viewModel.filteredExercises[indexPath.row]
         cell.configure(with: exercise)
         cell.selectionStyle = .none
         cell.addButtonTapped = { [weak self] in
