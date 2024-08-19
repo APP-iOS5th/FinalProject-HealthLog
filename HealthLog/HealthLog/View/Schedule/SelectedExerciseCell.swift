@@ -238,8 +238,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     
     func configure(with exerciseName: String) {
         exerciseTitleLabel.text = exerciseName
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
