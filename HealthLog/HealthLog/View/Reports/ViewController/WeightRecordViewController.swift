@@ -15,6 +15,7 @@ class WeightRecordViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .colorSecondary
         button.layer.cornerRadius = 12
+        button.addTarget(self, action: #selector(inputModalView), for: .touchUpInside)
         
         // 커스텀 폰트 적용
         let customfont = UIFont.font(.pretendardSemiBold, ofSize: 18)
@@ -44,5 +45,19 @@ class WeightRecordViewController: UIViewController {
             inbodyinfoButton.widthAnchor.constraint(equalToConstant: 345),
             inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44)
         ])
+    }
+    
+    @objc private func inputModalView() {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .color1E1E1E
+        vc.modalPresentationStyle = .formSheet
+        
+        if let sheet = vc.sheetPresentationController {
+            sheet.detents = [.medium(), .medium()]  // 지원 할 크기 지정
+            sheet.prefersGrabberVisible = true  // 시트 상단에 그래버 표시
+            sheet.selectedDetentIdentifier = .medium  // 처음 크기 지정
+            sheet.largestUndimmedDetentIdentifier = .large  //뒷 배경 흐리게 적용이 안됨
+        }
+        present(vc, animated: true, completion: nil)
     }
 }
