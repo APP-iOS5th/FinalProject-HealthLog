@@ -15,12 +15,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
     
-    var todaySchedule: Schedule?
+    private var schedules: Schedule?
+    private var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
-    
-    private var schedules: Results<Schedule>?
     
     private let today = Calendar.current.startOfDay(for: Date())
     private var selectedDate: Date?
@@ -197,10 +196,20 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
             let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3) // (영우:bodyPart를 타입에 맞게 수정했습니다 정진님)
             
-            todaySchedule = Schedule(date: Date(), exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
+            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
+            
+            // add today schedule to realm
+            try! realm.write {
+                realm.add(newSchedule)
+            }
+            print("added today schedule")
+            
+            todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
+            
+            let allSchedules = realm.objects(Schedule.self)
+            print("date: \(today), all schedules: \(allSchedules)")
         }
-        tableView.reloadData()
-        updateTableViewHeight()
+        updateTableView()
     }
     
     @objc func addSchedule() {
@@ -212,6 +221,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         // add today schedule to routine
     }
     
+    private func updateTableView() {
+        tableView.reloadData()
+        updateTableViewHeight()
+    }
     private func customizeCalendarTextColor() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.changeHeaderTextColor(self.calendarView)
@@ -298,24 +311,38 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         guard let date = dateComponents.date else { return nil }
         
-        // today text color
-        if Calendar.current.isDate(date, inSameDayAs: today) {
-            return .default(color: .colorAccent, size: .large)
-        }
-        
         // selecteed date color
         if let selectedDate = selectedDate, Calendar.current.isDate(date, inSameDayAs: selectedDate) {
             return .default(color: .blue, size: .large)
         }
         
+        // display schedules depending on completed
+        if let schedule = getScheduleForDate(date) {
+            
+            print("Date: \(date), Schedule: \(schedule)")
+            
+            if isScheduleCompleted(schedule) {
+                return .default(color: .colorAccent, size: .large)
+            } else {
+                return .default(color: .color767676, size: .large)
+            }
+        }
         return nil
+    }
+    
+    private func getScheduleForDate(_ date: Date) -> Schedule? {
+        return realm.objects(Schedule.self).filter("date == %@", date).first
+    }
+    
+    private func isScheduleCompleted(_ schedule: Schedule) -> Bool {
+        return schedule.exercises.contains { $0.isCompleted == true }
     }
     
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents, let date = dateComponents.date else { return }
         selectedDate = date
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
-        tableView.reloadData()
+        updateTableView()
         customizeCalendarTextColor()
     }
     
