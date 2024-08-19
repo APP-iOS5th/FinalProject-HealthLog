@@ -33,22 +33,37 @@ class MuscleImageTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private lazy var backMuscleImage: UIImageView = {
+        let imageView = UIImageView()
+        let imageName = "back_body_layout"
+        imageView.image = UIImage(named: imageName)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(monthLabel)
         contentView.addSubview(divider)
         contentView.addSubview(frontMuscleImage)
+        contentView.addSubview(backMuscleImage)
         
         NSLayoutConstraint.activate([
-            monthLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            monthLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            monthLabel.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8),
+            monthLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             
             divider.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             divider.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             divider.topAnchor.constraint(equalTo: monthLabel.bottomAnchor, constant: 13),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
+            frontMuscleImage.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 13),
+            frontMuscleImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            
+            backMuscleImage.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 13),
+            backMuscleImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
             
         ])
         

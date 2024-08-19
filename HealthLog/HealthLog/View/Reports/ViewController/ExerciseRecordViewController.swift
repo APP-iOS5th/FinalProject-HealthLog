@@ -28,6 +28,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
         
+        exerciseRecordTableView.register(MuscleImageTableViewCell.self, forCellReuseIdentifier: "muscle")
         exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
         exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
         exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
@@ -79,6 +80,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
+            cell.backgroundColor = UIColor.clear
+            cell.selectionStyle = .none
+            return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
             cell.backgroundColor = UIColor(named: "ColorSecondary")
@@ -127,6 +133,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 362
         case 2:
             if indexPath.row == 0 {
                 return 42
