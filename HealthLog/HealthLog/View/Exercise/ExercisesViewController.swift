@@ -20,6 +20,8 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     private let dividerView = UIView()
     private let tableView = UITableView()
     
+    let testView = UIView()
+    
     //MARK: - Init
     
     init() {
@@ -38,7 +40,6 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         setupNavigationBar()
         setupSearchController()
-        setupSearchBarView()
         setupDivider()
         setupTableView()
         setupBinding()
@@ -88,27 +89,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         )
         searchBar.searchTextField.attributedPlaceholder = placeHolder
         searchBar.searchTextField.textColor = .white
-    }
-    
-    func setupSearchBarView() {
-//        searchBar.translatesAutoresizingMaskIntoConstraints = false
-//        searchBar.delegate = self
-//        searchBar.sizeToFit()
-//        searchBar.barTintColor = .black
-//        searchBar.searchTextField.backgroundColor = .colorSecondary
-//        searchBar.searchTextField.textColor = .white
-//        let placeHolder = NSAttributedString(
-//            string: "검색어 입력",
-//            attributes: [NSAttributedString.Key.foregroundColor:
-//                            UIColor.lightGray])
-//        searchBar.searchTextField.attributedPlaceholder = placeHolder
-//        view.addSubview(searchBar)
-//        
-//        NSLayoutConstraint.activate([
-//            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//        ])
+ 
     }
     
     func setupDivider() {
