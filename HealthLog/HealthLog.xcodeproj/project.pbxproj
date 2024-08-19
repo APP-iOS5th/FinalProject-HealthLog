@@ -24,6 +24,7 @@
 		184A58C12C6C8521009F2848 /* SectionTitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */; };
 		184A58C32C6C88D0009F2848 /* MostPerformedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */; };
 		184A58C52C6CFDC0009F2848 /* MostChangedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 184A58C42C6CFDC0009F2848 /* MostChangedTableViewCell.swift */; };
+		186301E22C73313900CA32AA /* MuscleImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */; };
 		189401342C528B2000533E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401332C528B2000533E0A /* AppDelegate.swift */; };
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
@@ -86,6 +87,7 @@
 		184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitleTableViewCell.swift; sourceTree = "<group>"; };
 		184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostPerformedTableViewCell.swift; sourceTree = "<group>"; };
 		184A58C42C6CFDC0009F2848 /* MostChangedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostChangedTableViewCell.swift; sourceTree = "<group>"; };
+		186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleImageTableViewCell.swift; sourceTree = "<group>"; };
 		189401302C528B2000533E0A /* HealthLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		189401332C528B2000533E0A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		189401352C528B2000533E0A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */,
 				184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */,
 				184A58C42C6CFDC0009F2848 /* MostChangedTableViewCell.swift */,
+				186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */,
 			);
 			path = TableCell;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
+				186301E22C73313900CA32AA /* MuscleImageTableViewCell.swift in Sources */,
 				184A58B72C6B28C9009F2848 /* ExerciseRecordViewController.swift in Sources */,
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
