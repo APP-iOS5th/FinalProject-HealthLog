@@ -15,6 +15,7 @@ class AddScheduleViewController: UIViewController {
     var selectedExercises = [String]()
     
     private var viewModel = ExerciseViewModel()
+    private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     override func viewDidLoad() {
