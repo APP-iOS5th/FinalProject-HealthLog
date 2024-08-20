@@ -29,18 +29,15 @@
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
-		3C55C10E2C6C3257008B7D04 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3C55C10D2C6C3257008B7D04 /* RealmSwift */; };
 		3C8CD5882C731AB90025B059 /* EditExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5872C731AB90025B059 /* EditExerciseViewController.swift */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
 		4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */; };
-
 		4B911CFA2C741F770032F438 /* RoutineSerchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B911CF92C741F770032F438 /* RoutineSerchResultsViewController.swift */; };
-
+		4B911CFC2C746DBB0032F438 /* RoutineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */; };
 		75187B4C2C6C887400B9F84A /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 75187B4B2C6C887400B9F84A /* RealmSwift */; };
-
 		7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */; };
 		7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */; };
 		7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3232C69C4E300BDF142 /* ReportsViewController.swift */; };
@@ -111,6 +108,7 @@
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
 		4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineExerciseListTableViewCell.swift; sourceTree = "<group>"; };
 		4B911CF92C741F770032F438 /* RoutineSerchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSerchResultsViewController.swift; sourceTree = "<group>"; };
+		4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineViewModel.swift; sourceTree = "<group>"; };
 		7566B3202C69AC9800BDF142 /* AddScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewController.swift; sourceTree = "<group>"; };
 		7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutinesViewController.swift; sourceTree = "<group>"; };
 		7566B3232C69C4E300BDF142 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
@@ -312,6 +310,7 @@
 				CEE29B942C69A90B00D82571 /* RealmManager.swift */,
 				CEE29B892C69950900D82571 /* ScheduleViewModel.swift */,
 				CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */,
+				4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -405,6 +404,7 @@
 				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */,
+				4B911CFC2C746DBB0032F438 /* RoutineViewModel.swift in Sources */,
 				184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
