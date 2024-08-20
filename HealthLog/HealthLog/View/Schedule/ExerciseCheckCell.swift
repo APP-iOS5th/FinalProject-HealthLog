@@ -45,7 +45,7 @@ class ExerciseCheckCell: UITableViewCell {
     
     lazy var exerciseCompletedSwitch: UISwitch = {
         let checkbox = UISwitch()
-        checkbox.onTintColor = .white
+        checkbox.onTintColor = .colorAccent
         checkbox.addTarget(self, action: #selector(didToggleCheckboxExercise(_:)), for: .valueChanged)
         checkbox.translatesAutoresizingMaskIntoConstraints = false
         return checkbox
@@ -160,7 +160,7 @@ class ExerciseCheckCell: UITableViewCell {
         
         let checkbox = UISwitch()
         checkbox.isOn = set.isCompleted
-        checkbox.onTintColor = .white
+        checkbox.onTintColor = .colorAccent
         checkbox.addTarget(self, action: #selector(didToggleCheckboxSet(_:)), for: .valueChanged)
         
         [setNumber, weightLabel, repsLabel, checkbox].forEach {
@@ -172,7 +172,7 @@ class ExerciseCheckCell: UITableViewCell {
         ])
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.distribution = .fillEqually
+        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
