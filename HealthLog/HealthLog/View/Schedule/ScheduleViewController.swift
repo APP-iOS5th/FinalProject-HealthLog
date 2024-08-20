@@ -221,6 +221,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let saveRoutineVC = SaveRoutineViewController(schedule: todaySchedule!)
             let navigationController = UINavigationController(rootViewController: saveRoutineVC)
             
+            // transparent black background
             let partialScreenVC = UIViewController()
             partialScreenVC.modalPresentationStyle = .overFullScreen
             partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)

@@ -37,6 +37,7 @@ class SaveRoutineViewController: UIViewController {
         textField.textColor = .white
         textField.backgroundColor = .colorSecondary
         textField.borderStyle = .roundedRect
+        textField.layer.cornerRadius = 10
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -71,6 +72,19 @@ class SaveRoutineViewController: UIViewController {
         setupUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // add observer of keyboard notification
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // delete observer of keyboard notification
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     private func setupUI() {
         view.backgroundColor = .colorPrimary
         
@@ -98,6 +112,30 @@ class SaveRoutineViewController: UIViewController {
     }
     
     // MARK: - Methods
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        let keyboardHeight = keyboardFrame.cgRectValue.height
+        
+        if let parentVC = self.parent {
+            UIView.animate(withDuration: animationDuration) {
+                parentVC.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        if let parentVC = self.parent {
+            UIView.animate(withDuration: animationDuration) {
+                parentVC.view.transform = .identity
+            }
+        }
+    }
     @objc private func cancelSave() {
         dismiss(animated: true)
     }
