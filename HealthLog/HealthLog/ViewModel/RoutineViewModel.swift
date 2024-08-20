@@ -28,9 +28,7 @@ class RoutineViewModel: ObservableObject{
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
         .CombineLatest($rutineNameinput, $rutines)
         .map( {(rutineNameinput: String, rutines: [Routine]) in
-            if rutineNameinput.isEmpty {
-                return false
-            }
+            
             if (rutines.contains{ $0.name == rutineNameinput}) {
                 return false
             } else {
