@@ -54,9 +54,9 @@ class MuscleImageTableViewCell: UITableViewCell {
             monthLabel.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8),
             monthLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             
+            divider.topAnchor.constraint(equalTo: monthLabel.bottomAnchor, constant: 8),
             divider.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             divider.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            divider.topAnchor.constraint(equalTo: monthLabel.bottomAnchor, constant: 13),
             divider.heightAnchor.constraint(equalToConstant: 1),
             
             frontMuscleImage.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 13),
