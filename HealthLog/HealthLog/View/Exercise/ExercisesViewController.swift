@@ -20,7 +20,9 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     private let dividerView = UIView()
     private let tableView = UITableView()
     
-    //MARK: - Init
+    let testView = UIView()
+    
+    // MARK: - Init
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -38,7 +40,6 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         setupNavigationBar()
         setupSearchController()
-        setupSearchBarView()
         setupDivider()
         setupTableView()
         setupBinding()
@@ -64,6 +65,11 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         let rightBarButton = UIBarButtonItem(customView: addButton)
         navigationItem.rightBarButtonItem = rightBarButton
+        
+        // MARK: tempStepperButton
+        
+        let tempStepperButton = UIBarButtonItem(title: "Stepper", style: .plain, target: self, action: #selector(tempStepperButtonTapped))
+        self.navigationItem.leftBarButtonItem = tempStepperButton
     }
     
     private func setupSearchController() {
@@ -88,27 +94,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         )
         searchBar.searchTextField.attributedPlaceholder = placeHolder
         searchBar.searchTextField.textColor = .white
-    }
-    
-    func setupSearchBarView() {
-//        searchBar.translatesAutoresizingMaskIntoConstraints = false
-//        searchBar.delegate = self
-//        searchBar.sizeToFit()
-//        searchBar.barTintColor = .black
-//        searchBar.searchTextField.backgroundColor = .colorSecondary
-//        searchBar.searchTextField.textColor = .white
-//        let placeHolder = NSAttributedString(
-//            string: "검색어 입력",
-//            attributes: [NSAttributedString.Key.foregroundColor:
-//                            UIColor.lightGray])
-//        searchBar.searchTextField.attributedPlaceholder = placeHolder
-//        view.addSubview(searchBar)
-//        
-//        NSLayoutConstraint.activate([
-//            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-//        ])
+ 
     }
     
     func setupDivider() {
@@ -173,7 +159,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
             selectedOption = .bodyPart(bodyPart)
         }
         print("searchBar selectedScope - \(selectedOption.name)")
-        viewModel.selectedOption = selectedOption
+        viewModel.updateOption(to: selectedOption)
     }
     
     // MARK: - UISearchResultsUpdating
@@ -204,6 +190,12 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     
     @objc func addButtonTapped() {
         print("addButtonTapped!")
+        let vc = ExercisesAddViewController()
+        navigationController?.pushViewController(vc, animated: false)
+    }
+    
+    @objc func tempStepperButtonTapped() {
+        print("tempButtonTapped!")
         let vc = TempViewController()
         navigationController?.pushViewController(vc, animated: false)
     }

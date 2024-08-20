@@ -194,7 +194,7 @@ extension RealmManager {
                 ScheduleExercise(
                     exercise: exercises.first(where: { $0.name == "스쿼트" })!,
                     order: 1,
-                    isCompleted: false,
+                    isCompleted: true,
                     sets: [
                         ScheduleExerciseSet(order: 1, weight: 90, reps: 15, isCompleted: false)
                     ]
@@ -202,7 +202,7 @@ extension RealmManager {
                 ScheduleExercise(
                     exercise: exercises.first(where: { $0.name == "레그 프레스" })!,
                     order: 2,
-                    isCompleted: false,
+                    isCompleted: true,
                     sets: [
                         ScheduleExerciseSet(order: 1, weight: 170, reps: 12, isCompleted: false)
                     ]
@@ -240,9 +240,9 @@ extension RealmManager {
             ]
             
             let sampleSchedule = [
-                Schedule(date: getDate(year: 2024, month: 7, day: 1), exercises: sampleExercises1, highlightedBodyParts: highlightedBodyParts1),
-                Schedule(date: getDate(year: 2024, month: 7, day: 15), exercises: sampleExercises2, highlightedBodyParts: highlightedBodyParts2),
-                Schedule(date: getDate(year: 2024, month: 8, day: 1), exercises: sampleExercises3, highlightedBodyParts: highlightedBodyParts3),
+                Schedule(date: getDate(year: 2024, month: 7, day: 15), exercises: sampleExercises1, highlightedBodyParts: highlightedBodyParts1),
+                Schedule(date: getDate(year: 2024, month: 8, day: 15), exercises: sampleExercises2, highlightedBodyParts: highlightedBodyParts2),
+                Schedule(date: getDate(year: 2024, month: 8, day: 21), exercises: sampleExercises3, highlightedBodyParts: highlightedBodyParts3),
             ]
             
             // 3. Realm에 샘플 데이터 추가
