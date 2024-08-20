@@ -146,7 +146,7 @@ class WeightRecordViewController: UIViewController {
 }
 
 // MARK: - ModalViewController
-class InputModalViewController: UIViewController {
+class InputModalViewController: UIViewController, UITextFieldDelegate {
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
@@ -250,10 +250,24 @@ class InputModalViewController: UIViewController {
         titleLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
 
         let numberTextField = UITextField()
-        numberTextField.backgroundColor = .color767676
+        numberTextField.backgroundColor = .color2F2F2F
         numberTextField.layer.cornerRadius = 12
         numberTextField.keyboardType = .numberPad
-
+        numberTextField.textColor = .white
+        numberTextField.textAlignment = .left
+        
+        // Placeholder 폰트, 색상 변경
+        numberTextField.attributedPlaceholder = NSAttributedString(
+            string: "-",
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.systemGray,
+                NSAttributedString.Key.font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // textfield delegate 설정
+        numberTextField.delegate = self
+        
         let unitLabel = UILabel()
         unitLabel.text = "Kg"
         unitLabel.textColor = .white
@@ -294,4 +308,11 @@ class InputModalViewController: UIViewController {
     @objc private func completeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+            let currentText = textField.text ?? ""
+            let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+            return newText.count <= 3
+        }
+    
 }
