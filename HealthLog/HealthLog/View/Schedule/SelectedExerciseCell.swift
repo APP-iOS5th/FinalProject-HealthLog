@@ -70,7 +70,8 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 20),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 50),
+            containerView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -15),
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
             
             stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
@@ -142,6 +143,9 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             let setView = createSetInputView(setNumber: i)
             stackView.addArrangedSubview(setView)
         }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
     func createSetInputView(setNumber: Int) -> UIView {
@@ -207,7 +211,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            setView.heightAnchor.constraint(equalToConstant: 35),
+            setView.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
             
             setLabel.leadingAnchor.constraint(equalTo: setView.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
