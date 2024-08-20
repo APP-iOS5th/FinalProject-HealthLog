@@ -28,7 +28,7 @@ class RoutinesViewController: UIViewController {
         
         let barButton = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill")?.withTintColor(.white, renderingMode: .alwaysTemplate), primaryAction: buttonAction)
         barButton.tintColor = UIColor(named: "ColorAccent")
-       return barButton
+        return barButton
     }()
     
     
@@ -41,6 +41,9 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        
     }
     func setupUI() {
         
@@ -48,7 +51,7 @@ class RoutinesViewController: UIViewController {
         self.title = "루틴"
         self.view.tintColor = .white
         
-    
+        
         
         let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backbarButtonItem
