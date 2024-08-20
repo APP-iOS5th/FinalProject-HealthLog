@@ -9,6 +9,7 @@ import Combine
 import RealmSwift
 import Foundation
 
+
 class ExerciseViewModel: ObservableObject {
     private var realm: Realm
     private var exercisesNotificationToken: NotificationToken?
@@ -32,7 +33,6 @@ class ExerciseViewModel: ObservableObject {
     @Published var isExerciseNameEmpty: Bool = true
     @Published var isExerciseBodyPartsEmpty: Bool = true
     
-   
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
@@ -156,6 +156,12 @@ class ExerciseViewModel: ObservableObject {
         try! realm.write {
             realm.add(exercise)
         }
+        
+        exerciseName = ""
+        exerciseBodyParts = []
+        exerciseRecentWeight = 0
+        exerciseMaxWeight = 0
+        exerciseDescription = ""
     }
     
     // MARK: - Setter
@@ -166,5 +172,49 @@ class ExerciseViewModel: ObservableObject {
     
     func setSearchText(to text: String) {
         searchText = text
+    }
+    
+    func initInputExercise() {
+        exerciseName = ""
+        exerciseBodyParts = []
+        exerciseRecentWeight = 0
+        exerciseMaxWeight = 0
+        exerciseDescription = ""
+    }
+}
+
+
+class InputExerciseObject: ObservableObject {
+    @Published var name: String = ""
+    @Published var bodyParts: [BodyPart] = []
+    @Published var recentWeight: Int = 0
+    @Published var maxWeight: Int = 0
+    @Published var description: String = ""
+    
+    // Exercise 객체의 상태를 변경하는 메서드
+    func update(name: String, bodyParts: [BodyPart]) {
+        self.name = name
+        self.bodyParts = bodyParts
+    }
+    
+    func initInputExercise() {
+        name = ""
+        bodyParts = []
+        recentWeight = 0
+        maxWeight = 0
+        description = ""
+    }
+    
+    func inputRealmExercise(realmExercise : Exercise) -> Exercise {
+        return Exercise(
+            name: name,
+            bodyParts: bodyParts,
+            descriptionText: description,
+            image: nil,
+            totalReps: 0,
+            recentWeight: recentWeight,
+            maxWeight: maxWeight,
+            isCustom: true
+        )
     }
 }
