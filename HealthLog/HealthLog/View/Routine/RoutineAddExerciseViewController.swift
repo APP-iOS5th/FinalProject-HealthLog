@@ -6,10 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 class RoutineAddExerciseViewController: UIViewController {
     
     let viewModel = ExerciseViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    var selectedExercises = [String]()
+    
+    
     var resultsViewController = RoutineSerchResultsViewController()
     private lazy var searchController: UISearchController = {
        let searchController = UISearchController(searchResultsController: resultsViewController)
@@ -88,22 +93,34 @@ class RoutineAddExerciseViewController: UIViewController {
 
 extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 107
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.filteredExercises.count
+        return selectedExercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
-        
-                cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
+        let exerciseName = selectedExercises[indexPath.row]
+        cell.configure(with: exerciseName)
         cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        
+        cell.heightDidChange = { [weak self] in
+            self?.tableView.reloadData()
+        }
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 310 // 초기 예상 높이
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.updateSearchText(to: searchText)
+    }
    
     
     

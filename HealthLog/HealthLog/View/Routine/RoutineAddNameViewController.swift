@@ -6,9 +6,12 @@
 //
 
 import UIKit
+import Combine
 
 class RoutineAddNameViewController: UIViewController {
     
+    var viewModel = RoutineViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -29,6 +32,7 @@ class RoutineAddNameViewController: UIViewController {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .red
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
         return label
     }()
     
@@ -52,7 +56,32 @@ class RoutineAddNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addName")
+        
+        
         setupUI()
+        
+        // 텍스트필드에서 나가는 이벤트를
+        // 뷰모델의 프로퍼티가 구독
+        nameTextField
+            .textPublisher
+            .print()
+            // 스레드 - 메인에서 받겠다.
+            .receive(on: RunLoop.main)
+            .assign(to: \.rutineNameinput, on: viewModel)
+            .store(in: &cancellables)
+        
+        // 버튼이 뷰모델의 퍼블리셔를 구독
+        viewModel.isMatchNameInput
+            .print()
+            .receive(on: RunLoop.main)
+            .assign(to: \.isValid, on: checkButton)
+            .store(in: &cancellables)
+        
+        viewModel.isMatchNameInput
+            .print()
+            .receive(on: RunLoop.main)
+            .assign(to: \.isValid, on: subTextLabel)
+            .store(in: &cancellables)
         
     }
     
@@ -63,6 +92,7 @@ class RoutineAddNameViewController: UIViewController {
         self.navigationController?.setupBarAppearance()
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "루틴 이름을 정해주세요"
+       
 
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         
@@ -93,7 +123,48 @@ class RoutineAddNameViewController: UIViewController {
             self.checkButton.trailingAnchor.constraint(equalTo: self.nameTextField.trailingAnchor),
             
         ])
-        
-        
     }
 }
+
+extension UITextField {
+    var textPublisher: AnyPublisher<String, Never> {
+        
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: self)
+        // UITextField 가져옴
+            .compactMap{ $0.object as? UITextField}
+        // String 가져옴
+            .map{ $0.text ?? ""}
+            .print()
+            .eraseToAnyPublisher()
+    }
+}
+
+extension UIButton {
+    var isValid: Bool {
+        get {
+            backgroundColor == UIColor.colorAccent
+        }
+        
+        set {
+            backgroundColor = newValue ? .colorAccent : .lightGray
+            isEnabled = newValue
+            
+        }
+    }
+}
+
+extension UILabel {
+    var isValid: Bool {
+        get {
+            isHidden == true
+        }
+        
+        set {
+            isHidden = !newValue
+            textColor = newValue ? .green : .red
+            text = newValue ? "사용 가능한 이름입니다." : "이미 존재하는 이름 입니다."
+            
+        }
+    }
+}
+

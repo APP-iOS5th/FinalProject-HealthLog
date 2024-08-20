@@ -39,6 +39,8 @@ class RoutineSerchResultsViewController: UIViewController {
     }
     
     
+    
+    
     func setupUI() {
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         navigationController?.setupBarAppearance()
@@ -62,6 +64,7 @@ class RoutineSerchResultsViewController: UIViewController {
         ])
         
     }
+    
     
 }
 
