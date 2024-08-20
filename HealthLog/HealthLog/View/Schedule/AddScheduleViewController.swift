@@ -72,9 +72,6 @@ class AddScheduleViewController: UIViewController {
             }
             return false
         }
-        print("validate")
-        print(!selectedExercises.isEmpty)
-        print(allFieldsFilled)
         navigationItem.rightBarButtonItem?.isEnabled = !selectedExercises.isEmpty && allFieldsFilled
     }
     
