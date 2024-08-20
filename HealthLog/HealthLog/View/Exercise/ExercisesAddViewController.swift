@@ -14,6 +14,7 @@ class ExercisesAddViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
+    private let numberOnlyDelegate = NumberOnlyTextFieldDelegate()
     
     let scrollView = UIScrollView()
     let stackView = UIStackView()
@@ -185,6 +186,8 @@ class ExercisesAddViewController: UIViewController {
         
         // MARK: recentWeightTextField
         recentWeightTextField.textColor = .white
+        recentWeightTextField.delegate = numberOnlyDelegate
+        recentWeightTextField.keyboardType = .numberPad
         recentWeightStackView.addArrangedSubview(recentWeightTextField)
     }
     
@@ -203,6 +206,8 @@ class ExercisesAddViewController: UIViewController {
         
         // MARK: maxWeightTextField
         maxWeightTextField.textColor = .white
+        maxWeightTextField.delegate = numberOnlyDelegate
+        maxWeightTextField.keyboardType = .numberPad
         maxWeightStackView.addArrangedSubview(maxWeightTextField)
     }
     
@@ -244,23 +249,68 @@ class ExercisesAddViewController: UIViewController {
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-                print("titleTextField change")
                 self.viewModel.checkDuplicateExerciseName(to: text)
+                self.viewModel.exerciseName = text
+                print("titleTextField change - \(self.viewModel.exerciseName)")
             }
             .store(in: &cancellables)
-        viewModel.$isDuplicateExerciseName
+        // MARK: bodypart
+        
+        // MARK: recentWeightTextField
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: recentWeightTextField)
+            .compactMap { ($0.object as? UITextField)?.text }
+            .sink { text in
+                print("recentWeightTextField change")
+                self.viewModel.exerciseRecentWeight = Int(text) ?? 0
+            }
+            .store(in: &cancellables)
+        
+        // MARK: maxWeightTextField
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: maxWeightTextField)
+            .compactMap { ($0.object as? UITextField)?.text }
+            .sink { text in
+                print("maxWeightTextField change")
+                self.viewModel.exerciseMaxWeight = Int(text) ?? 0
+            }
+            .store(in: &cancellables)
+        
+        // MARK: descriptionTextField
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: descriptionTextField)
+            .compactMap { ($0.object as? UITextField)?.text }
+            .sink { text in
+                print("descriptionTextField change")
+                self.viewModel.exerciseDescription = text
+            }
+            .store(in: &cancellables)
+        
+        // MARK: Duplicate ExerciseName Warning
+        viewModel.$hasDuplicateExerciseName
             .sink { [weak self] isDuplicateExerciseName in
                 self?.titleWarningLabel.isHidden = !isDuplicateExerciseName
             }
             .store(in: &cancellables)
-        
-        // MARK: exercise
     }
 
-    // MARK: Methods
+    // MARK: - Methods
     
     @objc func doneButtonTapped() {
         print("doneButtonTapped!")
+        viewModel.realmWriteExercise()
+        navigationController?.popViewController(animated: true)
     }
-    
+}
+
+
+class NumberOnlyTextFieldDelegate: NSObject, UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let currentString = textField.text ?? ""
+        let updatedString = (currentString as NSString)
+            .replacingCharacters(in: range, with: string)
+        
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: updatedString)
+        
+        return allowedCharacters.isSuperset(of: characterSet)
+    }
 }

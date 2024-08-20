@@ -20,15 +20,26 @@ class ExerciseViewModel: ObservableObject {
     @Published private(set) var exercises: [Exercise] = []
     @Published private(set) var filteredExercises: [Exercise] = []
     
-    @Published var exercise: Exercise = Exercise()
-    @Published private(set) var exerciseName: String = ""
-    @Published private(set) var isDuplicateExerciseName: Bool = false
+//    @Published var exercise: Exercise = Exercise()
+    @Published var exerciseName: String = ""
+    @Published var exerciseBodyParts: [BodyPart] = []
+    @Published var exerciseRecentWeight: Int = 0
+    @Published var exerciseMaxWeight: Int = 0
+    @Published var exerciseDescription: String = ""
     
+    @Published var isValidatedRequiredExerciseFields: Bool = true
+    @Published var hasDuplicateExerciseName: Bool = false
+    @Published var isExerciseNameEmpty: Bool = true
+    @Published var isExerciseBodyPartsEmpty: Bool = true
+    
+   
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
-        subjectExercises()
-        subjectSearchExercises()
+        setupBindings()
+        
+        // TODO: 임시용 bodyParts
+        exerciseBodyParts = [.abductors]
     }
     
     deinit {
@@ -52,20 +63,30 @@ class ExerciseViewModel: ObservableObject {
         }
     }
     
-    private func subjectExercises() {
-        // realm의 observe가 exercises를 갱신시 assign
+    private func setupBindings() {
+        // MARK: Sync filteredExercises
         $exercises.assign(to: &$filteredExercises)
-    }
-    
-    private func subjectSearchExercises() {
+
+        // MARK: Search Exercises Filter
         Publishers.CombineLatest(
             $searchText.throttle(
-                for: .milliseconds(99), 
+                for: .milliseconds(99),
                 scheduler: RunLoop.main, latest: true),
             $selectedOption
         )
         .sink { [weak self] _ in self?.filterExercises() }
         .store(in: &cancellables)
+
+        // MARK: Check RequiredExerciseFields Empty
+        Publishers.CombineLatest($exerciseName, $exerciseBodyParts)
+            .sink { exerciseName, exerciseBodyParts in
+                print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
+                
+                self.isExerciseNameEmpty = exerciseName.isEmpty
+                self.isExerciseBodyPartsEmpty = exerciseBodyParts.isEmpty
+                self.validateRequiredFields()
+            }
+            .store(in: &cancellables)
     }
     
     func filterExercises(by searchText: String) {
@@ -103,7 +124,38 @@ class ExerciseViewModel: ObservableObject {
     }
     
     func checkDuplicateExerciseName(to name: String) {
-        isDuplicateExerciseName = exercises.contains {$0.name == name}
+        hasDuplicateExerciseName = exercises.contains {$0.name == name}
+    }
+    
+    func validateRequiredFields() {
+        if hasDuplicateExerciseName { return }
+        if isExerciseNameEmpty { return }
+        if isExerciseBodyPartsEmpty { return }
+        
+        isValidatedRequiredExerciseFields = true
+        print("isValidatedRequiredExerciseFields - \(isValidatedRequiredExerciseFields)") // log
+    }
+    
+    func realmWriteExercise() {
+        if !isValidatedRequiredExerciseFields {
+            print("realmWriteExercise - isValidatedRequiredExerciseFields")
+            return
+        }
+        
+        let exercise: Exercise = Exercise(
+            name: exerciseName,
+            bodyParts: exerciseBodyParts,
+            descriptionText: exerciseDescription,
+            image: nil,
+            totalReps: 0,
+            recentWeight: exerciseRecentWeight,
+            maxWeight: exerciseMaxWeight,
+            isCustom: true
+        )
+        
+        try! realm.write {
+            realm.add(exercise)
+        }
     }
     
     // MARK: - Setter
@@ -115,5 +167,4 @@ class ExerciseViewModel: ObservableObject {
     func setSearchText(to text: String) {
         searchText = text
     }
-    
 }
