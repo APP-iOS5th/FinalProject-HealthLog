@@ -61,7 +61,21 @@ class AddScheduleViewController: UIViewController {
             NSAttributedString.Key.foregroundColor: UIColor.white
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
-        self.navigationItem.rightBarButtonItem?.isHidden = true
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    func validateCompletionButton() {
+        let allFieldsFilled = selectedExercises.allSatisfy { exerciseName in
+            if let indexPath = selectedExercises.firstIndex(of: exerciseName) {
+                let cell = tableView.cellForRow(at: IndexPath(row: indexPath, section: 0)) as? SelectedExerciseCell
+                return cell?.areAllFieldsFilled() ?? false
+            }
+            return false
+        }
+        print("validate")
+        print(!selectedExercises.isEmpty)
+        print(allFieldsFilled)
+        navigationItem.rightBarButtonItem?.isEnabled = !selectedExercises.isEmpty && allFieldsFilled
     }
     
     private func setupSearchController() {
@@ -101,8 +115,6 @@ class AddScheduleViewController: UIViewController {
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
-        //tableView.rowHeight = UITableView.automaticDimension
-        //tableView.estimatedRowHeight = 340
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
         headerView.backgroundColor = .clear
@@ -169,16 +181,13 @@ class AddScheduleViewController: UIViewController {
     func addSelectedExercise(_ exerciseName: String) {
         selectedExercises.append(exerciseName)
         tableView.reloadData()
-        navigationItem.rightBarButtonItem?.isHidden = false
+        validateCompletionButton()
     }
     
     func removeSelectedExercise(at index: Int) {
         selectedExercises.remove(at: index)
         tableView.reloadData()
-        
-        if selectedExercises.isEmpty {
-            navigationItem.rightBarButtonItem?.isHidden = true
-        }
+        validateCompletionButton()
     }
     
     private func setupKeyboard() {
@@ -214,7 +223,7 @@ class AddScheduleViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
-
+    
     @objc func tapHandler() {
         self.view.endEditing(true)
     }
@@ -236,6 +245,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         }
         cell.heightDidChange = { [weak self] in
             self?.tableView.reloadData()
+            self?.validateCompletionButton()
         }
         return cell
     }
@@ -245,7 +255,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 310 // 초기 예상 높이
+        return 310
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -263,6 +273,17 @@ extension UIView {
         for subview in self.subviews {
             if let firstResponder = subview.currentFirstResponder() {
                 return firstResponder
+            }
+        }
+        return nil
+    }
+    
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder?.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
             }
         }
         return nil

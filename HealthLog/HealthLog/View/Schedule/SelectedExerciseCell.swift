@@ -11,10 +11,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     
     var exerciseTitleLabel = UILabel()
     var deleteButton = UIButton(type: .system)
-    
+    let stepperLabel = UILabel()
     private let containerView = UIView()
     private let stackView = UIStackView()
-    
+    private var weightTextFields: [UITextField] = []
+    private var repsTextFields: [UITextField] = []
     var deleteButtonTapped: (() -> Void)?
     var heightDidChange: (() -> Void)?
     
@@ -134,6 +135,10 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         }
         updateSetInputs(for: value)
         heightDidChange?()
+        
+        if let viewController = self.parentViewController as? AddScheduleViewController {
+            viewController.validateCompletionButton()
+        }
     }
     
     func updateSetInputs(for count: Int) {
@@ -232,6 +237,8 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             repsLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             repsLabel.trailingAnchor.constraint(equalTo: setView.trailingAnchor, constant: -8)
         ])
+        weightTextFields.append(weightTextField)
+        repsTextFields.append(repsTextField)
         
         return setView
     }
@@ -247,6 +254,23 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        return newText.count <= 3
+        if newText.count > 3 {
+            return false
+        }
+        return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        DispatchQueue.main.async {
+            if let viewController = self.parentViewController as? AddScheduleViewController {
+                viewController.validateCompletionButton()
+            }
+        }
+    }
+    
+    func areAllFieldsFilled() -> Bool {
+        return stackView.arrangedSubviews.allSatisfy { setView in
+            setView.subviews.compactMap { $0 as? UITextField }.allSatisfy { !$0.text!.isEmpty }
+        }
     }
 }
