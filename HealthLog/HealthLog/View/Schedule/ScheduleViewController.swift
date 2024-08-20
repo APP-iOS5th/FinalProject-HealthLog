@@ -22,6 +22,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private let today = Calendar.current.startOfDay(for: Date())
     private var selectedDate: Date?
+    private var todayExerciseVolume: Int = 0
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
     
@@ -56,13 +57,30 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         return calendar
     }()
     
+    lazy var exerciseVolumeLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.text = "오늘의 볼륨량: 0"
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    lazy var separatorLine1: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorSecondary
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     lazy var labelContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
         let label = UILabel()
-        label.text = "오늘 할 운동"
         label.textColor = .white
+        label.text = "오늘 할 운동"
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         let button = UIButton()
@@ -94,7 +112,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         return view
     }()
     
-    lazy var separatorLine: UIView = {
+    lazy var separatorLine2: UIView = {
         let view = UIView()
         view.backgroundColor = .colorSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -115,7 +133,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         
         setupUI()
-        loadTodaySchedule()
+        loadSelectedDateSchedule(today)
         customizeCalendarTextColor()
     }
     
@@ -131,8 +149,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addArrangedSubview(calendarView)
+        contentView.addArrangedSubview(exerciseVolumeLabel)
+        contentView.addArrangedSubview(separatorLine1)
         contentView.addArrangedSubview(labelContainer)
-        contentView.addArrangedSubview(separatorLine)
+        contentView.addArrangedSubview(separatorLine2)
         contentView.addArrangedSubview(tableView)
         
         let safeArea = view.safeAreaLayoutGuide
@@ -151,9 +171,15 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             calendarView.heightAnchor.constraint(equalToConstant: 600),
             
+            exerciseVolumeLabel.heightAnchor.constraint(equalToConstant:20),
+            exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            exerciseVolumeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            separatorLine1.heightAnchor.constraint(equalToConstant: 2),
+            
             labelContainer.heightAnchor.constraint(equalToConstant: 50),
             
-            separatorLine.heightAnchor.constraint(equalToConstant: 2),
+            separatorLine2.heightAnchor.constraint(equalToConstant: 2),
             
             tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -176,39 +202,47 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             view.layoutIfNeeded()
     }
     
-    private func loadTodaySchedule() {
-        todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
+    private func loadSelectedDateSchedule(_ date: Date) {
+        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         
-        if todaySchedule == nil {
-            let exercises = realm.objects(Exercise.self)
-            let scheduleExerciseSet1 = ScheduleExerciseSet(order: 1, weight: 10, reps: 10, isCompleted: true)
-            let scheduleExerciseSet2 = ScheduleExerciseSet(order: 2, weight: 11, reps: 10, isCompleted: true)
-            let scheduleExerciseSet3 = ScheduleExerciseSet(order: 3, weight: 12, reps: 10, isCompleted: false)
-            let scheduleExerciseSet4 = ScheduleExerciseSet(order: 1, weight: 10, reps: 12, isCompleted: true)
-            let scheduleExerciseSet5 = ScheduleExerciseSet(order: 2, weight: 12, reps: 12, isCompleted: false)
-            let scheduleExerciseSet6 = ScheduleExerciseSet(order: 3, weight: 14, reps: 12, isCompleted: false)
-            
-            let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
-            let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
-            
-            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
-            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
-            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3) // (영우:bodyPart를 타입에 맞게 수정했습니다 정진님)
-            
-            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
-            
-            // add today schedule to realm
-            try! realm.write {
-                realm.add(newSchedule)
+        // to create todaySchedule
+//        if todaySchedule == nil {
+//            let exercises = realm.objects(Exercise.self)
+//            let scheduleExerciseSet1 = ScheduleExerciseSet(order: 1, weight: 10, reps: 10, isCompleted: true)
+//            let scheduleExerciseSet2 = ScheduleExerciseSet(order: 2, weight: 11, reps: 10, isCompleted: true)
+//            let scheduleExerciseSet3 = ScheduleExerciseSet(order: 3, weight: 12, reps: 10, isCompleted: false)
+//            let scheduleExerciseSet4 = ScheduleExerciseSet(order: 1, weight: 10, reps: 12, isCompleted: true)
+//            let scheduleExerciseSet5 = ScheduleExerciseSet(order: 2, weight: 12, reps: 12, isCompleted: false)
+//            let scheduleExerciseSet6 = ScheduleExerciseSet(order: 3, weight: 14, reps: 12, isCompleted: false)
+//            
+//            let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
+//            let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
+//            
+//            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
+//            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
+//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3) // (영우:bodyPart를 타입에 맞게 수정했습니다 정진님)
+//            
+//            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
+//            
+//            // add today schedule to realm
+//            try! realm.write {
+//                realm.add(newSchedule)
+//            }
+//            
+//            todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
+//        }
+        todayExerciseVolume = 0
+        if let selectedSchedule = todaySchedule {
+            // calculate exercise volume
+            for scheduleExercise in selectedSchedule.exercises {
+                for set in scheduleExercise.sets {
+                    todayExerciseVolume += set.weight * set.reps
+                    print("\(todayExerciseVolume), \(set.weight) * \(set.reps)")
+                }
             }
-            print("added today schedule")
-            
-            todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
-            
-            let allSchedules = realm.objects(Schedule.self)
-            print("date: \(today), all schedules: \(allSchedules)")
+            exerciseVolumeLabel.text = "오늘의 볼륨량: \(todayExerciseVolume)"
+            updateTableView()
         }
-        updateTableView()
     }
     
     @objc func addSchedule() {
@@ -347,9 +381,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         // display schedules depending on completed
         if let schedule = getScheduleForDate(date) {
-            
-            print("Date: \(date), Schedule: \(schedule)")
-            
             if isScheduleCompleted(schedule) {
                 return .default(color: .colorAccent, size: .large)
             } else {
@@ -370,7 +401,8 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents, let date = dateComponents.date else { return }
         selectedDate = date
-        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
+//        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
+        loadSelectedDateSchedule(date)
         updateTableView()
         customizeCalendarTextColor()
     }
