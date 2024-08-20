@@ -15,6 +15,7 @@ class AddScheduleViewController: UIViewController {
     var selectedExercises = [String]()
     
     private var viewModel = ExerciseViewModel()
+    private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     override func viewDidLoad() {
@@ -28,6 +29,8 @@ class AddScheduleViewController: UIViewController {
         
         searchController.searchBar.delegate = self
         bindViewModel()
+        setupKeyboard()
+        hideKeyBoardWhenTappedScreen()
     }
     
     private func bindViewModel() {
@@ -59,7 +62,18 @@ class AddScheduleViewController: UIViewController {
             NSAttributedString.Key.foregroundColor: UIColor.white
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
-        self.navigationItem.rightBarButtonItem?.isHidden = true
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    func validateCompletionButton() {
+        let allFieldsFilled = selectedExercises.allSatisfy { exerciseName in
+            if let indexPath = selectedExercises.firstIndex(of: exerciseName) {
+                let cell = tableView.cellForRow(at: IndexPath(row: indexPath, section: 0)) as? SelectedExerciseCell
+                return cell?.areAllFieldsFilled() ?? false
+            }
+            return false
+        }
+        navigationItem.rightBarButtonItem?.isEnabled = !selectedExercises.isEmpty && allFieldsFilled
     }
     
     private func setupSearchController() {
@@ -99,8 +113,6 @@ class AddScheduleViewController: UIViewController {
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
-        //tableView.rowHeight = UITableView.automaticDimension
-        //tableView.estimatedRowHeight = 340
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
         headerView.backgroundColor = .clear
@@ -167,16 +179,51 @@ class AddScheduleViewController: UIViewController {
     func addSelectedExercise(_ exerciseName: String) {
         selectedExercises.append(exerciseName)
         tableView.reloadData()
-        navigationItem.rightBarButtonItem?.isHidden = false
+        validateCompletionButton()
     }
     
     func removeSelectedExercise(at index: Int) {
         selectedExercises.remove(at: index)
         tableView.reloadData()
+        validateCompletionButton()
+    }
+    
+    private func setupKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
         
-        if selectedExercises.isEmpty {
-            navigationItem.rightBarButtonItem?.isHidden = true
+        let keyboardHeight = keyboardFrame.height
+        let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+        
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+        
+        // 현재 선택된 텍스트 필드를 키보드 위로 이동
+        if let activeField = view.currentFirstResponder() {
+            let rect = tableView.convert(activeField.frame, from: activeField.superview)
+            tableView.scrollRectToVisible(rect, animated: true)
         }
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        tableView.contentInset = contentInsets
+        tableView.scrollIndicatorInsets = contentInsets
+    }
+    
+    func hideKeyBoardWhenTappedScreen() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func tapHandler() {
+        self.view.endEditing(true)
     }
 }
 
@@ -196,6 +243,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         }
         cell.heightDidChange = { [weak self] in
             self?.tableView.reloadData()
+            self?.validateCompletionButton()
         }
         return cell
     }
@@ -205,10 +253,37 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 310 // 초기 예상 높이
+        return 310
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.updateSearchText(to: searchText)
+    }
+}
+
+// 현재 선택된 UITextField를 찾는 메서드
+extension UIView {
+    func currentFirstResponder() -> UIView? {
+        if self.isFirstResponder {
+            return self
+        }
+        
+        for subview in self.subviews {
+            if let firstResponder = subview.currentFirstResponder() {
+                return firstResponder
+            }
+        }
+        return nil
+    }
+    
+    var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder?.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
     }
 }

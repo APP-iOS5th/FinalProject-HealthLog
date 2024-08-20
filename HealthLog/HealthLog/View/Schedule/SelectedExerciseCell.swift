@@ -11,10 +11,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     
     var exerciseTitleLabel = UILabel()
     var deleteButton = UIButton(type: .system)
-    
+    let stepperLabel = UILabel()
     private let containerView = UIView()
     private let stackView = UIStackView()
-    
+    private var weightTextFields: [UITextField] = []
+    private var repsTextFields: [UITextField] = []
     var deleteButtonTapped: (() -> Void)?
     var heightDidChange: (() -> Void)?
     
@@ -62,7 +63,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             exerciseTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             exerciseTitleLabel.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),
             
-            deleteButton.topAnchor.constraint(equalTo: exerciseTitleLabel.topAnchor, constant: 2),
+            deleteButton.centerYAnchor.constraint(equalTo: exerciseTitleLabel.centerYAnchor),
             deleteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             deleteButton.widthAnchor.constraint(equalToConstant: 14),
             deleteButton.heightAnchor.constraint(equalToConstant: 14),
@@ -70,9 +71,10 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 20),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: 50),
+            containerView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -15),
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
             
-            stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 10),
+            stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
@@ -133,6 +135,10 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         }
         updateSetInputs(for: value)
         heightDidChange?()
+        
+        if let viewController = self.parentViewController as? AddScheduleViewController {
+            viewController.validateCompletionButton()
+        }
     }
     
     func updateSetInputs(for count: Int) {
@@ -142,6 +148,9 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             let setView = createSetInputView(setNumber: i)
             stackView.addArrangedSubview(setView)
         }
+        
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
     func createSetInputView(setNumber: Int) -> UIView {
@@ -207,7 +216,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            setView.heightAnchor.constraint(equalToConstant: 35),
+            setView.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
             
             setLabel.leadingAnchor.constraint(equalTo: setView.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
@@ -228,6 +237,8 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             repsLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             repsLabel.trailingAnchor.constraint(equalTo: setView.trailingAnchor, constant: -8)
         ])
+        weightTextFields.append(weightTextField)
+        repsTextFields.append(repsTextField)
         
         return setView
     }
@@ -238,13 +249,33 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     
     func configure(with exerciseName: String) {
         exerciseTitleLabel.text = exerciseName
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        return newText.count <= 3
+        if newText.count > 3 {
+            return false
+        }
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: string)
+        if allowedCharacters.isSuperset(of: characterSet) == false {
+            return false
+        }
+        return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        DispatchQueue.main.async {
+            if let viewController = self.parentViewController as? AddScheduleViewController {
+                viewController.validateCompletionButton()
+            }
+        }
+    }
+    
+    func areAllFieldsFilled() -> Bool {
+        return stackView.arrangedSubviews.allSatisfy { setView in
+            setView.subviews.compactMap { $0 as? UITextField }.allSatisfy { !$0.text!.isEmpty }
+        }
     }
 }
