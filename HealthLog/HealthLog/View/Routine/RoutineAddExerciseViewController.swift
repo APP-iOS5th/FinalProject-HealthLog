@@ -46,14 +46,15 @@ class RoutineAddExerciseViewController: UIViewController {
         setupUI()
     }
    
-    
+ 
     
     func setupUI() {
         self.navigationController?.setupBarAppearance()
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-        self.navigationItem.searchController = searchController
+        
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "운동을 추가해주세요."
+        self.navigationItem.hidesSearchBarWhenScrolling = false
+        self.navigationItem.searchController = searchController
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         tabBarController?.tabBar.isHidden = true
         navigationController?.setupBarAppearance()
