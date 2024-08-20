@@ -20,6 +20,10 @@ class ExerciseViewModel: ObservableObject {
     @Published private(set) var exercises: [Exercise] = []
     @Published private(set) var filteredExercises: [Exercise] = []
     
+    @Published var exercise: Exercise = Exercise()
+    @Published private(set) var exerciseName: String = ""
+    @Published private(set) var isDuplicateExerciseName: Bool = false
+    
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
@@ -96,18 +100,20 @@ class ExerciseViewModel: ObservableObject {
             // 이 운동이 검색어와 선택한 운동 부위에 해당하는가
             return isSearchText && isBodyPart
         }
-        
-//        print(" \(filteredExercises.map { $0.name }) / ")
     }
     
-    func updateOption(to option: BodyPartOption) {
+    func checkDuplicateExerciseName(to name: String) {
+        isDuplicateExerciseName = exercises.contains {$0.name == name}
+    }
+    
+    // MARK: - Setter
+    
+    func setOption(to option: BodyPartOption) {
         selectedOption = option
-//        filterExercises()
     }
     
-    func updateSearchText(to text: String) {
+    func setSearchText(to text: String) {
         searchText = text
-//        filterExercises()
     }
     
 }

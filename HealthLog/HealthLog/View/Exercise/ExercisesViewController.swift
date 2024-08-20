@@ -159,14 +159,14 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
             selectedOption = .bodyPart(bodyPart)
         }
         print("searchBar selectedScope - \(selectedOption.name)")
-        viewModel.updateOption(to: selectedOption)
+        viewModel.setOption(to: selectedOption)
     }
     
     // MARK: - UISearchResultsUpdating
     
     func updateSearchResults(for searchController: UISearchController) {
         guard let searchText = searchController.searchBar.text else { return }
-        viewModel.updateSearchText(to: searchText)
+        viewModel.setSearchText(to: searchText)
     }
     
     // MARK: - UITableViewDataSource
