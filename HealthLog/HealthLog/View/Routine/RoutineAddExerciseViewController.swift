@@ -6,19 +6,21 @@
 //
 
 import UIKit
+import Combine
 
 class RoutineAddExerciseViewController: UIViewController {
     
     let viewModel = ExerciseViewModel()
+    private var cancellables = Set<AnyCancellable>()
+    var selectedExercises = [String]()
     
     
-    private lazy var textLabel: UILabel = {
-        let label = UILabel()
-        label.text = "운동을 추가해주세요."
-        label.font =  UIFont.font(.pretendardSemiBold, ofSize: 20)
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    var resultsViewController = RoutineSerchResultsViewController()
+    private lazy var searchController: UISearchController = {
+       let searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController.searchBar.placeholder = "운동명 거색"
+        searchController.searchResultsUpdater = self
+        return searchController
     }()
     
     private lazy var tableView: UITableView = {
@@ -34,30 +36,7 @@ class RoutineAddExerciseViewController: UIViewController {
     }()
     
     // Test를 위해 빌려옴
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "운동명 검색"
-        searchBar.searchBarStyle = .minimal
-        searchBar.tintColor = .white
-        searchBar.barTintColor = .white
-        searchBar.delegate = self
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        
-        if let textField = searchBar.value(forKey: "searchField") as? UITextField {
-            textField.attributedPlaceholder = NSAttributedString(
-                string: searchBar.placeholder ?? "",
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray]
-            )
-            textField.textColor = .white
-            
-            if let leftView = textField.leftView as? UIImageView {
-                leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
-                leftView.tintColor = .white
-            }
-        }
-        
-        return searchBar
-    }()
+   
     private lazy var dividerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "ColorSecondary")
@@ -71,35 +50,38 @@ class RoutineAddExerciseViewController: UIViewController {
         print("addExercise")
         setupUI()
     }
-    
+   
+ 
     
     func setupUI() {
+        self.navigationController?.setupBarAppearance()
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.title = "운동을 추가해주세요."
+        self.navigationItem.hidesSearchBarWhenScrolling = false
+        self.navigationItem.searchController = searchController
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         tabBarController?.tabBar.isHidden = true
         navigationController?.setupBarAppearance()
         
+        
         tableView.isHidden = true
         
         //MARK: - addSubview
-        self.view.addSubview(textLabel)
+        
         self.view.addSubview(dividerView)
-        self.view.addSubview(searchBar)
         self.view.addSubview(tableView)
         
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant:  12),
-            self.textLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 24),
-            self.dividerView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 13),
-            self.dividerView.leadingAnchor.constraint(equalTo: self.textLabel.leadingAnchor),
+            self.dividerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 13),
+            self.dividerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             self.dividerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
             self.dividerView.heightAnchor.constraint(equalToConstant: 1),
-            self.searchBar.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor,constant: 13),
-            self.searchBar.leadingAnchor.constraint(equalTo: self.textLabel.leadingAnchor),
-            self.searchBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
-            self.searchBar.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            self.tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 3),
+            
+          
+            self.tableView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 3),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
@@ -111,56 +93,47 @@ class RoutineAddExerciseViewController: UIViewController {
 
 extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 107
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.filteredExercises.count
+        return selectedExercises.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
-        
-                cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
+        let exerciseName = selectedExercises[indexPath.row]
+        cell.configure(with: exerciseName)
         cell.selectionStyle = .none
+        cell.backgroundColor = .clear
+        
+        cell.heightDidChange = { [weak self] in
+            self?.tableView.reloadData()
+        }
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 310 // 초기 예상 높이
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        viewModel.updateSearchText(to: searchText)
+    }
    
     
     
     
 }
 
-
-extension RoutineAddExerciseViewController: UISearchBarDelegate {
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        self.tableView.isHidden = false
-        self.searchBar.setShowsCancelButton(true, animated: true)
-
-        tableView.reloadData()
-    }
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.tableView.isHidden = true
+extension RoutineAddExerciseViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else {
+            return
+        }
         
-        self.searchBar.setShowsCancelButton(false, animated: true)
-
-
+        
     }
-    
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.filterExercises(by: searchText)
-        tableView.reloadData()
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
-        viewModel.filterExercises(by: "")
-        tableView.reloadData()
-    }
-
 }
+

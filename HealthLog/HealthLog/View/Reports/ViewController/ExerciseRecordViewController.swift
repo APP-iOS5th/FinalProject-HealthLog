@@ -14,6 +14,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorColor = UIColor(named: "Color525252")
+
+        
+        // 테이믈 가장 맨위 여백 지우기 (insetGroup)
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        
         return tableView
     }()
     
@@ -23,11 +28,12 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .blue
+        view.backgroundColor = .clear
         
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
         
+        exerciseRecordTableView.register(MuscleImageTableViewCell.self, forCellReuseIdentifier: "muscle")
         exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
         exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
         exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
@@ -79,6 +85,12 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
+            cell.backgroundColor = UIColor.clear
+            
+            cell.selectionStyle = .none
+            return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
             cell.backgroundColor = UIColor(named: "ColorSecondary")
@@ -105,6 +117,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.configureCell()
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 return cell
@@ -127,6 +140,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 372
         case 2:
             if indexPath.row == 0 {
                 return 42

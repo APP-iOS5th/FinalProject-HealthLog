@@ -66,10 +66,10 @@ class ReportsViewController: UIViewController {
         return control
     }()
     
-    let exerciseRecordVC = ExerciseRecordViewController()
-    let weightRecordVC = WeightRecordViewController()
+    private let exerciseRecordVC = ExerciseRecordViewController()
+    private let weightRecordVC = WeightRecordViewController()
     
-    var currentVC: UIViewController?
+    private var currentVC: UIViewController?
     
 
     override func viewDidLoad() {
@@ -176,7 +176,7 @@ class ReportsViewController: UIViewController {
                 viewController.view.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
                 viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
                 viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-                viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70)
             ])
         }
     
