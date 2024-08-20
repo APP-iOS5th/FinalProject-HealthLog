@@ -8,14 +8,7 @@
 import UIKit
 
 class RoutineAddNameViewController: UIViewController {
-    private lazy var textLabel: UILabel = {
-        let label = UILabel()
-        label.text = "루틴 이름을 정해주세요."
-        label.font =  UIFont.font(.pretendardSemiBold, ofSize: 20)
-        label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -64,8 +57,13 @@ class RoutineAddNameViewController: UIViewController {
     }
     
 
+
     
     func setupUI() {
+        self.navigationController?.setupBarAppearance()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.title = "루틴 이름을 정해주세요"
+
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         
         let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
@@ -73,7 +71,6 @@ class RoutineAddNameViewController: UIViewController {
         
         navigationController?.setupBarAppearance()
         //MARK: - addSubview
-        self.view.addSubview(textLabel)
         self.view.addSubview(nameTextField)
         self.view.addSubview(subTextLabel)
         self.view.addSubview(checkButton)
@@ -82,10 +79,10 @@ class RoutineAddNameViewController: UIViewController {
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant:  12),
-            self.textLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 24),
-            self.nameTextField.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: 10),
-            self.nameTextField.leadingAnchor.constraint(equalTo: self.textLabel.leadingAnchor),
+           
+            
+            self.nameTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
+            self.nameTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
             self.nameTextField.heightAnchor.constraint(equalToConstant: 44),
             self.subTextLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor, constant: 5),
