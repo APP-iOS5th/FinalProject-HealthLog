@@ -11,7 +11,8 @@ extension UINavigationController {
     func setupBarAppearance() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        
+        appearance.largeTitleTextAttributes = [ .font: UIFont.font(.pretendardSemiBold, ofSize: 20),
+                                                .foregroundColor: UIColor.white ]
         appearance.titleTextAttributes = [.font: UIFont.font(.pretendardSemiBold, ofSize: 20),
                                           .foregroundColor: UIColor.white]
         

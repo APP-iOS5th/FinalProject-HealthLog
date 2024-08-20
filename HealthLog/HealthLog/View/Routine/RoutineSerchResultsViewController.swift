@@ -1,22 +1,15 @@
 //
-//  RoutineAddExerciseViewController.swift
+//  RoutinesSerchResultsViewController.swift
 //  HealthLog
 //
-//  Created by 어재선 on 8/13/24.
+//  Created by 어재선 on 8/20/24.
 //
 
 import UIKit
 
-class RoutineAddExerciseViewController: UIViewController {
+class RoutineSerchResultsViewController: UIViewController {
     
     let viewModel = ExerciseViewModel()
-    var resultsViewController = RoutineSerchResultsViewController()
-    private lazy var searchController: UISearchController = {
-       let searchController = UISearchController(searchResultsController: resultsViewController)
-        searchController.searchBar.placeholder = "운동명 거색"
-        searchController.searchResultsUpdater = self
-        return searchController
-    }()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -29,9 +22,7 @@ class RoutineAddExerciseViewController: UIViewController {
         return tableView
         
     }()
-    
-    // Test를 위해 빌려옴
-   
+  
     private lazy var dividerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "ColorSecondary")
@@ -43,24 +34,14 @@ class RoutineAddExerciseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addExercise")
+        tableView.reloadData()
         setupUI()
     }
-   
     
     
     func setupUI() {
-        self.navigationController?.setupBarAppearance()
-        self.navigationItem.hidesSearchBarWhenScrolling = false
-        self.navigationItem.searchController = searchController
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationItem.title = "운동을 추가해주세요."
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
-        tabBarController?.tabBar.isHidden = true
         navigationController?.setupBarAppearance()
-        
-        
-        tableView.isHidden = true
-        
         //MARK: - addSubview
         
         self.view.addSubview(dividerView)
@@ -74,7 +55,6 @@ class RoutineAddExerciseViewController: UIViewController {
             self.dividerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
             self.dividerView.heightAnchor.constraint(equalToConstant: 1),
             
-          
             self.tableView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 3),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
@@ -85,7 +65,7 @@ class RoutineAddExerciseViewController: UIViewController {
     
 }
 
-extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewDataSource {
+extension RoutineSerchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 107
@@ -107,15 +87,5 @@ extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewData
     
     
     
-}
-
-extension RoutineAddExerciseViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else {
-            return
-        }
-        
-        
-    }
 }
 

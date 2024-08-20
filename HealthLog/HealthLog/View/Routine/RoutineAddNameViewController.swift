@@ -62,6 +62,11 @@ class RoutineAddNameViewController: UIViewController {
         setupUI()
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+
+    }
     
 
     
