@@ -118,10 +118,6 @@ extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewData
         return 310 // 초기 예상 높이
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.updateSearchText(to: searchText)
-    }
-   
     
     
     
