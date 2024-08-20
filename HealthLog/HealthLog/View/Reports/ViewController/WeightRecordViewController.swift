@@ -98,7 +98,8 @@ class WeightRecordViewController: UIViewController {
        unitLabel.textColor = .white
        unitLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
        unitLabel.textAlignment = .center
-       
+        
+       // boxView에 추가
        boxView.addSubview(titleLabel)
        boxView.addSubview(dividerView)
        boxView.addSubview(valueLabel)
@@ -110,7 +111,7 @@ class WeightRecordViewController: UIViewController {
        unitLabel.translatesAutoresizingMaskIntoConstraints = false
        
        NSLayoutConstraint.activate([
-           titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 10),
+           titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 13),
            titleLabel.centerXAnchor.constraint(equalTo: boxView.centerXAnchor),
            
            dividerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
@@ -128,6 +129,7 @@ class WeightRecordViewController: UIViewController {
        return boxView
    }
     
+    // MARK: - Actions
     @objc private func inputModalView() {
         let vc = InputModalViewController()
         vc.modalPresentationStyle = .formSheet
@@ -171,36 +173,9 @@ class InputModalViewController: UIViewController {
         return label
     }()
     
-    // 스택뷰에서 텍스트필드 값만 huggingPriority주고 싶었지만 원하는 대로 잘 안되서 UIView로 가야하나 고민이 됩니다.
-    private func createInuptStack(title: String) -> UIStackView {
-     let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.textColor = .white
-        titleLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
-
-     let numbertextField = UITextField()
-        numbertextField.backgroundColor = .color767676   // 임시로 색상 바꿈 기존 2E2E2E
-        numbertextField.layer.cornerRadius = 12
-        numbertextField.keyboardType = .numberPad  // 키보드패드 숫자패드로 변경
-        
-     let unitLabel = UILabel()
-        unitLabel.text = "Kg"
-        unitLabel.textColor = .white
-        unitLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
-        
-     let stackView = UIStackView(arrangedSubviews: [titleLabel, numbertextField, unitLabel])
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.spacing = 20
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
-     return stackView
-    }
-    
-    private lazy var weightStack = createInuptStack(title: "몸무게")
-    private lazy var musclesStack = createInuptStack(title: "골격근량")
-    private lazy var fatStack = createInuptStack(title: "체지방")
+    private lazy var weightView = createInputView(title: "몸무게")
+    private lazy var musclesView = createInputView(title: "골격근량")
+    private lazy var fatView = createInputView(title: "체지방")
     
     private let noteLabel: UILabel = {
         let label = UILabel()
@@ -210,7 +185,6 @@ class InputModalViewController: UIViewController {
         label.textAlignment = .center
         return label
     }()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -225,19 +199,18 @@ class InputModalViewController: UIViewController {
         view.addSubview(cancelButton)
         view.addSubview(completeButton)
         view.addSubview(titleLabel)
-        view.addSubview(weightStack)
-        view.addSubview(musclesStack)
-        view.addSubview(fatStack)
+        view.addSubview(weightView)
+        view.addSubview(musclesView)
+        view.addSubview(fatView)
         view.addSubview(noteLabel)
-
         
         // Auto Layout 설정
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         completeButton.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        weightStack.translatesAutoresizingMaskIntoConstraints = false
-        musclesStack.translatesAutoresizingMaskIntoConstraints = false
-        fatStack.translatesAutoresizingMaskIntoConstraints = false
+        weightView.translatesAutoresizingMaskIntoConstraints = false
+        musclesView.translatesAutoresizingMaskIntoConstraints = false
+        fatView.translatesAutoresizingMaskIntoConstraints = false
         noteLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -250,23 +223,70 @@ class InputModalViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 13),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 44),
             
-            weightStack.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
-            weightStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 44),
-            weightStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -44),
-           
-            musclesStack.topAnchor.constraint(equalTo: weightStack.bottomAnchor, constant: 20),
-            musclesStack.leadingAnchor.constraint(equalTo: weightStack.leadingAnchor),
-            musclesStack.trailingAnchor.constraint(equalTo: weightStack.trailingAnchor),
-           
-            fatStack.topAnchor.constraint(equalTo: musclesStack.bottomAnchor, constant: 20),
-            fatStack.leadingAnchor.constraint(equalTo: weightStack.leadingAnchor),
-            fatStack.trailingAnchor.constraint(equalTo: weightStack.trailingAnchor),
-           
-            noteLabel.topAnchor.constraint(equalTo: fatStack.bottomAnchor, constant: 26),
+            weightView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            weightView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 44),
+            weightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -44),
+ 
+            musclesView.topAnchor.constraint(equalTo: weightView.bottomAnchor, constant: 20),
+            musclesView.leadingAnchor.constraint(equalTo: weightView.leadingAnchor),
+            musclesView.trailingAnchor.constraint(equalTo: weightView.trailingAnchor),
+
+            fatView.topAnchor.constraint(equalTo: musclesView.bottomAnchor, constant: 20),
+            fatView.leadingAnchor.constraint(equalTo: weightView.leadingAnchor),
+            fatView.trailingAnchor.constraint(equalTo: weightView.trailingAnchor),
+
+            noteLabel.topAnchor.constraint(equalTo: fatView.bottomAnchor, constant: 26),
             noteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
     
+    // 스택뷰에서 텍스트필드 값만 huggingPriority주고 싶었지만 원하는 대로 잘 안되서 UIView로 가야하나 고민이 됩니다. -> UIView로 변경
+    private func createInputView(title: String) -> UIView {
+        let containerView = UIView()
+
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.textColor = .white
+        titleLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
+
+        let numberTextField = UITextField()
+        numberTextField.backgroundColor = .color767676
+        numberTextField.layer.cornerRadius = 12
+        numberTextField.keyboardType = .numberPad
+
+        let unitLabel = UILabel()
+        unitLabel.text = "Kg"
+        unitLabel.textColor = .white
+        unitLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
+        
+        // containerView에 추가
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(numberTextField)
+        containerView.addSubview(unitLabel)
+
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        numberTextField.translatesAutoresizingMaskIntoConstraints = false
+        unitLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 13),
+            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+
+            numberTextField.leadingAnchor.constraint(equalTo: unitLabel.trailingAnchor, constant: -220),
+            numberTextField.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            numberTextField.widthAnchor.constraint(equalToConstant: 187),
+            numberTextField.heightAnchor.constraint(equalToConstant: 44),
+
+            unitLabel.leadingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            unitLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            unitLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        ])
+
+        return containerView
+    }
+    
+    // MARK: - Actions
     @objc private func cancelButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
@@ -274,5 +294,4 @@ class InputModalViewController: UIViewController {
     @objc private func completeButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
-
 }
