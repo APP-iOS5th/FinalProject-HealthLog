@@ -62,6 +62,8 @@
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
 		CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */; };
 		CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */; };
+		CEE918AE2C741B9D00B8DEF7 /* CustomBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */; };
+		CEE918B22C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918B12C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -134,6 +136,8 @@
 		CEE8BC692C65B45100E1D94F /* InBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBody.swift; sourceTree = "<group>"; };
 		CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesAddViewController.swift; sourceTree = "<group>"; };
 		CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesUpdateViewController.swift; sourceTree = "<group>"; };
+		CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyPartButton.swift; sourceTree = "<group>"; };
+		CEE918B12C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyPartButtonStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -241,6 +245,8 @@
 				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
 				CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */,
 				CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */,
+				CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */,
+				CEE918B12C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -428,6 +434,7 @@
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				4B911CFA2C741F770032F438 /* RoutineSerchResultsViewController.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
+				CEE918B22C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
 				CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */,
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
@@ -444,6 +451,7 @@
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
+				CEE918AE2C741B9D00B8DEF7 /* CustomBodyPartButton.swift in Sources */,
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
 				CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */,

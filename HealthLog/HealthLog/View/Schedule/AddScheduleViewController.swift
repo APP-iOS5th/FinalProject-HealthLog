@@ -257,7 +257,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.updateSearchText(to: searchText)
+        viewModel.setSearchText(to: searchText)
     }
 }
 

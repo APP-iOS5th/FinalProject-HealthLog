@@ -32,4 +32,10 @@ class Exercise: Object {
         self.maxWeight = maxWeight
         self.isCustom = isCustom
     }
+    
+    convenience init(name: String, bodyParts: [BodyPart]) {
+        self.init()
+        self.name = name
+        self.bodyParts.append(objectsIn: bodyParts)
+    }
 }
