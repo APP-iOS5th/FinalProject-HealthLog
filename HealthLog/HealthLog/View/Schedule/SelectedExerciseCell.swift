@@ -257,6 +257,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         if newText.count > 3 {
             return false
         }
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: string)
+        if allowedCharacters.isSuperset(of: characterSet) == false {
+            return false
+        }
         return true
     }
     
