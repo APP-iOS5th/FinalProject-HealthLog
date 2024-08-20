@@ -238,6 +238,9 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
             noteLabel.topAnchor.constraint(equalTo: fatView.bottomAnchor, constant: 26),
             noteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+        
+        cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
     // 스택뷰에서 텍스트필드 값만 huggingPriority주고 싶었지만 원하는 대로 잘 안되서 UIView로 가야하나 고민이 됩니다. -> UIView로 변경
