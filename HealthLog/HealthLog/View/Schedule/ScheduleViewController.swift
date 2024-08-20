@@ -71,7 +71,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 7
         button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        button.addTarget(self, action: #selector(addToRoutine), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [label, button])
         stackView.axis = .horizontal
@@ -216,11 +216,29 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
     
-    @objc func addToRoutine() {
+    @objc func didTapSaveRoutine() {
         if todaySchedule != nil {
             let saveRoutineVC = SaveRoutineViewController(schedule: todaySchedule!)
             let navigationController = UINavigationController(rootViewController: saveRoutineVC)
-            present(navigationController, animated: true, completion: nil)
+            
+            let partialScreenVC = UIViewController()
+            partialScreenVC.modalPresentationStyle = .overFullScreen
+            partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+            
+            partialScreenVC.addChild(navigationController)
+            partialScreenVC.view.addSubview(navigationController.view)
+            
+            navigationController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
+                navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
+                navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
+                navigationController.view.heightAnchor.constraint(equalToConstant: 200),
+            ])
+            
+            navigationController.didMove(toParent: partialScreenVC)
+            
+            present(partialScreenVC, animated: true, completion: nil)
         }
     }
     
