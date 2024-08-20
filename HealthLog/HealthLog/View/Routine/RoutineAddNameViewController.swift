@@ -28,11 +28,11 @@ class RoutineAddNameViewController: UIViewController {
     
     private lazy var subTextLabel: UILabel = {
         let label = UILabel()
-        label.text = "이미 존재하는 이름 입니다."
+        label.text = ""
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
-        label.textColor = .red
+        
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.isHidden = true
+       
         return label
     }()
     
@@ -156,11 +156,11 @@ extension UIButton {
 extension UILabel {
     var isValid: Bool {
         get {
-            isHidden == true
+            true
         }
         
         set {
-            isHidden = !newValue
+            isHidden = newValue 
             textColor = newValue ? .green : .red
             text = newValue ? "사용 가능한 이름입니다." : "이미 존재하는 이름 입니다."
             
