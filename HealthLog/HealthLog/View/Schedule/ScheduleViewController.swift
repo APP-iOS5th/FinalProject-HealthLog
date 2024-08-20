@@ -217,7 +217,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func addToRoutine() {
-        // add today schedule to routine
+        if todaySchedule != nil {
+            let saveRoutineVC = SaveRoutineViewController(schedule: todaySchedule!)
+            let navigationController = UINavigationController(rootViewController: saveRoutineVC)
+            present(navigationController, animated: true, completion: nil)
+        }
     }
     
     private func updateTableView() {
