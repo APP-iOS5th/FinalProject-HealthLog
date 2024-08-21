@@ -26,7 +26,7 @@ class WeightRecordViewController: UIViewController {
     
     private lazy var weightBox = InfoBox(title: "몸무게", value: "84", unit: "kg")
     private lazy var musclesBox = InfoBox(title: "골격근량", value: "84", unit: "kg")  // 근골격량 or 골격근량
-    private lazy var fatBox = InfoBox(title: "체지방", value: "84", unit: "kg")
+    private lazy var fatBox = InfoBox(title: "체지방률", value: "84", unit: "%")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,9 +173,9 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    private lazy var weightView = createInputView(title: "몸무게")
-    private lazy var musclesView = createInputView(title: "골격근량")
-    private lazy var fatView = createInputView(title: "체지방")
+    private lazy var weightView = createInputView(title: "몸무게", unit: "Kg")
+    private lazy var musclesView = createInputView(title: "골격근량", unit: "Kg")
+    private lazy var fatView = createInputView(title: "체지방률", unit: "%")
     
     private let noteLabel: UILabel = {
         let label = UILabel()
@@ -244,7 +244,7 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
     }
     
     // 스택뷰에서 텍스트필드 값만 huggingPriority주고 싶었지만 원하는 대로 잘 안되서 UIView로 가야하나 고민이 됩니다. -> UIView로 변경
-    private func createInputView(title: String) -> UIView {
+    private func createInputView(title: String, unit: String) -> UIView {
         let containerView = UIView()
 
         let titleLabel = UILabel()
@@ -272,7 +272,7 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
         numberTextField.delegate = self
         
         let unitLabel = UILabel()
-        unitLabel.text = "Kg"
+        unitLabel.text = unit
         unitLabel.textColor = .white
         unitLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
         
