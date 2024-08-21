@@ -14,16 +14,40 @@ class RoutineViewModel: ObservableObject{
     private var realm: Realm
     
     private var routineNotificationToken: NotificationToken?
-    @Published var rutineNameinput: String = "" {
-        didSet {
-            print("ViewModel / NameInput \(rutineNameinput)")
-        }
-    }
+    @Published var rutineNameinput: String = ""
+    @Published var rutineNameConfirmation: String = ""
+    @Published var isValid: Bool = false
+    
+    private var cancellables = Set<AnyCancellable>()
+    
     @Published var rutines: [Routine] = []
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
     }
+    
+    lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
+        $rutineNameinput.map { $0.count >= 3 }.print("Legth").eraseToAnyPublisher()
+    }()
+    lazy var isRoutineNameEmptyPulisher: AnyPublisher<Bool, Never> = {
+        $rutineNameinput
+            .map(\.isEmpty)
+            .print("Empty")
+            .eraseToAnyPublisher()
+    }()
+    lazy var isRoutineNameMatchingPulisher: AnyPublisher<Bool, Never> = {
+        Publishers
+            .CombineLatest($rutineNameinput, $rutines)
+            .map { rutineNameinput, rutines in
+                !rutines.contains { $0.name == rutineNameinput}
+            }
+            .print("Matching")
+            .eraseToAnyPublisher()
+        
+    }()
+    
+    
+    
     
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
         .CombineLatest($rutineNameinput, $rutines)
@@ -48,14 +72,14 @@ class RoutineViewModel: ObservableObject{
         
         routineNotificationToken = results.observe { [weak self] changes in
             switch changes {
-                case .initial(let collection):
-                    print("results.observe - initial")
-                    self?.rutines = Array(collection)
-                case .update(let collection, _, _, _):
-                    print("results.observe - update")
-                    self?.rutines = Array(collection)
-                case .error(let error):
-                    print("results.observe - error: \(error)")
+            case .initial(let collection):
+                print("results.observe - initial")
+                self?.rutines = Array(collection)
+            case .update(let collection, _, _, _):
+                print("results.observe - update")
+                self?.rutines = Array(collection)
+            case .error(let error):
+                print("results.observe - error: \(error)")
             }
         }
     }
