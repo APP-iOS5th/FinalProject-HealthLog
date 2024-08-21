@@ -147,6 +147,7 @@ class WeightRecordViewController: UIViewController {
 
 // MARK: - ModalViewController
 class InputModalViewController: UIViewController, UITextFieldDelegate {
+    private var realm = RealmManager.shared.realm
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
@@ -176,6 +177,11 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
     private lazy var weightView = createInputView(title: "몸무게", unit: "Kg")
     private lazy var musclesView = createInputView(title: "골격근량", unit: "Kg")
     private lazy var fatView = createInputView(title: "체지방률", unit: "%")
+    
+    // 텍스트 필드 입력값을 저장할 변수
+    private var weightTextField: UITextField?
+    private var musclesTextField: UITextField?
+    private var fatTextField: UITextField?
     
     private let noteLabel: UILabel = {
         let label = UILabel()
@@ -238,6 +244,11 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
             noteLabel.topAnchor.constraint(equalTo: fatView.bottomAnchor, constant: 26),
             noteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+        
+        // 나중에 접근할 수 있도록 텍스트 필드를 할당
+        weightTextField = weightView.subviews.first(where: { $0 is UITextField }) as? UITextField
+        musclesTextField = musclesView.subviews.first(where: { $0 is UITextField }) as? UITextField
+        fatTextField = fatView.subviews.first(where: { $0 is UITextField }) as? UITextField
         
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
@@ -309,6 +320,15 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func completeButtonTapped() {
+        guard let weightText = weightTextField?.text, let weight = Float(weightText),
+              let musclesText = musclesTextField?.text, let muscleMass = Float(musclesText),
+              let fatText = fatTextField?.text, let bodyFat = Float(fatText) else {
+                 return
+             }
+
+             // RealmManager를 사용해 데이터를 Realm에 저장
+             RealmManager.shared.addInbody(weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+
         dismiss(animated: true, completion: nil)
     }
     
