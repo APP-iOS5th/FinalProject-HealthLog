@@ -8,7 +8,6 @@
 import UIKit
 
 class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
-    
     var exerciseTitleLabel = UILabel()
     var deleteButton = UIButton(type: .system)
     let stepperLabel = UILabel()
@@ -18,6 +17,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     private var repsTextFields: [UITextField] = []
     var deleteButtonTapped: (() -> Void)?
     var heightDidChange: (() -> Void)?
+    var setsDidChange: ((_ sets: [ScheduleExerciseSetStruct]) -> Void)?
+    var setCountChanged: ((Int) -> Void)?
+    private var currentSetCount: Int = 4
+    private let stepper = UIStepper()
+    private var isUpdatingSets: Bool = false
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -89,15 +93,14 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         stepperLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let stepperCountLabel = UILabel()
-        stepperCountLabel.text = "4"
+        stepperCountLabel.text = "\(currentSetCount)"
         stepperCountLabel.textColor = .white
         stepperCountLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         stepperCountLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        let stepper = UIStepper()
         stepper.minimumValue = 1
         stepper.maximumValue = 10
-        stepper.value = 4
+        stepper.value = Double(currentSetCount)
         stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
         stepper.layer.cornerRadius = 8
         stepper.backgroundColor = .colorAccent
@@ -125,16 +128,25 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             stepper.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
         ])
         
-        updateSetInputs(for: Int(stepper.value))
+        updateSetInputs(for: currentSetCount)
     }
     
     @objc func stepperValueChanged(sender: UIStepper) {
         let value = Int(sender.value)
+        //print("셀Stepper value changed for \(exerciseTitleLabel.text ?? "Unknown exercise"): \(value)")
+               
         if let stepperCountLabel = sender.superview?.subviews.compactMap({ $0 as? UILabel }).last {
             stepperCountLabel.text = "\(value)"
         }
+        currentSetCount = value
         updateSetInputs(for: value)
         heightDidChange?()
+        setCountChanged?(value)
+        
+        if let setsDidChange = setsDidChange {
+            let sets = createScheduleExerciseSets()
+            setsDidChange(sets)
+        }
         
         if let viewController = self.parentViewController as? AddScheduleViewController {
             viewController.validateCompletionButton()
@@ -142,15 +154,31 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func updateSetInputs(for count: Int) {
+        guard !isUpdatingSets else { return } //무한루프 일단 방지..
+        isUpdatingSets = true
+        //print("Updating set inputs for \(exerciseTitleLabel.text ?? "Unknown exercise"): \(count)")
+               
+        //print("Before update - weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
+        
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        weightTextFields.removeAll()
+        repsTextFields.removeAll()
         
         for i in 1...count {
             let setView = createSetInputView(setNumber: i)
             stackView.addArrangedSubview(setView)
         }
+        //print("After update - weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
+        
+        // 세트가 변경될 때마다 클로저를 호출해 뷰모델에 알려주기
+        if let setsDidChange = setsDidChange {
+            let sets = createScheduleExerciseSets() // 세트 생성하고
+            setsDidChange(sets) // ViewModel에 업데이트
+        }
         
         setNeedsLayout()
         layoutIfNeeded()
+        isUpdatingSets = false
     }
     
     func createSetInputView(setNumber: Int) -> UIView {
@@ -195,8 +223,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
                 .font: UIFont.font(.pretendardMedium, ofSize: 14)
             ]
         )
-        weightTextField.delegate = self
-        repsTextField.delegate = self
+        
         
         let repsLabel = UILabel()
         repsLabel.text = "회"
@@ -237,6 +264,9 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             repsLabel.centerYAnchor.constraint(equalTo: setView.centerYAnchor),
             repsLabel.trailingAnchor.constraint(equalTo: setView.trailingAnchor, constant: -8)
         ])
+        weightTextField.delegate = self
+        repsTextField.delegate = self
+        
         weightTextFields.append(weightTextField)
         repsTextFields.append(repsTextField)
         
@@ -249,6 +279,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     
     func configure(with exerciseName: String) {
         exerciseTitleLabel.text = exerciseName
+        //print("Configuring cell for exercise: \(exerciseName), current set count: \(currentSetCount)")
+        guard !isUpdatingSets else { return }
+        isUpdatingSets = true
+        updateSetInputs(for: currentSetCount)
+        isUpdatingSets = false
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -271,11 +306,28 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
                 viewController.validateCompletionButton()
             }
         }
+        
+        if let setsDidChange = setsDidChange {
+            let sets = createScheduleExerciseSets()
+            setsDidChange(sets)
+        }
     }
     
     func areAllFieldsFilled() -> Bool {
         return stackView.arrangedSubviews.allSatisfy { setView in
             setView.subviews.compactMap { $0 as? UITextField }.allSatisfy { !$0.text!.isEmpty }
+        }
+    }
+
+    func createScheduleExerciseSets() -> [ScheduleExerciseSetStruct] {
+        return (0..<weightTextFields.count).compactMap { index in
+            guard let weightText = weightTextFields[index].text, let weight = Int(weightText),
+                  let repsText = repsTextFields[index].text, let reps = Int(repsText) else {
+                return nil
+            }
+            let set = ScheduleExerciseSetStruct(order: index, weight: weight, reps: reps, isCompleted: false)
+            //print("Created set: \(set)")
+            return set
         }
     }
 }
