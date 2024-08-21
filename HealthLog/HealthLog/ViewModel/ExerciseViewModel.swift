@@ -21,7 +21,7 @@ class ExerciseViewModel: ObservableObject {
     @Published private(set) var exercises: [Exercise] = []
     @Published private(set) var filteredExercises: [Exercise] = []
     
-//    @Published var exercise: Exercise = Exercise()
+    @Published var inputExerciseObject = InputExerciseObject()
     @Published var exerciseName: String = ""
     @Published var exerciseBodyParts: [BodyPart] = []
     @Published var exerciseRecentWeight: Int = 0
@@ -78,12 +78,23 @@ class ExerciseViewModel: ObservableObject {
         .store(in: &cancellables)
 
         // MARK: Check RequiredExerciseFields Empty
-        Publishers.CombineLatest($exerciseName, $exerciseBodyParts)
-            .sink { exerciseName, exerciseBodyParts in
-                print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
+//        Publishers.CombineLatest($exerciseName, $exerciseBodyParts)
+//            .sink { exerciseName, exerciseBodyParts in
+//                print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
+//                
+//                self.isExerciseNameEmpty = exerciseName.isEmpty
+//                self.isExerciseBodyPartsEmpty = exerciseBodyParts.isEmpty
+//                self.validateRequiredFields()
+//            }
+//            .store(in: &cancellables)
+        
+        // MARK: Test - Check RequiredExerciseFields Empty
+        $inputExerciseObject
+            .sink {
+                print("name - \($0.name.isEmpty) bodypart - \($0.bodyParts.isEmpty)") // log
                 
-                self.isExerciseNameEmpty = exerciseName.isEmpty
-                self.isExerciseBodyPartsEmpty = exerciseBodyParts.isEmpty
+                self.isExerciseNameEmpty = $0.name.isEmpty
+                self.isExerciseBodyPartsEmpty = $0.bodyParts.isEmpty
                 self.validateRequiredFields()
             }
             .store(in: &cancellables)
@@ -154,7 +165,7 @@ class ExerciseViewModel: ObservableObject {
         )
         
         try! realm.write {
-            realm.add(exercise)
+            realm.add(inputExerciseObject.addRealmExerciseObject())
         }
         
         exerciseName = ""
@@ -205,7 +216,7 @@ class InputExerciseObject: ObservableObject {
         description = ""
     }
     
-    func inputRealmExercise(realmExercise : Exercise) -> Exercise {
+    func addRealmExerciseObject() -> Exercise {
         return Exercise(
             name: name,
             bodyParts: bodyParts,

@@ -254,7 +254,9 @@ class ExercisesAddViewController: UIViewController {
                 print("titleTextField change - \(self.viewModel.exerciseName)")
             }
             .store(in: &cancellables)
-        // MARK: bodypart
+        
+        // MARK: bodypartButtonStackView
+        
         
         // MARK: recentWeightTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: recentWeightTextField)
