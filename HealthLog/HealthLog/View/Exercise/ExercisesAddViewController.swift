@@ -256,7 +256,21 @@ class ExercisesAddViewController: UIViewController {
             .store(in: &cancellables)
         
         // MARK: bodypartButtonStackView
-        
+        bodypartButtonStackView.bodypartButtonList.forEach { button in
+            button.buttonPublisher
+                .sink { button in
+                    if button.isSelected {
+                        self.viewModel.exerciseBodyParts
+                            .append(button.bodypart)
+                    } else {
+                        self.viewModel.exerciseBodyParts
+                            .removeAll { $0 == button.bodypart }
+                    }
+                    print("\(button.bodypart.rawValue) - \(button.isSelected)")
+                    print(self.viewModel.exerciseBodyParts) // log
+                }
+                .store(in: &cancellables)
+        }
         
         // MARK: recentWeightTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: recentWeightTextField)

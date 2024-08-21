@@ -37,9 +37,6 @@ class ExerciseViewModel: ObservableObject {
         realm = RealmManager.shared.realm
         observeRealmData()
         setupBindings()
-        
-        // TODO: 임시용 bodyParts
-        exerciseBodyParts = [.abductors]
     }
     
     deinit {
@@ -165,7 +162,7 @@ class ExerciseViewModel: ObservableObject {
         )
         
         try! realm.write {
-            realm.add(inputExerciseObject.addRealmExerciseObject())
+            realm.add(exercise)
         }
         
         exerciseName = ""

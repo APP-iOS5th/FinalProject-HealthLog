@@ -9,10 +9,10 @@ import UIKit
 
 class CustomBodyPartButtonStackView: UIStackView {
     
-    var bodypartButtonList: [UIButton] = []
+    var bodypartButtonList: [CustomBodyPartButton] = []
 
     private var currentRow: UIStackView!
-    private var currentButton: UIButton!
+    private var currentButton: CustomBodyPartButton!
     
     init() {
         super.init(frame: .zero)
@@ -25,7 +25,7 @@ class CustomBodyPartButtonStackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Func
+    // MARK: - Methods
     
     private func setup() {
         axis = .vertical
@@ -39,8 +39,7 @@ class CustomBodyPartButtonStackView: UIStackView {
         self.addArrangedSubview(currentRow)
         
         for bodyPart in BodyPart.allCases {
-            currentButton = CustomBodyPartButton()
-            currentButton.setTitle(bodyPart.rawValue, for: .normal)
+            currentButton = CustomBodyPartButton(bodypart: bodyPart)
             
             let width = calculatorButtonAddAfterWidth()
             checkCreateAfterRow(buttonAddAfterWidth: width)
@@ -55,7 +54,7 @@ class CustomBodyPartButtonStackView: UIStackView {
         currentButton = nil
     }
     
-    // MARK: - Sub Func
+    // MARK: - Sub Methods
     
     private func calculatorButtonAddAfterWidth() -> CGFloat {
         let allRowButtonWidth = currentRow
