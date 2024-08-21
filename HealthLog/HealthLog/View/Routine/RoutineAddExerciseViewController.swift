@@ -117,10 +117,6 @@ extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 310 // 초기 예상 높이
     }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        viewModel.updateSearchText(to: searchText)
-    }
    
     
     
