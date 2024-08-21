@@ -43,23 +43,10 @@ class AddScheduleViewModel {
         selectedExercises.append(scheduleExercise)
     }
     
-    // 세트 수 변경(수정 필요)
-    func updateExerciseSetCount(for index: Int, setCount: Int) {
-        guard index < selectedExercises.count else { return }
-        let currentSets = selectedExercises[index].sets
-        if setCount > currentSets.count {
-            for i in currentSets.count..<setCount {
-                selectedExercises[index].sets.append(ScheduleExerciseSetStruct(order: i, weight: 0, reps: 0, isCompleted: false))
-            }
-        } else if setCount < currentSets.count {
-            selectedExercises[index].sets = Array(currentSets.prefix(setCount))
-        }
-    }
-    
     // 세트, 무게, 횟수 설정 후 ScheduleExerciseSetStruct을 업데이트
     func updateExerciseSet(for index: Int, sets: [ScheduleExerciseSetStruct]) {
         guard index < selectedExercises.count else { return }
-        //print("뷰모델Updating exercise at index \(index) with \(sets.count) sets")
+        print("뷰모델Updating exercise at index \(index) with \(sets.count) sets")
         selectedExercises[index].sets = sets
     }
     

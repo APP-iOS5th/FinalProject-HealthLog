@@ -12,7 +12,7 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    var selectedExercises = [String]()
+    //var selectedExercises = [String]()
     
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
@@ -41,6 +41,7 @@ class AddScheduleViewController: UIViewController {
             }
             .store(in: &cancellables)
         
+        // 사용자가 선택한 운동 목록이 변경될 때마다 테이블 뷰를 갱신하고, 완료 버튼의 상태를 갱신
         addScheduleViewModel.$selectedExercises
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -73,6 +74,7 @@ class AddScheduleViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
+    // 모든 운동 세트의 필드가 채워졌는지 확인 -> 완료버튼활성화
     func validateCompletionButton() {
         let allFieldsFilled = addScheduleViewModel.selectedExercises.allSatisfy { exercise in
             if let indexPath = addScheduleViewModel.selectedExercises.firstIndex(where: { $0.exerciseName == exercise.exerciseName }) {
@@ -182,19 +184,19 @@ class AddScheduleViewController: UIViewController {
     
     @objc func doneTapped() {
         let date = Date() // 임시로 현재 날짜 넣음, scheduleviewcontroller에서 받아오는 날짜 사용 예정
-        addScheduleViewModel.saveSchedule(for: date)
+        addScheduleViewModel.saveSchedule(for: date) // 스케줄 저장
         navigationController?.popViewController(animated: true)
     }
     
     func addSelectedExercise(_ exerciseName: String) {
         addScheduleViewModel.addExercise(exerciseName)
-        tableView.reloadData()
+        //tableView.reloadData()
         validateCompletionButton()
     }
     
     func removeSelectedExercise(at index: Int) {
         addScheduleViewModel.removeExercise(at: index)
-        tableView.reloadData()
+        //tableView.reloadData()
         validateCompletionButton()
     }
     
@@ -203,6 +205,7 @@ class AddScheduleViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    // 키보드가 나타날 때 테이블 뷰의 인셋 조정
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
@@ -220,6 +223,7 @@ class AddScheduleViewController: UIViewController {
         }
     }
     
+    // 키보드가 사라질 때 테이블 뷰의 인셋 초기화
     @objc func keyboardWillHide(notification: NSNotification) {
         let contentInsets = UIEdgeInsets.zero
         tableView.contentInset = contentInsets
@@ -252,15 +256,8 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
-        cell.heightDidChange = { [weak self] in
-            self?.tableView.reloadData()
-            self?.validateCompletionButton()
-        }
         cell.setsDidChange = { [weak self] sets in
             self?.addScheduleViewModel.updateExerciseSet(for: indexPath.row, sets: sets)
-        }
-        cell.setCountChanged = { [weak self] newCount in
-            self?.addScheduleViewModel.updateExerciseSetCount(for: indexPath.row, setCount: newCount)
         }
         
         return cell
@@ -281,7 +278,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
 
 
 extension UIView {
-    // 현재 선택된 UITextField를 찾는 메서드
+    // 현재 포커스를 받고 있는 뷰(텍스트 필드) 찾기
     func currentFirstResponder() -> UIView? {
         if self.isFirstResponder {
             return self
@@ -294,7 +291,7 @@ extension UIView {
         }
         return nil
     }
-    
+    // 해당 뷰의 부모 뷰 컨트롤러 찾기
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {
