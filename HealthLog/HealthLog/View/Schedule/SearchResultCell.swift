@@ -8,7 +8,6 @@
 import UIKit
 
 class SearchResultCell: UITableViewCell {
-    
     var addButtonTapped: (() -> Void)?
     
     let titleLabel: UILabel = {
