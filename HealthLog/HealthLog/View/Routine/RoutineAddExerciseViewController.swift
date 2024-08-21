@@ -119,7 +119,7 @@ extension RoutineAddExerciseViewController: UITableViewDelegate, UITableViewData
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.updateSearchText(to: searchText)
+//        viewModel.updateSearchText(to: searchText)
     }
    
     
