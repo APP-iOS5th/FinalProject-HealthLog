@@ -352,7 +352,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func didTapEditExercise(_ exercise: ScheduleExercise) {
-        let editExerciseVC = EditExerciseViewController(scheduleExercise: exercise)
+        let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise)
         let navigationController = UINavigationController(rootViewController: editExerciseVC)
         present(navigationController, animated: true, completion: nil)
     }
