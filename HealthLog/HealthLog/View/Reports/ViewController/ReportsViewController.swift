@@ -168,17 +168,22 @@ class ReportsViewController: UIViewController {
     }
     
     override func addChild(_ viewController: UIViewController) {
-            view.addSubview(viewController.view)
-            
-            // 레이아웃 설정
-            viewController.view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                viewController.view.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
-                viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-                viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-                viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70)
-            ])
-        }
+        view.addSubview(viewController.view)
+        
+        // 레이아웃 설정
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            viewController.view.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
+            viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -70)
+        ])
+    }
+    
+    func testFunction() {
+        let whyCantPR = "왜 Push가 안되는 거죠?"
+        
+    }
     
 
 }

@@ -177,6 +177,7 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
     private lazy var weightView = createInputView(title: "몸무게", unit: "Kg")
     private lazy var musclesView = createInputView(title: "골격근량", unit: "Kg")
     private lazy var fatView = createInputView(title: "체지방률", unit: "%")
+
     
     // 텍스트 필드 입력값을 저장할 변수
     private var weightTextField: UITextField?
