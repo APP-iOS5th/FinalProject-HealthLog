@@ -20,14 +20,13 @@ class ExerciseCheckCell: UITableViewCell {
     lazy var exerciseNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+        label.font = UIFont.font(.pretendardBold, ofSize: 20)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var exerciseEditContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = .colorSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -126,7 +125,7 @@ class ExerciseCheckCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
-        stackView.spacing = 20
+        stackView.spacing = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         exerciseEditContainer.addSubview(stackView)
@@ -148,14 +147,17 @@ class ExerciseCheckCell: UITableViewCell {
         
         let setNumber = UILabel()
         setNumber.text = "\(set.order) 세트"
+        setNumber.font = UIFont.font(.pretendardMedium, ofSize: 14)
         setNumber.textColor = .white
         
         let weightLabel = UILabel()
         weightLabel.text = "\(set.weight) kg"
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightLabel.textColor = .white
         
         let repsLabel = UILabel()
         repsLabel.text = "\(set.reps) 회"
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.textColor = .white
         
         let checkbox = UISwitch()
@@ -173,7 +175,7 @@ class ExerciseCheckCell: UITableViewCell {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
-        stackView.spacing = 20
+        stackView.spacing = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
