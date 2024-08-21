@@ -6,10 +6,16 @@
 //
 
 import UIKit
+import RealmSwift
 
-class EditExerciseViewController: UIViewController, UITextFieldDelegate {
+class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate {
+
+//    let realm = try! Realm()
+    let realm = RealmManager.shared.realm
+    
     private let scheduleExercise: ScheduleExercise
     private var stepperValue = 0
+    private var setValues: [(order: Int, weight: String, reps: String)] = []
     
     init(scheduleExercise: ScheduleExercise) {
         self.scheduleExercise = scheduleExercise
@@ -50,7 +56,7 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
         let stepper = UIStepper()
         stepper.minimumValue = 1
         stepper.maximumValue = 10
-        stepper.value = 0
+        stepper.value = Double(stepperValue)
         stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
         stepper.layer.cornerRadius = 8
         stepper.backgroundColor = .colorAccent
@@ -90,7 +96,15 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
         
         nameLabel.text = scheduleExercise.exercise?.name
         stepperValue = scheduleExercise.sets.count
+        stepper.value = Double(stepperValue)
+        
+        // save scheduleExercies.sets to setValues
+        setValues = scheduleExercise.sets.map { set in
+            return (order: set.order, weight: "\(set.weight)", reps: "\(set.reps)")
+        }
+        
         setupUI()
+        updateSets()
     }
     
     // MARK: - Methods
@@ -134,20 +148,40 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
             setsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             setsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
-        print("ScheduleExercise: \(scheduleExercise)")
-        
-        for set in scheduleExercise.sets {
-            let setView = createSetView(set)
-            setsContainer.addArrangedSubview(setView)
-        }
     }
     
     private func updateSets() {
+        // save inputs to setValues
+        saveInputs()
         
+        // reset setsContainer
+        setsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        // add sets
+        for i in 0..<stepperValue {
+            let set = i < setValues.count ? setValues[i] : nil
+            let setView = createSetView(set)
+            setsContainer.addArrangedSubview(setView)
+        }
+        
+        stepperCountLabel.text = "\(stepperValue)"
     }
     
-    private func createSetView(_ set: ScheduleExerciseSet?) -> UIView {
+    private func saveInputs() {
+        for (index, view) in setsContainer.arrangedSubviews.enumerated() {
+            if let weightTextField = view.viewWithTag(1000) as? UITextField,
+               let repsTextField = view.viewWithTag(1001) as? UITextField {
+                let weight = weightTextField.text ?? ""
+                let reps = repsTextField.text ?? ""
+                if index < setValues.count {
+                    setValues[index] = (order: index, weight: weight, reps: reps)
+                } else {
+                    setValues.append((order: index, weight: weight, reps: reps))
+                }
+            }
+        }
+    }
+    private func createSetView(_ set: (order: Int, weight: String, reps: String)?) -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -163,6 +197,7 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
         weightTextField.keyboardType = .numberPad
         weightTextField.backgroundColor = .colorSecondary
         weightTextField.layer.cornerRadius = 10
+        weightTextField.tag = 1000
         weightTextField.translatesAutoresizingMaskIntoConstraints = false
         
         weightTextField.attributedPlaceholder = NSAttributedString(
@@ -186,6 +221,7 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
         repsTextField.keyboardType = .numberPad
         repsTextField.backgroundColor = .colorSecondary
         repsTextField.layer.cornerRadius = 10
+        repsTextField.tag = 1001
         repsTextField.translatesAutoresizingMaskIntoConstraints = false
         
         repsTextField.attributedPlaceholder = NSAttributedString(
@@ -196,28 +232,14 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
             ]
         )
         
-        weightTextField.delegate = self
-        repsTextField.delegate = self
-        
         let repsLabel = UILabel()
         repsLabel.text = "회"
         repsLabel.textColor = .white
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        if let set = set {
-            setNumber.text = "\(set.order) 세트"
-            weightTextField.text = "\(set.weight)"
-            repsTextField.text = "\(set.reps)"
-        } else {
-            setNumber.text = " 세트"
-            weightTextField.text = ""
-            repsTextField.text = ""
-        }
-        
-        [setNumber, weightTextField, weightLabel, repsTextField, repsLabel].forEach {
-            $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        }
+        setNumber.text = "\(setsContainer.arrangedSubviews.count + 1) 세트"
+        weightTextField.text = set?.weight
+        repsTextField.text = set?.reps
         
         view.addSubview(setNumber)
         view.addSubview(weightTextField)
@@ -256,11 +278,34 @@ class EditExerciseViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func saveEdit() {
-        dismiss(animated: true)
+        saveInputs()
+        print("\(setValues)")
+        print("\(scheduleExercise)")
+        
+        var scheduleExerciseSets = List<ScheduleExerciseSet>()
+        for i in 0..<setValues.count {
+            let set = ScheduleExerciseSet(
+                order: setValues[i].order,
+                weight: Int(setValues[i].weight) ?? 0,
+                reps: Int(setValues[i].reps) ?? 0,
+                isCompleted: false
+            )
+            scheduleExerciseSets.append(set)
+        }
+        print("\(scheduleExerciseSets)")
+        do {
+            try realm.write {
+                scheduleExercise.sets.removeAll()
+                scheduleExercise.sets.append(objectsIn: scheduleExerciseSets)
+            }
+        } catch {
+            print("Error updating ScheduleExercise")
+        }
+//        dismiss(animated: true)
     }
     
     @objc func stepperValueChanged() {
-        
+        stepperValue = Int(stepper.value)
         updateSets()
     }
     
