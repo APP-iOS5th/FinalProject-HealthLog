@@ -28,7 +28,7 @@ class ExerciseViewModel: ObservableObject {
     @Published var exerciseMaxWeight: Int = 0
     @Published var exerciseDescription: String = ""
     
-    @Published var isValidatedRequiredExerciseFields: Bool = true
+    @Published var isValidatedRequiredExerciseFields: Bool = false
     @Published var hasDuplicateExerciseName: Bool = false
     @Published var isExerciseNameEmpty: Bool = true
     @Published var isExerciseBodyPartsEmpty: Bool = true
@@ -75,26 +75,26 @@ class ExerciseViewModel: ObservableObject {
         .store(in: &cancellables)
 
         // MARK: Check RequiredExerciseFields Empty
-//        Publishers.CombineLatest($exerciseName, $exerciseBodyParts)
-//            .sink { exerciseName, exerciseBodyParts in
-//                print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
-//                
-//                self.isExerciseNameEmpty = exerciseName.isEmpty
-//                self.isExerciseBodyPartsEmpty = exerciseBodyParts.isEmpty
-//                self.validateRequiredFields()
-//            }
-//            .store(in: &cancellables)
-        
-        // MARK: Test - Check RequiredExerciseFields Empty
-        $inputExerciseObject
-            .sink {
-                print("name - \($0.name.isEmpty) bodypart - \($0.bodyParts.isEmpty)") // log
+        Publishers.CombineLatest($exerciseName, $exerciseBodyParts)
+            .sink { exerciseName, exerciseBodyParts in
+                print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
                 
-                self.isExerciseNameEmpty = $0.name.isEmpty
-                self.isExerciseBodyPartsEmpty = $0.bodyParts.isEmpty
+                self.isExerciseNameEmpty = exerciseName.isEmpty
+                self.isExerciseBodyPartsEmpty = exerciseBodyParts.isEmpty
                 self.validateRequiredFields()
             }
             .store(in: &cancellables)
+        
+        // MARK: Test - Check RequiredExerciseFields Empty
+//        $inputExerciseObject
+//            .sink {
+//                print("name - \($0.name.isEmpty) bodypart - \($0.bodyParts.isEmpty)") // log
+//                
+//                self.isExerciseNameEmpty = $0.name.isEmpty
+//                self.isExerciseBodyPartsEmpty = $0.bodyParts.isEmpty
+//                self.validateRequiredFields()
+//            }
+//            .store(in: &cancellables)
     }
     
     func filterExercises(by searchText: String) {
@@ -136,9 +136,23 @@ class ExerciseViewModel: ObservableObject {
     }
     
     func validateRequiredFields() {
-        if hasDuplicateExerciseName { return }
-        if isExerciseNameEmpty { return }
-        if isExerciseBodyPartsEmpty { return }
+        if hasDuplicateExerciseName {
+            isValidatedRequiredExerciseFields = false
+            print("isValidatedRequiredExerciseFields - \(isValidatedRequiredExerciseFields)") // log
+            return
+        }
+        
+        if isExerciseNameEmpty {
+            isValidatedRequiredExerciseFields = false
+            print("isValidatedRequiredExerciseFields - \(isValidatedRequiredExerciseFields)") // log
+            return
+        }
+        
+        if isExerciseBodyPartsEmpty {
+            isValidatedRequiredExerciseFields = false
+            print("isValidatedRequiredExerciseFields - \(isValidatedRequiredExerciseFields)") // log
+            return
+        }
         
         isValidatedRequiredExerciseFields = true
         print("isValidatedRequiredExerciseFields - \(isValidatedRequiredExerciseFields)") // log
