@@ -11,6 +11,7 @@ import Combine
 class RoutineAddExerciseViewController: UIViewController {
     
     let viewModel = ExerciseViewModel()
+    var routineName: String?
     private var cancellables = Set<AnyCancellable>()
     var selectedExercises = [String]()
     
@@ -19,6 +20,8 @@ class RoutineAddExerciseViewController: UIViewController {
     private lazy var searchController: UISearchController = {
        let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchBar.placeholder = "운동명 거색"
+        searchController.searchResultsUpdater = self
+        definesPresentationContext = true
         return searchController
     }()
     
@@ -72,4 +75,19 @@ class RoutineAddExerciseViewController: UIViewController {
         
     }
     
+}
+
+// 검색 기능
+extension RoutineAddExerciseViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text, !text.isEmpty else {
+            return
+        }
+        
+        
+        if let resultcontroller = searchController.searchResultsController as? RoutineSerchResultsViewController {
+            resultcontroller.viewModel.filterExercises(by: text)
+            resultcontroller.tableView.reloadData()
+        }
+    }
 }

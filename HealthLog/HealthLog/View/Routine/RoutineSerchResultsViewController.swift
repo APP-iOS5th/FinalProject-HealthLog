@@ -11,7 +11,7 @@ class RoutineSerchResultsViewController: UIViewController {
     
     let viewModel = ExerciseViewModel()
     
-    private lazy var tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.dataSource = self
@@ -22,7 +22,7 @@ class RoutineSerchResultsViewController: UIViewController {
         return tableView
         
     }()
-  
+    
     private lazy var dividerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(named: "ColorSecondary")
@@ -34,7 +34,6 @@ class RoutineSerchResultsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addExercise")
-        tableView.reloadData()
         setupUI()
     }
     
@@ -81,14 +80,8 @@ extension RoutineSerchResultsViewController: UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
         
-                cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        cell.configure(with: viewModel.filteredExercises[indexPath.row])
         cell.selectionStyle = .none
         return cell
     }
-    
-   
-    
-    
-    
 }
-

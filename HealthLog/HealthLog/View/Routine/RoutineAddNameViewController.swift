@@ -45,6 +45,7 @@ class RoutineAddNameViewController: UIViewController {
         let button = UIButton(configuration: configuration,
                               primaryAction: UIAction { _ in
             let routineAddExerciseViewController = RoutineAddExerciseViewController()
+            routineAddExerciseViewController.routineName = self.viewModel.rutineNameinput
             self.navigationController?.pushViewController(routineAddExerciseViewController, animated: true)
             print("확인 버튼 눌림")
         })
@@ -67,13 +68,10 @@ class RoutineAddNameViewController: UIViewController {
     func setupObservers() {
         nameTextField
             .textPublisher
-            .print()
-        // 스레드 - 메인에서 받겠다.
             .receive(on: DispatchQueue.main)
             .assign(to: \.rutineNameinput, on: viewModel)
             .store(in: &cancellables)
-        // 텍스트필드에서 나가는 이벤트를
-        // 뷰모델의 프로퍼티가 구독
+        
         
         Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
                     .map { !$0 && $1 }
@@ -99,15 +97,6 @@ class RoutineAddNameViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .assign(to:\.validMessage ,on:subTextLabel)
             .store(in: &cancellables)
-        
-        // 버튼이 뷰모델의 퍼블리셔를 구독
-//        viewModel.isRoutineNameEmptyPulisher
-//            .print()
-//            .receive(on: DispatchQueue.main)
-//            .assign(to: \.isValid, on: checkButton)
-//            .store(in: &cancellables)
-//        
-        
     }
 
 
