@@ -76,6 +76,7 @@ class RoutineAddExerciseViewController: UIViewController {
 }
 
 // 검색 기능
+
 extension RoutineAddExerciseViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text, !text.isEmpty else {
