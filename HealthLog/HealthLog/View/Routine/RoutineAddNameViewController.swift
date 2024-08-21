@@ -12,6 +12,7 @@ class RoutineAddNameViewController: UIViewController {
     
     var viewModel = RoutineViewModel()
     private var cancellables = Set<AnyCancellable>()
+    private var isValid: Bool = false
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -28,7 +29,7 @@ class RoutineAddNameViewController: UIViewController {
     
     private lazy var subTextLabel: UILabel = {
         let label = UILabel()
-        label.text = ""
+        label.text = viewModel.rutineNameConfirmation
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +49,6 @@ class RoutineAddNameViewController: UIViewController {
             print("확인 버튼 눌림")
         })
         button.translatesAutoresizingMaskIntoConstraints = false
-        
         button.tintColor = UIColor(named: "ColorAccent")
         return button
     }()
@@ -59,32 +59,56 @@ class RoutineAddNameViewController: UIViewController {
         
         
         setupUI()
-        
-        // 텍스트필드에서 나가는 이벤트를
-        // 뷰모델의 프로퍼티가 구독
-        nameTextField
-            .textPublisher
-            .print()
-            // 스레드 - 메인에서 받겠다.
-            .receive(on: RunLoop.main)
-            .assign(to: \.rutineNameinput, on: viewModel)
-            .store(in: &cancellables)
-        
-        // 버튼이 뷰모델의 퍼블리셔를 구독
-        viewModel.isMatchNameInput
-            .print()
-            .receive(on: RunLoop.main)
-            .assign(to: \.isValid, on: checkButton)
-            .store(in: &cancellables)
-        
-        viewModel.isMatchNameInput
-            .print()
-            .receive(on: RunLoop.main)
-            .assign(to: \.isValid, on: subTextLabel)
-            .store(in: &cancellables)
+        setupObservers()
+
         
     }
     
+    func setupObservers() {
+        nameTextField
+            .textPublisher
+            .print()
+        // 스레드 - 메인에서 받겠다.
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.rutineNameinput, on: viewModel)
+            .store(in: &cancellables)
+        // 텍스트필드에서 나가는 이벤트를
+        // 뷰모델의 프로퍼티가 구독
+        
+        Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
+                    .map { !$0 && $1 }
+                    .receive(on: DispatchQueue.main)
+                    .assign(to:\.isValid ,on:checkButton)
+                    .store(in: &cancellables)
+        
+        Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
+                    .map { !$0 && $1 }
+                    .receive(on: DispatchQueue.main)
+                    .assign(to:\.isValid ,on: subTextLabel)
+                    .store(in: &cancellables)
+        
+        Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
+            .map { isRoutineNameEmptyPulisher, isRoutineNameMatchingPulisher in
+                if isRoutineNameEmptyPulisher {
+                    return ""
+                } else if !isRoutineNameMatchingPulisher {
+                    return "이미 사용준인 루틴 이름입니다."
+                }
+                return "사용 가능한 루틴입니다."
+            }
+            .receive(on: DispatchQueue.main)
+            .assign(to:\.validMessage ,on:subTextLabel)
+            .store(in: &cancellables)
+        
+        // 버튼이 뷰모델의 퍼블리셔를 구독
+//        viewModel.isRoutineNameEmptyPulisher
+//            .print()
+//            .receive(on: DispatchQueue.main)
+//            .assign(to: \.isValid, on: checkButton)
+//            .store(in: &cancellables)
+//        
+        
+    }
 
 
     
@@ -92,7 +116,7 @@ class RoutineAddNameViewController: UIViewController {
         self.navigationController?.setupBarAppearance()
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "루틴 이름을 정해주세요"
-       
+        
 
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         
@@ -144,27 +168,32 @@ extension UIButton {
         get {
             backgroundColor == UIColor.colorAccent
         }
-        
+
         set {
             backgroundColor = newValue ? .colorAccent : .lightGray
             isEnabled = newValue
-            
+
         }
     }
 }
 
 extension UILabel {
+    var validMessage: String {
+        get {
+            ""
+        }
+        set {
+            text = newValue
+        }
+    }
+    
     var isValid: Bool {
         get {
             true
         }
-        
         set {
-            isHidden = newValue 
             textColor = newValue ? .green : .red
-            text = newValue ? "사용 가능한 이름입니다." : "이미 존재하는 이름 입니다."
-            
         }
     }
+    
 }
-
