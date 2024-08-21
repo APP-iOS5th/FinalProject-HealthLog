@@ -42,8 +42,6 @@ class RoutineAddExerciseViewController: UIViewController {
         setupUI()
     }
    
- 
-    
     func setupUI() {
         self.navigationController?.setupBarAppearance()
         
