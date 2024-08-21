@@ -26,7 +26,7 @@ class WeightRecordViewController: UIViewController {
     
     private lazy var weightBox = InfoBox(title: "몸무게", value: "84", unit: "kg")
     private lazy var musclesBox = InfoBox(title: "골격근량", value: "84", unit: "kg")  // 근골격량 or 골격근량
-    private lazy var fatBox = InfoBox(title: "체지방", value: "84", unit: "kg")
+    private lazy var fatBox = InfoBox(title: "체지방률", value: "84", unit: "%")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -147,6 +147,7 @@ class WeightRecordViewController: UIViewController {
 
 // MARK: - ModalViewController
 class InputModalViewController: UIViewController, UITextFieldDelegate {
+    private var realm = RealmManager.shared.realm
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
@@ -173,9 +174,14 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    private lazy var weightView = createInputView(title: "몸무게")
-    private lazy var musclesView = createInputView(title: "골격근량")
-    private lazy var fatView = createInputView(title: "체지방")
+    private lazy var weightView = createInputView(title: "몸무게", unit: "Kg")
+    private lazy var musclesView = createInputView(title: "골격근량", unit: "Kg")
+    private lazy var fatView = createInputView(title: "체지방률", unit: "%")
+    
+    // 텍스트 필드 입력값을 저장할 변수
+    private var weightTextField: UITextField?
+    private var musclesTextField: UITextField?
+    private var fatTextField: UITextField?
     
     private let noteLabel: UILabel = {
         let label = UILabel()
@@ -239,12 +245,17 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
             noteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
+        // 나중에 접근할 수 있도록 텍스트 필드를 할당
+        weightTextField = weightView.subviews.first(where: { $0 is UITextField }) as? UITextField
+        musclesTextField = musclesView.subviews.first(where: { $0 is UITextField }) as? UITextField
+        fatTextField = fatView.subviews.first(where: { $0 is UITextField }) as? UITextField
+        
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
     // 스택뷰에서 텍스트필드 값만 huggingPriority주고 싶었지만 원하는 대로 잘 안되서 UIView로 가야하나 고민이 됩니다. -> UIView로 변경
-    private func createInputView(title: String) -> UIView {
+    private func createInputView(title: String, unit: String) -> UIView {
         let containerView = UIView()
 
         let titleLabel = UILabel()
@@ -272,7 +283,7 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
         numberTextField.delegate = self
         
         let unitLabel = UILabel()
-        unitLabel.text = "Kg"
+        unitLabel.text = unit
         unitLabel.textColor = .white
         unitLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
         
@@ -309,6 +320,15 @@ class InputModalViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc private func completeButtonTapped() {
+        guard let weightText = weightTextField?.text, let weight = Float(weightText),
+              let musclesText = musclesTextField?.text, let muscleMass = Float(musclesText),
+              let fatText = fatTextField?.text, let bodyFat = Float(fatText) else {
+                 return
+             }
+
+             // RealmManager를 사용해 데이터를 Realm에 저장
+             RealmManager.shared.addInbody(weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+
         dismiss(animated: true, completion: nil)
     }
     

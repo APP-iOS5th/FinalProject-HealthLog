@@ -17,7 +17,7 @@ class RealmManager {
         if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
             print("open \(realmFileURL)")
         }
-        
+                
         do {
             realm = try Realm()
         } catch {
@@ -30,7 +30,38 @@ class RealmManager {
         initializeRealmRoutine()
         initializeRealmSchedule()
     }
+    
+    
+    // 현재 init의 do catch 구문을 추후 openRealm 으로 변경 예정
+    func openRealm() {
+        do {
+            let config = Realm.Configuration(schemaVersion: 1)
+            Realm.Configuration.defaultConfiguration = config
+            realm = try Realm()
+            
+        } catch {
+            print("Failed to initialize Realm: \(error.localizedDescription)")
+        }
+    }
+    
+    func addInbody(weight: Float, bodyFat:Float, muscleMass: Float) {
+//        if let localRealm = localRealm {
+            do {
+                try realm.write {
+                    let newInbodyInfo = InBody(value: ["weight": weight, "bodyFat": bodyFat, "muscleMass": muscleMass ])
+                    realm.add(newInbodyInfo)
+                    print("Added new Inbody Info")
+                }
+            } catch {
+                print("Error adding task to Realm: \(error)")
+            }
+//        }
+    }
 }
+
+
+
+
 
 extension RealmManager {
 //    func bodyPartSearch (_ bodyPartTypes: [BodyPart]) -> [BodyPart] {

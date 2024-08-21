@@ -64,5 +64,8 @@ class HighlightedBodyPart : Object {
         self.init()
         self.bodyPart = bodyPart
         self.step = step
+        
+        // step 대신 total sets 는 어떤지 ex) 체크 할때마다 +1
+        // 또는 그냥 아에 HighlightedBodyPart 부분을 삭제하고 vm에서 계산해서 사용하는게 나을 지도
     }
 }
