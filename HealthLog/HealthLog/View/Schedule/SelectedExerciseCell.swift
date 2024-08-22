@@ -19,7 +19,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     var setsDidChange: ((_ sets: [ScheduleExerciseSetStruct]) -> Void)?
     private var currentSetCount: Int = 4
     private let stepper = UIStepper()
-    private var isUpdatingSets: Bool = false
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -59,6 +58,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         contentView.addSubview(stackView)
         
         setupStepperComponents()
+        updateSetInputs(for: currentSetCount)
         
         NSLayoutConstraint.activate([
             exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
@@ -126,12 +126,13 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             stepper.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
         ])
         
-        updateSetInputs(for: currentSetCount)
+        //updateSetInputs(for: currentSetCount)
     }
     
+    // 새로운 세트 수를 반영하여 UI를 업데이트, 변경된 세트 데이터를 클로저를 통해 뷰모델에 전달
     @objc func stepperValueChanged(sender: UIStepper) {
         let value = Int(sender.value)
-        print("셀Stepper value changed for \(exerciseTitleLabel.text ?? "Unknown exercise"): \(value)")
+        // print("\(exerciseTitleLabel.text ?? "Unknown exercise")의 스텝퍼 세트 수 변경: \(value)")
                
         if let stepperCountLabel = sender.superview?.subviews.compactMap({ $0 as? UILabel }).last {
             stepperCountLabel.text = "\(value)"
@@ -149,34 +150,34 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         }
     }
     
+    // 세트 수가 변경되면 스택뷰 내의 기존 세트 입력 필드를 제거하고, 새로운 세트 수에 맞게 다시 생성
+    // stepperValueChanged와 configure 메서드에서 호출되어 UI를 갱신(순서에 문제가 있음)
     func updateSetInputs(for count: Int) {
-        guard !isUpdatingSets else { return } //무한루프 일단 방지..
-        isUpdatingSets = true
-        print("Updating set inputs for \(exerciseTitleLabel.text ?? "Unknown exercise"): \(count)")
+        // print("\(exerciseTitleLabel.text ?? "Unknown exercise")의 세트 수: \(count)")
                
-        print("Before update - weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
+        // print("업데이트 전 weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
         
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         weightTextFields.removeAll()
         repsTextFields.removeAll()
         
+        // 세트 입력 뷰 세트 수만큼 생성해서 스택뷰에 addSubview
         for i in 1...count {
             let setView = createSetInputView(setNumber: i)
             stackView.addArrangedSubview(setView)
         }
-        print("After update - weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
+        // print("업데이트 후 weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
         
         // 세트가 변경될 때마다 클로저를 호출해 뷰모델에 알려주기
         if let setsDidChange = setsDidChange {
             let sets = createScheduleExerciseSets() // 세트 생성하고
             setsDidChange(sets) // ViewModel에 업데이트
         }
-        
         setNeedsLayout()
         layoutIfNeeded()
-        isUpdatingSets = false
     }
     
+    // 각 세트에 대한 무게와 횟수 입력을 위한 뷰를 생성하는 메서드 [1세트 _kg _회]
     func createSetInputView(setNumber: Int) -> UIView {
         let setView = UIView()
         
@@ -273,13 +274,12 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         deleteButtonTapped?()
     }
     
-    func configure(with exerciseName: String) {
+    func configure(with exerciseName: String, setCount: Int) {
         exerciseTitleLabel.text = exerciseName
-        print("Configuring cell for exercise: \(exerciseName), current set count: \(currentSetCount)")
-        guard !isUpdatingSets else { return }
-        isUpdatingSets = true
-        updateSetInputs(for: currentSetCount)
-        isUpdatingSets = false
+        currentSetCount = setCount // 뷰 모델에서 가져온 세트 수로 설정 -> 이거 때문에 로그에 현재 세트 수 변경 없는 듯
+        // print("Configuring cell \(exerciseName), 현재 세트 수: \(currentSetCount)")
+        //updateSetInputs(for: currentSetCount) -> 여기서 update하면 무한루프에 빠지고 스텝퍼도 동작 안함
+        // setsDidChange 클로저 때문에 뷰모델 업데이트되어서 configure(with:)와 updateSetInputs(for:) 간의 상호 호출이 반복
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

@@ -100,6 +100,7 @@ class AddScheduleViewController: UIViewController {
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
         
+        // UITextField는 공개적으로 제공되는 프로퍼티가 아니기 때문에, value(forKey:)를 사용해 이 내부 요소에 접근
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
                 leftView.tintColor = .white
@@ -190,13 +191,11 @@ class AddScheduleViewController: UIViewController {
     
     func addSelectedExercise(_ exerciseName: String) {
         addScheduleViewModel.addExercise(exerciseName)
-        //tableView.reloadData()
         validateCompletionButton()
     }
     
     func removeSelectedExercise(at index: Int) {
         addScheduleViewModel.removeExercise(at: index)
-        //tableView.reloadData()
         validateCompletionButton()
     }
     
@@ -249,13 +248,16 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
         let exercise = addScheduleViewModel.selectedExercises[indexPath.row]
-        
-        cell.configure(with: exercise.exerciseName)
+        let setCount = exercise.sets.isEmpty ? 4 : exercise.sets.count
+        // print("Configuring cell at 인덱스: \(indexPath.row), 운동이름: \(exercise.exerciseName)")
+        cell.configure(with: exercise.exerciseName, setCount: setCount)
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
+        // 셀의 삭제버튼이 탭되었을 때 해당인덱스에서 운동 제거하는 클로저
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
+        // 셀의 세트 수, 내용을 수정할 때 뷰모델의 운동데이터 업데이트하는 클로저
         cell.setsDidChange = { [weak self] sets in
             self?.addScheduleViewModel.updateExerciseSet(for: indexPath.row, sets: sets)
         }
