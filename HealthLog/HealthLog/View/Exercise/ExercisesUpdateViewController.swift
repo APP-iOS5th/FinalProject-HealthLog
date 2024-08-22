@@ -63,7 +63,7 @@ class ExercisesUpdateViewController: UIViewController {
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
         deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 20)
+        deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
             .isActive = true
         deleteButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
