@@ -8,8 +8,13 @@
 import UIKit
 import RealmSwift
 
-class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate {
+protocol EditScheduleExerciseViewControllerDelegate: AnyObject {
+    func didUpdateScheduleExercise()
+}
 
+class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate {
+    weak var delegate: EditScheduleExerciseViewControllerDelegate?
+    
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
     
@@ -154,6 +159,13 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         // save inputs to setValues
         saveInputs()
         
+        // trim setValues if stepperValue is less than setValues count
+        print("setValues: \(setValues)")
+        if setValues.count > stepperValue {
+            setValues = Array(setValues.prefix(stepperValue))
+        }
+        print("setValues2: \(setValues)")
+        
         // reset setsContainer
         setsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
@@ -174,9 +186,9 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
                 let weight = weightTextField.text ?? ""
                 let reps = repsTextField.text ?? ""
                 if index < setValues.count {
-                    setValues[index] = (order: index, weight: weight, reps: reps)
+                    setValues[index] = (order: index + 1, weight: weight, reps: reps)
                 } else {
-                    setValues.append((order: index, weight: weight, reps: reps))
+                    setValues.append((order: index + 1, weight: weight, reps: reps))
                 }
             }
         }
@@ -298,10 +310,20 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
                 scheduleExercise.sets.removeAll()
                 scheduleExercise.sets.append(objectsIn: scheduleExerciseSets)
             }
+            
+            // notify the delegate of the update
+            delegate?.didUpdateScheduleExercise()
         } catch {
             print("Error updating ScheduleExercise")
         }
-//        dismiss(animated: true)
+        
+        let alertController = UIAlertController(title: "운동 수정 완료", message: "\(String(describing: scheduleExercise.exercise!.name))이(가) 성공적으로 수정되었습니다.", preferredStyle: .alert)
+        present(alertController, animated: true, completion: nil)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            alertController.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true)
+        }
     }
     
     @objc func stepperValueChanged() {

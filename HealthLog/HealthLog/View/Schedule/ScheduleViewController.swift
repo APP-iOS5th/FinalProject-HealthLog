@@ -9,7 +9,8 @@ import UIKit
 import RealmSwift
 import Combine
 
-class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate {
+class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate, EditScheduleExerciseViewControllerDelegate {
+    
     // MARK: - declare
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
@@ -137,7 +138,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         customizeCalendarTextColor()
     }
     
-    fileprivate func setupUI() {
+    private func setupUI() {
         let titleColor = UIColor.white
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
@@ -281,6 +282,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.reloadData()
         updateTableViewHeight()
     }
+    
     private func customizeCalendarTextColor() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.changeHeaderTextColor(self.calendarView)
@@ -353,8 +355,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func didTapEditExercise(_ exercise: ScheduleExercise) {
         let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise)
+        editExerciseVC.delegate = self
         let navigationController = UINavigationController(rootViewController: editExerciseVC)
         present(navigationController, animated: true, completion: nil)
+    }
+    
+    func didUpdateScheduleExercise() {
+        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
