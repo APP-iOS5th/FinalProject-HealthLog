@@ -22,11 +22,13 @@ class ExercisesAddViewController: UIViewController {
     let titleStackView = UIStackView()
     let titleLabel = UILabel()
     let titleTextField = UITextField()
-    let titleWarningLabel = UILabel()
+    let titleDuplicateWarningLabel = UILabel()
+    let titleEmptyWarningLabel = UILabel()
     
     let bodypartStackView = UIStackView()
     let bodypartLabel = UILabel()
     var bodypartButtonStackView = CustomBodyPartButtonStackView()
+    let bodypartEmptyWarningLabel = UILabel()
     
     let recentWeightStackView = UIStackView()
     let recentWeightLabel = UILabel()
@@ -41,7 +43,6 @@ class ExercisesAddViewController: UIViewController {
     let descriptionStackView = UIStackView()
     let descriptionLabel = UILabel()
     let descriptionTextField = UITextField()
-    
     
     let imageStackView = UIStackView()
     let imageLabel = UILabel()
@@ -81,7 +82,9 @@ class ExercisesAddViewController: UIViewController {
         
         // MARK: addButton
         
-        let doneButton = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneButtonTapped))
+        let doneButton = UIBarButtonItem(
+            title: "완료", style: .done, target: self,
+            action: #selector(doneButtonTapped))
         self.navigationItem.rightBarButtonItem = doneButton
         
         // MARK: - scrollView
@@ -142,11 +145,17 @@ class ExercisesAddViewController: UIViewController {
         titleTextField.textColor = .white
         titleStackView.addArrangedSubview(titleTextField)
         
-        // MARK: titleWarningLabel
-        titleWarningLabel.text = "이미 존재하는 운동 이름입니다."
-        titleWarningLabel.numberOfLines = 1
-        titleWarningLabel.textColor = .red
-        titleStackView.addArrangedSubview(titleWarningLabel)
+        // MARK: titleDuplicateWarningLabel
+        titleDuplicateWarningLabel.text = "이미 존재하는 운동 이름입니다."
+        titleDuplicateWarningLabel.numberOfLines = 1
+        titleDuplicateWarningLabel.textColor = .red
+        titleStackView.addArrangedSubview(titleDuplicateWarningLabel)
+        
+        // MARK: titleEmptyWarningLabel
+        titleEmptyWarningLabel.text = "운동 이름이 비어있습니다."
+        titleEmptyWarningLabel.numberOfLines = 1
+        titleEmptyWarningLabel.textColor = .red
+        titleStackView.addArrangedSubview(titleEmptyWarningLabel)
     }
     
     func setupBodypartStackView() {
@@ -169,6 +178,12 @@ class ExercisesAddViewController: UIViewController {
         
         // MARK: bodypartButtonStackView
         bodypartStackView.addArrangedSubview(bodypartButtonStackView)
+        
+        // MARK: bodypartEmptyWarningLabel
+        bodypartEmptyWarningLabel.text = "운동 부위가 비어있습니다."
+        bodypartEmptyWarningLabel.numberOfLines = 1
+        bodypartEmptyWarningLabel.textColor = .red
+        bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
     }
     
     func setupRecentWeightStackView() {
@@ -245,13 +260,12 @@ class ExercisesAddViewController: UIViewController {
     
     
     private func setupBindings() {
-        // MARK: checkDuplicateExerciseName Warning
+        // MARK: titleTextField (checkDuplicate)
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-                self.viewModel.checkDuplicateExerciseName(to: text)
-                self.viewModel.exerciseName = text
-                print("titleTextField change - \(self.viewModel.exerciseName)")
+                self.viewModel.exercise.name = text
+                print("titleTextField change - \(self.viewModel.exercise.name)")
             }
             .store(in: &cancellables)
         
@@ -260,14 +274,14 @@ class ExercisesAddViewController: UIViewController {
             button.buttonPublisher
                 .sink { button in
                     if button.isSelected {
-                        self.viewModel.exerciseBodyParts
+                        self.viewModel.exercise.bodyParts
                             .append(button.bodypart)
                     } else {
-                        self.viewModel.exerciseBodyParts
+                        self.viewModel.exercise.bodyParts
                             .removeAll { $0 == button.bodypart }
                     }
                     print("\(button.bodypart.rawValue) - \(button.isSelected)")
-                    print(self.viewModel.exerciseBodyParts) // log
+                    print(self.viewModel.exercise.bodyParts) // log
                 }
                 .store(in: &cancellables)
         }
@@ -277,7 +291,7 @@ class ExercisesAddViewController: UIViewController {
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
                 print("recentWeightTextField change")
-                self.viewModel.exerciseRecentWeight = Int(text) ?? 0
+                self.viewModel.exercise.recentWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
         
@@ -286,7 +300,7 @@ class ExercisesAddViewController: UIViewController {
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
                 print("maxWeightTextField change")
-                self.viewModel.exerciseMaxWeight = Int(text) ?? 0
+                self.viewModel.exercise.maxWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
         
@@ -295,14 +309,36 @@ class ExercisesAddViewController: UIViewController {
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
                 print("descriptionTextField change")
-                self.viewModel.exerciseDescription = text
+                self.viewModel.exercise.description = text
             }
             .store(in: &cancellables)
         
         // MARK: Duplicate ExerciseName Warning
-        viewModel.$hasDuplicateExerciseName
-            .sink { [weak self] isDuplicateExerciseName in
-                self?.titleWarningLabel.isHidden = !isDuplicateExerciseName
+        viewModel.exercise.$hasDuplicateExerciseName
+            .sink { [weak self] hasDuplicate in
+                self?.titleDuplicateWarningLabel.isHidden = !hasDuplicate
+            }
+            .store(in: &cancellables)
+        
+        // MARK: Empty ExerciseName Warning
+        viewModel.exercise.$isExerciseNameEmpty
+            .sink { [weak self] isEmpty in
+                self?.titleEmptyWarningLabel.isHidden = !isEmpty
+            }
+            .store(in: &cancellables)
+        
+        // MARK: Empty Bodyparts Warning
+        viewModel.exercise.$isExerciseBodyPartsEmpty
+            .sink { [weak self] isEmpty in
+                self?.bodypartEmptyWarningLabel.isHidden = !isEmpty
+            }
+            .store(in: &cancellables)
+        
+        // MARK: Validated Exercise Fields - Add Button
+        viewModel.exercise.$isValidatedRequiredExerciseFields
+            .sink { [weak self] isValidated in
+                self?.navigationItem.rightBarButtonItem?
+                    .isEnabled = isValidated
             }
             .store(in: &cancellables)
     }
