@@ -155,6 +155,7 @@
 		184A589E2C69E42B009F2848 /* Reports */ = {
 			isa = PBXGroup;
 			children = (
+				18FAA0792C76C9EE00B62B8F /* ViewModel */,
 				CEE623B82C6CAACC00863699 /* ViewController */,
 				CEE623B72C6CAA9A00863699 /* TableCell */,
 			);
@@ -207,6 +208,13 @@
 				184A589F2C69ECAF009F2848 /* font */,
 			);
 			path = HealthLog;
+			sourceTree = "<group>";
+		};
+		18FAA0792C76C9EE00B62B8F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		7566B31F2C69AC8300BDF142 /* View */ = {
@@ -262,11 +270,11 @@
 		CEE623B72C6CAA9A00863699 /* TableCell */ = {
 			isa = PBXGroup;
 			children = (
+				186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */,
 				184A58BC2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift */,
 				184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */,
 				184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */,
 				184A58C42C6CFDC0009F2848 /* MostChangedTableViewCell.swift */,
-				186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */,
 			);
 			path = TableCell;
 			sourceTree = "<group>";
