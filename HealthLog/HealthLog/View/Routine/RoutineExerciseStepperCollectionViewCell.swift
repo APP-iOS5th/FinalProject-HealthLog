@@ -20,6 +20,7 @@ class RoutineExerciseStepperCollectionViewCell: UICollectionViewCell {
       // 셀 초기화
       override init(frame: CGRect) {
           super.init(frame: frame)
+          self.contentView.backgroundColor = .colorPrimary
           contentView.addSubview(label)
           setupConstraints()
       }

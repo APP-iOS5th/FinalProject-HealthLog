@@ -41,6 +41,7 @@ class RoutineAddExerciseViewController: UIViewController {
         var layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .color1E1E1E
         return collectionView
     }()
     
@@ -58,7 +59,7 @@ class RoutineAddExerciseViewController: UIViewController {
         self.navigationItem.title = "운동을 추가해주세요."
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationItem.searchController = searchController
-        self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        self.view.backgroundColor = .color1E1E1E
         tabBarController?.tabBar.isHidden = true
         navigationController?.setupBarAppearance()
         
@@ -98,6 +99,7 @@ class RoutineAddExerciseViewController: UIViewController {
 }
 
 extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
     // UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return data.count
@@ -112,8 +114,7 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     
     // UICollectionViewDelegateFlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // 셀의 크기를 설정
-        return CGSize(width: 100, height: 100)
+        return CGSize(width: 345, height: 200)
     }
 }
 

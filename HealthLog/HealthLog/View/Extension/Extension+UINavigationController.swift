@@ -16,7 +16,7 @@ extension UINavigationController {
         appearance.titleTextAttributes = [.font: UIFont.font(.pretendardSemiBold, ofSize: 20),
                                           .foregroundColor: UIColor.white]
         
-        appearance.backgroundColor = UIColor(named: "ColorPrimary")
+        appearance.backgroundColor = .color1E1E1E
         navigationBar.tintColor = .white
         navigationBar.scrollEdgeAppearance = appearance
         navigationBar.standardAppearance = appearance
