@@ -19,7 +19,7 @@ class ExerciseViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published private(set) var searchText: String = ""
-    @Published private(set) var selectedOption: BodyPartOption = .all
+    @Published var selectedOption: BodyPartOption = .all
     
     @Published private(set) var exercises: [Exercise] = []
     @Published private(set) var filteredExercises: [Exercise] = []
@@ -62,13 +62,19 @@ class ExerciseViewModel: ObservableObject {
         $exercises.assign(to: &$filteredExercises)
 
         // MARK: Search Exercises Filter
+        // TODO: RunLoop 대신할꺼 있나 찾아보기
         Publishers.CombineLatest(
             $searchText.throttle(
                 for: .milliseconds(99),
                 scheduler: RunLoop.main, latest: true),
-            $selectedOption
+            $selectedOption.throttle(
+                for: .milliseconds(99),
+                scheduler: RunLoop.main, latest: true)
         )
-        .sink { [weak self] _ in self?.filterExercises() }
+        .sink { [weak self] _ in
+            print("Search Exercises Filter - \(String(describing: self?.selectedOption))")
+            self?.filterExercises()
+        }
         .store(in: &cancellables)
 
         // MARK: Test - Check RequiredExerciseFields Empty
@@ -97,9 +103,11 @@ class ExerciseViewModel: ObservableObject {
     // MARK: - Methods
     
     func filterExercises() {
+        print("filterExercises - \(String(describing: selectedOption))")
+        
         // 검색어와 부위를 기반으로 운동리스트를 필터링
         filteredExercises = exercises.filter { exercise in
-            
+
             // 검색어
             let matchesAll = searchText.isEmpty
             let matchesSearchText  = exercise.name
@@ -173,6 +181,7 @@ class ExerciseViewModel: ObservableObject {
     
     func setOption(to option: BodyPartOption) {
         selectedOption = option
+        print("setOption - \(selectedOption)")
     }
     
     func setSearchText(to text: String) {

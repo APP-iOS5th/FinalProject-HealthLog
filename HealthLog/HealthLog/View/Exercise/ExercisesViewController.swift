@@ -16,7 +16,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     private let viewModel = ExerciseViewModel()
     private let searchController = UISearchController(searchResultsController: nil)
     private let containerStackView = UIStackView()
-    private let testStackView = CustomBodyPartButtonStackView()
+    private let searchOptionStackView = SearchBodyPartStackView()
     
     private let addButton = UIButton(type: .custom)
     private let dividerView = UIView()
@@ -44,20 +44,10 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         setupNavigationBar()
         setupSearchController()
-        setupTestStackView()
+        setupSearchOptionStackView()
         setupDivider()
         setupTableView()
         setupBindings()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        if stackViewHeight == nil {
-            stackViewHeight = testStackView.bounds.height
-            stackViewHeightConstraint = testStackView
-                .heightAnchor.constraint(equalToConstant: 0)
-            stackViewHeightConstraint!.isActive = true
-        }
     }
     
     // MARK: - Setup
@@ -97,8 +87,6 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         let searchBar = searchController.searchBar
         searchBar.delegate = self
-        searchBar.scopeButtonTitles = BodyPartOption.allName
-        searchBar.showsScopeBar = true
         searchBar.searchBarStyle = .minimal
         searchBar.barStyle = .black
 
@@ -114,17 +102,12 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
     }
     
-    private func setupTestStackView() {
-        view.addSubview(testStackView)
-        testStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            testStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-        ])
-        
-//        // hidden
-//        self.testStackView.arrangedSubviews
-//            .forEach {$0.isHidden = true}
+    private func setupSearchOptionStackView() {
+        view.addSubview(searchOptionStackView)
+        searchOptionStackView.translatesAutoresizingMaskIntoConstraints = false
+        searchOptionStackView.topAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        searchOptionStackView.subViewsHidden(isHidden: true)
     }
     
     func setupDivider() {
@@ -134,7 +117,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(
-                equalTo: testStackView.bottomAnchor),
+                equalTo: searchOptionStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
                 constant: 10),
@@ -173,9 +156,13 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
                 self?.tableView.reloadData()
             }.store(in: &cancellables)
         
-        searchController
-            .publisher(for: \.isActive)
-            .sink { print("searchController - \($0)") }
+        // MARK: SearchBodyPartOption Select
+        searchOptionStackView
+            .bodyPartOptionPublisher
+            .sink { bodyPartOption in
+                print("bodyPartOptionPublisher - \(bodyPartOption)")
+                self.viewModel.selectedOption = bodyPartOption
+            }
             .store(in: &cancellables)
     }
     
@@ -202,35 +189,19 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     
     func willPresentSearchController(_ searchController: UISearchController) {
         print("Search Controller will become active")
-        animateContainerViewHeight(isVisible: true)
+        animateBodyPartsHidden(isHidden: false)
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
         print("Search Controller will be dismissed")
-        animateContainerViewHeight(isVisible: false)
-    }
-    
-    private func animateContainerViewHeight(isVisible: Bool) {
-        if isVisible {
-            self.stackViewHeightConstraint?.constant = self.stackViewHeight!
-            self.stackViewHeightConstraint?.isActive = true
-        } else {
-            self.stackViewHeightConstraint?.constant = 0
-            self.stackViewHeightConstraint?.isActive = true
-        }
-        
-        print("stackViewHeightConstraint - \(String(describing: stackViewHeightConstraint?.constant))")
-        
-        UIView.animate(withDuration: 0.5, animations: {
-            self.view.layoutIfNeeded()
-        })
+        animateBodyPartsHidden(isHidden: true)
+        searchOptionStackView.bodypartButtonList.first(where: { $0.bodypartOption == .all })?.sendActions(for: .touchUpInside)
     }
     
     // hidden
-    private func animateContainerViewHeight2(isVisible: Bool) {
+    private func animateBodyPartsHidden(isHidden: Bool) {
         UIView.animate(withDuration: 0.5) {
-            self.testStackView.arrangedSubviews
-                .forEach {$0.isHidden = !isVisible}
+            self.searchOptionStackView.subViewsHidden(isHidden: isHidden)
         }
     }
     

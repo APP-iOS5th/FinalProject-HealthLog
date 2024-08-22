@@ -23,7 +23,7 @@ enum BodyPart: String, PersistableEnum {
     case other = "기타"
 }
 
-enum BodyPartOption {
+enum BodyPartOption: Equatable {
     case all
     case bodyPart(BodyPart)
     
@@ -32,6 +32,10 @@ enum BodyPartOption {
             case .all: return "전체"
             case .bodyPart(let bodyPart): return bodyPart.rawValue
         }
+    }
+    
+    static var allCases: [BodyPartOption] {
+        return [BodyPartOption.all] + BodyPart.allCases.map { BodyPartOption.bodyPart($0) }
     }
     
     static var allName: [String] {
