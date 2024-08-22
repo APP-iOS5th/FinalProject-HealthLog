@@ -15,7 +15,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
     
-    private var schedules: Schedule?
+//    private var schedules: Schedule?
     private var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
@@ -238,7 +238,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             for scheduleExercise in selectedSchedule.exercises {
                 for set in scheduleExercise.sets {
                     todayExerciseVolume += set.weight * set.reps
-                    print("\(todayExerciseVolume), \(set.weight) * \(set.reps)")
                 }
             }
             exerciseVolumeLabel.text = "오늘의 볼륨량: \(todayExerciseVolume)"
@@ -281,6 +280,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     private func updateTableView() {
         tableView.reloadData()
         updateTableViewHeight()
+        
     }
     
     private func customizeCalendarTextColor() {
@@ -354,14 +354,19 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func didTapEditExercise(_ exercise: ScheduleExercise) {
-        let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise)
+        let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise, selectedDate: selectedDate ?? today)
         editExerciseVC.delegate = self
         let navigationController = UINavigationController(rootViewController: editExerciseVC)
         present(navigationController, animated: true, completion: nil)
     }
     
     func didUpdateScheduleExercise() {
-        tableView.reloadData()
+        loadSelectedDateSchedule(selectedDate ?? today)
+        let calendar = Calendar.current
+        let selectedComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate ?? today)
+        calendarView.reloadDecorations(forDateComponents: [selectedComponents], animated: true)
+        
+        updateTableView()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -382,18 +387,14 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         guard let date = dateComponents.date else { return nil }
         
         // selecteed date color
-        if let selectedDate = selectedDate, Calendar.current.isDate(date, inSameDayAs: selectedDate) {
-            return .default(color: .blue, size: .large)
-        }
-        
-        // display schedules depending on completed
-        if let schedule = getScheduleForDate(date) {
+        if let schedule = getScheduleForDate(date), !schedule.exercises.isEmpty {
             if isScheduleCompleted(schedule) {
                 return .default(color: .colorAccent, size: .large)
             } else {
                 return .default(color: .color767676, size: .large)
             }
         }
+        
         return nil
     }
     

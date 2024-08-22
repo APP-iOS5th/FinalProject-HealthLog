@@ -19,11 +19,13 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     let realm = RealmManager.shared.realm
     
     private let scheduleExercise: ScheduleExercise
+    private let selectedDate: Date
     private var stepperValue = 0
     private var setValues: [(order: Int, weight: String, reps: String)] = []
     
-    init(scheduleExercise: ScheduleExercise) {
+    init(scheduleExercise: ScheduleExercise, selectedDate: Date) {
         self.scheduleExercise = scheduleExercise
+        self.selectedDate = selectedDate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -96,6 +98,24 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         return stack
     }()
     
+    lazy var scrollContainer: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    lazy var deleteButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("삭제", for: .normal)
+        button.backgroundColor = .colorSecondary
+        button.setTitleColor(.red, for: .normal)
+        button.layer.cornerRadius = 7
+        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        button.addTarget(self, action: #selector(didTapDeleteExercise), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -118,26 +138,26 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
-        
+                
         stepperContainer.addSubview(stepperLabel)
         stepperContainer.addSubview(stepperCountLabel)
         stepperContainer.addSubview(stepper)
+        scrollContainer.addSubview(setsContainer)
         
         view.addSubview(nameLabel)
         view.addSubview(stepperContainer)
-        view.addSubview(setsContainer)
+        view.addSubview(scrollContainer)
+        view.addSubview(deleteButton)
         
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            nameLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            nameLabel.heightAnchor.constraint(equalToConstant: 20),
             
             stepperContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
-            stepperContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stepperContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stepperContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            stepperContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             stepperContainer.heightAnchor.constraint(equalToConstant: 44),
             
             stepperLabel.leadingAnchor.constraint(equalTo: stepperContainer.leadingAnchor, constant: 16),
@@ -149,9 +169,22 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             stepper.trailingAnchor.constraint(equalTo: stepperContainer.trailingAnchor, constant: -16),
             stepper.centerYAnchor.constraint(equalTo: stepperContainer.centerYAnchor),
             
-            setsContainer.topAnchor.constraint(equalTo: stepperContainer.bottomAnchor, constant: 10),
-            setsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            setsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollContainer.topAnchor.constraint(equalTo: stepperContainer.bottomAnchor, constant: 10),
+            scrollContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            scrollContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            scrollContainer.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -10),
+            
+            setsContainer.topAnchor.constraint(equalTo: scrollContainer.topAnchor),
+            setsContainer.leadingAnchor.constraint(equalTo: scrollContainer.leadingAnchor),
+            setsContainer.trailingAnchor.constraint(equalTo: scrollContainer.trailingAnchor),
+            setsContainer.bottomAnchor.constraint(equalTo: scrollContainer.bottomAnchor),
+            setsContainer.widthAnchor.constraint(equalTo: scrollContainer.widthAnchor),
+            
+            deleteButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            deleteButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            deleteButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            deleteButton.heightAnchor.constraint(equalToConstant: 50),
+            
         ])
     }
     
@@ -160,11 +193,9 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         saveInputs()
         
         // trim setValues if stepperValue is less than setValues count
-        print("setValues: \(setValues)")
         if setValues.count > stepperValue {
             setValues = Array(setValues.prefix(stepperValue))
         }
-        print("setValues2: \(setValues)")
         
         // reset setsContainer
         setsContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -291,10 +322,8 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     
     @objc private func saveEdit() {
         saveInputs()
-        print("\(setValues)")
-        print("\(scheduleExercise)")
         
-        var scheduleExerciseSets = List<ScheduleExerciseSet>()
+        let scheduleExerciseSets = List<ScheduleExerciseSet>()
         for i in 0..<setValues.count {
             let set = ScheduleExerciseSet(
                 order: setValues[i].order,
@@ -304,7 +333,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             )
             scheduleExerciseSets.append(set)
         }
-        print("\(scheduleExerciseSets)")
+        
         do {
             try realm.write {
                 scheduleExercise.sets.removeAll()
@@ -335,5 +364,55 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let currentText = textField.text ?? ""
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
         return newText.count <= 3
+    }
+    
+    @objc func didTapDeleteExercise() {
+        // alert to confirm delete
+        let alertController = UIAlertController(
+            title: "운동 삭제",
+            message: "\(String(describing: scheduleExercise.exercise!.name))이(가) 삭제됩니다.",
+            preferredStyle: .alert
+        )
+        // add confirm action
+        let confirmAction = UIAlertAction(title: "확인", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            let exerciseName = self.scheduleExercise.exercise?.name ?? "운동"
+            let selectedDate = self.selectedDate
+
+            do {
+                let schedule = self.realm.objects(Schedule.self).filter("date == %@", selectedDate).first
+
+                try self.realm.write {
+                    guard let exercises = schedule?.exercises else { return }
+                    if exercises.count > 1 {
+                        self.realm.delete(self.scheduleExercise)
+                    } else {
+                        self.realm.delete(schedule!)
+                    }
+                }
+                
+                // notify the delegate of the update
+                self.delegate?.didUpdateScheduleExercise()
+            } catch {
+                print("Error deleting ScheduleExercise")
+            }
+            
+            let alertCompletion = UIAlertController(title: "운동 수정 완료", message: "\(String(describing: exerciseName))이(가) 성공적으로 수정되었습니다.", preferredStyle: .alert)
+            self.present(alertCompletion, animated: true, completion: nil)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                alertCompletion.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true)
+            }
+        }
+        
+        // add cancel action
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        // add actions to the alter controller
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
