@@ -75,11 +75,15 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         cell.selectionStyle = .none
         cell.addButtonTapped = { [weak self] in
             self?.onExerciseSelected?(exercise.name)
-            if let searchController = self?.parent as? UISearchController {
-                searchController.searchBar.text = ""
-            }
-            self?.dismiss(animated: true, completion: nil)
+            self?.clearSearchAndDismiss()
         }
         return cell
+    }
+    
+    private func clearSearchAndDismiss() {
+        if let searchController = self.parent as? UISearchController {
+            searchController.searchBar.text = ""
+        }
+        self.dismiss(animated: true, completion: nil)
     }
 }
