@@ -23,6 +23,9 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -133,7 +136,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     @objc func stepperValueChanged(sender: UIStepper) {
         let value = Int(sender.value)
         // print("\(exerciseTitleLabel.text ?? "Unknown exercise")의 스텝퍼 세트 수 변경: \(value)")
-               
+        
         if let stepperCountLabel = sender.superview?.subviews.compactMap({ $0 as? UILabel }).last {
             stepperCountLabel.text = "\(value)"
         }
@@ -154,7 +157,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     // stepperValueChanged와 configure 메서드에서 호출되어 UI를 갱신(순서에 문제가 있음)
     func updateSetInputs(for count: Int) {
         // print("\(exerciseTitleLabel.text ?? "Unknown exercise")의 세트 수: \(count)")
-               
+        
         // print("업데이트 전 weightTextFields count: \(weightTextFields.count), repsTextFields count: \(repsTextFields.count)")
         
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
@@ -302,7 +305,17 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
                 viewController.validateCompletionButton()
             }
         }
-        
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        // 모든 텍스트 필드의 값 저장
+        saveTextFieldValues()
+    }
+    
+    func saveTextFieldValues() {
         if let setsDidChange = setsDidChange {
             let sets = createScheduleExerciseSets()
             setsDidChange(sets)
@@ -314,7 +327,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             setView.subviews.compactMap { $0 as? UITextField }.allSatisfy { !$0.text!.isEmpty }
         }
     }
-
+    
     func createScheduleExerciseSets() -> [ScheduleExerciseSetStruct] {
         return (0..<weightTextFields.count).compactMap { index in
             guard let weightText = weightTextFields[index].text, let weight = Int(weightText),
