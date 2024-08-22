@@ -8,19 +8,23 @@
 import Combine
 import UIKit
 
-class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDataSource, UITableViewDelegate {
+class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UITableViewDataSource, UITableViewDelegate {
 
-    // MARK: - Declare
+    // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
     private let searchController = UISearchController(searchResultsController: nil)
+    private let containerStackView = UIStackView()
+    private let testStackView = CustomBodyPartButtonStackView()
     
     private let addButton = UIButton(type: .custom)
     private let dividerView = UIView()
     private let tableView = UITableView()
     
     let testView = UIView()
+    var stackViewHeight: CGFloat?
+    var stackViewHeightConstraint: NSLayoutConstraint?
     
     // MARK: - Init
     
@@ -40,9 +44,20 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         setupNavigationBar()
         setupSearchController()
+        setupTestStackView()
         setupDivider()
         setupTableView()
-        setupBinding()
+        setupBindings()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if stackViewHeight == nil {
+            stackViewHeight = testStackView.bounds.height
+            print("stackViewHeight - \(stackViewHeight!)")
+            stackViewHeightConstraint = testStackView.heightAnchor.constraint(equalToConstant: 0)
+            stackViewHeightConstraint!.isActive = true
+        }
     }
     
     // MARK: - Setup
@@ -73,20 +88,20 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     }
     
     private func setupSearchController() {
+
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.searchBar.scopeButtonTitles = BodyPartOption.allName
-        navigationItem.searchController = searchController
-//        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.delegate = self
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
-        definesPresentationContext = true
-        searchController.searchBar.showsScopeBar = true
-//        tableView.tableHeaderView = searchController.searchBar
+        navigationItem.searchController = searchController
         
         let searchBar = searchController.searchBar
         searchBar.delegate = self
         searchBar.scopeButtonTitles = BodyPartOption.allName
         searchBar.showsScopeBar = true
+        searchBar.searchBarStyle = .minimal
+        searchBar.barStyle = .black
+
         let placeHolder = NSAttributedString(
             string: "운동명 입력",
             attributes: [NSAttributedString.Key.foregroundColor:
@@ -94,7 +109,22 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         )
         searchBar.searchTextField.attributedPlaceholder = placeHolder
         searchBar.searchTextField.textColor = .white
- 
+        
+        definesPresentationContext = true
+        
+    }
+    
+    private func setupTestStackView() {
+        view.addSubview(testStackView)
+        testStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackViewHeightConstraint = testStackView.heightAnchor.constraint(equalToConstant: 0)
+        NSLayoutConstraint.activate([
+            testStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        ])
+        
+        stackViewHeight = testStackView.bounds.height
+        print("stackViewHeight - \(stackViewHeight!)")
     }
     
     func setupDivider() {
@@ -104,7 +134,7 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor),
+                equalTo: testStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
                 constant: 10),
@@ -133,8 +163,8 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         ])
     }
     
-    func setupBinding() {
-        // 바인딩 - 검색시 테이블 리로드 실행
+    func setupBindings() {
+        // MARK: Search Exercises Reload
         viewModel.$filteredExercises
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -142,12 +172,18 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
                 print("tableView - reload")
                 self?.tableView.reloadData()
             }.store(in: &cancellables)
+        
+        searchController
+            .publisher(for: \.isActive)
+            .sink { print("searchController - \($0)") }
+            .store(in: &cancellables)
     }
     
     // MARK: - UISearchBarDelegate
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
+//        searchBar.setShowsCancelButton(true, animated: true)
+//        viewModel.setOption(to: .all)
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
@@ -160,6 +196,31 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         }
         print("searchBar selectedScope - \(selectedOption.name)")
         viewModel.setOption(to: selectedOption)
+    }
+    
+    // MARK: - UISearchControllerDelegate
+    
+    func willPresentSearchController(_ searchController: UISearchController) {
+        print("Search Controller will become active")
+        animateContainerViewHeight(isVisible: true)
+    }
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        print("Search Controller will be dismissed")
+        animateContainerViewHeight(isVisible: false)
+    }
+    
+    private func animateContainerViewHeight(isVisible: Bool) {
+        UIView.animate(withDuration: 0.3, animations: {
+            if isVisible {
+                self.stackViewHeightConstraint = self.testStackView.heightAnchor.constraint(equalToConstant: self.stackViewHeight!)
+                self.stackViewHeightConstraint!.isActive = true
+            } else {
+                self.stackViewHeightConstraint = self.testStackView.heightAnchor.constraint(equalToConstant: 0)
+                self.stackViewHeightConstraint!.isActive = true
+            }
+            
+        })
     }
     
     // MARK: - UISearchResultsUpdating
@@ -179,7 +240,10 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
-        cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        
+        let exercise = viewModel.filteredExercises[indexPath.row]
+        cell.configure(with: exercise)
+        cell.configurePushDetailViewButton(with: exercise, navigationController: self.navigationController!)
         cell.selectionStyle = .none
         return cell
     }
