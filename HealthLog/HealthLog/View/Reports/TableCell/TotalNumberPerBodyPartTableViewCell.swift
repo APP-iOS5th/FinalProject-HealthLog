@@ -120,5 +120,18 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func configureCell(bodyPart: String, setsCount: Int) {
+        
+        bodyPartLabel.text = bodyPart
+        totalNumberPerBodyPartLabel.text = "\(setsCount)세트"
+        // 추후 최대 값에 맞출 예정
+        progressView.progress = Float(setsCount) / 100.0
+        
+        
+    }
+    
+    
+    
+    
     
 }

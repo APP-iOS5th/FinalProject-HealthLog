@@ -9,6 +9,10 @@ import UIKit
 
 class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    private let realm = RealmManager.shared.realm
+    private var bodyPartSetsCount: [(key: String, value: Int)] = []
+    
+    
     private lazy var exerciseRecordTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.backgroundColor = .clear
@@ -57,7 +61,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             exerciseRecordTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        
+        let AugustSchedules = fetchAugustSchedules()
+        bodyPartSetsCount = calculateSetsByBodyPart(schedules: AugustSchedules)
         
         
     }
@@ -71,7 +76,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return 1
         case 1:
-            return 4
+            return bodyPartSetsCount.count
         case 2:
             return 2
         case 3:
@@ -96,6 +101,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             cell.backgroundColor = UIColor(named: "ColorSecondary")
             cell.selectionStyle = .none
             cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+            let bodyPart = bodyPartSetsCount[indexPath.row].key
+            let setsCount = bodyPartSetsCount[indexPath.row].value
+            cell.configureCell(bodyPart: bodyPart, setsCount: setsCount)
             
             return cell
             
@@ -159,4 +167,43 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             return 40
         }
     }
+    
+    
+    // MARK: 부위별 세트수 계산 (1달간)
+    
+    // 8월로 되어있는 걸 달 이동 기능과 연결 해야함.
+    func fetchAugustSchedules() -> [Schedule] {
+        let realm = realm
+//        guard let realm = realm else { return []}
+        let calendar = Calendar.current
+        let startDate = calendar.date(from: DateComponents(year: 2024, month: 8, day: 1))!
+        let endDate = calendar.date(from: DateComponents(year: 2024, month: 8, day: 31))!
+        
+        let result = Array(realm.objects(Schedule.self).filter { $0.date >= startDate && $0.date <= endDate } )
+        print(" August Data fetch success")
+        
+        return result
+    }
+    
+    func calculateSetsByBodyPart(schedules: [Schedule]) -> [(key: String, value: Int)] {
+        var bodyPartSetsCount: [String:Int] = [:]
+        
+        for schedule in schedules {
+            for scheduleExercise in schedule.exercises {
+                guard let exercise = scheduleExercise.exercise else {continue}
+                
+                let completedSets = scheduleExercise.sets.filter {$0.isCompleted}
+                
+                for bodyPart in exercise.bodyParts {
+                    let bodyPartName = bodyPart.rawValue
+                    bodyPartSetsCount[bodyPartName, default: 0] += completedSets.count
+                }
+            }
+        }
+        
+        let sortedCount = bodyPartSetsCount.sorted { $0.value > $1.value }
+        
+        return sortedCount
+    }
+    
 }
