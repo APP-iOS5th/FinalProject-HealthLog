@@ -73,20 +73,20 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     }
     
     private func setupSearchController() {
+
         searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.searchBar.scopeButtonTitles = BodyPartOption.allName
-        navigationItem.searchController = searchController
-//        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
-        definesPresentationContext = true
-        searchController.searchBar.showsScopeBar = true
-//        tableView.tableHeaderView = searchController.searchBar
+        navigationItem.searchController = searchController
         
         let searchBar = searchController.searchBar
         searchBar.delegate = self
         searchBar.scopeButtonTitles = BodyPartOption.allName
         searchBar.showsScopeBar = true
+//        searchBar.showsCancelButton = true
+        searchBar.searchBarStyle = .minimal
+        searchBar.barStyle = .black
+
         let placeHolder = NSAttributedString(
             string: "운동명 입력",
             attributes: [NSAttributedString.Key.foregroundColor:
@@ -94,7 +94,8 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         )
         searchBar.searchTextField.attributedPlaceholder = placeHolder
         searchBar.searchTextField.textColor = .white
- 
+        
+        definesPresentationContext = true
     }
     
     func setupDivider() {
@@ -147,7 +148,8 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     // MARK: - UISearchBarDelegate
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
+//        searchBar.setShowsCancelButton(true, animated: true)
+//        viewModel.setOption(to: .all)
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
