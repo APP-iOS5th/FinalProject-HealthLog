@@ -195,6 +195,15 @@ class ExerciseListCell: UITableViewCell {
         descriptionTextView.text = exercise.descriptionText
     }
     
+    func configurePushDetailViewButton(with exercise: Exercise, navigationController: UINavigationController) {
+        detailButton.removeTarget(nil, action: nil, for: .touchUpInside)
+        detailButton.addAction(UIAction { _ in
+            let viewModel = ExerciseDetailViewModel(exercise: exercise)
+            let vc = ExercisesDetailViewController(viewModel: viewModel)
+            navigationController.pushViewController(vc, animated: true)
+        }, for: .touchUpInside)
+    }
+    
 }
 
 // MARK: - Extension UILabel

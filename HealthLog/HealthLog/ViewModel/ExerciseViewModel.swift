@@ -2,7 +2,7 @@
 //  ViewModel.swift
 //  HealthLog
 //
-//  Created by user on 8/12/24.
+//  Created by youngwoo_ahn on 8/12/24.
 //
 
 import Combine

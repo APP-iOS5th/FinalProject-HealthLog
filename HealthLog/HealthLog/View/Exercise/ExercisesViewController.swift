@@ -10,7 +10,7 @@ import UIKit
 
 class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDataSource, UITableViewDelegate {
 
-    // MARK: - Declare
+    // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
@@ -179,7 +179,10 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseListCell
-        cell.configure(with: viewModel.filteredExercises[indexPath.row])
+        
+        let exercise = viewModel.filteredExercises[indexPath.row]
+        cell.configure(with: exercise)
+        cell.configurePushDetailViewButton(with: exercise, navigationController: self.navigationController!)
         cell.selectionStyle = .none
         return cell
     }
