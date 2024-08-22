@@ -78,12 +78,12 @@ extension RealmManager {
     func initializeRealmExercise() {
         if realm.objects(Exercise.self).isEmpty {
             let sampleExercises = [
-                Exercise(name: "스쿼트", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동", image: nil, totalReps: 75, recentWeight: 80, maxWeight: 120, isCustom: false),
+                Exercise(name: "스쿼트", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동", image: nil, totalReps: 75, recentWeight: 80, maxWeight: 120, isCustom: true),
                 Exercise(name: "Shoulder Press", bodyParts: [.shoulders], descriptionText: "Shoulder exercise Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest TestTestTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ", image: nil, totalReps: 60, recentWeight: 40, maxWeight: 60, isCustom: false),
                 Exercise(name: "Bicep Curl", bodyParts: [.biceps], descriptionText: "Arm exercise", image: nil, totalReps: 90, recentWeight: 20, maxWeight: 30, isCustom: false),
                 Exercise(name: "Tricep Dip", bodyParts: [.triceps], descriptionText: "Arm exercise", image: nil, totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
                 Exercise(name: "Lateral Raise", bodyParts: [.shoulders], descriptionText: "Shoulder isolation exercise", image: nil, totalReps: 70, recentWeight: 10, maxWeight: 15, isCustom: false),
-                Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", image: nil, totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: false),
+                Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", image: nil, totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: true),
                 Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", image: nil, totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
                 Exercise(name: "Leg Curl", bodyParts: [.hamstrings], descriptionText: "Hamstring exercise", image: nil, totalReps: 60, recentWeight: 50, maxWeight: 60, isCustom: false),
                 Exercise(name: "Calf Raise", bodyParts: [.calves], descriptionText: "Calf exercise", image: nil, totalReps: 100, recentWeight: 20, maxWeight: 30, isCustom: false),
