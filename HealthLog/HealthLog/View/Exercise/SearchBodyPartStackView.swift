@@ -39,12 +39,12 @@ class SearchBodyPartStackView: UIStackView {
     
     // MARK: - Public Methods
     
-    public func subViewsHidden (isHidden: Bool) {
-        arrangedSubviews.forEach {$0.isHidden = isHidden}
+    public func stackContentHidden (isHidden: Bool) {
+        arrangedSubviews.forEach { $0.isHidden = isHidden }
         isLayoutMarginsRelativeArrangement = !isHidden
     }
     
-    // MARK: - Methods
+    // MARK: - Private Methods
     
     private func setup() {
         axis = .vertical
@@ -87,7 +87,7 @@ class SearchBodyPartStackView: UIStackView {
         print(currentBodyPartOption)
     }
     
-    // MARK: - Sub Methods
+    // MARK: - Sub Private Methods
     
     private func calculatorButtonAddAfterWidth() -> CGFloat {
         let allRowButtonWidth = currentRow
