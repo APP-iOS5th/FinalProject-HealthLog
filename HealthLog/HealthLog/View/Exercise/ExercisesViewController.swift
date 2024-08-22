@@ -50,12 +50,12 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         setupBindings()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if stackViewHeight == nil {
             stackViewHeight = testStackView.bounds.height
-            print("stackViewHeight - \(stackViewHeight!)")
-            stackViewHeightConstraint = testStackView.heightAnchor.constraint(equalToConstant: 0)
+            stackViewHeightConstraint = testStackView
+                .heightAnchor.constraint(equalToConstant: 0)
             stackViewHeightConstraint!.isActive = true
         }
     }
@@ -118,13 +118,13 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         view.addSubview(testStackView)
         testStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackViewHeightConstraint = testStackView.heightAnchor.constraint(equalToConstant: 0)
         NSLayoutConstraint.activate([
             testStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
         ])
         
-        stackViewHeight = testStackView.bounds.height
-        print("stackViewHeight - \(stackViewHeight!)")
+//        // hidden
+//        self.testStackView.arrangedSubviews
+//            .forEach {$0.isHidden = true}
     }
     
     func setupDivider() {
@@ -211,16 +211,27 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     }
     
     private func animateContainerViewHeight(isVisible: Bool) {
-        UIView.animate(withDuration: 0.3, animations: {
-            if isVisible {
-                self.stackViewHeightConstraint = self.testStackView.heightAnchor.constraint(equalToConstant: self.stackViewHeight!)
-                self.stackViewHeightConstraint!.isActive = true
-            } else {
-                self.stackViewHeightConstraint = self.testStackView.heightAnchor.constraint(equalToConstant: 0)
-                self.stackViewHeightConstraint!.isActive = true
-            }
-            
+        if isVisible {
+            self.stackViewHeightConstraint?.constant = self.stackViewHeight!
+            self.stackViewHeightConstraint?.isActive = true
+        } else {
+            self.stackViewHeightConstraint?.constant = 0
+            self.stackViewHeightConstraint?.isActive = true
+        }
+        
+        print("stackViewHeightConstraint - \(String(describing: stackViewHeightConstraint?.constant))")
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            self.view.layoutIfNeeded()
         })
+    }
+    
+    // hidden
+    private func animateContainerViewHeight2(isVisible: Bool) {
+        UIView.animate(withDuration: 0.5) {
+            self.testStackView.arrangedSubviews
+                .forEach {$0.isHidden = !isVisible}
+        }
     }
     
     // MARK: - UISearchResultsUpdating
