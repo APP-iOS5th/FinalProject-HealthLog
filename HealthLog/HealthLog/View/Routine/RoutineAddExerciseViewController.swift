@@ -20,7 +20,7 @@ class RoutineAddExerciseViewController: UIViewController {
     var resultsViewController = RoutineSerchResultsViewController()
     private lazy var searchController: UISearchController = {
         let searchController = UISearchController(searchResultsController: resultsViewController)
-        searchController.searchBar.placeholder = "운동명 거색"
+        searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self
         definesPresentationContext = true
         return searchController
