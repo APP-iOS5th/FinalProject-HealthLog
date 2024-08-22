@@ -125,9 +125,12 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         bodyPartLabel.text = bodyPart
         totalNumberPerBodyPartLabel.text = "\(setsCount)세트"
         // 추후 최대 값에 맞출 예정
-        progressView.progress = Float(setsCount/100)
+        progressView.progress = Float(setsCount) / 100.0
+        
         
     }
+    
+    
     
     
     
