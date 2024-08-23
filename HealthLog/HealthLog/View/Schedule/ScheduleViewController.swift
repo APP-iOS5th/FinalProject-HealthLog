@@ -221,7 +221,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //            
 //            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
 //            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
-//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3) // (영우:bodyPart를 타입에 맞게 수정했습니다 정진님)
+//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
 //            
 //            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
 //            
@@ -379,6 +379,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         present(partialScreenVC, animated: true, completion: nil)
     }
     
+    func didToggleExerciseCompletion(_ exercise: ScheduleExercise) {
+        didUpdateScheduleExercise()
+    }
+    
     func didUpdateScheduleExercise() {
         loadSelectedDateSchedule(selectedDate ?? today)
         let calendar = Calendar.current
@@ -428,7 +432,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents, let date = dateComponents.date else { return }
         selectedDate = date
-//        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         loadSelectedDateSchedule(date)
         updateTableView()
         customizeCalendarTextColor()

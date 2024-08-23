@@ -10,6 +10,7 @@ import RealmSwift
 
 protocol ExerciseCheckCellDelegate: AnyObject {
     func didTapEditExercise(_ exercise: ScheduleExercise)
+    func didToggleExerciseCompletion(_ exercise: ScheduleExercise)
 }
 
 class ExerciseCheckCell: UITableViewCell {
@@ -198,7 +199,7 @@ class ExerciseCheckCell: UITableViewCell {
     }
     
     @objc private func didToggleCheckboxSet(_ sender: UISwitch) {
-        // save it to the data
+        // save it to the database
         guard let exercise = currentExercise else { return }
         
         let setOrder = sender.tag
@@ -216,21 +217,41 @@ class ExerciseCheckCell: UITableViewCell {
                     try realm.write {
                         scheduleExercise.isCompleted = allSetsCompleted
                     }
+                    
+                    // update calendar and bodyparts image
+                    // notice scheduleExercise changed
+                    delegate?.didToggleExerciseCompletion(scheduleExercise)
                 }
             } catch {
-                print("Error update ScheduleExercise")
+                print("Error update ScheduleExerciseSet")
             }
         }
-        
-        // apply it to bodyparts image
-        
     }
+    
+    @objc private func didToggleCheckboxExercise(_ sender: UISwitch) {
+        // save it to the database
+        guard let exercise = currentExercise else { return }
+        
+        do {
+            if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {
+                // update scheduleExercise and the sets
+                try realm.write {
+                    scheduleExercise.isCompleted = sender.isOn
+                    scheduleExercise.sets.forEach { $0.isCompleted = sender.isOn }
+                }
+                
+                // update calendar and bodyparts image
+                // notice scheduleExercise changed
+                delegate?.didToggleExerciseCompletion(scheduleExercise)
+            }
+        } catch {
+            print("Error update ScheduleExercise")
+        }
+    }
+    
     @objc private func editExercise() {
         guard let exercise = currentExercise else { return }
         delegate?.didTapEditExercise(exercise)
-    }
-    @objc private func didToggleCheckboxExercise(_ sender: UISwitch) {
-//        print("checkbox")
     }
 }
 
