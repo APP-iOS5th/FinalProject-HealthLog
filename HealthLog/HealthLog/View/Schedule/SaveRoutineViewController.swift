@@ -136,6 +136,7 @@ class SaveRoutineViewController: UIViewController {
             }
         }
     }
+    
     @objc private func cancelSave() {
         dismiss(animated: true)
     }
@@ -189,8 +190,6 @@ class SaveRoutineViewController: UIViewController {
         try! realm.write {
             realm.add(routine)
         }
-        
-        let savedRoutine = realm.objects(Routine.self).filter("name == %@", name).first
         
         existName = false
         

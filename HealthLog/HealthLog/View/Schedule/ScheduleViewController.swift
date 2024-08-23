@@ -84,12 +84,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        let button = UIButton()
-        button.setTitle("루틴으로 저장", for: .normal)
-        button.backgroundColor = .colorAccent
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 7
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        let button = UIButton(type: .system)
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "루틴으로 저장"
+        configuration.baseBackgroundColor = .colorAccent
+        configuration.baseForegroundColor = .white
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        button.configuration = configuration
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [label, button])
@@ -221,7 +223,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //            
 //            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
 //            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
-//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3) // (영우:bodyPart를 타입에 맞게 수정했습니다 정진님)
+//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
 //            
 //            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
 //            
@@ -246,7 +248,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func addSchedule() {
+//        let date = selectedDate ?? today
+//        let addScheduleViewController = AddScheduleViewController(date)
+        
         let addScheduleViewController = AddScheduleViewController()
+        
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
     
@@ -357,7 +363,30 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise, selectedDate: selectedDate ?? today)
         editExerciseVC.delegate = self
         let navigationController = UINavigationController(rootViewController: editExerciseVC)
-        present(navigationController, animated: true, completion: nil)
+        
+        // transparent black background
+        let partialScreenVC = UIViewController()
+        partialScreenVC.modalPresentationStyle = .overFullScreen
+        partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        
+        partialScreenVC.addChild(navigationController)
+        partialScreenVC.view.addSubview(navigationController.view)
+        
+        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
+            navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
+            navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
+            navigationController.view.heightAnchor.constraint(equalToConstant: 500),
+        ])
+        
+        navigationController.didMove(toParent: partialScreenVC)
+        
+        present(partialScreenVC, animated: true, completion: nil)
+    }
+    
+    func didToggleExerciseCompletion(_ exercise: ScheduleExercise) {
+        didUpdateScheduleExercise()
     }
     
     func didUpdateScheduleExercise() {
@@ -409,7 +438,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
         guard let dateComponents = dateComponents, let date = dateComponents.date else { return }
         selectedDate = date
-//        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         loadSelectedDateSchedule(date)
         updateTableView()
         customizeCalendarTextColor()
