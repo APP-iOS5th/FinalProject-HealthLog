@@ -69,7 +69,7 @@ class MuscleImageTableViewCell: UITableViewCell {
         
         
         
-        // Autolayout Constraints
+        
         
     }
     

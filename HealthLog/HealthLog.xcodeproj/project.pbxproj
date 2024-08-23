@@ -49,6 +49,8 @@
 		7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0002C69FE05004CB285 /* SearchResultCell.swift */; };
 		7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */; };
 		75F636212C6C89AB00A9B2E4 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 75187B4B2C6C887400B9F84A /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */; };
+		CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
@@ -124,6 +126,8 @@
 		7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		7590C0002C69FE05004CB285 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedExerciseCell.swift; sourceTree = "<group>"; };
+		CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesDetailViewController.swift; sourceTree = "<group>"; };
+		CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailViewModel.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 		184A589E2C69E42B009F2848 /* Reports */ = {
 			isa = PBXGroup;
 			children = (
+				18FAA0792C76C9EE00B62B8F /* ViewModel */,
 				CEE623B82C6CAACC00863699 /* ViewController */,
 				CEE623B72C6CAA9A00863699 /* TableCell */,
 			);
@@ -211,6 +216,13 @@
 			path = HealthLog;
 			sourceTree = "<group>";
 		};
+		18FAA0792C76C9EE00B62B8F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		7566B31F2C69AC8300BDF142 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +257,7 @@
 				CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */,
 				CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */,
 				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
+				CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */,
 				CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */,
 				CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */,
 				CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */,
@@ -264,11 +277,11 @@
 		CEE623B72C6CAA9A00863699 /* TableCell */ = {
 			isa = PBXGroup;
 			children = (
+				186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */,
 				184A58BC2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift */,
 				184A58C02C6C8521009F2848 /* SectionTitleTableViewCell.swift */,
 				184A58C22C6C88D0009F2848 /* MostPerformedTableViewCell.swift */,
 				184A58C42C6CFDC0009F2848 /* MostChangedTableViewCell.swift */,
-				186301E12C73313900CA32AA /* MuscleImageTableViewCell.swift */,
 			);
 			path = TableCell;
 			sourceTree = "<group>";
@@ -326,6 +339,7 @@
 				CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */,
 				756E39182C74755D00EDDBC6 /* AddScheduleViewModel.swift */,
 				4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */,
+				CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -440,6 +454,7 @@
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				CEE918B22C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
+				CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */,
 				CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */,
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
 				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
@@ -457,6 +472,7 @@
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
 				CEE918AE2C741B9D00B8DEF7 /* CustomBodyPartButton.swift in Sources */,
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
+				CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */,
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
 				CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */,
 				7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */,

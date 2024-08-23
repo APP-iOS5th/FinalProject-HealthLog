@@ -180,10 +180,6 @@ class ReportsViewController: UIViewController {
         ])
     }
     
-    func testFunction() {
-        let whyCantPR = "왜 Push가 안되는 거죠?"
-        
-    }
     
 
 }

@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import RealmSwift
 
 struct ScheduleStruct {
     let date: Date
@@ -43,23 +44,10 @@ class AddScheduleViewModel {
         selectedExercises.append(scheduleExercise)
     }
     
-    // 세트 수 변경(수정 필요)
-    func updateExerciseSetCount(for index: Int, setCount: Int) {
-        guard index < selectedExercises.count else { return }
-        let currentSets = selectedExercises[index].sets
-        if setCount > currentSets.count {
-            for i in currentSets.count..<setCount {
-                selectedExercises[index].sets.append(ScheduleExerciseSetStruct(order: i, weight: 0, reps: 0, isCompleted: false))
-            }
-        } else if setCount < currentSets.count {
-            selectedExercises[index].sets = Array(currentSets.prefix(setCount))
-        }
-    }
-    
     // 세트, 무게, 횟수 설정 후 ScheduleExerciseSetStruct을 업데이트
     func updateExerciseSet(for index: Int, sets: [ScheduleExerciseSetStruct]) {
         guard index < selectedExercises.count else { return }
-        //print("뷰모델Updating exercise at index \(index) with \(sets.count) sets")
+        // print("Viewmodel - index \(index) 운동의 입력된 세트 수: \(sets.count)")
         selectedExercises[index].sets = sets
     }
     
@@ -70,6 +58,37 @@ class AddScheduleViewModel {
     
     func saveSchedule(for date: Date) {
         let schedule = ScheduleStruct(date: date, exercises: selectedExercises, highlightedBodyParts: [])
-        print(schedule) // realm에 저장하도록 수정필요
+        print(schedule) // 생성된 데이터 확인
+    }
+    
+    // 아직 만드는 중,,
+    func saveSchedulerealm(for date: Date) {
+    // 해당날짜에 스케줄 있는 경우 처리 필요
+        let scheduleExercises = selectedExercises.map { exerciseStruct -> ScheduleExercise in
+            let exercise = RealmManager.shared.realm.objects(Exercise.self).filter("name == %@", exerciseStruct.exerciseName).first!
+            let sets = exerciseStruct.sets.map { setStruct in
+                ScheduleExerciseSet(order: setStruct.order, weight: setStruct.weight, reps: setStruct.reps, isCompleted: setStruct.isCompleted)
+            }
+            return ScheduleExercise(exercise: exercise, order: exerciseStruct.order, isCompleted: exerciseStruct.isCompleted, sets: sets)
+        }
+        
+        let highlightedBodyParts = selectedExercises.flatMap { exerciseStruct -> [HighlightedBodyPart] in
+            let exercise = RealmManager.shared.realm.objects(Exercise.self).filter("name == %@", exerciseStruct.exerciseName).first!
+            return exercise.bodyParts.map { bodyPart in
+                HighlightedBodyPart(bodyPart: bodyPart, step: 1)  // ...
+            }
+        }
+        
+        let schedule = Schedule(date: date, exercises: scheduleExercises, highlightedBodyParts: highlightedBodyParts)
+        
+        do {
+            let realm = RealmManager.shared.realm
+            try realm.write {
+                realm.add(schedule)
+            }
+            print("Schedule saved successfully")
+        } catch {
+            print("Error saving schedule: \(error)")
+        }
     }
 }
