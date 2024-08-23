@@ -6,12 +6,16 @@
 //
 
 import UIKit
+import RealmSwift
 
 protocol ExerciseCheckCellDelegate: AnyObject {
     func didTapEditExercise(_ exercise: ScheduleExercise)
 }
 
 class ExerciseCheckCell: UITableViewCell {
+    //    let realm = try! Realm()
+    let realm = RealmManager.shared.realm
+    
     static let identifier = "ExerciseCheckCell"
     
     weak var delegate: ExerciseCheckCellDelegate?
@@ -163,6 +167,7 @@ class ExerciseCheckCell: UITableViewCell {
         let checkbox = UISwitch()
         checkbox.isOn = set.isCompleted
         checkbox.onTintColor = .colorAccent
+        checkbox.tag = set.order
         checkbox.addTarget(self, action: #selector(didToggleCheckboxSet(_:)), for: .valueChanged)
         
         [setNumber, weightLabel, repsLabel, checkbox].forEach {
@@ -193,7 +198,32 @@ class ExerciseCheckCell: UITableViewCell {
     }
     
     @objc private func didToggleCheckboxSet(_ sender: UISwitch) {
-//        print("checkbox")
+        // save it to the data
+        guard let exercise = currentExercise else { return }
+        
+        let setOrder = sender.tag
+        if let setIndex = exercise.sets.firstIndex(where: { $0.order == setOrder }) {
+            do {
+                if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {
+                    // update scheduleExerciseSet
+                    try realm.write {
+                        scheduleExercise.sets[setIndex].isCompleted = sender.isOn
+                    }
+                    
+                    // update ScheduleExercise
+                    let allSetsCompleted = scheduleExercise.sets.allSatisfy { $0.isCompleted }
+                    exerciseCompletedSwitch.isOn = allSetsCompleted
+                    try realm.write {
+                        scheduleExercise.isCompleted = allSetsCompleted
+                    }
+                }
+            } catch {
+                print("Error update ScheduleExercise")
+            }
+        }
+        
+        // apply it to bodyparts image
+        
     }
     @objc private func editExercise() {
         guard let exercise = currentExercise else { return }
