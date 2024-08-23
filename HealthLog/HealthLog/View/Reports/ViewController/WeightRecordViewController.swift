@@ -186,8 +186,6 @@ class WeightRecordViewController: UIViewController {
         if let sheet = vc.sheetPresentationController {
             sheet.detents = [.medium()]  // 모달 크기 지정
             sheet.prefersGrabberVisible = true  // 시트 상단에 그래버 표시
-            sheet.selectedDetentIdentifier = .medium  // 처음 크기 지정
-            sheet.largestUndimmedDetentIdentifier = .large  //뒷 배경 흐리게 적용이 안됨
             sheet.preferredCornerRadius = 32
         }
         present(vc, animated: true, completion: nil)
