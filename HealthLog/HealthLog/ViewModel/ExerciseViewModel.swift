@@ -1,5 +1,5 @@
 //
-//  ViewModel.swift
+//  ExerciseViewModel.swift
 //  HealthLog
 //
 //  Created by youngwoo_ahn on 8/12/24.
@@ -22,12 +22,12 @@ class ExerciseViewModel: ObservableObject {
     @Published var bodypartOptionShow: Bool = false
     
     // 검색 상태값
-    @Published private(set) var searchText: String = ""
+    @Published var searchText: String = ""
     @Published var selectedOption: BodyPartOption = .all
     
     // 검색 결과 상태값
-    @Published private(set) var exercises: [Exercise] = []
-    @Published private(set) var filteredExercises: [Exercise] = []
+    @Published var exercises: [Exercise] = []
+    @Published var filteredExercises: [Exercise] = []
     
     // 입력용 Object
     @Published var exercise = InputExerciseObject()
