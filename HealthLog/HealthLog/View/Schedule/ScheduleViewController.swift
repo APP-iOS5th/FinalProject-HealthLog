@@ -357,7 +357,26 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise, selectedDate: selectedDate ?? today)
         editExerciseVC.delegate = self
         let navigationController = UINavigationController(rootViewController: editExerciseVC)
-        present(navigationController, animated: true, completion: nil)
+        
+        // transparent black background
+        let partialScreenVC = UIViewController()
+        partialScreenVC.modalPresentationStyle = .overFullScreen
+        partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        
+        partialScreenVC.addChild(navigationController)
+        partialScreenVC.view.addSubview(navigationController.view)
+        
+        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
+            navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
+            navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
+            navigationController.view.heightAnchor.constraint(equalToConstant: 500),
+        ])
+        
+        navigationController.didMove(toParent: partialScreenVC)
+        
+        present(partialScreenVC, animated: true, completion: nil)
     }
     
     func didUpdateScheduleExercise() {
