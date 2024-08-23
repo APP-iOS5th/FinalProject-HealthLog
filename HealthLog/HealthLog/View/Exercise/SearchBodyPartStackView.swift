@@ -13,13 +13,21 @@ class SearchBodyPartStackView: UIStackView {
     
     // MARK: - Properties
     
+    // 외부에서 버튼리스트에 접근 하기위한 변수
     var bodypartButtonList: [SearchBodyPartButton] = []
+    
+    // 현재 선택된 BodyPartOption
     var currentBodyPartOption: BodyPartOption = .all
+    
+    // (Combine) .send를 통해 BodyPartOption을 방출
     private let bodyPartOptionSubject = PassthroughSubject<BodyPartOption, Never>()
+    
+    // (Combine) bodyPartOptionSubject를 외부에서 구독
     var bodyPartOptionPublisher: AnyPublisher<BodyPartOption, Never> {
         bodyPartOptionSubject.eraseToAnyPublisher()
     }
     
+    // 스택뷰 안쪽 생성 작업때 쓸 현재상태 변수
     private var currentRow: UIStackView!
     private var currentButton: SearchBodyPartButton!
     
@@ -52,7 +60,7 @@ class SearchBodyPartStackView: UIStackView {
         distribution = .equalSpacing
         alignment = .leading
         isLayoutMarginsRelativeArrangement = true
-        layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
+        layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 13, right: 0)
     }
     
     private func addButtonsToStackView() {
@@ -89,6 +97,7 @@ class SearchBodyPartStackView: UIStackView {
     
     // MARK: - Sub Private Methods
     
+    // 현재 버튼들이 포함된 Row(버튼 가로줄)의 가로폭 계산
     private func calculatorButtonAddAfterWidth() -> CGFloat {
         let allRowButtonWidth = currentRow
             .arrangedSubviews.reduce(0, { sum, button in
@@ -98,8 +107,9 @@ class SearchBodyPartStackView: UIStackView {
         return allRowButtonWidth + currentButton.intrinsicContentSize.width
     }
     
+    // 가로폭이 넘쳤나 확인 후, 새로운 Row(버튼 가로줄) 생성
     private func checkCreateAfterRow(buttonAddAfterWidth: CGFloat) {
-        if buttonAddAfterWidth > UIScreen.main.bounds.width - 30 {
+        if buttonAddAfterWidth > UIScreen.main.bounds.width - 26 {
             currentRow = RowStackView()
             addArrangedSubview(currentRow)
         }

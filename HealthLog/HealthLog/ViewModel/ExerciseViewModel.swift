@@ -18,12 +18,18 @@ class ExerciseViewModel: ObservableObject {
     private var exercisesNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
+    // 운동부위옵션을 열고 닫을때 쓰는 상태값
+    @Published var bodypartOptionShow: Bool = false
+    
+    // 검색 상태값
     @Published private(set) var searchText: String = ""
     @Published var selectedOption: BodyPartOption = .all
     
+    // 검색 결과 상태값
     @Published private(set) var exercises: [Exercise] = []
     @Published private(set) var filteredExercises: [Exercise] = []
     
+    // 입력용 Object
     @Published var exercise = InputExerciseObject()
     
     // MARK: - Init
@@ -38,6 +44,7 @@ class ExerciseViewModel: ObservableObject {
         exercisesNotificationToken?.invalidate()
     }
     
+    // Realm 데이터 -> Combine Published 변수
     private func observeRealmData() {
         let results = realm.objects(Exercise.self)
         
@@ -63,6 +70,7 @@ class ExerciseViewModel: ObservableObject {
 
         // MARK: Search Exercises Filter
         // TODO: RunLoop 대신할꺼 있나 찾아보기
+        // 검색 키워드, 운동부위 변경시마다 검색결과 필터링
         Publishers.CombineLatest(
             $searchText.throttle(
                 for: .milliseconds(99),
@@ -77,19 +85,24 @@ class ExerciseViewModel: ObservableObject {
         }
         .store(in: &cancellables)
 
+        // MARK: Check Duplicate Name
+        // 운동 이름 중복 체크
+        exercise.$name
+            .sink { self.checkDuplicateExerciseName(to: $0) }
+            .store(in: &cancellables)
+        
         // MARK: Test - Check RequiredExerciseFields Empty
+        // 입력 필수요소 유효성 검사
         Publishers.CombineLatest(exercise.$name, exercise.$bodyParts)
             .sink { exerciseName, exerciseBodyParts in
                 self.validateRequiredFields(exerciseName: exerciseName, exerciseBodyParts: exerciseBodyParts)
             }
             .store(in: &cancellables)
-        
-        // MARK: Check Duplicate Name
-        exercise.$name
-            .sink { self.checkDuplicateExerciseName(to: $0) }
-            .store(in: &cancellables)
     }
     
+    // MARK: - Methods
+    
+    // (사용 안함) 검색 키워드만 필터링
     func filterExercises(by searchText: String) {
         if searchText.isEmpty {
             filteredExercises = exercises
@@ -100,8 +113,7 @@ class ExerciseViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Methods
-    
+    // (사용 중) 검색 키워드 + 운동 부위로 필터링
     func filterExercises() {
         print("filterExercises - \(String(describing: selectedOption))")
         
@@ -160,11 +172,13 @@ class ExerciseViewModel: ObservableObject {
             return
         }
         
+        // 필수 요소 체크 끝, 정상이므로 true
         exercise.isValidatedRequiredExerciseFields = true
         print("isValidatedRequiredExerciseFields - \(exercise.isValidatedRequiredExerciseFields)") // log
     }
     
     func realmWriteExercise() {
+        // 필수 요소 확인
         if !exercise.isValidatedRequiredExerciseFields {
             print("realmWriteExercise - isValidatedRequiredExerciseFields")
             return
