@@ -107,7 +107,7 @@ class RoutineAddNameViewController: UIViewController {
         self.navigationItem.title = "루틴 이름을 정해주세요"
         
 
-        self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        self.view.backgroundColor = .color1E1E1E
         
         let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         self.navigationItem.backBarButtonItem = backbarButtonItem

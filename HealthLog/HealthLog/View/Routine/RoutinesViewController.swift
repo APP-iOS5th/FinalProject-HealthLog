@@ -47,7 +47,7 @@ class RoutinesViewController: UIViewController {
     }
     func setupUI() {
         
-        self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        self.view.backgroundColor = .color1E1E1E
         self.title = "루틴"
         self.view.tintColor = .white
         

@@ -15,7 +15,7 @@ class RoutineViewModel: ObservableObject{
     
     private var routineNotificationToken: NotificationToken?
     @Published var rutineNameinput: String = ""
-    @Published var rutineNameConfirmation: String = ""
+    @Published var rutineNameConfirmation: String = " "
     @Published var isValid: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
