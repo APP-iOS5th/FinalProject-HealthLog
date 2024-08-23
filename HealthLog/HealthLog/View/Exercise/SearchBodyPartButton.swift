@@ -10,7 +10,6 @@ import UIKit
 
 class SearchBodyPartButton: UIButton {
     
-    private var cancellables = Set<AnyCancellable>()
     let bodypartOption: BodyPartOption
     
     // 선택값 변경때마다, 버튼색 변경

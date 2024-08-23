@@ -86,7 +86,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         let searchBar = searchController.searchBar
         searchBar.delegate = self
         searchBar.showsCancelButton = true
-        searchBar.showsBookmarkButton = true
+        searchBar.showsBookmarkButton = true // 북마크 버튼
         searchBar.setImage(UIImage(), for: .search, state: .normal)
         let clearIconImage = UIImage(systemName: "delete.left")?
             .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
@@ -236,8 +236,6 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         navigationController?.pushViewController(vc, animated: false)
     }
     
-    @objc private func customCancelButtonTapped() {}
-    
     @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
         let isTappedInsideStackView = searchOptionStackView.frame.contains(sender.location(in: view))
         let isTappedInsideSearchBar = searchController.searchBar.frame.contains(sender.location(in: view))
@@ -253,6 +251,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     // MARK: - Methods
     
+    // 스택뷰 안에 있는 Row들을 감추고 보여주는 애니메이션 (스택뷰 높이 자동 조절)
     private func animateBodyPartsHidden(isHidden: Bool) {
         UIView.animate(withDuration: 0.5) {
             self.searchOptionStackView.stackContentHidden(isHidden: isHidden)
