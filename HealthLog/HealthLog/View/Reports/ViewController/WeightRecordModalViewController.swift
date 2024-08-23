@@ -8,7 +8,7 @@
 import UIKit
 
 class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
-    private var realm = RealmManager.shared.realm
+    private let realm = RealmManager.shared.realm
     
     private let cancelButton: UIButton = {
         let button = UIButton(type: .system)
