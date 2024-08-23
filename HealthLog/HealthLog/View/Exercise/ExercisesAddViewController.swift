@@ -27,7 +27,7 @@ class ExercisesAddViewController: UIViewController {
     
     let bodypartStackView = UIStackView()
     let bodypartLabel = UILabel()
-    var bodypartButtonStackView = CustomBodyPartButtonStackView()
+    var bodypartButtonStackView = InputBodyPartButtonStackView()
     let bodypartEmptyWarningLabel = UILabel()
     
     let recentWeightStackView = UIStackView()
@@ -260,7 +260,7 @@ class ExercisesAddViewController: UIViewController {
     
     
     private func setupBindings() {
-        // MARK: titleTextField (checkDuplicate)
+        // MARK: Input titleTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
@@ -269,16 +269,19 @@ class ExercisesAddViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // MARK: bodypartButtonStackView
+        // MARK: Input bodypartButtonStackView
+        // 버튼리스트로 순회 구독. 버튼 터치시 ViewModel에 bodyPart 삽입
         bodypartButtonStackView.bodypartButtonList.forEach { button in
             button.buttonPublisher
                 .sink { button in
                     if button.isSelected {
-                        self.viewModel.exercise.bodyParts
-                            .append(button.bodypart)
+                        // 선택시 삽입
+                        self.viewModel.exercise
+                            .bodyParts.append(button.bodypart)
                     } else {
-                        self.viewModel.exercise.bodyParts
-                            .removeAll { $0 == button.bodypart }
+                        // 선택 해제시 제거
+                        self.viewModel.exercise
+                            .bodyParts.removeAll { $0 == button.bodypart }
                     }
                     print("\(button.bodypart.rawValue) - \(button.isSelected)")
                     print(self.viewModel.exercise.bodyParts) // log
@@ -286,7 +289,7 @@ class ExercisesAddViewController: UIViewController {
                 .store(in: &cancellables)
         }
         
-        // MARK: recentWeightTextField
+        // MARK: Input recentWeightTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: recentWeightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
@@ -295,7 +298,7 @@ class ExercisesAddViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // MARK: maxWeightTextField
+        // MARK: Input maxWeightTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: maxWeightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
@@ -304,7 +307,7 @@ class ExercisesAddViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // MARK: descriptionTextField
+        // MARK: Input descriptionTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: descriptionTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
@@ -313,28 +316,28 @@ class ExercisesAddViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // MARK: Duplicate ExerciseName Warning
+        // MARK: Input Duplicate ExerciseName Warning
         viewModel.exercise.$hasDuplicateExerciseName
             .sink { [weak self] hasDuplicate in
                 self?.titleDuplicateWarningLabel.isHidden = !hasDuplicate
             }
             .store(in: &cancellables)
         
-        // MARK: Empty ExerciseName Warning
+        // MARK: UI Empty ExerciseName Warning
         viewModel.exercise.$isExerciseNameEmpty
             .sink { [weak self] isEmpty in
                 self?.titleEmptyWarningLabel.isHidden = !isEmpty
             }
             .store(in: &cancellables)
         
-        // MARK: Empty Bodyparts Warning
+        // MARK: UI Empty Bodyparts Warning
         viewModel.exercise.$isExerciseBodyPartsEmpty
             .sink { [weak self] isEmpty in
                 self?.bodypartEmptyWarningLabel.isHidden = !isEmpty
             }
             .store(in: &cancellables)
         
-        // MARK: Validated Exercise Fields - Add Button
+        // MARK: UI Validated Exercise Fields - Add Button
         viewModel.exercise.$isValidatedRequiredExerciseFields
             .sink { [weak self] isValidated in
                 self?.navigationItem.rightBarButtonItem?
@@ -343,7 +346,7 @@ class ExercisesAddViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    // MARK: - Methods
+    // MARK: - Selector Methods
     
     @objc func doneButtonTapped() {
         print("doneButtonTapped!")
@@ -352,7 +355,7 @@ class ExercisesAddViewController: UIViewController {
     }
 }
 
-
+// MARK: - OnlyNumberInputDelegate
 class NumberOnlyTextFieldDelegate: NSObject, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         

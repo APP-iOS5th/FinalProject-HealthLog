@@ -1,5 +1,5 @@
 //
-//  CustomBodyPartButton.swift
+//  InputBodyPartButton.swift
 //  HealthLog
 //
 //  Created by youngwoo_ahn on 8/20/24.

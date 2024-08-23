@@ -48,8 +48,8 @@ class ExerciseListCell: UITableViewCell {
         super.layoutSubviews()
         
         // 셀 마진
-        contentView.frame = contentView.frame.inset(
-            by: UIEdgeInsets(top: 13, left: 10, bottom: 0, right: 10))
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(
+            top: 13, left: 10, bottom: 0, right: 10))
     }
     
     // MARK: - Setup UI
@@ -195,6 +195,7 @@ class ExerciseListCell: UITableViewCell {
         descriptionTextView.text = exercise.descriptionText
     }
     
+    // 자세히 보기 버튼 - 상세 화면 이동
     func configurePushDetailViewButton(with exercise: Exercise, navigationController: UINavigationController) {
         detailButton.removeTarget(nil, action: nil, for: .touchUpInside)
         detailButton.addAction(UIAction { _ in

@@ -39,3 +39,44 @@ class Exercise: Object {
         self.bodyParts.append(objectsIn: bodyParts)
     }
 }
+
+// MARK: -
+// 입력용 Exercise
+class InputExerciseObject: ObservableObject {
+    @Published var name: String = ""
+    @Published var bodyParts: [BodyPart] = []
+    @Published var recentWeight: Int = 0
+    @Published var maxWeight: Int = 0
+    @Published var description: String = ""
+    
+    @Published var isValidatedRequiredExerciseFields: Bool = false
+    @Published var hasDuplicateExerciseName: Bool = false
+    @Published var isExerciseNameEmpty: Bool = true
+    @Published var isExerciseBodyPartsEmpty: Bool = true
+    
+    func initInputExercise() {
+        name = ""
+        bodyParts = []
+        recentWeight = 0
+        maxWeight = 0
+        description = ""
+        
+        isValidatedRequiredExerciseFields = false
+        hasDuplicateExerciseName = false
+        isExerciseNameEmpty = true
+        isExerciseBodyPartsEmpty = true
+    }
+    
+    func addRealmExerciseObject() -> Exercise {
+        return Exercise(
+            name: name,
+            bodyParts: bodyParts,
+            descriptionText: description,
+            image: nil,
+            totalReps: 0,
+            recentWeight: recentWeight,
+            maxWeight: maxWeight,
+            isCustom: true
+        )
+    }
+}

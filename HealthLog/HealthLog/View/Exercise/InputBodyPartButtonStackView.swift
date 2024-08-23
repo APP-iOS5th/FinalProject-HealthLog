@@ -1,5 +1,5 @@
 //
-//  CustomBodyPartStackView.swift
+//  InputBodyPartButtonStackView.swift
 //  HealthLog
 //
 //  Created by youngwoo_ahn on 8/20/24.

@@ -120,13 +120,13 @@ class ExerciseViewModel: ObservableObject {
         // 검색어와 부위를 기반으로 운동리스트를 필터링
         filteredExercises = exercises.filter { exercise in
 
-            // 검색어
+            // 검색어 체크
             let matchesAll = searchText.isEmpty
             let matchesSearchText  = exercise.name
                 .localizedCaseInsensitiveContains(searchText)
             let isSearchText = matchesAll || matchesSearchText
             
-            // 부위
+            // 운동부위 체크
             let isBodyPart: Bool
             switch selectedOption {
                 case .all:
@@ -172,7 +172,7 @@ class ExerciseViewModel: ObservableObject {
             return
         }
         
-        // 필수 요소 체크 끝, 정상이므로 true
+        // 필수 요소 체크 끝, 정상이면 true
         exercise.isValidatedRequiredExerciseFields = true
         print("isValidatedRequiredExerciseFields - \(exercise.isValidatedRequiredExerciseFields)") // log
     }
@@ -200,45 +200,5 @@ class ExerciseViewModel: ObservableObject {
     
     func setSearchText(to text: String) {
         searchText = text
-    }
-}
-
-
-class InputExerciseObject: ObservableObject {
-    @Published var name: String = ""
-    @Published var bodyParts: [BodyPart] = []
-    @Published var recentWeight: Int = 0
-    @Published var maxWeight: Int = 0
-    @Published var description: String = ""
-    
-    @Published var isValidatedRequiredExerciseFields: Bool = false
-    @Published var hasDuplicateExerciseName: Bool = false
-    @Published var isExerciseNameEmpty: Bool = true
-    @Published var isExerciseBodyPartsEmpty: Bool = true
-    
-    func initInputExercise() {
-        name = ""
-        bodyParts = []
-        recentWeight = 0
-        maxWeight = 0
-        description = ""
-        
-        isValidatedRequiredExerciseFields = false
-        hasDuplicateExerciseName = false
-        isExerciseNameEmpty = true
-        isExerciseBodyPartsEmpty = true
-    }
-    
-    func addRealmExerciseObject() -> Exercise {
-        return Exercise(
-            name: name,
-            bodyParts: bodyParts,
-            descriptionText: description,
-            image: nil,
-            totalReps: 0,
-            recentWeight: recentWeight,
-            maxWeight: maxWeight,
-            isCustom: true
-        )
     }
 }
