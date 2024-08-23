@@ -55,7 +55,7 @@ class ExerciseListCell: UITableViewCell {
     // MARK: - Setup UI
     
     private func setupCell() {
-        backgroundColor = .black
+        backgroundColor = .color1E1E1E
         contentView.backgroundColor = .colorSecondary
         contentView.layer.cornerRadius = 12
         contentView.layer.masksToBounds = true

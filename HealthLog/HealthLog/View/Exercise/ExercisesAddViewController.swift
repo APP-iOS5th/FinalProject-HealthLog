@@ -16,36 +16,36 @@ class ExercisesAddViewController: UIViewController {
     private let viewModel = ExerciseViewModel()
     private let numberOnlyDelegate = NumberOnlyTextFieldDelegate()
     
-    let scrollView = UIScrollView()
-    let stackView = UIStackView()
+    private let scrollView = UIScrollView()
+    private let stackView = UIStackView()
     
-    let titleStackView = UIStackView()
-    let titleLabel = UILabel()
-    let titleTextField = UITextField()
-    let titleDuplicateWarningLabel = UILabel()
-    let titleEmptyWarningLabel = UILabel()
+    private let titleStackView = UIStackView()
+    private let titleLabel = UILabel()
+    private let titleTextField = PaddedTextField()
+    private let titleDuplicateWarningLabel = UILabel()
+    private let titleEmptyWarningLabel = UILabel()
     
-    let bodypartStackView = UIStackView()
-    let bodypartLabel = UILabel()
-    var bodypartButtonStackView = InputBodyPartButtonStackView()
-    let bodypartEmptyWarningLabel = UILabel()
+    private let bodypartStackView = UIStackView()
+    private let bodypartLabel = UILabel()
+    private let bodypartButtonStackView = InputBodyPartButtonStackView()
+    private let bodypartEmptyWarningLabel = UILabel()
     
-    let recentWeightStackView = UIStackView()
-    let recentWeightLabel = UILabel()
-    let recentWeightTextField = UITextField()
-    let recentWeightKGLabel = UILabel()
+    private let recentWeightStackView = UIStackView()
+    private let recentWeightLabel = UILabel()
+    private let recentWeightTextField = UITextField()
+    private let recentWeightKGLabel = UILabel()
     
-    let maxWeightStackView = UIStackView()
-    let maxWeightLabel = UILabel()
-    let maxWeightTextField = UITextField()
-    let maxWeightKGLabel = UILabel()
+    private let maxWeightStackView = UIStackView()
+    private let maxWeightLabel = UILabel()
+    private let maxWeightTextField = UITextField()
+    private let maxWeightKGLabel = UILabel()
     
-    let descriptionStackView = UIStackView()
-    let descriptionLabel = UILabel()
-    let descriptionTextField = UITextField()
+    private let descriptionStackView = UIStackView()
+    private let descriptionLabel = UILabel()
+    private let descriptionTextField = UITextField()
     
-    let imageStackView = UIStackView()
-    let imageLabel = UILabel()
+    private let imageStackView = UIStackView()
+    private let imageLabel = UILabel()
     
     // MARK: - Init
     
@@ -61,7 +61,7 @@ class ExercisesAddViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .color1E1E1E
         
         setupNavigationBar()
         setupTitleStackView()
@@ -87,9 +87,13 @@ class ExercisesAddViewController: UIViewController {
             action: #selector(doneButtonTapped))
         self.navigationItem.rightBarButtonItem = doneButton
         
-        // MARK: - scrollView
-        
+        // MARK: scrollView
         view.addSubview(scrollView)
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.isDirectionalLockEnabled = true
+//        scrollView.contentInset = UIEdgeInsets(
+//            top: 10, left: 10, bottom: 10, right: 10)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(
@@ -97,9 +101,11 @@ class ExercisesAddViewController: UIViewController {
             scrollView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor),
             scrollView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor),
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 8),
             scrollView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor),
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -8),
         ])
         
         // MARK: stackView
@@ -107,7 +113,6 @@ class ExercisesAddViewController: UIViewController {
         stackView.distribution = .equalSpacing
         stackView.spacing = 10
         stackView.alignment = .leading
-        stackView.backgroundColor = .color252525
         scrollView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -128,12 +133,12 @@ class ExercisesAddViewController: UIViewController {
         // MARK: titleStackView
         titleStackView.axis = .vertical
         titleStackView.distribution = .equalSpacing
-        titleStackView.spacing = 10
-        titleStackView.backgroundColor = .color1E1E1E
+        titleStackView.spacing = 13
         stackView.addArrangedSubview(titleStackView)
         
         // MARK: titleLabel
         titleLabel.textColor = .white
+        titleLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
         let titleLabelText = "운동 이름 *"
         let attributedString = NSMutableAttributedString(string: titleLabelText)
         let range = (titleLabelText as NSString).range(of: "*")
@@ -142,9 +147,17 @@ class ExercisesAddViewController: UIViewController {
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
-        titleTextField.textColor = .white
         titleStackView.addArrangedSubview(titleTextField)
-        
+        titleTextField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            titleTextField.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            titleTextField.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+        ])
+
         // MARK: titleDuplicateWarningLabel
         titleDuplicateWarningLabel.text = "이미 존재하는 운동 이름입니다."
         titleDuplicateWarningLabel.numberOfLines = 1
@@ -156,6 +169,21 @@ class ExercisesAddViewController: UIViewController {
         titleEmptyWarningLabel.numberOfLines = 1
         titleEmptyWarningLabel.textColor = .red
         titleStackView.addArrangedSubview(titleEmptyWarningLabel)
+        
+        let dividerView = UIView()
+        dividerView.backgroundColor = .color252525
+        titleStackView.addArrangedSubview(dividerView)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1),
+        ])
     }
     
     func setupBodypartStackView() {
@@ -184,6 +212,21 @@ class ExercisesAddViewController: UIViewController {
         bodypartEmptyWarningLabel.numberOfLines = 1
         bodypartEmptyWarningLabel.textColor = .red
         bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
+        
+        let dividerView = UIView()
+        dividerView.backgroundColor = .color252525
+        bodypartStackView.addArrangedSubview(dividerView)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1),
+        ])
     }
     
     func setupRecentWeightStackView() {
@@ -204,6 +247,21 @@ class ExercisesAddViewController: UIViewController {
         recentWeightTextField.delegate = numberOnlyDelegate
         recentWeightTextField.keyboardType = .numberPad
         recentWeightStackView.addArrangedSubview(recentWeightTextField)
+        
+        let dividerView = UIView()
+        dividerView.backgroundColor = .color252525
+        recentWeightStackView.addArrangedSubview(dividerView)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1),
+        ])
     }
     
     func setupMaxWeightStackView() {
@@ -224,6 +282,21 @@ class ExercisesAddViewController: UIViewController {
         maxWeightTextField.delegate = numberOnlyDelegate
         maxWeightTextField.keyboardType = .numberPad
         maxWeightStackView.addArrangedSubview(maxWeightTextField)
+        
+        let dividerView = UIView()
+        dividerView.backgroundColor = .color252525
+        maxWeightStackView.addArrangedSubview(dividerView)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1),
+        ])
     }
     
     func setupDescriptionStackView() {
@@ -242,6 +315,21 @@ class ExercisesAddViewController: UIViewController {
         // MARK: descriptionTextField
         descriptionTextField.textColor = .white
         descriptionStackView.addArrangedSubview(descriptionTextField)
+        
+        let dividerView = UIView()
+        dividerView.backgroundColor = .color252525
+        descriptionStackView.addArrangedSubview(dividerView)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            dividerView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1),
+        ])
     }
     
     func setupImageStackView() {
@@ -257,7 +345,6 @@ class ExercisesAddViewController: UIViewController {
         imageLabel.text = "운동 이미지"
         imageStackView.addArrangedSubview(imageLabel)
     }
-    
     
     private func setupBindings() {
         // MARK: Input titleTextField
@@ -319,21 +406,21 @@ class ExercisesAddViewController: UIViewController {
         // MARK: Input Duplicate ExerciseName Warning
         viewModel.exercise.$hasDuplicateExerciseName
             .sink { [weak self] hasDuplicate in
-                self?.titleDuplicateWarningLabel.isHidden = !hasDuplicate
+                self?.warningLabelAnimation(targetView: self?.titleDuplicateWarningLabel, warningState: hasDuplicate)
             }
             .store(in: &cancellables)
         
         // MARK: UI Empty ExerciseName Warning
         viewModel.exercise.$isExerciseNameEmpty
             .sink { [weak self] isEmpty in
-                self?.titleEmptyWarningLabel.isHidden = !isEmpty
+                self?.warningLabelAnimation(targetView: self?.titleEmptyWarningLabel, warningState: isEmpty)
             }
             .store(in: &cancellables)
         
         // MARK: UI Empty Bodyparts Warning
         viewModel.exercise.$isExerciseBodyPartsEmpty
             .sink { [weak self] isEmpty in
-                self?.bodypartEmptyWarningLabel.isHidden = !isEmpty
+                self?.warningLabelAnimation(targetView: self?.bodypartEmptyWarningLabel, warningState: isEmpty)
             }
             .store(in: &cancellables)
         
@@ -353,6 +440,17 @@ class ExercisesAddViewController: UIViewController {
         viewModel.realmWriteExercise()
         navigationController?.popViewController(animated: true)
     }
+    
+    // MARK: - Methods
+    
+    // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (고장남)
+    private func warningLabelAnimation(targetView: UIView?, warningState: Bool) {
+        guard let target = targetView else { return }
+        guard target.isHidden == warningState else { return } // 중복 방지
+        UIView.animate(withDuration: 0.2) {
+            target.isHidden = !warningState
+        }
+    }
 }
 
 // MARK: - OnlyNumberInputDelegate
@@ -367,5 +465,37 @@ class NumberOnlyTextFieldDelegate: NSObject, UITextFieldDelegate {
         let characterSet = CharacterSet(charactersIn: updatedString)
         
         return allowedCharacters.isSuperset(of: characterSet)
+    }
+}
+
+// MARK - Custom UI Class
+private class PaddedTextField: UITextField {
+    var padding = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: padding)
+    }
+    
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: padding)
+    }
+    
+    private func setupUI() {
+        clearButtonMode = .always
+        borderStyle = .roundedRect
+        layer.cornerRadius = 12
+        layer.masksToBounds = true
+        textColor = .white
+        backgroundColor = .color2F2F2F
     }
 }

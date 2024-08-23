@@ -35,7 +35,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .color1E1E1E
         
         setupNavigationBar()
         setupSearchController()
@@ -138,9 +138,10 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     }
     
     func setupTableView() {
-        tableView.backgroundColor = .black
+        tableView.backgroundColor = .color1E1E1E
         tableView.dataSource = self
-        tableView.register(ExerciseListCell.self, forCellReuseIdentifier: "ExerciseCell")
+        tableView.register(ExerciseListCell.self, 
+                           forCellReuseIdentifier: "ExerciseCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(tableView)
