@@ -366,23 +366,31 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     @objc private func saveEdit() {
         saveInputs()
         
-        let scheduleExerciseSets = List<ScheduleExerciseSet>()
-        for i in 0..<setValues.count {
-            let set = ScheduleExerciseSet(
-                order: setValues[i].order,
-                weight: Int(setValues[i].weight) ?? 0,
-                reps: Int(setValues[i].reps) ?? 0,
-                isCompleted: false
-            )
-            scheduleExerciseSets.append(set)
-        }
-        
         do {
             try realm.write {
-                scheduleExercise.sets.removeAll()
-                scheduleExercise.sets.append(objectsIn: scheduleExerciseSets)
+                for i in 0..<setValues.count {
+                    if i < scheduleExercise.sets.count {
+                        scheduleExercise.sets[i].order = setValues[i].order
+                        scheduleExercise.sets[i].weight = Int(setValues[i].weight) ?? 0
+                        scheduleExercise.sets[i].reps = Int(setValues[i].reps) ?? 0
+                    } else {
+                        let set = ScheduleExerciseSet(
+                            order: setValues[i].order,
+                            weight: Int(setValues[i].weight) ?? 0,
+                            reps: Int(setValues[i].reps) ?? 0,
+                            isCompleted: false
+                        )
+                        scheduleExercise.sets.append(set)
+                    }
+                }
+                
+                if setValues.count < scheduleExercise.sets.count {
+                    let scheduleExerciseSetsCount = scheduleExercise.sets.count
+                    for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
+                        realm.delete(scheduleExercise.sets[j])
+                    }
+                }
             }
-            
             // notify the delegate of the update
             delegate?.didUpdateScheduleExercise()
         } catch {
