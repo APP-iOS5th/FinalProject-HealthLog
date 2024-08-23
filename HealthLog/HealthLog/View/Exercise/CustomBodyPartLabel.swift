@@ -41,7 +41,7 @@ class CustomBodyPartLabel: UILabel {
         textColor = .white
         font = UIFont(name: "Pretendard-Medium", size: 12)
         textAlignment = .center
-        layer.cornerRadius = 11
+        layer.cornerRadius = 12
         layer.masksToBounds = true
     }
 }

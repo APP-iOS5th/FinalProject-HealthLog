@@ -33,7 +33,7 @@ class ExercisesUpdateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .color1E1E1E
         
         setupNavigationBar()
         setupDeleteButton()

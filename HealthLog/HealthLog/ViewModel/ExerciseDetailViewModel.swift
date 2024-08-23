@@ -5,6 +5,7 @@
 //  Created by user on 8/22/24.
 //
 
+import Foundation
 import RealmSwift
 import Combine
 
@@ -22,9 +23,8 @@ class ExerciseDetailViewModel: ObservableObject {
     }
     
     func realmDeleteExercise() {
-        let realm = RealmManager.shared.realm
-        try! realm.write {
-            realm.delete(exercise)
+        RealmManager.shared.realm.writeAsync() {
+            RealmManager.shared.realm.delete(self.exercise)
         }
     }
 }

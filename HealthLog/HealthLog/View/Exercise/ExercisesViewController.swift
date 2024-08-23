@@ -8,23 +8,18 @@
 import Combine
 import UIKit
 
-class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UITableViewDataSource, UITableViewDelegate {
-
+class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, UITableViewDataSource  {
+    
     // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
     private let searchController = UISearchController(searchResultsController: nil)
-    private let containerStackView = UIStackView()
-    private let testStackView = CustomBodyPartButtonStackView()
+    private let searchOptionStackView = SearchBodyPartStackView()
     
     private let addButton = UIButton(type: .custom)
     private let dividerView = UIView()
     private let tableView = UITableView()
-    
-    let testView = UIView()
-    var stackViewHeight: CGFloat?
-    var stackViewHeightConstraint: NSLayoutConstraint?
     
     // MARK: - Init
     
@@ -40,24 +35,14 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .color1E1E1E
         
         setupNavigationBar()
         setupSearchController()
-        setupTestStackView()
+        setupSearchOptionStackView()
         setupDivider()
         setupTableView()
         setupBindings()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if stackViewHeight == nil {
-            stackViewHeight = testStackView.bounds.height
-            print("stackViewHeight - \(stackViewHeight!)")
-            stackViewHeightConstraint = testStackView.heightAnchor.constraint(equalToConstant: 0)
-            stackViewHeightConstraint!.isActive = true
-        }
     }
     
     // MARK: - Setup
@@ -68,7 +53,6 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         navigationController?.navigationBar.tintColor = UIColor.white
         
         // MARK: addButton
-        
         var buttonConfig = UIButton.Configuration.filled()
         buttonConfig.title = "+"
         buttonConfig.baseBackgroundColor = .colorAccent
@@ -82,75 +66,82 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         navigationItem.rightBarButtonItem = rightBarButton
         
         // MARK: tempStepperButton
-        
         let tempStepperButton = UIBarButtonItem(title: "Stepper", style: .plain, target: self, action: #selector(tempStepperButtonTapped))
         self.navigationItem.leftBarButtonItem = tempStepperButton
+        
+        // MARK: handleTapOutsideSearchArea
+        // 검색영역 바깥을 터치시, 운동부위옵션 및 키보드 접기
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchArea))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func setupSearchController() {
-
+        
         searchController.searchResultsUpdater = self
-        searchController.delegate = self
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
         
         let searchBar = searchController.searchBar
         searchBar.delegate = self
-        searchBar.scopeButtonTitles = BodyPartOption.allName
-        searchBar.showsScopeBar = true
+        searchBar.showsCancelButton = true
+        searchBar.showsBookmarkButton = true // 북마크 버튼
+        searchBar.setImage(UIImage(), for: .search, state: .normal)
+        let clearIconImage = UIImage(systemName: "delete.left")?
+            .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
+        searchBar.setImage(clearIconImage, for: .clear, state: .normal)
         searchBar.searchBarStyle = .minimal
         searchBar.barStyle = .black
-
-        let placeHolder = NSAttributedString(
-            string: "운동명 입력",
-            attributes: [NSAttributedString.Key.foregroundColor:
-                            UIColor.lightGray]
-        )
+        let attributes = [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+        let placeHolder = NSAttributedString(string: "운동명 입력", attributes: attributes)
         searchBar.searchTextField.attributedPlaceholder = placeHolder
         searchBar.searchTextField.textColor = .white
         
         definesPresentationContext = true
         
+//        // searchBar Text 변경 - KVO. 오래된 방식이라 조금 위험?
+//        searchBar.setValue("닫기", forKey: "cancelButtonText")
+        
     }
     
-    private func setupTestStackView() {
-        view.addSubview(testStackView)
-        testStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        stackViewHeightConstraint = testStackView.heightAnchor.constraint(equalToConstant: 0)
+    private func setupSearchOptionStackView() {
+        view.addSubview(searchOptionStackView)
+        searchOptionStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            testStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchOptionStackView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchOptionStackView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor, constant: 13),
+            searchOptionStackView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor, constant: -13),
         ])
-        
-        stackViewHeight = testStackView.bounds.height
-        print("stackViewHeight - \(stackViewHeight!)")
     }
     
     func setupDivider() {
-        dividerView.backgroundColor = UIColor.lightGray // 구분선 색상 설정
+        dividerView.backgroundColor = .color252525
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dividerView)
         
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(
-                equalTo: testStackView.bottomAnchor),
+                equalTo: searchOptionStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
-                constant: 10),
+                constant: 13),
             dividerView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
-                constant: -10),
+                constant: -13),
             dividerView.heightAnchor.constraint(
                 equalToConstant: 1)
         ])
     }
     
     func setupTableView() {
-        tableView.backgroundColor = .black
+        tableView.backgroundColor = .color1E1E1E
         tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(ExerciseListCell.self, forCellReuseIdentifier: "ExerciseCell")
+        tableView.register(ExerciseListCell.self, 
+                           forCellReuseIdentifier: "ExerciseCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(tableView)
@@ -167,60 +158,19 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         // MARK: Search Exercises Reload
         viewModel.$filteredExercises
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                
-                print("tableView - reload")
-                self?.tableView.reloadData()
-            }.store(in: &cancellables)
-        
-        searchController
-            .publisher(for: \.isActive)
-            .sink { print("searchController - \($0)") }
+            .sink { [weak self] _ in self?.tableView.reloadData() }
             .store(in: &cancellables)
-    }
-    
-    // MARK: - UISearchBarDelegate
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-//        searchBar.setShowsCancelButton(true, animated: true)
-//        viewModel.setOption(to: .all)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        let selectedOption: BodyPartOption
-        if selectedScope == 0 {
-            selectedOption = .all
-        } else {
-            let bodyPart = BodyPart.allCases[selectedScope - 1]
-            selectedOption = .bodyPart(bodyPart)
-        }
-        print("searchBar selectedScope - \(selectedOption.name)")
-        viewModel.setOption(to: selectedOption)
-    }
-    
-    // MARK: - UISearchControllerDelegate
-    
-    func willPresentSearchController(_ searchController: UISearchController) {
-        print("Search Controller will become active")
-        animateContainerViewHeight(isVisible: true)
-    }
-    
-    func willDismissSearchController(_ searchController: UISearchController) {
-        print("Search Controller will be dismissed")
-        animateContainerViewHeight(isVisible: false)
-    }
-    
-    private func animateContainerViewHeight(isVisible: Bool) {
-        UIView.animate(withDuration: 0.3, animations: {
-            if isVisible {
-                self.stackViewHeightConstraint = self.testStackView.heightAnchor.constraint(equalToConstant: self.stackViewHeight!)
-                self.stackViewHeightConstraint!.isActive = true
-            } else {
-                self.stackViewHeightConstraint = self.testStackView.heightAnchor.constraint(equalToConstant: 0)
-                self.stackViewHeightConstraint!.isActive = true
-            }
-            
-        })
+        
+        // MARK: SearchBodyPartOption Select
+        searchOptionStackView
+            .bodyPartOptionPublisher
+            .sink { self.viewModel.selectedOption = $0 }
+            .store(in: &cancellables)
+        
+        // MARK: bodypartOptionShowUIChange
+        viewModel.$bodypartOptionShow
+            .sink { self.bodypartOptionShowUIChange($0) }
+            .store(in: &cancellables)
     }
     
     // MARK: - UISearchResultsUpdating
@@ -248,26 +198,94 @@ class ExercisesViewController: UIViewController, UISearchBarDelegate, UISearchRe
         return cell
     }
     
-    // MARK: - UITableViewDelegate
+    // MARK: - UISearchBarDelegate
     
-    // MARK: Methods
+    // 검색바 터치 및 검색 활성화
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("Search bar was touched and began editing.")
+        if !viewModel.bodypartOptionShow {
+            viewModel.bodypartOptionShow = true
+        }
+    }
     
-    @objc func addButtonTapped() {
+    // 취소 버튼 터치
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("searchBar CancelButton Clicked")
+        if viewModel.bodypartOptionShow {
+            viewModel.bodypartOptionShow = false
+        }
+        resetBodyPartsOption()
+    }
+    
+    // 북마크 버튼(검색바 우측 끝) 터치
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+        print("Bookmark button clicked")
+        viewModel.bodypartOptionShow.toggle()
+    }
+    
+    // MARK: Selector Methods
+    
+    @objc private func addButtonTapped() {
         print("addButtonTapped!")
         let vc = ExercisesAddViewController()
         navigationController?.pushViewController(vc, animated: false)
     }
     
-    @objc func tempStepperButtonTapped() {
+    @objc private func tempStepperButtonTapped() {
         print("tempButtonTapped!")
         let vc = TempViewController()
         navigationController?.pushViewController(vc, animated: false)
     }
     
-//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        searchBar.text = ""
-//        viewModel.filterExercises(by: "")
-//        searchBar.resignFirstResponder()
-//    }
+    @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
+        let isTappedInsideStackView = searchOptionStackView.frame.contains(sender.location(in: view))
+        let isTappedInsideSearchBar = searchController.searchBar.frame.contains(sender.location(in: view))
+        
+        // 검색옵션스택뷰와 검색바 이외의 영역을 터치한 경우
+        if !(isTappedInsideStackView || isTappedInsideSearchBar)  {
+            print("Tap detected outside search area")
+            if viewModel.bodypartOptionShow {
+                viewModel.bodypartOptionShow = false
+            }
+        }
+    }
     
+    // MARK: - Methods
+    
+    // 스택뷰 안에 있는 Row들을 감추고 보여주는 애니메이션 (스택뷰 높이 자동 조절)
+    private func animateBodyPartsHidden(isHidden: Bool) {
+        UIView.animate(withDuration: 0.5) {
+            self.searchOptionStackView.stackContentHidden(isHidden: isHidden)
+        }
+    }
+    
+    // .all 버튼의 터치를 동작시켜서 옵션 초기화
+    private func resetBodyPartsOption() {
+        searchOptionStackView.bodypartButtonList
+            .first(where: { $0.bodypartOption == .all })?
+            .sendActions(for: .touchUpInside)
+    }
+    
+    // Combine 용 운동부위옵션 접고 피는 함수
+    private func bodypartOptionShowUIChange(_ bodypartOptionShow: Bool) {
+        let iconName: String
+        let searchBar = self.searchController.searchBar
+        
+        if bodypartOptionShow {
+            iconName = "dock.arrow.down.rectangle"
+            self.animateBodyPartsHidden(isHidden: false)
+            searchBar.becomeFirstResponder()
+        } else {
+            iconName = "dock.arrow.up.rectangle"
+            self.animateBodyPartsHidden(isHidden: true)
+            searchBar.resignFirstResponder()
+        }
+        
+        let icon = UIImage(systemName: iconName)?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+        
+        UIView.animate(withDuration: 0.3) {
+            searchBar.setImage(icon, for: .bookmark, state: .normal)
+        }
+    }
 }

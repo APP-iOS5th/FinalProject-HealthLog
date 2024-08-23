@@ -105,14 +105,20 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     }()
     
     lazy var deleteButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("삭제", for: .normal)
-        button.backgroundColor = .colorSecondary
-        button.setTitleColor(.red, for: .normal)
-        button.layer.cornerRadius = 7
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        button.addTarget(self, action: #selector(didTapDeleteExercise), for: .touchUpInside)
+        let button = UIButton(type: .system)
+        
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "삭제"
+        configuration.baseBackgroundColor = .colorSecondary
+        configuration.baseForegroundColor = .red
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        
+        button.configuration = configuration
         button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addTarget(self, action: #selector(didTapDeleteExercise), for: .touchUpInside)
+
         return button
     }()
     
@@ -132,7 +138,44 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         updateSets()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // add observer of keyboard notification
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // delete observer of keyboard notification
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     // MARK: - Methods
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        let keyboardHeight = keyboardFrame.cgRectValue.height
+        
+        if let parentVC = self.parent {
+            UIView.animate(withDuration: animationDuration) {
+                parentVC.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        
+        if let parentVC = self.parent {
+            UIView.animate(withDuration: animationDuration) {
+                parentVC.view.transform = .identity
+            }
+        }
+    }
     private func setupUI() {
         view.backgroundColor = .colorPrimary
         
@@ -323,23 +366,31 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     @objc private func saveEdit() {
         saveInputs()
         
-        let scheduleExerciseSets = List<ScheduleExerciseSet>()
-        for i in 0..<setValues.count {
-            let set = ScheduleExerciseSet(
-                order: setValues[i].order,
-                weight: Int(setValues[i].weight) ?? 0,
-                reps: Int(setValues[i].reps) ?? 0,
-                isCompleted: false
-            )
-            scheduleExerciseSets.append(set)
-        }
-        
         do {
             try realm.write {
-                scheduleExercise.sets.removeAll()
-                scheduleExercise.sets.append(objectsIn: scheduleExerciseSets)
+                for i in 0..<setValues.count {
+                    if i < scheduleExercise.sets.count {
+                        scheduleExercise.sets[i].order = setValues[i].order
+                        scheduleExercise.sets[i].weight = Int(setValues[i].weight) ?? 0
+                        scheduleExercise.sets[i].reps = Int(setValues[i].reps) ?? 0
+                    } else {
+                        let set = ScheduleExerciseSet(
+                            order: setValues[i].order,
+                            weight: Int(setValues[i].weight) ?? 0,
+                            reps: Int(setValues[i].reps) ?? 0,
+                            isCompleted: false
+                        )
+                        scheduleExercise.sets.append(set)
+                    }
+                }
+                
+                if setValues.count < scheduleExercise.sets.count {
+                    let scheduleExerciseSetsCount = scheduleExercise.sets.count
+                    for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
+                        realm.delete(scheduleExercise.sets[j])
+                    }
+                }
             }
-            
             // notify the delegate of the update
             delegate?.didUpdateScheduleExercise()
         } catch {
