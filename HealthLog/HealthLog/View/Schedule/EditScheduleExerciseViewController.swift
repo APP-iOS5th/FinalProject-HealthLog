@@ -105,14 +105,20 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     }()
     
     lazy var deleteButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("삭제", for: .normal)
-        button.backgroundColor = .colorSecondary
-        button.setTitleColor(.red, for: .normal)
-        button.layer.cornerRadius = 7
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        button.addTarget(self, action: #selector(didTapDeleteExercise), for: .touchUpInside)
+        let button = UIButton(type: .system)
+        
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "삭제"
+        configuration.baseBackgroundColor = .colorSecondary
+        configuration.baseForegroundColor = .red
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        
+        button.configuration = configuration
         button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.addTarget(self, action: #selector(didTapDeleteExercise), for: .touchUpInside)
+
         return button
     }()
     

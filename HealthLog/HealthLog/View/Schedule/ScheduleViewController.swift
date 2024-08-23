@@ -84,12 +84,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        let button = UIButton()
-        button.setTitle("루틴으로 저장", for: .normal)
-        button.backgroundColor = .colorAccent
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 7
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        let button = UIButton(type: .system)
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "루틴으로 저장"
+        configuration.baseBackgroundColor = .colorAccent
+        configuration.baseForegroundColor = .white
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        button.configuration = configuration
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [label, button])
@@ -246,7 +248,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func addSchedule() {
+//        let date = selectedDate ?? today
+//        let addScheduleViewController = AddScheduleViewController(date)
+        
         let addScheduleViewController = AddScheduleViewController()
+        
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
     

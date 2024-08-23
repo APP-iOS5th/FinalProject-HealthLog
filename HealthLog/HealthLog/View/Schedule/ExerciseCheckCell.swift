@@ -37,13 +37,18 @@ class ExerciseCheckCell: UITableViewCell {
     }()
     
     lazy var exerciseEditButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("수정", for: .normal)
-        button.backgroundColor = .colorAccent
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 7
-        button.contentEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
+        let button = UIButton(type: .system)
+        
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "수정"
+        configuration.baseBackgroundColor = .colorAccent
+        configuration.baseForegroundColor = .white
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        
+        button.configuration = configuration
         button.translatesAutoresizingMaskIntoConstraints = false
+
         return button
     }()
     

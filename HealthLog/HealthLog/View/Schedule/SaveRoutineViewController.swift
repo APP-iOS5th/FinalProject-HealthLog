@@ -191,8 +191,6 @@ class SaveRoutineViewController: UIViewController {
             realm.add(routine)
         }
         
-        let savedRoutine = realm.objects(Routine.self).filter("name == %@", name).first
-        
         existName = false
         
         let alertController = UIAlertController(title: "루틴 저장 완료", message: "루틴 (\(name))이 성공적으로 저장되었습니다.", preferredStyle: .alert)
