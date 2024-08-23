@@ -228,13 +228,13 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     @objc private func addButtonTapped() {
         print("addButtonTapped!")
         let vc = ExercisesAddViewController()
-        navigationController?.pushViewController(vc, animated: false)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func tempStepperButtonTapped() {
         print("tempButtonTapped!")
         let vc = TempViewController()
-        navigationController?.pushViewController(vc, animated: false)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
@@ -272,11 +272,11 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         let searchBar = self.searchController.searchBar
         
         if bodypartOptionShow {
-            iconName = "dock.arrow.down.rectangle"
+            iconName = "menubar.arrow.down.rectangle"
             self.animateBodyPartsHidden(isHidden: false)
             searchBar.becomeFirstResponder()
         } else {
-            iconName = "dock.arrow.up.rectangle"
+            iconName = "menubar.arrow.up.rectangle"
             self.animateBodyPartsHidden(isHidden: true)
             searchBar.resignFirstResponder()
         }
