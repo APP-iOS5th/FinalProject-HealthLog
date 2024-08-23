@@ -1,30 +1,26 @@
 //
-//  CustomBodyPartButton.swift
+//  SearchBodyPartButton.swift
 //  HealthLog
 //
-//  Created by youngwoo_ahn on 8/20/24.
+//  Created by user on 8/22/24.
 //
 
 import Combine
 import UIKit
 
-class CustomBodyPartButton: UIButton {
+class SearchBodyPartButton: UIButton {
     
-    let bodypart: BodyPart
-    private let buttonSubject = PassthroughSubject<CustomBodyPartButton, Never>()
-    var buttonPublisher: AnyPublisher<CustomBodyPartButton, Never> {
-        buttonSubject.eraseToAnyPublisher()
-    }
+    let bodypartOption: BodyPartOption
     
+    // 선택값 변경때마다, 버튼색 변경
     override var isSelected: Bool {
         didSet {
             updateButtonAppearance()
-            buttonSubject.send(self)
         }
     }
     
-    init(bodypart: BodyPart, frame: CGRect = .zero) {
-        self.bodypart = bodypart
+    init(bodypartOption: BodyPartOption, frame: CGRect = .zero) {
+        self.bodypartOption = bodypartOption
         super.init(frame: frame)
         setup()
     }
@@ -34,22 +30,16 @@ class CustomBodyPartButton: UIButton {
     }
     
     private func setup() {
-        setTitle(bodypart.rawValue, for: .normal)
-        
+        setTitle(bodypartOption.name + "", for: .normal)
+        titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 12)
+        layer.cornerRadius = 12
+        layer.masksToBounds = true
         var buttonConfig = UIButton.Configuration.filled()
         buttonConfig.baseBackgroundColor = .colorPrimary
         buttonConfig.baseForegroundColor = .white
-        buttonConfig.cornerStyle = .large
         buttonConfig.contentInsets = NSDirectionalEdgeInsets(
-            top: 10, leading: 10, bottom: 10, trailing: 10)
+            top: 8, leading: 8, bottom: 8, trailing: 8)
         configuration = buttonConfig
-        titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 12)
-        
-        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    }
-    
-    @objc private func buttonTapped() {
-        isSelected.toggle()
     }
     
     private func updateButtonAppearance() {
@@ -60,3 +50,4 @@ class CustomBodyPartButton: UIButton {
         }
     }
 }
+

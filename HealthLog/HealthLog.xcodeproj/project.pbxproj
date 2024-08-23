@@ -50,6 +50,8 @@
 		75F636212C6C89AB00A9B2E4 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 75187B4B2C6C887400B9F84A /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */; };
 		CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */; };
+		CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */; };
+		CE4779202C777F2800F6DE74 /* SearchBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791F2C777F2800F6DE74 /* SearchBodyPartButton.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
@@ -64,8 +66,8 @@
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
 		CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */; };
 		CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */; };
-		CEE918AE2C741B9D00B8DEF7 /* CustomBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */; };
-		CEE918B22C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918B12C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift */; };
+		CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */; };
+		CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -126,6 +128,8 @@
 		7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedExerciseCell.swift; sourceTree = "<group>"; };
 		CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesDetailViewController.swift; sourceTree = "<group>"; };
 		CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailViewModel.swift; sourceTree = "<group>"; };
+		CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartStackView.swift; sourceTree = "<group>"; };
+		CE47791F2C777F2800F6DE74 /* SearchBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartButton.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
@@ -140,8 +144,8 @@
 		CEE8BC692C65B45100E1D94F /* InBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBody.swift; sourceTree = "<group>"; };
 		CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesAddViewController.swift; sourceTree = "<group>"; };
 		CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesUpdateViewController.swift; sourceTree = "<group>"; };
-		CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyPartButton.swift; sourceTree = "<group>"; };
-		CEE918B12C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyPartButtonStackView.swift; sourceTree = "<group>"; };
+		CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBodyPartButton.swift; sourceTree = "<group>"; };
+		CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBodyPartButtonStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,8 +262,10 @@
 				CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */,
 				CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */,
 				CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */,
-				CEE918AD2C741B9D00B8DEF7 /* CustomBodyPartButton.swift */,
-				CEE918B12C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift */,
+				CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */,
+				CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */,
+				CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */,
+				CE47791F2C777F2800F6DE74 /* SearchBodyPartButton.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -433,6 +439,7 @@
 				4B911CFC2C746DBB0032F438 /* RoutineViewModel.swift in Sources */,
 				184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
+				CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */,
 				4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */,
@@ -448,7 +455,7 @@
 				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				4B911CFA2C741F770032F438 /* RoutineSerchResultsViewController.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
-				CEE918B22C745E4A00B8DEF7 /* CustomBodyPartButtonStackView.swift in Sources */,
+				CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
 				CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */,
 				CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */,
@@ -466,10 +473,11 @@
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
-				CEE918AE2C741B9D00B8DEF7 /* CustomBodyPartButton.swift in Sources */,
+				CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */,
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
 				CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */,
 				CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */,
+				CE4779202C777F2800F6DE74 /* SearchBodyPartButton.swift in Sources */,
 				CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */,
 				7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */,
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,

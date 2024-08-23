@@ -1,5 +1,5 @@
 //
-//  CustomBodyPartStackView.swift
+//  InputBodyPartButtonStackView.swift
 //  HealthLog
 //
 //  Created by youngwoo_ahn on 8/20/24.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-class CustomBodyPartButtonStackView: UIStackView {
+class InputBodyPartButtonStackView: UIStackView {
     
-    var bodypartButtonList: [CustomBodyPartButton] = []
+    var bodypartButtonList: [InputBodyPartButton] = []
 
     private var currentRow: UIStackView!
-    private var currentButton: CustomBodyPartButton!
+    private var currentButton: InputBodyPartButton!
     
     init() {
         super.init(frame: .zero)
@@ -39,7 +39,7 @@ class CustomBodyPartButtonStackView: UIStackView {
         self.addArrangedSubview(currentRow)
         
         for bodyPart in BodyPart.allCases {
-            currentButton = CustomBodyPartButton(bodypart: bodyPart)
+            currentButton = InputBodyPartButton(bodypart: bodyPart)
             
             let width = calculatorButtonAddAfterWidth()
             checkCreateAfterRow(buttonAddAfterWidth: width)
