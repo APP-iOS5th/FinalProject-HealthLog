@@ -12,7 +12,6 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    //var selectedExercises = [String]()
     
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
@@ -248,16 +247,20 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
         let exercise = addScheduleViewModel.selectedExercises[indexPath.row]
-        let setCount = exercise.sets.isEmpty ? 4 : exercise.sets.count
-        // print("Configuring cell at 인덱스: \(indexPath.row), 운동이름: \(exercise.exerciseName)")
-        cell.configure(with: exercise.exerciseName, setCount: setCount)
+        //print("Configuring cell at 인덱스: \(indexPath.row), 운동이름: \(exercise.exerciseName)")
+        cell.configure(with: exercise.exerciseName, setCount: exercise.setCount)
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
         // 셀의 삭제버튼이 탭되었을 때 해당인덱스에서 운동 제거하는 클로저
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
-        // 셀의 세트 수, 내용을 수정할 때 뷰모델의 운동데이터 업데이트하는 클로저
+        // 세트 수 변경될 때 뷰모델 업데이트하고 reload
+        cell.setCountDidChange = { [weak self] newSetCount in
+            self?.addScheduleViewModel.updateExerciseSetCount(for: indexPath.row, setCount: newSetCount)
+            self?.tableView.reloadRows(at: [indexPath], with: .none)
+        }
+        // 셀의 세트 내용을 수정할 때 뷰모델의 운동데이터 업데이트하는 클로저
         cell.setsDidChange = { [weak self] sets in
             self?.addScheduleViewModel.updateExerciseSet(for: indexPath.row, sets: sets)
         }
@@ -267,10 +270,6 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 310
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
