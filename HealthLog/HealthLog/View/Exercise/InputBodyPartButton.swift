@@ -8,11 +8,11 @@
 import Combine
 import UIKit
 
-class CustomBodyPartButton: UIButton {
+class InputBodyPartButton: UIButton {
     
     let bodypart: BodyPart
-    private let buttonSubject = PassthroughSubject<CustomBodyPartButton, Never>()
-    var buttonPublisher: AnyPublisher<CustomBodyPartButton, Never> {
+    private let buttonSubject = PassthroughSubject<InputBodyPartButton, Never>()
+    var buttonPublisher: AnyPublisher<InputBodyPartButton, Never> {
         buttonSubject.eraseToAnyPublisher()
     }
     
