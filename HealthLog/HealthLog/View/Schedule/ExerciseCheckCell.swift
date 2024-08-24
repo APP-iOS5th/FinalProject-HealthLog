@@ -205,7 +205,7 @@ class ExerciseCheckCell: UITableViewCell {
     
     @objc private func didToggleCheckboxSet(_ sender: UISwitch) {
         // save it to the database
-        guard let exercise = currentExercise else { return }
+        guard let exercise = currentExercise, let realm = realm else { return } // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
         
         let setOrder = sender.tag
         if let setIndex = exercise.sets.firstIndex(where: { $0.order == setOrder }) {
@@ -235,7 +235,7 @@ class ExerciseCheckCell: UITableViewCell {
     
     @objc private func didToggleCheckboxExercise(_ sender: UISwitch) {
         // save it to the database
-        guard let exercise = currentExercise else { return }
+        guard let exercise = currentExercise, let realm = realm else { return } // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
         
         do {
             if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {

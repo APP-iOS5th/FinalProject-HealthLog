@@ -10,22 +10,15 @@ import Foundation
 
 class RealmManager {
     static let shared = RealmManager()
-    private(set) var realm: Realm
+    private(set) var realm: Realm?
 //    var bodyParts: Results<BodyPart>
     
     private init() {
         if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
             print("open \(realmFileURL)")
         }
-                
-        do {
-            realm = try Realm()
-        } catch {
-            fatalError("Failed to initialize Realm: \(error.localizedDescription)")
-        }
+        openRealm()
         
-//        bodyParts = realm.objects(BodyPart.self)
-//        initializeBodyParts()
         initializeRealmExercise()
         initializeRealmRoutine()
         initializeRealmSchedule()
@@ -45,7 +38,7 @@ class RealmManager {
     }
     
     func addInbody(weight: Float, bodyFat:Float, muscleMass: Float) {
-//        if let localRealm = localRealm {
+        if let realm = realm {
             do {
                 try realm.write {
                     let newInbodyInfo = InBody(value: ["weight": weight, "bodyFat": bodyFat, "muscleMass": muscleMass ])
@@ -55,27 +48,26 @@ class RealmManager {
             } catch {
                 print("Error adding task to Realm: \(error)")
             }
-//        }
+        }
     }
 }
 
 
-
-
-
-extension RealmManager {
+//extension RealmManager {
 //    func bodyPartSearch (_ bodyPartTypes: [BodyPart]) -> [BodyPart] {
 //        let filteredBodyParts = bodyParts.filter { bodyPart in
 //            bodyPartTypes.contains(bodyPart.name)
 //        }
 //        return Array(filteredBodyParts)
 //    }
-}
+//}
 
 // MARK: - InitializeRealmData
 extension RealmManager {
     
     func initializeRealmExercise() {
+        guard let realm = realm else {return}
+        
         if realm.objects(Exercise.self).isEmpty {
             let sampleExercises = [
                 Exercise(name: "스쿼트", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동", image: nil, totalReps: 75, recentWeight: 80, maxWeight: 120, isCustom: true),
@@ -110,6 +102,8 @@ extension RealmManager {
     
     
     func initializeRealmRoutine() {
+        guard let realm = realm else { return }
+        
         if realm.objects(Routine.self).isEmpty {
             
             // 1. 기존 Exercise 객체 조회
@@ -190,6 +184,8 @@ extension RealmManager {
     }
     
     func initializeRealmSchedule() {
+        guard let realm = realm else {return}
+        
         if realm.objects(Schedule.self).isEmpty {
             
             // 1. 기존 Exercise 객체 조회
@@ -208,7 +204,7 @@ extension RealmManager {
                     order: 1,
                     isCompleted: false,
                     sets: [
-                        ScheduleExerciseSet(order: 1, weight: 80, reps: 15, isCompleted: false)
+                        ScheduleExerciseSet(order: 1, weight: 80, reps: 15, isCompleted: true)
                     ]
                 ),
                 ScheduleExercise(
@@ -216,8 +212,8 @@ extension RealmManager {
                     order: 2,
                     isCompleted: false,
                     sets: [
-                        ScheduleExerciseSet(order: 1, weight: 150, reps: 6, isCompleted: false),
-                        ScheduleExerciseSet(order: 2, weight: 160, reps: 8, isCompleted: false)
+                        ScheduleExerciseSet(order: 1, weight: 150, reps: 6, isCompleted: true),
+                        ScheduleExerciseSet(order: 2, weight: 160, reps: 8, isCompleted: true)
                     ]
                 )
             ]
@@ -227,7 +223,7 @@ extension RealmManager {
                     order: 1,
                     isCompleted: true,
                     sets: [
-                        ScheduleExerciseSet(order: 1, weight: 90, reps: 15, isCompleted: false)
+                        ScheduleExerciseSet(order: 1, weight: 90, reps: 15, isCompleted: true)
                     ]
                 ),
                 ScheduleExercise(
@@ -235,7 +231,7 @@ extension RealmManager {
                     order: 2,
                     isCompleted: true,
                     sets: [
-                        ScheduleExerciseSet(order: 1, weight: 170, reps: 12, isCompleted: false)
+                        ScheduleExerciseSet(order: 1, weight: 170, reps: 12, isCompleted: true)
                     ]
                 )
             ]
@@ -245,35 +241,23 @@ extension RealmManager {
                     order: 1,
                     isCompleted: false,
                     sets: [
-                        ScheduleExerciseSet(order: 1, weight: 80, reps: 15, isCompleted: false),
-                        ScheduleExerciseSet(order: 2, weight: 90, reps: 10, isCompleted: false),
+                        ScheduleExerciseSet(order: 1, weight: 80, reps: 15, isCompleted: true),
+                        ScheduleExerciseSet(order: 2, weight: 90, reps: 10, isCompleted: true),
                     ]
                 ),
                 ScheduleExercise(
                     exercise: exercises.first(where: { $0.name == "레그 프레스" })!,
                     order: 2,
                     isCompleted: false,
-                    sets: [ScheduleExerciseSet(order: 1, weight: 180, reps: 12, isCompleted: false)]
+                    sets: [ScheduleExerciseSet(order: 1, weight: 180, reps: 12, isCompleted: true)]
                 )
             ]
             
-            let highlightedBodyParts1 = [
-                HighlightedBodyPart(bodyPart: .quadriceps, step: 1),
-                HighlightedBodyPart(bodyPart: .glutes, step: 1)
-            ]
-            let highlightedBodyParts2 = [
-                HighlightedBodyPart(bodyPart: .quadriceps, step: 1),
-                HighlightedBodyPart(bodyPart: .glutes, step: 1)
-            ]
-            let highlightedBodyParts3 = [
-                HighlightedBodyPart(bodyPart: .quadriceps, step: 1),
-                HighlightedBodyPart(bodyPart: .glutes, step: 1)
-            ]
             
             let sampleSchedule = [
-                Schedule(date: getDate(year: 2024, month: 7, day: 15), exercises: sampleExercises1, highlightedBodyParts: highlightedBodyParts1),
-                Schedule(date: getDate(year: 2024, month: 8, day: 15), exercises: sampleExercises2, highlightedBodyParts: highlightedBodyParts2),
-                Schedule(date: getDate(year: 2024, month: 8, day: 21), exercises: sampleExercises3, highlightedBodyParts: highlightedBodyParts3),
+                Schedule(date: getDate(year: 2024, month: 7, day: 15), exercises: sampleExercises1),
+                Schedule(date: getDate(year: 2024, month: 8, day: 15), exercises: sampleExercises2),
+                Schedule(date: getDate(year: 2024, month: 8, day: 21), exercises: sampleExercises3),
             ]
             
             // 3. Realm에 샘플 데이터 추가
