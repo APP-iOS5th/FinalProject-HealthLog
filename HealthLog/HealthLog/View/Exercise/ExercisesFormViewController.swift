@@ -1,5 +1,5 @@
 //
-//  ExercisesAddViewController.swift
+//  ExercisesFormViewController.swift
 //  HealthLog
 //
 //  Created by youngwoo_ahn on 8/17/24.
@@ -8,12 +8,13 @@
 import Combine
 import UIKit
 
-class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
+class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     
-    // MARK: - Declare
+    // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
+    private let mode: ExerciseFormMode
     
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
@@ -48,9 +49,16 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
     
+    private let deleteButton: UIButton?
+    
     // MARK: - Init
     
-    init() {
+    init(mode: ExerciseFormMode) {
+        self.mode = mode
+        switch mode {
+            case .add: deleteButton = nil
+            case .update: deleteButton = UIButton()
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -71,22 +79,35 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         setupMaxWeightStackView()
         setupDescriptionStackView()
         setupImageStackView()
+        setupDeleteButton()
+        
         setupBindings()
+        setupBindingsUpdateMode()
     }
     
-    // MARK: - Setup
+    // MARK: - Setup UI
     
     func setupNavigationBar() {
-        title = "운동 추가"
+        switch mode {
+            case .add: title = "운동 추가"
+            case .update: title = "운동 수정"
+        }
+        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
         // MARK: addButton
-        
         let doneButton = UIBarButtonItem(
             title: "완료", style: .done, target: self,
             action: #selector(doneButtonTapped))
         self.navigationItem.rightBarButtonItem = doneButton
+        
+        // MARK: backButton
+        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        self.navigationItem.backBarButtonItem = backbarButtonItem
+        
+        // MARK: tabBar
+        self.tabBarController?.tabBar.isHidden = true
         
         // MARK: scrollView
         view.addSubview(scrollView)
@@ -175,7 +196,7 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         titleStackView.addArrangedSubview(titleEmptyWarningLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         titleStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -218,7 +239,7 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         bodypartStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -273,7 +294,7 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         recentWeightTextFieldStackView.addArrangedSubview(recentWeightKGLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         recentWeightStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -328,7 +349,7 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         maxWeightTextFieldStackView.addArrangedSubview(maxWeightKGLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         maxWeightStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -377,7 +398,7 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         ])
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         descriptionStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -406,6 +427,27 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         imageStackView.addArrangedSubview(imageLabel)
     }
     
+    func setupDeleteButton() {
+        guard case .update = mode else { return }
+        guard let deleteButton = deleteButton else { return }
+        
+        deleteButton.backgroundColor = .color2F2F2F
+        deleteButton.tintColor = .red
+        deleteButton.setTitle("삭제하기", for: .normal)
+        deleteButton.addTarget(
+            self, action: #selector(deleteButtonTapped),
+            for: .touchUpInside)
+        view.addSubview(deleteButton)
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            .isActive = true
+        deleteButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    // MARK: - Setup Binddings
+    
     private func setupBindings() {
         // MARK: Input titleTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
@@ -421,17 +463,14 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         bodypartButtonStackView.bodypartButtonList.forEach { button in
             button.buttonPublisher
                 .sink { button in
-                    if button.isSelected {
-                        // 선택시 삽입
+                    if button.isSelected { // 선택시 삽입
                         self.viewModel.exercise
                             .bodyParts.append(button.bodypart)
-                    } else {
-                        // 선택 해제시 제거
+                    } else { // 선택 해제시 제거
                         self.viewModel.exercise
                             .bodyParts.removeAll { $0 == button.bodypart }
                     }
                     print("\(button.bodypart.rawValue) - \(button.isSelected)")
-                    print(self.viewModel.exercise.bodyParts) // log
                 }
                 .store(in: &cancellables)
         }
@@ -491,6 +530,23 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
                     .isEnabled = isValidated
             }
             .store(in: &cancellables)
+        
+  
+    }
+    
+    private func setupBindingsUpdateMode() {
+        guard case .update(let detailViewModel) = mode else { return }
+        
+        // MARK: UI exercise data init
+        detailViewModel.$exercise
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.titleTextField.text = $0.name
+                self?.recentWeightTextField.text = String($0.recentWeight)
+                self?.maxWeightTextField.text = String($0.maxWeight)
+                self?.descriptionTextView.text = $0.descriptionText
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - UITextFieldDelegate
@@ -511,7 +567,7 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
         
         switch textField.tag {
             case 1001:
-                return newLength <= 50
+                return newLength <= 30
             case 1002, 1003:
                 return newLength <= 3 && allowedCharacters.isSuperset(of: characterSet)
             default:
@@ -523,8 +579,21 @@ class ExercisesAddViewController: UIViewController, UITextFieldDelegate {
     
     @objc func doneButtonTapped() {
         print("doneButtonTapped!")
-        viewModel.realmWriteExercise()
+        switch mode {
+            case .add: viewModel.realmWriteExercise()
+            case .update: print("TODO realm update")
+        }
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func deleteButtonTapped() {
+        print("deleteButtonTapped!")
+        switch mode {
+            case .add: return
+            case .update(let detailViewModel):
+                detailViewModel.realmDeleteExercise()
+                navigationController?.popToRootViewController(animated: true)
+        }
     }
     
     // MARK: - Methods
@@ -568,5 +637,18 @@ private class PaddedTextField: UITextField {
         layer.masksToBounds = true
         textColor = .white
         backgroundColor = .color2F2F2F
+    }
+}
+
+enum ExerciseFormMode {
+    case add
+    case update(ExerciseDetailViewModel)
+    
+    var detailViewModel: ExerciseDetailViewModel? {
+        if case .update(let model) = self {
+            return model
+        } else {
+            return nil
+        }
     }
 }

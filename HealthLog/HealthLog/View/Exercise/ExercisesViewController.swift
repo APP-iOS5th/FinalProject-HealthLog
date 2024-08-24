@@ -14,10 +14,10 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
-    private let searchController = UISearchController(searchResultsController: nil)
-    private let searchOptionStackView = SearchBodyPartStackView()
     
     private let addButton = UIButton(type: .custom)
+    private let searchController = UISearchController(searchResultsController: nil)
+    private let searchOptionStackView = SearchBodyPartStackView()
     private let dividerView = UIView()
     private let tableView = UITableView()
     
@@ -43,6 +43,11 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         setupDivider()
         setupTableView()
         setupBindings()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Setup
@@ -227,7 +232,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     @objc private func addButtonTapped() {
         print("addButtonTapped!")
-        let vc = ExercisesAddViewController()
+        let vc = ExercisesFormViewController(mode: .add)
         navigationController?.pushViewController(vc, animated: true)
     }
     
