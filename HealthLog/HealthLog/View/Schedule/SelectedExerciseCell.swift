@@ -15,22 +15,34 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     private let stackView = UIStackView()
     private var weightTextFields: [UITextField] = []
     private var repsTextFields: [UITextField] = []
+    private var currentSetCount: Int = 4
+    private let stepper = UIStepper()
     var deleteButtonTapped: (() -> Void)?
     var setsDidChange: ((_ sets: [ScheduleExerciseSetStruct]) -> Void)?
     var setCountDidChange: ((Int) -> Void)?
-    private var currentSetCount: Int = 4
-    private let stepper = UIStepper()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        currentSetCount = 4
+        stepper.value = Double(currentSetCount)
+        if let stepperCountLabel = stepper.superview?.subviews.compactMap({ $0 as? UILabel }).last {
+            stepperCountLabel.text = "\(currentSetCount)"
+        }
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        weightTextFields.removeAll()
+        repsTextFields.removeAll()
+        updateSetInputs(for: currentSetCount)
     }
     
     func setupUI() {
@@ -146,7 +158,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         weightTextFields.removeAll()
         repsTextFields.removeAll()
         
-        // 세트 입력 뷰 세트 수만큼 생성해서 스택뷰에 addSubview
         for i in 1...count {
             let setView = createSetInputView(setNumber: i)
             stackView.addArrangedSubview(setView)
@@ -297,10 +308,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func saveTextFieldValues() {
-        if let setsDidChange = setsDidChange {
+        //if let setsDidChange = setsDidChange {
             let sets = createScheduleExerciseSets()
-            setsDidChange(sets)
-        }
+            print(sets) // 이 세트를 해당 셀 운동에 주면 될 듯
+            //setsDidChange(sets)
+        //}
     }
     
     func areAllFieldsFilled() -> Bool {

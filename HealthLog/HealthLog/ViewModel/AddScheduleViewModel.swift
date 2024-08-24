@@ -63,7 +63,7 @@ class AddScheduleViewModel {
     
     func saveSchedule(for date: Date) {
         let schedule = ScheduleStruct(date: date, exercises: selectedExercises, highlightedBodyParts: [])
-        //print(schedule) // 생성된 데이터 확인
+        print(schedule) // 생성된 데이터 확인
     }
     
 //    // 아직 만드는 중,,
