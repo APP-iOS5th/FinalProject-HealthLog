@@ -8,31 +8,39 @@
 import UIKit
 
 class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
     private let realm = RealmManager.shared.realm
-    private var bodyPartSetsCount: [(key: String, value: Int)] = []
     
+    private var bodyPartDataList: [ReportBodyPartData] = []
     
-    private lazy var exerciseRecordTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .insetGrouped)
-        tableView.backgroundColor = .clear
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorColor = UIColor(named: "Color525252")
+    private var exerciseRecordTableView = UITableView(frame: .zero, style: .insetGrouped)
+//    private lazy var exerciseRecordTableView: UITableView(frame: .zero, style: .insetGrouped) = {
+//        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+//        tableView.backgroundColor = .clear
+//        tableView.showsVerticalScrollIndicator = false
+//        tableView.separatorColor = UIColor(named: "Color525252")
+//
+//        // 테이믈 가장 맨위 여백 지우기 (insetGroup)
+//        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+//        
+//        return tableView
+//    }()
+    
+    func setupTableView() {
+        exerciseRecordTableView.backgroundColor = .clear
+        exerciseRecordTableView.showsVerticalScrollIndicator = false
+        exerciseRecordTableView.separatorColor = UIColor(named: "Color525252")
 
-        
         // 테이믈 가장 맨위 여백 지우기 (insetGroup)
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-        
-        return tableView
-    }()
-    
-    private var expandedIndexPaths: Set<IndexPath> = []
+        exerciseRecordTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+    }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .clear
+        
+        setupTableView()
         
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
@@ -61,10 +69,12 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             exerciseRecordTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        let AugustSchedules = fetchAugustSchedules()
-        bodyPartSetsCount = calculateSetsByBodyPart(schedules: AugustSchedules)
+        let augustSchedules = fetchAugustSchedules()
+        bodyPartDataList = calculateSetsByBodyPartAndExercise(schedules: augustSchedules)
         
-        
+        print(bodyPartDataList)
+        exerciseRecordTableView.reloadData()
+
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -76,7 +86,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return 1
         case 1:
-            return bodyPartSetsCount.count
+            return bodyPartDataList.count
         case 2:
             return 2
         case 3:
@@ -97,13 +107,16 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             cell.selectionStyle = .none
             return cell
         case 1:
+            let data = bodyPartDataList[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
             cell.backgroundColor = UIColor(named: "ColorSecondary")
             cell.selectionStyle = .none
             cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-            let bodyPart = bodyPartSetsCount[indexPath.row].key
-            let setsCount = bodyPartSetsCount[indexPath.row].value
-            cell.configureCell(bodyPart: bodyPart, setsCount: setsCount)
+            
+            cell.configureCell(with: data, at: indexPath) { [weak self] indexPath in
+                self?.toggleStackViewVisibility(for: indexPath)
+            }
+            
             
             return cell
             
@@ -150,6 +163,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         switch indexPath.section {
         case 0:
             return 372
+        case 1:
+            return 100
         case 2:
             if indexPath.row == 0 {
                 return 42
@@ -168,13 +183,18 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
+        
+        tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+    
     
     // MARK: 부위별 세트수 계산 (1달간)
     
     // 8월로 되어있는 걸 달 이동 기능과 연결 해야함.
     func fetchAugustSchedules() -> [Schedule] {
-        let realm = realm
-//        guard let realm = realm else { return []}
+        guard let realm = realm else { return []}
         let calendar = Calendar.current
         let startDate = calendar.date(from: DateComponents(year: 2024, month: 8, day: 1))!
         let endDate = calendar.date(from: DateComponents(year: 2024, month: 8, day: 31))!
@@ -185,25 +205,50 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         return result
     }
     
-    func calculateSetsByBodyPart(schedules: [Schedule]) -> [(key: String, value: Int)] {
-        var bodyPartSetsCount: [String:Int] = [:]
+    
+    func calculateSetsByBodyPartAndExercise(schedules: [Schedule]) -> [ReportBodyPartData] {
+        var bodyPartDataList: [ReportBodyPartData] = []
         
         for schedule in schedules {
             for scheduleExercise in schedule.exercises {
-                guard let exercise = scheduleExercise.exercise else {continue}
+                let setsCount = scheduleExercise.sets.filter { $0.isCompleted }.count // 완료된 set 만 계산
                 
-                let completedSets = scheduleExercise.sets.filter {$0.isCompleted}
-                
-                for bodyPart in exercise.bodyParts {
+                for bodyPart in scheduleExercise.exercise!.bodyParts { // 에러처리 요망
                     let bodyPartName = bodyPart.rawValue
-                    bodyPartSetsCount[bodyPartName, default: 0] += completedSets.count
+                    
+                    if let index = bodyPartDataList.firstIndex(where: {$0.bodyPart == bodyPartName}) {
+                        bodyPartDataList[index].totalSets += setsCount
+                        let exerciseName = scheduleExercise.exercise!.name
+                        if let exerciseIndex = bodyPartDataList[index].exercises.firstIndex(where: {$0.name == exerciseName}) {
+                            bodyPartDataList[index].exercises[exerciseIndex].setsCount += setsCount
+                        } else {
+                            bodyPartDataList[index].exercises.append(ExerciseSets(name: exerciseName, setsCount: setsCount))
+                        }
+                    } else {
+                        let newData = ReportBodyPartData(bodyPart: bodyPartName, totalSets: setsCount, exercises: [ExerciseSets(name: scheduleExercise.exercise!.name, setsCount: setsCount)])
+                        bodyPartDataList.append(newData)
+                    }
                 }
             }
         }
         
-        let sortedCount = bodyPartSetsCount.sorted { $0.value > $1.value }
+        bodyPartDataList.sort { $0.totalSets > $1.totalSets}
+        for i in 0..<bodyPartDataList.count {
+            bodyPartDataList[i].exercises.sort { $0.setsCount > $1.setsCount}
+        }
         
-        return sortedCount
+        
+        return bodyPartDataList
+    }
+    
+    func toggleStackViewVisibility(for indexPath: IndexPath) {
+        var data = bodyPartDataList[indexPath.row]
+        data.isStackViewVisible.toggle()
+        bodyPartDataList[indexPath.row] = data
+        
+        exerciseRecordTableView.beginUpdates()
+        exerciseRecordTableView.reloadRows(at: [indexPath], with: .automatic)
+        exerciseRecordTableView.endUpdates()
     }
     
 }

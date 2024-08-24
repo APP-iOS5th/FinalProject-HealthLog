@@ -11,7 +11,7 @@ import Foundation
 
 // ViewModel 정의
 class ScheduleViewModel: ObservableObject {
-    private var realm: Realm
+    private var realm: Realm?
     private var scheduleNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
@@ -27,6 +27,7 @@ class ScheduleViewModel: ObservableObject {
     }
     
     private func observeRealmData() {
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         let results = realm.objects(Schedule.self)
         
         scheduleNotificationToken = results.observe { [weak self] changes in

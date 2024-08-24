@@ -365,7 +365,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     
     @objc private func saveEdit() {
         saveInputs()
-        
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         do {
             try realm.write {
                 for i in 0..<setValues.count {
@@ -426,19 +426,19 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         )
         // add confirm action
         let confirmAction = UIAlertAction(title: "확인", style: .destructive) { [weak self] _ in
-            guard let self = self else { return }
+            guard let self = self , let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
             let exerciseName = self.scheduleExercise.exercise?.name ?? "운동"
             let selectedDate = self.selectedDate
 
             do {
-                let schedule = self.realm.objects(Schedule.self).filter("date == %@", selectedDate).first
+                let schedule = realm.objects(Schedule.self).filter("date == %@", selectedDate).first // realm 에러처리를 위해 self를 뺐습니다.
 
-                try self.realm.write {
+                try realm.write {
                     guard let exercises = schedule?.exercises else { return }
                     if exercises.count > 1 {
-                        self.realm.delete(self.scheduleExercise)
+                        realm.delete(self.scheduleExercise)
                     } else {
-                        self.realm.delete(schedule!)
+                        realm.delete(schedule!)
                     }
                 }
                 

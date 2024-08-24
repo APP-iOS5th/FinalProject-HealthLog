@@ -11,7 +11,7 @@ import RealmSwift
 
 class RoutineViewModel: ObservableObject{
     
-    private var realm: Realm
+    private var realm: Realm?
     
     private var routineNotificationToken: NotificationToken?
     @Published var rutineNameinput: String = ""
@@ -68,6 +68,7 @@ class RoutineViewModel: ObservableObject{
     
     
     private func observeRealmData() {
+        guard let realm = realm else {return} // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
         let results = realm.objects(Routine.self)
         
         routineNotificationToken = results.observe { [weak self] changes in
