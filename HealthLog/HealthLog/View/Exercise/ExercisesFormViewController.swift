@@ -537,13 +537,27 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     private func setupBindingsUpdateMode() {
         guard case .update(let detailViewModel) = mode else { return }
         
-        // MARK: UI exercise data init
+        // MARK: detail exercise input
         detailViewModel.$exercise
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
+                self?.viewModel.exercise.name = $0.name
                 self?.titleTextField.text = $0.name
+                
+                $0.bodyParts.forEach { bodypart in
+                    self?.bodypartButtonStackView
+                        .bodypartButtonList
+                        .first(where: { $0.bodypart == bodypart })?
+                        .sendActions(for: .touchUpInside)
+                }
+                
+                self?.viewModel.exercise.recentWeight = $0.recentWeight
                 self?.recentWeightTextField.text = String($0.recentWeight)
+                
+                self?.viewModel.exercise.maxWeight = $0.maxWeight
                 self?.maxWeightTextField.text = String($0.maxWeight)
+                
+                self?.viewModel.exercise.description = $0.descriptionText
                 self?.descriptionTextView.text = $0.descriptionText
             }
             .store(in: &cancellables)
@@ -591,8 +605,9 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
         switch mode {
             case .add: return
             case .update(let detailViewModel):
-                detailViewModel.realmDeleteExercise()
-                navigationController?.popToRootViewController(animated: true)
+                print(viewModel.exercise)
+//                detailViewModel.realmDeleteExercise()
+//                navigationController?.popToRootViewController(animated: true)
         }
     }
     
