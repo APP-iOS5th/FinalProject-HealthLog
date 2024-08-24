@@ -28,9 +28,7 @@ class ExerciseViewModel: ObservableObject {
     // 검색 결과 상태값
     @Published var exercises: [Exercise] = []
     @Published var filteredExercises: [Exercise] = []
-    
-    // 입력용 Object
-    @Published var exercise = InputExerciseObject()
+
     
     // MARK: - Init
     
@@ -48,6 +46,7 @@ class ExerciseViewModel: ObservableObject {
     private func observeRealmData() {
         guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         let results = realm.objects(Exercise.self)
+            .filter("isDeleted == false")
         
         exercisesNotificationToken = results.observe { [weak self] changes in
             switch changes {
@@ -68,7 +67,7 @@ class ExerciseViewModel: ObservableObject {
     private func setupBindings() {
         // MARK: Sync filteredExercises
         $exercises.assign(to: &$filteredExercises)
-
+        
         // MARK: Search Exercises Filter
         // TODO: RunLoop 대신할꺼 있나 찾아보기
         // 검색 키워드, 운동부위 변경시마다 검색결과 필터링
@@ -85,20 +84,7 @@ class ExerciseViewModel: ObservableObject {
             self?.filterExercises()
         }
         .store(in: &cancellables)
-
-        // MARK: Check Duplicate Name
-        // 운동 이름 중복 체크
-        exercise.$name
-            .sink { self.checkDuplicateExerciseName(to: $0) }
-            .store(in: &cancellables)
         
-        // MARK: Test - Check RequiredExerciseFields Empty
-        // 입력 필수요소 유효성 검사
-        Publishers.CombineLatest(exercise.$name, exercise.$bodyParts)
-            .sink { exerciseName, exerciseBodyParts in
-                self.validateRequiredFields(exerciseName: exerciseName, exerciseBodyParts: exerciseBodyParts)
-            }
-            .store(in: &cancellables)
     }
     
     // MARK: - Methods
@@ -120,7 +106,7 @@ class ExerciseViewModel: ObservableObject {
         
         // 검색어와 부위를 기반으로 운동리스트를 필터링
         filteredExercises = exercises.filter { exercise in
-
+            
             // 검색어 체크
             let matchesAll = searchText.isEmpty
             let matchesSearchText  = exercise.name
@@ -141,57 +127,6 @@ class ExerciseViewModel: ObservableObject {
         }
     }
     
-    func checkDuplicateExerciseName(to name: String) {
-        exercise.hasDuplicateExerciseName = exercises.contains {$0.name == name}
-    }
-    
-    func validateRequiredFields(exerciseName: String, exerciseBodyParts: [BodyPart]) {
-        
-        print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
-        
-        exercise.isExerciseNameEmpty = exerciseName.isEmpty
-        exercise.isExerciseBodyPartsEmpty = exerciseBodyParts.isEmpty
-        
-        // 운동 이름 중복 여부
-        if exercise.hasDuplicateExerciseName {
-            exercise.isValidatedRequiredExerciseFields = false
-            print("isValidatedRequiredExerciseFields - \(exercise.isValidatedRequiredExerciseFields)") // log
-            return
-        }
-        
-        // 운동 이름 비어있는지 여부
-        if exercise.isExerciseNameEmpty {
-            exercise.isValidatedRequiredExerciseFields = false
-            print("isValidatedRequiredExerciseFields - \(exercise.isValidatedRequiredExerciseFields)") // log
-            return
-        }
-        
-        // 운동 부위 비어있는지 여부
-        if exercise.isExerciseBodyPartsEmpty {
-            exercise.isValidatedRequiredExerciseFields = false
-            print("isValidatedRequiredExerciseFields - \(exercise.isValidatedRequiredExerciseFields)") // log
-            return
-        }
-        
-        // 필수 요소 체크 끝, 정상이면 true
-        exercise.isValidatedRequiredExerciseFields = true
-        print("isValidatedRequiredExerciseFields - \(exercise.isValidatedRequiredExerciseFields)") // log
-    }
-    
-    func realmWriteExercise() {
-        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
-        // 필수 요소 확인
-        if !exercise.isValidatedRequiredExerciseFields {
-            print("realmWriteExercise - isValidatedRequiredExerciseFields")
-            return
-        }
-        
-        try! realm.write { // 이부분 try! 강제 언래핑 지울 방법 있을 까요?
-            realm.add(exercise.addRealmExerciseObject())
-        }
-        
-        exercise.initInputExercise()
-    }
     
     // MARK: - Setter
     

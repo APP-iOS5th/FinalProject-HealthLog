@@ -39,7 +39,7 @@ class Exercise: Object {
 
 // MARK: -
 // 입력용 Exercise
-class InputExerciseObject: ObservableObject {
+class EntryExercise: ObservableObject {
     @Published var name: String = ""
     @Published var bodyParts: [BodyPart] = []
     @Published var recentWeight: Int = 0
@@ -47,9 +47,9 @@ class InputExerciseObject: ObservableObject {
     @Published var description: String = ""
     
     @Published var isValidatedRequiredExerciseFields: Bool = false
-    @Published var hasDuplicateExerciseName: Bool = false
-    @Published var isExerciseNameEmpty: Bool = true
-    @Published var isExerciseBodyPartsEmpty: Bool = true
+    @Published var hasDuplicateName: Bool = false
+    @Published var isNameEmpty: Bool = true
+    @Published var isBodyPartsEmpty: Bool = true
     
     func initInputExercise() {
         name = ""
@@ -59,9 +59,9 @@ class InputExerciseObject: ObservableObject {
         description = ""
         
         isValidatedRequiredExerciseFields = false
-        hasDuplicateExerciseName = false
-        isExerciseNameEmpty = true
-        isExerciseBodyPartsEmpty = true
+        hasDuplicateName = false
+        isNameEmpty = true
+        isBodyPartsEmpty = true
     }
     
     func addRealmExerciseObject() -> Exercise {
