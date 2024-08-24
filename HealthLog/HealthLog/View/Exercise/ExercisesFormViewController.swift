@@ -493,11 +493,11 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
             }
             .store(in: &cancellables)
         
-        // MARK: Input descriptionTextField
-        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: descriptionTextView)
-            .compactMap { ($0.object as? UITextField)?.text }
+        // MARK: Input descriptionTextView
+        NotificationCenter.default.publisher(for: UITextView.textDidChangeNotification, object: descriptionTextView)
+            .compactMap { ($0.object as? UITextView)?.text }
             .sink { text in
-                print("descriptionTextField change")
+                print("descriptionTextView change")
                 self.viewModel.exercise.description = text
             }
             .store(in: &cancellables)
@@ -606,8 +606,8 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
             case .add: return
             case .update(let detailViewModel):
                 print(viewModel.exercise)
-//                detailViewModel.realmDeleteExercise()
-//                navigationController?.popToRootViewController(animated: true)
+                detailViewModel.realmExerciseIsDeleted()
+                navigationController?.popToRootViewController(animated: true)
         }
     }
     

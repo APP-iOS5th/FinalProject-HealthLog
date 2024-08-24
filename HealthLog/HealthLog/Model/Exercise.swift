@@ -22,7 +22,7 @@ class Exercise: Object {
     @Persisted var isDeleted: Bool = false // 삭제된 데이터인가의 여부
     
     // 생성자
-    convenience init(name: String, bodyParts: [BodyPart], descriptionText: String, image: Data?, totalReps: Int, recentWeight: Int, maxWeight: Int, isCustom: Bool, isDeleted: Bool = false) {
+    convenience init(name: String, bodyParts: [BodyPart], descriptionText: String, image: Data?, totalReps: Int, recentWeight: Int, maxWeight: Int, isCustom: Bool) {
         self.init()
         self.name = name
         self.bodyParts.append(objectsIn: bodyParts)
@@ -32,13 +32,9 @@ class Exercise: Object {
         self.recentWeight = recentWeight
         self.maxWeight = maxWeight
         self.isCustom = isCustom
+        self.isDeleted = false // 생성시 무조건 false
     }
-    
-    convenience init(name: String, bodyParts: [BodyPart]) {
-        self.init()
-        self.name = name
-        self.bodyParts.append(objectsIn: bodyParts)
-    }
+
 }
 
 // MARK: -
