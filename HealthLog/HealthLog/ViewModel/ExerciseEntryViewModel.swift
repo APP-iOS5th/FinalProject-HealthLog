@@ -22,6 +22,9 @@ class ExerciseEntryViewModel {
     // ExerciseEntryViewController의 입력 모드
     let mode: ExerciseEntryViewMode
     
+    // 첫 실행 이후 (4회 이상부터) 부터 동작하게 하기위한 카운트
+    var warningCount = 0
+    
     // 입력용 Object
     @Published var entryExercise = EntryExercise()
     
@@ -46,9 +49,12 @@ class ExerciseEntryViewModel {
         
         // MARK: Test - Check RequiredExerciseFields Empty
         // 입력 필수요소 유효성 검사
-        Publishers.CombineLatest(entryExercise.$name, entryExercise.$bodyParts)
+        Publishers.CombineLatest(
+            entryExercise.$name, entryExercise.$bodyParts)
             .sink { exerciseName, exerciseBodyParts in
-                self.validateRequiredFields(exerciseName: exerciseName, exerciseBodyParts: exerciseBodyParts)
+                self.validateRequiredFields(
+                    exerciseName: exerciseName,
+                    exerciseBodyParts: exerciseBodyParts)
             }
             .store(in: &cancellables)
     }
@@ -64,6 +70,7 @@ class ExerciseEntryViewModel {
                 result = viewModel.exercises.contains { $0.name == name }
                 result = result && detailViewModel.exercise.name != name
         }
+
         entryExercise.hasDuplicateName = result
     }
     
@@ -77,45 +84,43 @@ class ExerciseEntryViewModel {
         
         // 운동 이름 중복 여부
         if entryExercise.hasDuplicateName {
-            entryExercise.isValidatedRequiredExerciseFields = false
-            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredExerciseFields)") // log
+            entryExercise.isValidatedRequiredFields = false
+            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
             return
         }
         
         // 운동 이름 비어있는지 여부
         if entryExercise.isNameEmpty {
-            entryExercise.isValidatedRequiredExerciseFields = false
-            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredExerciseFields)") // log
+            entryExercise.isValidatedRequiredFields = false
+            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
             return
         }
         
         // 운동 부위 비어있는지 여부
         if entryExercise.isBodyPartsEmpty {
-            entryExercise.isValidatedRequiredExerciseFields = false
-            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredExerciseFields)") // log
+            entryExercise.isValidatedRequiredFields = false
+            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
             return
         }
         
         // 필수 요소 체크 끝, 정상이면 true
-        entryExercise.isValidatedRequiredExerciseFields = true
-        print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredExerciseFields)") // log
+        entryExercise.isValidatedRequiredFields = true
+        print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
     }
     
     // MARK: - Realm Methods
     
     func realmWriteExercise() {
-        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
+        guard let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         // 필수 요소 확인
-        if !entryExercise.isValidatedRequiredExerciseFields {
-            print("realmWriteExercise - isValidatedRequiredExerciseFields")
+        guard entryExercise.isValidatedRequiredFields else {
+            print("realmWriteExercise - 필수 입력 불충족")
             return
         }
         
         try! realm.write { // 이부분 try! 강제 언래핑 지울 방법 있을 까요?
             realm.add(entryExercise.addRealmExerciseObject())
         }
-        
-        entryExercise.initInputExercise()
     }
     
 }

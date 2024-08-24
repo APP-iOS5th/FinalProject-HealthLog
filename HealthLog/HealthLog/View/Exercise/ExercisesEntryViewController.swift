@@ -83,8 +83,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         setupDeleteButton()
         
         setupBindingsUpdateMode()
-        setupBindingsData()
-        setupBindingsUI()
+        setupBindingsUpdateUI()
+        setupBindingsUpdateData()
     }
     
     // MARK: - Setup UI
@@ -189,12 +189,14 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         titleDuplicateWarningLabel.text = "이미 존재하는 운동 이름입니다."
         titleDuplicateWarningLabel.numberOfLines = 1
         titleDuplicateWarningLabel.textColor = .red
+        titleDuplicateWarningLabel.isHidden = true
         titleStackView.addArrangedSubview(titleDuplicateWarningLabel)
         
         // MARK: titleEmptyWarningLabel
         titleEmptyWarningLabel.text = "운동 이름이 비어있습니다."
         titleEmptyWarningLabel.numberOfLines = 1
         titleEmptyWarningLabel.textColor = .red
+        titleEmptyWarningLabel.isHidden = true
         titleStackView.addArrangedSubview(titleEmptyWarningLabel)
         
         let dividerView = UIView()
@@ -238,6 +240,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         bodypartEmptyWarningLabel.text = "운동 부위가 비어있습니다."
         bodypartEmptyWarningLabel.numberOfLines = 1
         bodypartEmptyWarningLabel.textColor = .red
+        bodypartEmptyWarningLabel.isHidden = true
         bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
         
         let dividerView = UIView()
@@ -450,13 +453,11 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Setup Binddings
     
-    private func setupBindingsData() {
+    private func setupBindingsUpdateData() {
         // MARK: Input titleTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-                print(text)
-                print( self.entryViewModel.entryExercise.name)
                 self.entryViewModel.entryExercise.name = text
             }
             .store(in: &cancellables)
@@ -504,26 +505,31 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
                 self.entryViewModel.entryExercise.description = text
             }
             .store(in: &cancellables)
+
+    }
+    
+    private func setupBindingsUpdateUI() {
         
-        // MARK: Input Duplicate ExerciseName Warning
+        // MARK: UI Duplicate ExerciseName Warning
         self.entryViewModel.entryExercise.$hasDuplicateName
             .sink { [weak self] hasDuplicate in
                 let label = self?.titleDuplicateWarningLabel
                 self?.warningLabelAnimation(label, isWarning: hasDuplicate)
             }
             .store(in: &cancellables)
-    }
-    
-    private func setupBindingsUI() {
-        // MARK: UI Empty ExerciseName Warning
+        
+        // MARK: Empty ExerciseName Warning
         self.entryViewModel.entryExercise.$isNameEmpty
             .sink { [weak self] isEmpty in
+                print("Empty ExerciseName Warning isEmpty - \(isEmpty)")
                 let label = self?.titleEmptyWarningLabel
+                print("before label isHidden - \(label!.isHidden)")
                 self?.warningLabelAnimation(label, isWarning: isEmpty)
+                print("after label isHidden - \(label!.isHidden)")
             }
             .store(in: &cancellables)
         
-        // MARK: UI Empty Bodyparts Warning
+        // MARK: Empty Bodyparts Warning
         self.entryViewModel.entryExercise.$isBodyPartsEmpty
             .sink { [weak self] isEmpty in
                 let label = self?.bodypartEmptyWarningLabel
@@ -531,8 +537,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
             }
             .store(in: &cancellables)
         
-        // MARK: UI Validated Exercise Fields - Done Button
-        self.entryViewModel.entryExercise.$isValidatedRequiredExerciseFields
+        // MARK: Validated RequiredFields - Done Button
+        self.entryViewModel.entryExercise.$isValidatedRequiredFields
             .sink { [weak self] isValidated in
                 self?.navigationItem.rightBarButtonItem?
                     .isEnabled = isValidated
@@ -543,8 +549,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     private func setupBindingsUpdateMode() {
         guard case .update(let detailViewModel) = entryViewModel.mode
         else { return }
-        
-        //
         
         // MARK: UI,Input detail exercise
         detailViewModel.$exercise
@@ -604,26 +608,27 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         print("doneButtonTapped!")
         switch entryViewModel.mode {
             case .add: entryViewModel.realmWriteExercise()
-            case .update: print("TODO realm update")
+            case .update: print("TODO realm update") // TODO: realm update
         }
         navigationController?.popViewController(animated: true)
     }
     
     @objc func deleteButtonTapped() {
         print("deleteButtonTapped!")
-        switch entryViewModel.mode {
-            case .add: return
-            case .update(let detailViewModel):
-                print(entryViewModel.entryExercise)
-                detailViewModel.realmExerciseIsDeleted()
-                navigationController?.popToRootViewController(animated: true)
-        }
+        guard case .update(let detailViewModel) = entryViewModel.mode
+        else { return }
+
+        detailViewModel.realmExerciseIsDeleted()
+        navigationController?.popToRootViewController(animated: true)
     }
     
     // MARK: - Methods
     
-    // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (고장남)
+    // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (중복 실행시 고장남)
     private func warningLabelAnimation(_ targetView: UILabel?, isWarning: Bool) {
+        guard entryViewModel.warningCount > 4 else {
+            return entryViewModel.warningCount += 1
+        } // 첫 실행시에는 경고 표시 안함
         guard let target = targetView else { return }
         guard target.isHidden == isWarning else { return } // 중복 방지
         UIView.animate(withDuration: 0.2) {

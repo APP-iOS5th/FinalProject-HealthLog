@@ -46,10 +46,10 @@ class EntryExercise: ObservableObject {
     @Published var maxWeight: Int = 0
     @Published var description: String = ""
     
-    @Published var isValidatedRequiredExerciseFields: Bool = false
+    @Published var isValidatedRequiredFields: Bool = false
     @Published var hasDuplicateName: Bool = false
-    @Published var isNameEmpty: Bool = true
-    @Published var isBodyPartsEmpty: Bool = true
+    @Published var isNameEmpty: Bool = false
+    @Published var isBodyPartsEmpty: Bool = false
     
     func initInputExercise() {
         name = ""
@@ -58,7 +58,7 @@ class EntryExercise: ObservableObject {
         maxWeight = 0
         description = ""
         
-        isValidatedRequiredExerciseFields = false
+        isValidatedRequiredFields = false
         hasDuplicateName = false
         isNameEmpty = true
         isBodyPartsEmpty = true
