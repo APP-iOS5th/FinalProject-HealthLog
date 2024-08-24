@@ -65,7 +65,7 @@
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
 		CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC632C65B25B00E1D94F /* Routine.swift */; };
 		CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC652C65B3EB00E1D94F /* Schedule.swift */; };
-		CEE8BC682C65B43500E1D94F /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* Report.swift */; };
+		CEE8BC682C65B43500E1D94F /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
 		CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */; };
 		CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */; };
@@ -146,7 +146,7 @@
 		CEE8BC612C65B1B800E1D94F /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		CEE8BC632C65B25B00E1D94F /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
 		CEE8BC652C65B3EB00E1D94F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
-		CEE8BC672C65B43500E1D94F /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
+		CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportBodyPartData.swift; sourceTree = "<group>"; };
 		CEE8BC692C65B45100E1D94F /* InBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBody.swift; sourceTree = "<group>"; };
 		CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesAddViewController.swift; sourceTree = "<group>"; };
 		CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesUpdateViewController.swift; sourceTree = "<group>"; };
@@ -337,7 +337,7 @@
 				CEE8BC612C65B1B800E1D94F /* Exercise.swift */,
 				CEE8BC632C65B25B00E1D94F /* Routine.swift */,
 				CEE8BC652C65B3EB00E1D94F /* Schedule.swift */,
-				CEE8BC672C65B43500E1D94F /* Report.swift */,
+				CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */,
 				CEE8BC692C65B45100E1D94F /* InBody.swift */,
 			);
 			path = Model;
@@ -453,10 +453,8 @@
 				756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */,
 				4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */,
 				3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */,
-				
-        4BE243C12C76D66800FD2BA5 /* SetCell.swift in Sources */,
+				4BE243C12C76D66800FD2BA5 /* SetCell.swift in Sources */,
 				8D0CA37F2C781B9700727F18 /* WeightRecordModalViewController.swift in Sources */,
-        
 				4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */,
 				4BE243C52C78642E00FD2BA5 /* SetCountHeaderView.swift in Sources */,
 				4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */,
@@ -466,7 +464,7 @@
 				3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
 				184A58C52C6CFDC0009F2848 /* MostChangedTableViewCell.swift in Sources */,
-				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
+				CEE8BC682C65B43500E1D94F /* ReportBodyPartData.swift in Sources */,
 				4B911CFA2C741F770032F438 /* RoutineSerchResultsViewController.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */,

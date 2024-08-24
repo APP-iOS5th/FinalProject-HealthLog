@@ -42,13 +42,36 @@ class MuscleImageTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private lazy var frontMuscleChest: UIImageView = {
+        let imageView = UIImageView()
+        let imageName = "front_body_chest"
+        imageView.image = UIImage(named: imageName)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    private lazy var frontMuscleBiceps: UIImageView = {
+        let imageView = UIImageView()
+        let imageName = "front_body_biceps"
+        imageView.image = UIImage(named: imageName)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    
+    
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(monthLabel)
         contentView.addSubview(divider)
+        contentView.addSubview(frontMuscleChest)
+        contentView.addSubview(frontMuscleBiceps)
         contentView.addSubview(frontMuscleImage)
         contentView.addSubview(backMuscleImage)
+        
         
         NSLayoutConstraint.activate([
             monthLabel.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8),
@@ -63,7 +86,13 @@ class MuscleImageTableViewCell: UITableViewCell {
             frontMuscleImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             
             backMuscleImage.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 13),
-            backMuscleImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            backMuscleImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
+            frontMuscleChest.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
+            frontMuscleChest.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            
+            frontMuscleBiceps.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
+            frontMuscleBiceps.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor)
             
         ])
         

@@ -40,6 +40,7 @@ class WeightRecordViewController: UIViewController {
     
     // Realm에서 데이터를 불러와 UI에 반영
     private func fetchInbodyData() {
+        guard let realm = realm else { return } // realm 에러처리 때문에 이부분 코드 삽입했습니다 _ 허원열
         let calendar = Calendar.current
         let now = Date()
         let startDate = calendar.date(byAdding: .month, value: -1, to: now)! // 1개월 전

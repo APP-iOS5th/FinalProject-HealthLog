@@ -14,7 +14,7 @@ class ExerciseViewModel: ObservableObject {
     
     // MARK: - Properties
     
-    private var realm: Realm
+    private var realm: Realm?
     private var exercisesNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
@@ -46,6 +46,7 @@ class ExerciseViewModel: ObservableObject {
     
     // Realm 데이터 -> Combine Published 변수
     private func observeRealmData() {
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         let results = realm.objects(Exercise.self)
         
         exercisesNotificationToken = results.observe { [weak self] changes in
@@ -178,13 +179,14 @@ class ExerciseViewModel: ObservableObject {
     }
     
     func realmWriteExercise() {
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         // 필수 요소 확인
         if !exercise.isValidatedRequiredExerciseFields {
             print("realmWriteExercise - isValidatedRequiredExerciseFields")
             return
         }
         
-        try! realm.write {
+        try! realm.write { // 이부분 try! 강제 언래핑 지울 방법 있을 까요?
             realm.add(exercise.addRealmExerciseObject())
         }
         
