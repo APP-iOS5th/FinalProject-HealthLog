@@ -23,10 +23,10 @@ class ExerciseDetailViewModel: ObservableObject {
         self.exercise = exercise
     }
     
-    func realmDeleteExercise() {
+    func realmExerciseIsDeleted() {
         guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         realm.writeAsync() {
-            realm.delete(self.exercise)
+            self.exercise.isDeleted = true
         }
     }
 }

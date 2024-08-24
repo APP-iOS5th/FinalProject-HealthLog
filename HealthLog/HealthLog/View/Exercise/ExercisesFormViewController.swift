@@ -1,5 +1,5 @@
 //
-//  ExercisesAddViewController.swift
+//  ExercisesFormViewController.swift
 //  HealthLog
 //
 //  Created by youngwoo_ahn on 8/17/24.
@@ -8,13 +8,13 @@
 import Combine
 import UIKit
 
-class ExercisesAddViewController: UIViewController {
+class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     
-    // MARK: - Declare
+    // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
-    private let numberOnlyDelegate = NumberOnlyTextFieldDelegate()
+    private let mode: ExerciseFormMode
     
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
@@ -32,24 +32,33 @@ class ExercisesAddViewController: UIViewController {
     
     private let recentWeightStackView = UIStackView()
     private let recentWeightLabel = UILabel()
-    private let recentWeightTextField = UITextField()
+    private let recentWeightTextFieldStackView = UIStackView()
+    private let recentWeightTextField = PaddedTextField()
     private let recentWeightKGLabel = UILabel()
     
     private let maxWeightStackView = UIStackView()
     private let maxWeightLabel = UILabel()
-    private let maxWeightTextField = UITextField()
+    private let maxWeightTextFieldStackView = UIStackView()
+    private let maxWeightTextField = PaddedTextField()
     private let maxWeightKGLabel = UILabel()
     
     private let descriptionStackView = UIStackView()
     private let descriptionLabel = UILabel()
-    private let descriptionTextField = UITextField()
+    private let descriptionTextView = UITextView()
     
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
     
+    private let deleteButton: UIButton?
+    
     // MARK: - Init
     
-    init() {
+    init(mode: ExerciseFormMode) {
+        self.mode = mode
+        switch mode {
+            case .add: deleteButton = nil
+            case .update: deleteButton = UIButton()
+        }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -70,22 +79,35 @@ class ExercisesAddViewController: UIViewController {
         setupMaxWeightStackView()
         setupDescriptionStackView()
         setupImageStackView()
+        setupDeleteButton()
+        
         setupBindings()
+        setupBindingsUpdateMode()
     }
     
-    // MARK: - Setup
+    // MARK: - Setup UI
     
     func setupNavigationBar() {
-        title = "운동 추가"
+        switch mode {
+            case .add: title = "운동 추가"
+            case .update: title = "운동 수정"
+        }
+        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
         // MARK: addButton
-        
         let doneButton = UIBarButtonItem(
             title: "완료", style: .done, target: self,
             action: #selector(doneButtonTapped))
         self.navigationItem.rightBarButtonItem = doneButton
+        
+        // MARK: backButton
+        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        self.navigationItem.backBarButtonItem = backbarButtonItem
+        
+        // MARK: tabBar
+        self.tabBarController?.tabBar.isHidden = true
         
         // MARK: scrollView
         view.addSubview(scrollView)
@@ -99,7 +121,7 @@ class ExercisesAddViewController: UIViewController {
             scrollView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor),
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             scrollView.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                 constant: 8),
@@ -134,6 +156,7 @@ class ExercisesAddViewController: UIViewController {
         titleStackView.axis = .vertical
         titleStackView.distribution = .equalSpacing
         titleStackView.spacing = 13
+        titleStackView.alignment = .leading
         stackView.addArrangedSubview(titleStackView)
         
         // MARK: titleLabel
@@ -147,6 +170,8 @@ class ExercisesAddViewController: UIViewController {
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
+        titleTextField.tag = 1001
+        titleTextField.delegate = self
         titleStackView.addArrangedSubview(titleTextField)
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -171,7 +196,7 @@ class ExercisesAddViewController: UIViewController {
         titleStackView.addArrangedSubview(titleEmptyWarningLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         titleStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -214,7 +239,7 @@ class ExercisesAddViewController: UIViewController {
         bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         bodypartStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -241,15 +266,35 @@ class ExercisesAddViewController: UIViewController {
         recentWeightLabel.textColor = .white
         recentWeightLabel.text = "최근 무게"
         recentWeightStackView.addArrangedSubview(recentWeightLabel)
+        NSLayoutConstraint.activate([
+            recentWeightLabel.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            recentWeightLabel.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+        ])
+        
+        // MARK: recentWeightTextFieldStackView
+        recentWeightTextFieldStackView.axis = .horizontal
+        recentWeightTextFieldStackView.distribution = .fillEqually
+        recentWeightTextFieldStackView.spacing = 10
+        recentWeightStackView.addArrangedSubview(recentWeightTextFieldStackView)
         
         // MARK: recentWeightTextField
+        recentWeightTextField.tag = 1002
+        recentWeightTextField.delegate = self
         recentWeightTextField.textColor = .white
-        recentWeightTextField.delegate = numberOnlyDelegate
         recentWeightTextField.keyboardType = .numberPad
-        recentWeightStackView.addArrangedSubview(recentWeightTextField)
+        recentWeightTextFieldStackView.addArrangedSubview(recentWeightTextField)
+        
+        // MARK: recentWeightKGLabel
+        recentWeightKGLabel.text = "KG"
+        recentWeightKGLabel.textColor = .white
+        recentWeightTextFieldStackView.addArrangedSubview(recentWeightKGLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         recentWeightStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -265,26 +310,46 @@ class ExercisesAddViewController: UIViewController {
     }
     
     func setupMaxWeightStackView() {
-        // MARK:  maxWeightStackView
+        // MARK: maxWeightStackView
         maxWeightStackView.axis = .vertical
         maxWeightStackView.distribution = .equalSpacing
         maxWeightStackView.spacing = 10
         maxWeightStackView.backgroundColor = .color1E1E1E
-        stackView.addArrangedSubview( maxWeightStackView)
+        stackView.addArrangedSubview(maxWeightStackView)
         
-        // MARK:  maxWeightLabel
+        // MARK: maxWeightLabel
         maxWeightLabel.textColor = .white
         maxWeightLabel.text = "최대 무게"
-        maxWeightStackView.addArrangedSubview( maxWeightLabel)
+        maxWeightStackView.addArrangedSubview(maxWeightLabel)
+        NSLayoutConstraint.activate([
+            maxWeightLabel.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            maxWeightLabel.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+        ])
+        
+        // MARK: maxWeightTextFieldStackView
+        maxWeightTextFieldStackView.axis = .horizontal
+        maxWeightTextFieldStackView.distribution = .fillEqually
+        maxWeightTextFieldStackView.spacing = 10
+        maxWeightStackView.addArrangedSubview(maxWeightTextFieldStackView)
         
         // MARK: maxWeightTextField
+        maxWeightTextField.tag = 1003
+        maxWeightTextField.delegate = self
         maxWeightTextField.textColor = .white
-        maxWeightTextField.delegate = numberOnlyDelegate
         maxWeightTextField.keyboardType = .numberPad
-        maxWeightStackView.addArrangedSubview(maxWeightTextField)
+        maxWeightTextFieldStackView.addArrangedSubview(maxWeightTextField)
+        
+        // MARK: maxWeightKGLabel
+        maxWeightKGLabel.text = "KG"
+        maxWeightKGLabel.textColor = .white
+        maxWeightTextFieldStackView.addArrangedSubview(maxWeightKGLabel)
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         maxWeightStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -312,12 +377,28 @@ class ExercisesAddViewController: UIViewController {
         descriptionLabel.text = "운동 설명"
         descriptionStackView.addArrangedSubview(descriptionLabel)
         
-        // MARK: descriptionTextField
-        descriptionTextField.textColor = .white
-        descriptionStackView.addArrangedSubview(descriptionTextField)
+        // MARK: descriptionTextView
+        descriptionTextView.textColor = .white
+        descriptionTextView.backgroundColor = .color2F2F2F
+        descriptionTextView.layer.cornerRadius = 12
+        descriptionTextView.layer.masksToBounds = true
+        descriptionTextView.isScrollEnabled = false
+        descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 16)
+        descriptionTextView.textContainerInset = UIEdgeInsets(
+            top: 13, left: 13, bottom: 13, right: 13)
+        descriptionStackView.addArrangedSubview(descriptionTextView)
+        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            descriptionTextView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 10),
+            descriptionTextView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -10),
+        ])
         
         let dividerView = UIView()
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color2F2F2F
         descriptionStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -346,6 +427,27 @@ class ExercisesAddViewController: UIViewController {
         imageStackView.addArrangedSubview(imageLabel)
     }
     
+    func setupDeleteButton() {
+        guard case .update = mode else { return }
+        guard let deleteButton = deleteButton else { return }
+        
+        deleteButton.backgroundColor = .color2F2F2F
+        deleteButton.tintColor = .red
+        deleteButton.setTitle("삭제하기", for: .normal)
+        deleteButton.addTarget(
+            self, action: #selector(deleteButtonTapped),
+            for: .touchUpInside)
+        view.addSubview(deleteButton)
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            .isActive = true
+        deleteButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
+    // MARK: - Setup Binddings
+    
     private func setupBindings() {
         // MARK: Input titleTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
@@ -361,17 +463,14 @@ class ExercisesAddViewController: UIViewController {
         bodypartButtonStackView.bodypartButtonList.forEach { button in
             button.buttonPublisher
                 .sink { button in
-                    if button.isSelected {
-                        // 선택시 삽입
+                    if button.isSelected { // 선택시 삽입
                         self.viewModel.exercise
                             .bodyParts.append(button.bodypart)
-                    } else {
-                        // 선택 해제시 제거
+                    } else { // 선택 해제시 제거
                         self.viewModel.exercise
                             .bodyParts.removeAll { $0 == button.bodypart }
                     }
                     print("\(button.bodypart.rawValue) - \(button.isSelected)")
-                    print(self.viewModel.exercise.bodyParts) // log
                 }
                 .store(in: &cancellables)
         }
@@ -394,11 +493,11 @@ class ExercisesAddViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // MARK: Input descriptionTextField
-        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: descriptionTextField)
-            .compactMap { ($0.object as? UITextField)?.text }
+        // MARK: Input descriptionTextView
+        NotificationCenter.default.publisher(for: UITextView.textDidChangeNotification, object: descriptionTextView)
+            .compactMap { ($0.object as? UITextView)?.text }
             .sink { text in
-                print("descriptionTextField change")
+                print("descriptionTextView change")
                 self.viewModel.exercise.description = text
             }
             .store(in: &cancellables)
@@ -406,21 +505,21 @@ class ExercisesAddViewController: UIViewController {
         // MARK: Input Duplicate ExerciseName Warning
         viewModel.exercise.$hasDuplicateExerciseName
             .sink { [weak self] hasDuplicate in
-                self?.warningLabelAnimation(targetView: self?.titleDuplicateWarningLabel, warningState: hasDuplicate)
+                self?.warningLabelAnimation(self?.titleDuplicateWarningLabel, isWarning: hasDuplicate)
             }
             .store(in: &cancellables)
         
         // MARK: UI Empty ExerciseName Warning
         viewModel.exercise.$isExerciseNameEmpty
             .sink { [weak self] isEmpty in
-                self?.warningLabelAnimation(targetView: self?.titleEmptyWarningLabel, warningState: isEmpty)
+                self?.warningLabelAnimation(self?.titleEmptyWarningLabel, isWarning: isEmpty)
             }
             .store(in: &cancellables)
         
         // MARK: UI Empty Bodyparts Warning
         viewModel.exercise.$isExerciseBodyPartsEmpty
             .sink { [weak self] isEmpty in
-                self?.warningLabelAnimation(targetView: self?.bodypartEmptyWarningLabel, warningState: isEmpty)
+                self?.warningLabelAnimation(self?.bodypartEmptyWarningLabel, isWarning: isEmpty)
             }
             .store(in: &cancellables)
         
@@ -431,40 +530,96 @@ class ExercisesAddViewController: UIViewController {
                     .isEnabled = isValidated
             }
             .store(in: &cancellables)
+        
+  
+    }
+    
+    private func setupBindingsUpdateMode() {
+        guard case .update(let detailViewModel) = mode else { return }
+        
+        // MARK: detail exercise input
+        detailViewModel.$exercise
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.viewModel.exercise.name = $0.name
+                self?.titleTextField.text = $0.name
+                
+                $0.bodyParts.forEach { bodypart in
+                    self?.bodypartButtonStackView
+                        .bodypartButtonList
+                        .first(where: { $0.bodypart == bodypart })?
+                        .sendActions(for: .touchUpInside)
+                }
+                
+                self?.viewModel.exercise.recentWeight = $0.recentWeight
+                self?.recentWeightTextField.text = String($0.recentWeight)
+                
+                self?.viewModel.exercise.maxWeight = $0.maxWeight
+                self?.maxWeightTextField.text = String($0.maxWeight)
+                
+                self?.viewModel.exercise.description = $0.descriptionText
+                self?.descriptionTextView.text = $0.descriptionText
+            }
+            .store(in: &cancellables)
+    }
+    
+    // MARK: - UITextFieldDelegate
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        print("textField.tag - \(textField.tag)")
+        
+        // 문자 입력수 제한
+        let currentText = textField.text ?? ""
+        let newLength = currentText.count + string.count - range.length
+        
+        // 숫자만 입력
+        let updatedText = (currentText as NSString)
+            .replacingCharacters(in: range, with: string)
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: updatedText)
+        
+        switch textField.tag {
+            case 1001:
+                return newLength <= 30
+            case 1002, 1003:
+                return newLength <= 3 && allowedCharacters.isSuperset(of: characterSet)
+            default:
+                return true
+        }
     }
 
     // MARK: - Selector Methods
     
     @objc func doneButtonTapped() {
         print("doneButtonTapped!")
-        viewModel.realmWriteExercise()
+        switch mode {
+            case .add: viewModel.realmWriteExercise()
+            case .update: print("TODO realm update")
+        }
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func deleteButtonTapped() {
+        print("deleteButtonTapped!")
+        switch mode {
+            case .add: return
+            case .update(let detailViewModel):
+                print(viewModel.exercise)
+                detailViewModel.realmExerciseIsDeleted()
+                navigationController?.popToRootViewController(animated: true)
+        }
     }
     
     // MARK: - Methods
     
     // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (고장남)
-    private func warningLabelAnimation(targetView: UIView?, warningState: Bool) {
+    private func warningLabelAnimation(_ targetView: UILabel?, isWarning: Bool) {
         guard let target = targetView else { return }
-        guard target.isHidden == warningState else { return } // 중복 방지
+        guard target.isHidden == isWarning else { return } // 중복 방지
         UIView.animate(withDuration: 0.2) {
-            target.isHidden = !warningState
+            target.isHidden = !isWarning
         }
-    }
-}
-
-// MARK: - OnlyNumberInputDelegate
-class NumberOnlyTextFieldDelegate: NSObject, UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        let currentString = textField.text ?? ""
-        let updatedString = (currentString as NSString)
-            .replacingCharacters(in: range, with: string)
-        
-        let allowedCharacters = CharacterSet.decimalDigits
-        let characterSet = CharacterSet(charactersIn: updatedString)
-        
-        return allowedCharacters.isSuperset(of: characterSet)
     }
 }
 
@@ -497,5 +652,18 @@ private class PaddedTextField: UITextField {
         layer.masksToBounds = true
         textColor = .white
         backgroundColor = .color2F2F2F
+    }
+}
+
+enum ExerciseFormMode {
+    case add
+    case update(ExerciseDetailViewModel)
+    
+    var detailViewModel: ExerciseDetailViewModel? {
+        if case .update(let model) = self {
+            return model
+        } else {
+            return nil
+        }
     }
 }

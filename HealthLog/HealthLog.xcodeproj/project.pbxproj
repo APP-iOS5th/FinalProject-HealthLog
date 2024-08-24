@@ -67,7 +67,7 @@
 		CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC652C65B3EB00E1D94F /* Schedule.swift */; };
 		CEE8BC682C65B43500E1D94F /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
-		CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */; };
+		CEE918AA2C6FAA6500B8DEF7 /* ExercisesFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesFormViewController.swift */; };
 		CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */; };
 		CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */; };
 		CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */; };
@@ -148,7 +148,7 @@
 		CEE8BC652C65B3EB00E1D94F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportBodyPartData.swift; sourceTree = "<group>"; };
 		CEE8BC692C65B45100E1D94F /* InBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBody.swift; sourceTree = "<group>"; };
-		CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesAddViewController.swift; sourceTree = "<group>"; };
+		CEE918A92C6FAA6500B8DEF7 /* ExercisesFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesFormViewController.swift; sourceTree = "<group>"; };
 		CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesUpdateViewController.swift; sourceTree = "<group>"; };
 		CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBodyPartButton.swift; sourceTree = "<group>"; };
 		CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBodyPartButtonStackView.swift; sourceTree = "<group>"; };
@@ -266,7 +266,7 @@
 				CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */,
 				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
 				CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */,
-				CEE918A92C6FAA6500B8DEF7 /* ExercisesAddViewController.swift */,
+				CEE918A92C6FAA6500B8DEF7 /* ExercisesFormViewController.swift */,
 				CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */,
 				CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */,
 				CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */,
@@ -480,7 +480,7 @@
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
 				186301E22C73313900CA32AA /* MuscleImageTableViewCell.swift in Sources */,
 				184A58B72C6B28C9009F2848 /* ExerciseRecordViewController.swift in Sources */,
-				CEE918AA2C6FAA6500B8DEF7 /* ExercisesAddViewController.swift in Sources */,
+				CEE918AA2C6FAA6500B8DEF7 /* ExercisesFormViewController.swift in Sources */,
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
