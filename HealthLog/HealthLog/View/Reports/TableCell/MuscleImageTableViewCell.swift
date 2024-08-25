@@ -44,7 +44,7 @@ class MuscleImageTableViewCell: UITableViewCell {
     
     private lazy var frontMuscleChest: UIImageView = {
         let imageView = UIImageView()
-        let imageName = "front_body_chest"
+        let imageName = "front_body_chest_01"
         imageView.image = UIImage(named: imageName)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +52,7 @@ class MuscleImageTableViewCell: UITableViewCell {
     }()
     private lazy var frontMuscleBiceps: UIImageView = {
         let imageView = UIImageView()
-        let imageName = "front_body_biceps"
+        let imageName = "front_body_biceps_01"
         imageView.image = UIImage(named: imageName)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
