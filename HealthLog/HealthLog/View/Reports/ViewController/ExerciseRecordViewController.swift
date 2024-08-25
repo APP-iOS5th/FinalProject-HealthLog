@@ -91,8 +91,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
             cell.backgroundColor = UIColor.clear
-            
             cell.selectionStyle = .none
+            cell.configureCell(data: bodyPartDataList)
+            
             return cell
         case 1:
             let data = bodyPartDataList[indexPath.row]
