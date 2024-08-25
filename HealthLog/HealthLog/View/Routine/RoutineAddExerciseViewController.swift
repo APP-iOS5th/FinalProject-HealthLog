@@ -10,7 +10,7 @@ import Combine
 
 struct AddRoutineExercise {
     let name: String
-    var setCount: Int
+    var setCount: Int = 4
     var sets: [ExerciseSet]
     
     struct ExerciseSet {
