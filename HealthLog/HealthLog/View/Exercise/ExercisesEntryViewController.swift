@@ -617,9 +617,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         print("deleteButtonTapped!")
         guard case .update(let detailViewModel) = entryViewModel.mode
         else { return }
-
-        detailViewModel.realmExerciseIsDeleted()
-        navigationController?.popToRootViewController(animated: true)
+        deleteAlertAction()
     }
     
     // MARK: - Methods
@@ -634,6 +632,33 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         UIView.animate(withDuration: 0.2) {
             target.isHidden = !isWarning
         }
+    }
+    
+    private func deleteAlertAction() {
+        guard case .update(let detailViewModel) = entryViewModel.mode
+        else { return }
+        
+        let alertController = UIAlertController(
+            title: "삭제 확인",
+            message: "삭제시, 더이상 운동리스트에서는 표시되지 않습니다.",
+            preferredStyle: .alert
+        )
+        
+        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color767676
+        alertController.view.layer.cornerRadius = 15
+        
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+            // 삭제 처리 코드
+            detailViewModel.realmExerciseIsDeleted()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 

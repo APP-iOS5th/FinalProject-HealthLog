@@ -8,6 +8,7 @@
 import Foundation
 import RealmSwift
 import Combine
+import UIKit
 
 class ExerciseDetailViewModel: ObservableObject {
 
@@ -27,6 +28,8 @@ class ExerciseDetailViewModel: ObservableObject {
     }
     
     func realmExerciseIsDeleted() {
+        
+        
         guard let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         realm.writeAsync() {
             self.exercise.isDeleted = true

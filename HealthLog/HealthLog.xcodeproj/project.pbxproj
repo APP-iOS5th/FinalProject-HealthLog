@@ -73,7 +73,6 @@
 		CEE8BC682C65B43500E1D94F /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
 		CEE918AA2C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift */; };
-		CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */; };
 		CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */; };
 		CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */; };
 /* End PBXBuildFile section */
@@ -159,7 +158,6 @@
 		CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportBodyPartData.swift; sourceTree = "<group>"; };
 		CEE8BC692C65B45100E1D94F /* InBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBody.swift; sourceTree = "<group>"; };
 		CEE918A92C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesEntryViewController.swift; sourceTree = "<group>"; };
-		CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesUpdateViewController.swift; sourceTree = "<group>"; };
 		CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBodyPartButton.swift; sourceTree = "<group>"; };
 		CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputBodyPartButtonStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -277,7 +275,6 @@
 				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
 				CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */,
 				CEE918A92C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift */,
-				CEE918AB2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift */,
 				CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */,
 				CEE918B12C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift */,
 				CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */,
@@ -488,7 +485,6 @@
 				CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
 				CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */,
-				CEE918AC2C6FAAB000B8DEF7 /* ExercisesUpdateViewController.swift in Sources */,
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
 				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
 				CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */,
