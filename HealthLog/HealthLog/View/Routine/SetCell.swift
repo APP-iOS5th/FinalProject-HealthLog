@@ -10,13 +10,13 @@ import UIKit
 class SetCell: UICollectionViewCell {
     static let identifier = "SetCell"
     
-    let setNumberLabel: UILabel = {
+    lazy var setNumberLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let weightTextField: UITextField = {
+    private lazy var weightTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "무게"
         textField.keyboardType = .numberPad
@@ -25,7 +25,7 @@ class SetCell: UICollectionViewCell {
         return textField
     }()
     
-    let repsTextField: UITextField = {
+    private lazy var repsTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "횟수"
         textField.keyboardType = .numberPad
