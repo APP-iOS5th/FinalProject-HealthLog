@@ -8,17 +8,6 @@
 import UIKit
 import Combine
 
-struct AddRoutineExercise {
-    let name: String
-    var setCount: Int = 4
-    var sets: [ExerciseSet]
-    
-    struct ExerciseSet {
-        var weight: Int
-        var reps: Int
-    }
-}
-
 protocol SerchResultDelegate: AnyObject {
     func didSelectItem(_ item: Exercise)
 }
@@ -65,6 +54,15 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         
         return collectionView
     }()
+    private lazy var rightBarButtonItem : UIBarButtonItem = {
+        let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneTapped))
+        rightBarButtonItem.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "Pretendard-Semibold", size: 16) as Any,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        return rightBarButtonItem
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +74,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     func setupUI() {
         self.navigationController?.setupBarAppearance()
-        
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "운동을 추가해주세요."
         self.navigationItem.hidesSearchBarWhenScrolling = false
@@ -138,6 +136,10 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         print("RoutinAddView: \(routineViewModel.rutine.exercises)")
     }
     
+    @objc func doneTapped() {
+        
+    }
+    
 }
 
 // MARK: CollectionView
@@ -153,7 +155,7 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
-        cell.configure(with: routineViewModel.rutine.exercises[indexPath.section].sets[indexPath.item].order)
+        cell.configure(with: routineViewModel.rutine.exercises[indexPath.section].sets[indexPath.item])
         return cell
     }
 

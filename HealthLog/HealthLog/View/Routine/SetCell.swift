@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class SetCell: UICollectionViewCell {
     static let identifier = "SetCell"
+    
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private lazy var setNumberLabel: UILabel = {
         let label = UILabel()
@@ -109,8 +113,30 @@ class SetCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with setNumber: Int ) {
-        setNumberLabel.text = "\(setNumber) 세트"
+    func configure(with set: RoutineExerciseSet ) {
+        setNumberLabel.text = "\(set.order) 세트"
+        weightTextField.text = set.weight == 0 ? "" : "\(set.weight)"
+        repsTextField.text = set.reps == 0 ? "" : "\(set.reps)"
         
+        // MARK: Combine
+        
+        // 셀의 모든 구독을 해제 (이 셀에 걸려있는거 모두 해제이므로 주의)
+        cancellables.removeAll()
+        
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
+            .compactMap { ($0.object as? UITextField)?.text }
+            .sink { text in
+                print("weightTextField combine change")
+                set.weight = Int(text) ?? 0
+            }
+            .store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
+            .compactMap { ($0.object as? UITextField)?.text }
+            .sink { text in
+                print("repsTextField combine change")
+                set.reps = Int(text) ?? 0
+            }
+            .store(in: &cancellables)
     }
 }
