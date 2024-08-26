@@ -27,7 +27,8 @@ class RoutineAddExerciseViewController: UIViewController {
     ]
     
     
-    let viewModel = ExerciseViewModel()
+    let routineViewModel = RoutineViewModel()
+    
     var routineName: String?
     private var cancellables = Set<AnyCancellable>()
     var selectedExercises = [String]()

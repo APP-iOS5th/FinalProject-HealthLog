@@ -21,6 +21,8 @@ class RoutineViewModel: ObservableObject{
     private var cancellables = Set<AnyCancellable>()
     
     @Published var rutines: [Routine] = []
+    
+    @Published var rutine: Routine = Routine()
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
