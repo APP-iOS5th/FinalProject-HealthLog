@@ -7,9 +7,16 @@
 
 import UIKit
 
+protocol SearchResultCellDelegate: AnyObject {
+    func didTapButton(in cell: RoutineExerciseListTableViewCell)
+}
+
 class RoutineExerciseListTableViewCell: UITableViewCell {
     
     static let cellId = "RoutineExerciseListTableViewCell"
+    
+    weak var delegate: SearchResultCellDelegate?
+
     
     // 운동이름
     private lazy var titleLabel: UILabel = {
@@ -29,6 +36,7 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
         button.setImage(plusImage, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -132,6 +140,11 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
         
         
     }
+ 
+    @objc func buttonTapped(_ sender: UIButton) {
+        delegate?.didTapButton(in: self)
+    }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

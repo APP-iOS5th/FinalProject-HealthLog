@@ -98,10 +98,10 @@ class SetCountHeaderView: UICollectionReusableView {
         ])
     }
     
-    func configure(with exercise: AddRoutineExercise ) {
-        titleLabel.text = exercise.name
-        stepper.value = Double(exercise.setCount)
-        setNumberLabel.text = "\(exercise.setCount)"
+    func configure(with exercise: RoutineExercise ) {
+        titleLabel.text = exercise.exercise?.name
+        stepper.value = Double(exercise.sets.count)
+        setNumberLabel.text = "\(exercise.sets.count)"
         
     }
     

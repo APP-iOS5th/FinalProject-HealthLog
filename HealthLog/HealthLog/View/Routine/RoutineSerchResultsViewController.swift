@@ -7,9 +7,12 @@
 
 import UIKit
 
-class RoutineSerchResultsViewController: UIViewController {
+class RoutineSerchResultsViewController: UIViewController, SearchResultCellDelegate {
+    
+    weak var delegate: SerchResultDelegate?
     
     let viewModel = ExerciseViewModel()
+   
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -64,6 +67,15 @@ class RoutineSerchResultsViewController: UIViewController {
         
     }
     
+    func didTapButton(in cell: RoutineExerciseListTableViewCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            let selectedItem = viewModel.filteredExercises[indexPath.row]
+            print("RoutinSearchReslutView: \(selectedItem)")
+            delegate?.didSelectItem(selectedItem)
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
     
 }
 
@@ -79,7 +91,7 @@ extension RoutineSerchResultsViewController: UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
-        
+        cell.delegate = self
         cell.configure(with: viewModel.filteredExercises[indexPath.row])
         cell.selectionStyle = .none
         return cell

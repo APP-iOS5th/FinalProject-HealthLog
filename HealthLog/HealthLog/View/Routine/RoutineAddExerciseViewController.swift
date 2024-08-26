@@ -19,12 +19,12 @@ struct AddRoutineExercise {
     }
 }
 
-class RoutineAddExerciseViewController: UIViewController {
+protocol SerchResultDelegate: AnyObject {
+    func didSelectItem(_ item: Exercise)
+}
+
+class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
-    var exercises: [AddRoutineExercise] = [
-        AddRoutineExercise(name: "벤치 프레스", setCount: 4, sets: Array(repeating: AddRoutineExercise.ExerciseSet(weight: 10, reps: 10), count: 4)),
-        AddRoutineExercise(name: "스쿼트", setCount: 3, sets: Array(repeating: AddRoutineExercise.ExerciseSet(weight: 20, reps: 5), count: 3))
-    ]
     
     
     let routineViewModel = RoutineViewModel()
@@ -34,7 +34,9 @@ class RoutineAddExerciseViewController: UIViewController {
     var selectedExercises = [String]()
     
     var resultsViewController = RoutineSerchResultsViewController()
+    
     private lazy var searchController: UISearchController = {
+        resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self
@@ -126,22 +128,32 @@ class RoutineAddExerciseViewController: UIViewController {
         
     }
     
+    func didSelectItem(_ item: Exercise) {
+        let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
+        RoutineExerciseSet(order: index, weight: 0, reps: 0)
+        }
+        
+        routineViewModel.rutine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
+        self.collectionView.reloadData()
+        print("RoutinAddView: \(routineViewModel.rutine.exercises)")
+    }
+    
 }
 
 // MARK: CollectionView
 
 extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return exercises.count
+        return routineViewModel.rutine.exercises.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return exercises[section].setCount
+        return routineViewModel.rutine.exercises[section].sets.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
-        cell.configure(with: indexPath.item + 1)
+        cell.configure(with: routineViewModel.rutine.exercises[indexPath.section].sets[indexPath.item].order)
         return cell
     }
 
@@ -166,12 +178,16 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
             }
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetCountHeaderView.identifier, for: indexPath) as! SetCountHeaderView
-        header.configure(with: exercises[indexPath.section])
+        header.configure(with: routineViewModel.rutine.exercises[indexPath.section])
         header.setCountDidChange = { newSetCount in
-            self.exercises[indexPath.section].setCount = newSetCount
+            if self.routineViewModel.rutine.exercises[indexPath.section].sets.count < newSetCount {
+                self.routineViewModel.rutine.exercises[indexPath.section].sets.append(RoutineExerciseSet(order: newSetCount, weight: 0, reps: 0))
+            } else {
+                self.routineViewModel.rutine.exercises[indexPath.section].sets.removeLast()
+            }
             self.collectionView.reloadSections(IndexSet(integer: indexPath.section))
             
-            print("운동이름: \(self.exercises[indexPath.section].name), 세트 수: \(self.exercises[indexPath.section].setCount)")
+//            print("운동이름: \(self.exercises[indexPath.section].name), 세트 수: \(self.exercises[indexPath.section].setCount)")
         }
         
         return header
