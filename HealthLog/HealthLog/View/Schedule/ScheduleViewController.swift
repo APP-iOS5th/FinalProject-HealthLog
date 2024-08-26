@@ -15,6 +15,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
     
+    private var muscleImageView = MuscleImageView()
+    
     private var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
@@ -140,6 +142,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         setupUI()
         loadSelectedDateSchedule(today)
         customizeCalendarTextColor()
+        
+        highlightMusclePerDate(today)
     }
     
     private func setupUI() {
@@ -151,10 +155,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
         view.backgroundColor = .colorPrimary
         
+        muscleImageView.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addArrangedSubview(calendarView)
         contentView.addArrangedSubview(exerciseVolumeLabel)
+        contentView.addArrangedSubview(muscleImageView)
         contentView.addArrangedSubview(separatorLine1)
         contentView.addArrangedSubview(labelContainer)
         contentView.addArrangedSubview(separatorLine2)
@@ -182,6 +189,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             separatorLine1.heightAnchor.constraint(equalToConstant: 2),
             
+            muscleImageView.heightAnchor.constraint(equalToConstant: 300),
+            muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
             labelContainer.heightAnchor.constraint(equalToConstant: 50),
             
             separatorLine2.heightAnchor.constraint(equalToConstant: 2),
@@ -207,7 +218,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             view.layoutIfNeeded()
     }
     
-    private func loadSelectedDateSchedule(_ date: Date) {
+    func loadSelectedDateSchedule(_ date: Date) {
         guard let realm = realm else {return}
         
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
@@ -475,5 +486,123 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     // reload calendar when month is changed
     func calendarView(_ calendarView: UICalendarView, didChangeMonth dateComponents: DateComponents) {
         customizeCalendarTextColor()
+    }
+}
+
+
+extension ScheduleViewController {
+    private func highlightMusclePerDate(_ date: Date) {
+        guard let realm = realm else {return}
+        
+        guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date).first else { return }
+        
+        var completedSetsCount = 0
+        var bodyPartsWithCompletedSets: [String: Int] = [:]
+        
+        for scheduleExercise in selectedDateSchedule.exercises {
+            var completedSetsForExercise = 0
+            
+            for set in scheduleExercise.sets {
+                if set.isCompleted {
+                    completedSetsCount += 1
+                    completedSetsForExercise += 1
+                }
+            }
+            
+            if completedSetsForExercise > 0 {
+                if let bodyParts = scheduleExercise.exercise?.bodyParts {
+                    for bodyPart in bodyParts {
+                        if let currentCount = bodyPartsWithCompletedSets[bodyPart.rawValue] {
+                            bodyPartsWithCompletedSets[bodyPart.rawValue] = currentCount + completedSetsForExercise
+                        } else {
+                            bodyPartsWithCompletedSets[bodyPart.rawValue] = completedSetsForExercise
+                        }
+                    }
+                }
+            }
+        }
+        
+        print("Completed Sets Count: \(completedSetsCount)")
+        print("Body Parts with Completed Sets: \(bodyPartsWithCompletedSets)")
+
+//        for bodyPartData in data {
+//            let bodyPart = BodyPart(rawValue: bodyPartData.bodyPart)
+//            
+//            var imageNamePrefixes: [String] = []
+//            var imageViews: [UIImageView] = []
+//
+//            switch bodyPart {
+//            case .chest:
+//                imageViews = [frontMuscleChest]
+//                imageNamePrefixes = ["front_body_chest"]
+//            case .back:
+//                imageViews = [backMuscleback]
+//                imageNamePrefixes = ["back_body_back"]
+//            case .shoulders:
+//                imageViews = [frontMuscleShoulders, backMuscleShoulders]
+//                imageNamePrefixes = ["front_body_shoulders", "back_body_shoulders"]
+//            case .triceps:
+//                imageViews = [backMuscleTriceps]
+//                imageNamePrefixes = ["back_body_triceps"]
+//            case .biceps:
+//                imageViews = [frontMuscleBiceps]
+//                imageNamePrefixes = ["front_body_biceps"]
+//            case .abs:
+//                imageViews = [frontMuscleAbs]
+//                imageNamePrefixes = ["front_body_abs"]
+//            case .quadriceps:
+//                imageViews = [frontMuscleQuadriceps]
+//                imageNamePrefixes = ["front_body_quadriceps"]
+//            case .hamstrings:
+//                imageViews = [backMuscleHamstrings]
+//                imageNamePrefixes = ["back_body_hamstrings"]
+//            case .glutes:
+//                imageViews = [backMuscleGlutes]
+//                imageNamePrefixes = ["back_body_glutes"]
+//            case .adductors:
+//                imageViews = [frontMuscleAdductors, backMuscleAdductors]
+//                imageNamePrefixes = ["front_body_adductors", "back_body_adductors"]
+//            case .abductors:
+//                imageViews = [frontMuscleAbductors, backMuscleAbductors]
+//                imageNamePrefixes = ["front_body_abductors", "back_body_abductors"]
+//            case .calves:
+//                imageViews = [backMuscleCalves]
+//                imageNamePrefixes = ["back_body_calves"]
+//            case .trap:
+//                imageViews = [frontMuscleTrap, backMuscleTrap]
+//                imageNamePrefixes = ["front_body_trap", "back_body_trap"]
+//            case .forearms:
+//                imageViews = [frontMuscleForearms]
+//                imageNamePrefixes = ["front_body_forearms"]
+//            case .other, .none:
+//                continue
+//            }
+//
+//            // totalSets에 따른 이미지 파일 이름을 결정
+//            if bodyPartData.totalSets > 0 {
+//                var imageSuffix = "_01"
+//                
+//                switch bodyPartData.totalSets {
+//                case 1...5:
+//                    imageSuffix = "_01"
+//                case 6...15:
+//                    imageSuffix = "_02"
+//                case 16...25:
+//                    imageSuffix = "_03"
+//                case 26...35:
+//                    imageSuffix = "_04"
+//                case 36...:
+//                    imageSuffix = "_05"
+//                default:
+//                    break
+//                }
+//                
+//                // 해당 이미지 뷰들을 보이게 하고 이미지 이름 설정
+//                for (index, imageView) in imageViews.enumerated() {
+//                    imageView.isHidden = false
+//                    imageView.image = UIImage(named: "\(imageNamePrefixes[index])\(imageSuffix)")
+//                }
+//            }
+//        }
     }
 }
