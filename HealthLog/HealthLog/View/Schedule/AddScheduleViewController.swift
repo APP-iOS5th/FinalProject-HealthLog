@@ -118,6 +118,9 @@ class AddScheduleViewController: UIViewController {
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
+        tableView.dragInteractionEnabled = true
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
         headerView.backgroundColor = .clear
@@ -232,7 +235,7 @@ class AddScheduleViewController: UIViewController {
     }
 }
 
-extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UITableViewDragDelegate, UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return addScheduleViewModel.selectedExercises.count
     }
@@ -292,6 +295,31 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         exerciseViewModel.setSearchText(to: searchText)
     }
+    
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dragItem = UIDragItem(itemProvider: NSItemProvider())
+        dragItem.localObject = addScheduleViewModel.selectedExercises[indexPath.row]
+        return [dragItem]
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if session.localDragSession != nil {
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if let item = coordinator.items.first,
+           let sourceIndexPath = item.sourceIndexPath,
+           let _ = item.dragItem.localObject as? ScheduleExercise {
+            addScheduleViewModel.moveExercise(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+            coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+        }
+    }
 }
 
 extension UIView {
@@ -307,7 +335,7 @@ extension UIView {
         }
         return nil
     }
-
+    
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {

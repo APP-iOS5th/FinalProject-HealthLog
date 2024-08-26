@@ -49,6 +49,18 @@ class AddScheduleViewModel {
         selectedExercises[exerciseIndex].sets[setIndex].reps = reps
         validateExercises()
     }
+    
+    func moveExercise(from sourceIndex: Int, to destinationIndex: Int) {
+        guard sourceIndex != destinationIndex else { return }
+        let exercise = selectedExercises.remove(at: sourceIndex)
+        selectedExercises.insert(exercise, at: destinationIndex)
+        
+        for (index, exercise) in selectedExercises.enumerated() {
+            exercise.order = index
+        }
+        
+        validateExercises()
+    }
         
     private func validateExercises() {
         let exercisesExist = !selectedExercises.isEmpty
