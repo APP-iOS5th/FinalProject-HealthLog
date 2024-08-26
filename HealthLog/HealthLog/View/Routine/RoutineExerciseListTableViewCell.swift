@@ -109,7 +109,9 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
             
             self.plusButton.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
             self.plusButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -22),
-           
+            self.plusButton.widthAnchor.constraint(equalToConstant: 28),
+            self.plusButton.heightAnchor.constraint(equalToConstant: 28),
+            
             self.recentWeightLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),
             self.recentWeightLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
             self.maxWeightLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),

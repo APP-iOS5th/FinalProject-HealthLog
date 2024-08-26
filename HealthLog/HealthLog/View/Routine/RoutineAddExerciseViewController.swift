@@ -117,7 +117,7 @@ class RoutineAddExerciseViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20)
         ])
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -126,6 +126,8 @@ class RoutineAddExerciseViewController: UIViewController {
     }
     
 }
+
+// MARK: CollectionView
 
 extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -167,7 +169,6 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
         header.setCountDidChange = { newSetCount in
             self.exercises[indexPath.section].setCount = newSetCount
             self.collectionView.reloadSections(IndexSet(integer: indexPath.section))
-            self.collectionView.reloadItems(at: [indexPath])
             
             print("운동이름: \(self.exercises[indexPath.section].name), 세트 수: \(self.exercises[indexPath.section].setCount)")
         }

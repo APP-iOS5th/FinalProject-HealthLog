@@ -59,7 +59,7 @@ class RoutineSerchResultsViewController: UIViewController {
             self.tableView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 3),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
         ])
         
     }
