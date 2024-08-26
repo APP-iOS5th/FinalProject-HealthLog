@@ -69,6 +69,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         print("addExercise")
         setupUI()
         setupCollectionView()
+        setupObservers()
         
     }
     
@@ -104,8 +105,6 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     private func setupCollectionView() {
         
-       
-        
         collectionView.register(SetCell.self, forCellWithReuseIdentifier: SetCell.identifier)
         collectionView.register(SetCountHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SetCountHeaderView.identifier)
         collectionView.register(DividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DividerFooterView.identifier)
@@ -123,20 +122,30 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        
+    }
+    
+    func setupObservers() {
+        routineViewModel.$isAddRoutineValid
+            .receive(on: DispatchQueue.main)
+            .sink { isValid in
+                self.navigationItem.rightBarButtonItem?.isEnabled = isValid
+            }
+            .store(in: &cancellables)
     }
     
     func didSelectItem(_ item: Exercise) {
         let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
-        RoutineExerciseSet(order: index, weight: 0, reps: 0)
+            RoutineExerciseSet(order: index, weight: 0, reps: 0)
         }
-        
-        routineViewModel.rutine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
+        routineViewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
+       
         self.collectionView.reloadData()
-        print("RoutinAddView: \(routineViewModel.rutine.exercises)")
+        print("RoutinAddView: \(routineViewModel.routine.exercises)")
     }
     
     @objc func doneTapped() {
+        
+        
         
     }
     
@@ -146,19 +155,20 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
 
 extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return routineViewModel.rutine.exercises.count
+        return routineViewModel.routine.exercises.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return routineViewModel.rutine.exercises[section].sets.count
+        return routineViewModel.routine.exercises[section].sets.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
-        cell.configure(with: routineViewModel.rutine.exercises[indexPath.section].sets[indexPath.item])
+        cell.configure(with: routineViewModel.routine.exercises[indexPath.section].sets[indexPath.item])
+        
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 115)
     }
@@ -174,22 +184,16 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if kind == UICollectionView.elementKindSectionFooter {
-                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DividerFooterView.identifier, for: indexPath) as! DividerFooterView
-                
-                return footer
-            }
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DividerFooterView.identifier, for: indexPath) as! DividerFooterView
+            
+            return footer
+        }
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetCountHeaderView.identifier, for: indexPath) as! SetCountHeaderView
-        header.configure(with: routineViewModel.rutine.exercises[indexPath.section])
+        header.configure(with: routineViewModel.routine.exercises[indexPath.section])
         header.setCountDidChange = { newSetCount in
-            if self.routineViewModel.rutine.exercises[indexPath.section].sets.count < newSetCount {
-                self.routineViewModel.rutine.exercises[indexPath.section].sets.append(RoutineExerciseSet(order: newSetCount, weight: 0, reps: 0))
-            } else {
-                self.routineViewModel.rutine.exercises[indexPath.section].sets.removeLast()
-            }
+            self.routineViewModel.updateExercisesetCount(for: indexPath.section, setCount: newSetCount)
             self.collectionView.reloadSections(IndexSet(integer: indexPath.section))
-            
-//            print("운동이름: \(self.exercises[indexPath.section].name), 세트 수: \(self.exercises[indexPath.section].setCount)")
         }
         
         return header

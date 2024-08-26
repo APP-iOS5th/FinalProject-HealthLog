@@ -17,33 +17,36 @@ class RoutineViewModel: ObservableObject{
     @Published var rutineNameinput: String = ""
     @Published var rutineNameConfirmation: String = " "
     @Published var isValid: Bool = false
+    @Published var isAddRoutineValid: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var rutines: [Routine] = []
+    @Published var routines: [Routine] = []
     
-    @Published var rutine: Routine = Routine()
+    @Published var routine: Routine = Routine()
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
     }
     
     lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
-        $rutineNameinput.map { $0.count >= 3 }.print("Legth").eraseToAnyPublisher()
+        $rutineNameinput.map { $0.count >= 3 }
+//            .print("Legth")
+            .eraseToAnyPublisher()
     }()
     lazy var isRoutineNameEmptyPulisher: AnyPublisher<Bool, Never> = {
         $rutineNameinput
             .map(\.isEmpty)
-            .print("Empty")
+//            .print("Empty")
             .eraseToAnyPublisher()
     }()
     lazy var isRoutineNameMatchingPulisher: AnyPublisher<Bool, Never> = {
         Publishers
-            .CombineLatest($rutineNameinput, $rutines)
+            .CombineLatest($rutineNameinput, $routines)
             .map { rutineNameinput, rutines in
                 !rutines.contains { $0.name == rutineNameinput}
             }
-            .print("Matching")
+//            .print("Matching")
             .eraseToAnyPublisher()
         
     }()
@@ -52,7 +55,7 @@ class RoutineViewModel: ObservableObject{
     
     
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
-        .CombineLatest($rutineNameinput, $rutines)
+        .CombineLatest($rutineNameinput, $routines)
         .map( {(rutineNameinput: String, rutines: [Routine]) in
             if rutineNameinput.isEmpty {
                 return false
@@ -67,7 +70,26 @@ class RoutineViewModel: ObservableObject{
         .print()
         .eraseToAnyPublisher()
     
+    func updateExercisesetCount(for section: Int, setCount: Int) {
+        if self.routine.exercises[section].sets.count < setCount {
+            self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
+        } else {
+            self.routine.exercises[section].sets.removeLast()
+        }
+        validateExercise()
+    }
     
+    private func validateExercise() {
+        let isExercise = !routine.exercises.isEmpty
+        let allFieldsFilled = routine.exercises.allSatisfy { exercise in
+            exercise.sets.allSatisfy { set in
+                set.weight > 0 && set.reps > 0
+            }
+        }
+        
+        isAddRoutineValid = isExercise && allFieldsFilled
+        
+    }
     
     private func observeRealmData() {
         guard let realm = realm else {return} // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
@@ -77,10 +99,10 @@ class RoutineViewModel: ObservableObject{
             switch changes {
             case .initial(let collection):
                 print("results.observe - initial")
-                self?.rutines = Array(collection)
+                self?.routines = Array(collection)
             case .update(let collection, _, _, _):
                 print("results.observe - update")
-                self?.rutines = Array(collection)
+                self?.routines = Array(collection)
             case .error(let error):
                 print("results.observe - error: \(error)")
             }
