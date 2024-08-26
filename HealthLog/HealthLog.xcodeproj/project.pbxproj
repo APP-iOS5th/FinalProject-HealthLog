@@ -29,6 +29,8 @@
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		189401402C528B2100533E0A /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 1894013F2C528B2100533E0A /* Base */; };
+		18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991232C7C1ACE0007F115 /* MuscleImageView.swift */; };
+		18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */; };
 		3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
@@ -71,7 +73,6 @@
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
 		CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC632C65B25B00E1D94F /* Routine.swift */; };
 		CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC652C65B3EB00E1D94F /* Schedule.swift */; };
-		CEE8BC682C65B43500E1D94F /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC692C65B45100E1D94F /* InBody.swift */; };
 		CEE918AA2C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918A92C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift */; };
 		CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE918AD2C741B9D00B8DEF7 /* InputBodyPartButton.swift */; };
@@ -117,6 +118,7 @@
 		1894013C2C528B2100533E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1894013F2C528B2100533E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18D991232C7C1ACE0007F115 /* MuscleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleImageView.swift; sourceTree = "<group>"; };
 		3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScheduleExerciseViewController.swift; sourceTree = "<group>"; };
 		3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveRoutineViewController.swift; sourceTree = "<group>"; };
 		4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddNameViewController.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */,
 				184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */,
 				8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */,
+				18D991232C7C1ACE0007F115 /* MuscleImageView.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */,
 				CE4779242C7B204400F6DE74 /* TestAddScheduleViewController.swift in Sources */,
 				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
 				CE4779222C7A284500F6DE74 /* ExerciseEntryViewModel.swift in Sources */,
@@ -470,6 +474,7 @@
 				756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */,
 				4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */,
 				3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */,
+				18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */,
 				4BE243C12C76D66800FD2BA5 /* SetCell.swift in Sources */,
 				8D0CA37F2C781B9700727F18 /* WeightRecordModalViewController.swift in Sources */,
 				CE4779262C7B205C00F6DE74 /* TestAddScheduleViewModel.swift in Sources */,
@@ -482,11 +487,7 @@
 				3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
 				184A58C52C6CFDC0009F2848 /* MostChangedTableViewCell.swift in Sources */,
-
-				CEE8BC682C65B43500E1D94F /* Report.swift in Sources */,
 				4B8D65DD2C7B5C9700B8AFA0 /* DividerFooterView.swift in Sources */,
-				CEE8BC682C65B43500E1D94F /* ReportBodyPartData.swift in Sources */,
-
 				4B911CFA2C741F770032F438 /* RoutineSerchResultsViewController.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */,

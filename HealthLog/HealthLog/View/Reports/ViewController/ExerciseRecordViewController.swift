@@ -102,9 +102,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             cell.selectionStyle = .none
             cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
             
-            cell.configureCell(with: data, at: indexPath) { [weak self] indexPath in
-                self?.toggleStackViewVisibility(for: indexPath)
-            }
+            cell.configureCell(with: data, at: indexPath)
             
             return cell
             
@@ -137,13 +135,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 return cell
             }
-        default :
-            let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
-            cell.backgroundColor = UIColor(named: "ColorSecondary")
-            cell.selectionStyle = .none
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-            
-            return cell
+        default:
+            return UITableViewCell()
         }
     }
     
@@ -181,6 +174,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 1 else {return}
+        
         bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
         
         tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -236,16 +231,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         
         return bodyPartDataList
-    }
-    
-    func toggleStackViewVisibility(for indexPath: IndexPath) {
-        var data = bodyPartDataList[indexPath.row]
-        data.isStackViewVisible.toggle()
-        bodyPartDataList[indexPath.row] = data
-        
-        exerciseRecordTableView.beginUpdates()
-        exerciseRecordTableView.reloadRows(at: [indexPath], with: .automatic)
-        exerciseRecordTableView.endUpdates()
     }
     
 }

@@ -11,7 +11,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     
     // cell의 위치
     private var indexPath: IndexPath?
-    private var toggleVisibilityAction: ((IndexPath) -> Void)?
     
     private var isStackViewVisibility = true {
         didSet {
@@ -148,7 +147,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         isStackViewVisibility.toggle()
     }
     
-    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath, toggleVisibilityAction: @escaping (IndexPath) -> Void ) {
+    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath) {
         
         bodyPartLabel.text = data.bodyPart
         totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
@@ -167,7 +166,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         }
         
         self.indexPath = indexPath
-        self.toggleVisibilityAction = toggleVisibilityAction
         isStackViewVisibility = data.isStackViewVisible
         
     }
