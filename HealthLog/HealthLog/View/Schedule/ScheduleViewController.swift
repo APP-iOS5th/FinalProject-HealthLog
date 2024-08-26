@@ -15,7 +15,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //    let realm = try! Realm()
     let realm = RealmManager.shared.realm
     
-//    private var schedules: Schedule?
     private var todaySchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
@@ -206,7 +205,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func loadSelectedDateSchedule(_ date: Date) {
-        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
+        guard let realm = realm else {return}
+        
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         
         // to create todaySchedule
@@ -222,11 +222,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //            let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
 //            let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
 //            
-//            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
-//            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
-//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
+////            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
+////            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
+////            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
 //            
-//            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
+//            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2]/*, highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3]*/)
 //            
 //            // add today schedule to realm
 //            try! realm.write {
@@ -290,58 +290,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
     }
     
-    private func customizeCalendarTextColor() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.changeHeaderTextColor(self.calendarView)
-            self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
-        }
-    }
-    
-    private func changeHeaderTextColor(_ view: UIView) {
-        for subview in view.subviews {
-            if let label = subview as? UILabel {
-                label.textColor = .white
-            } else {
-                changeHeaderTextColor(subview)
-            }
-        }
-    }
-    
-    private func changeSubviewTextColor(_ view: UIView, today: Date, selectedDate: Date?) {
-        for subview in view.subviews {
-            if let label = subview as? UILabel,
-               let labelDate = label.text.flatMap({ dateFromLabelText($0) }) {
-                if Calendar.current.isDate(labelDate, inSameDayAs: today) {
-                    if let selectedDate = selectedDate,
-                       Calendar.current.isDate(labelDate, inSameDayAs: selectedDate) {
-                        label.textColor = .white
-                    } else {
-                        label.textColor = .colorAccent
-                    }
-                } else {
-                    label.textColor = .white
-                }
-            } else {
-                changeSubviewTextColor(subview, today: today, selectedDate: selectedDate)
-            }
-        }
-    }
-    
-    // get date from text of UILabel
-    private func dateFromLabelText(_ text: String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "d"
-        
-        if let day = Int(text), day <= 31 {
-            var components = DateComponents()
-            components.year = Calendar.current.component(.year, from: Date())
-            components.month = Calendar.current.component(.month, from: Date())
-            components.day = day
-            return Calendar.current.date(from: components)
-        }
-        
-        return nil
-    }
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return todaySchedule?.exercises.count ?? 0
@@ -416,7 +364,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         guard let date = dateComponents.date else { return nil }
         
-        // selecteed date color
+        // selected date color
         if let schedule = getScheduleForDate(date), !schedule.exercises.isEmpty {
             if isScheduleCompleted(schedule) {
                 return .default(color: .colorAccent, size: .large)
@@ -429,7 +377,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
-        guard let realm = realm else {return nil} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열 // nil return 하는게 맞을까요..?
+        guard let realm = realm else { return nil }
         return realm.objects(Schedule.self).filter("date == %@", date).first
     }
     
@@ -438,11 +386,87 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
-        guard let dateComponents = dateComponents, let date = dateComponents.date else { return }
+        guard let dateComponents = dateComponents, 
+              let date = dateComponents.date else { return }
         selectedDate = date
         loadSelectedDateSchedule(date)
         updateTableView()
         customizeCalendarTextColor()
     }
     
+    // MARK: - Customize Calendar Text Color
+    private func customizeCalendarTextColor() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.changeHeaderTextColor(self.calendarView)
+            self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
+        }
+    }
+    
+    private func changeHeaderTextColor(_ view: UIView) {
+        for subview in view.subviews {
+            if let label = subview as? UILabel {
+                label.textColor = .white
+            } else {
+                changeHeaderTextColor(subview)
+            }
+        }
+    }
+    
+    private func changeSubviewTextColor(_ view: UIView, today: Date, selectedDate: Date?) {
+        let calendar = Calendar.current
+        let currentDateComponents = calendar.dateComponents([.day, .month, .year], from: today)
+
+        for subview in view.subviews {
+            if let label = subview as? UILabel,
+               let labelDate = dateFromLabelText(label.text, calendar: calendar),
+               let labelDateActual = calendar.date(from: labelDate) {
+                
+                // set base color
+                label.textColor = .white
+                label.highlightedTextColor = .white
+                
+                // today
+                if calendar.isDateInToday(labelDateActual) {
+                    if today == selectedDate {
+                        label.textColor = .white
+                    } else {
+                        label.textColor = .colorAccent
+                    }
+                }
+                // selected date
+                else if let selectedDate = selectedDate,
+                        calendar.isDate(labelDateActual, inSameDayAs: selectedDate) {
+                    label.textColor = .white
+                }
+                // this month
+                else if labelDate.month == currentDateComponents.month && labelDate.year == currentDateComponents.year {
+                    label.textColor = .white
+                }
+                // different month
+                else {
+                    label.textColor = .color767676
+                }
+            } else {
+                changeSubviewTextColor(subview, today: today, selectedDate: selectedDate)
+            }
+        }
+    }
+
+    // get date from text of UILabel
+    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
+        guard let text = text,
+              let day = Int(text) else { return nil }
+        
+        // get current month and year from calendar
+        let displayedMonthDate = calendarView.visibleDateComponents
+        guard let month = displayedMonthDate.month,
+              let year = displayedMonthDate.year else { return nil }
+        
+        return DateComponents(year: year, month: month, day: day)
+    }
+    
+    // reload calendar when month is changed
+    func calendarView(_ calendarView: UICalendarView, didChangeMonth dateComponents: DateComponents) {
+        customizeCalendarTextColor()
+    }
 }
