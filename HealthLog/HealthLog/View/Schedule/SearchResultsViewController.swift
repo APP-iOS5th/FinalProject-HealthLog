@@ -5,12 +5,13 @@
 //  Created by seokyung on 8/12/24.
 //
 
+import Foundation
 import UIKit
 
 class SearchResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var viewModel = ExerciseViewModel()
-    var onExerciseSelected: ((String) -> Void)?
+    var onExerciseSelected: ((Exercise) -> Void)?
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -74,7 +75,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         cell.configure(with: exercise)
         cell.selectionStyle = .none
         cell.addButtonTapped = { [weak self] in
-            self?.onExerciseSelected?(exercise.name)
+            self?.onExerciseSelected?(exercise)
             self?.clearSearchAndDismiss()
         }
         return cell
