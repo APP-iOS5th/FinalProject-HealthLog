@@ -132,11 +132,11 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         setCountDidChange?(value)
         
         // + - 버튼 클릭 출력용
-//        if value > currentSetCount {
-//            print("Stepper + button pressed : value - \(value), currentSetCount - \(currentSetCount)")
-//        } else if value < currentSetCount {
-//            print("Stepper - button pressed : value - \(value), -currentSetCount - \(currentSetCount)")
-//        }
+        //        if value > currentSetCount {
+        //            print("Stepper + button pressed : value - \(value), currentSetCount - \(currentSetCount)")
+        //        } else if value < currentSetCount {
+        //            print("Stepper - button pressed : value - \(value), -currentSetCount - \(currentSetCount)")
+        //        }
     }
     
     @objc func deleteTapped() {
@@ -294,23 +294,25 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: 35),
+            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
             
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
             weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
             weightTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            weightTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            weightTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             weightTextField.widthAnchor.constraint(equalToConstant: 58),
-            weightTextField.heightAnchor.constraint(equalToConstant: 35),
             
             weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
             weightLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
             repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
             repsTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            repsTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             repsTextField.widthAnchor.constraint(equalToConstant: 58),
-            repsTextField.heightAnchor.constraint(equalToConstant: 35),
             
             repsLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             repsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
