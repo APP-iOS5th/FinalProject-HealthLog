@@ -206,7 +206,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func loadSelectedDateSchedule(_ date: Date) {
-        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
+        guard let realm = realm else {return}
+        
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         
         // to create todaySchedule
@@ -222,11 +223,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 //            let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
 //            let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
 //            
-//            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
-//            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
-//            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
+////            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
+////            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
+////            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
 //            
-//            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2], highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3])
+//            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2]/*, highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3]*/)
 //            
 //            // add today schedule to realm
 //            try! realm.write {
