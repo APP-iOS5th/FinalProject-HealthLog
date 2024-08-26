@@ -73,6 +73,6 @@ class AddScheduleViewModel {
     
     func saveSchedule(for date: Date) {
         let schedule = Schedule(date: date, exercises: selectedExercises)
-        //print(schedule) // 생성된 데이터 확인
+        print(schedule) // 생성된 데이터 확인
     }
 }

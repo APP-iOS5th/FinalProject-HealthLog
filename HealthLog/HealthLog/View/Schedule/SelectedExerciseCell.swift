@@ -76,7 +76,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 20),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: stackView.topAnchor, constant: -15),
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
             
             stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
@@ -174,12 +173,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         let reps = Int(stackView.repsTextFields[setIndex].text ?? "") ?? 0
         
         updateSet?(setIndex, weight, reps)
-    }
-    
-    func areAllFieldsFilled() -> Bool {
-        return stackView.arrangedSubviews.allSatisfy { setView in
-            setView.subviews.compactMap { $0 as? UITextField }.allSatisfy { !$0.text!.isEmpty }
-        }
     }
     
     func configure(_ exercise: ScheduleExercise) {
@@ -301,24 +294,24 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
+            self.heightAnchor.constraint(equalToConstant: 35),
             
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            weightTextField.leadingAnchor.constraint(equalTo: setLabel.trailingAnchor, constant: 45),
+            
+            weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
             weightTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             weightTextField.widthAnchor.constraint(equalToConstant: 58),
             weightTextField.heightAnchor.constraint(equalToConstant: 35),
             
-            weightLabel.leadingAnchor.constraint(equalTo: weightTextField.trailingAnchor, constant: 8),
+            weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
             weightLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
-            repsTextField.leadingAnchor.constraint(equalTo: weightLabel.trailingAnchor, constant: 38),
+            repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
             repsTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             repsTextField.widthAnchor.constraint(equalToConstant: 58),
             repsTextField.heightAnchor.constraint(equalToConstant: 35),
             
-            repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
             repsLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             repsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
         ])
