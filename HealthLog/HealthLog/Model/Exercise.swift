@@ -76,4 +76,17 @@ class EntryExercise: ObservableObject {
             isCustom: true
         )
     }
+    
+    func updateRealmExerciseObject(id: ObjectId) -> Exercise {
+        return Exercise(
+            name: name,
+            bodyParts: bodyParts,
+            descriptionText: description,
+            image: nil,
+            totalReps: 0,
+            recentWeight: recentWeight,
+            maxWeight: maxWeight,
+            isCustom: true
+        )
+    }
 }

@@ -607,16 +607,16 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     @objc func doneButtonTapped() {
         print("doneButtonTapped!")
         switch entryViewModel.mode {
-            case .add: entryViewModel.realmWriteExercise()
-            case .update: print("TODO realm update") // TODO: realm update
+            case .add: entryViewModel.realmAddExercise()
+            case .update: 
+                print("TODO realm update") // TODO: realm update
+                entryViewModel.realmUpdateExercise()
         }
         navigationController?.popViewController(animated: true)
     }
     
     @objc func deleteButtonTapped() {
         print("deleteButtonTapped!")
-        guard case .update(let detailViewModel) = entryViewModel.mode
-        else { return }
         deleteAlertAction()
     }
     
@@ -624,7 +624,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     
     // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (중복 실행시 고장남)
     private func warningLabelAnimation(_ targetView: UILabel?, isWarning: Bool) {
-        guard entryViewModel.warningCount > 4 else {
+        guard entryViewModel.warningCount >= 3 else {
             return entryViewModel.warningCount += 1
         } // 첫 실행시에는 경고 표시 안함
         guard let target = targetView else { return }

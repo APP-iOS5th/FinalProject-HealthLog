@@ -51,12 +51,12 @@ class ExerciseEntryViewModel {
         // 입력 필수요소 유효성 검사
         Publishers.CombineLatest(
             entryExercise.$name, entryExercise.$bodyParts)
-            .sink { exerciseName, exerciseBodyParts in
-                self.validateRequiredFields(
-                    exerciseName: exerciseName,
-                    exerciseBodyParts: exerciseBodyParts)
-            }
-            .store(in: &cancellables)
+        .sink { exerciseName, exerciseBodyParts in
+            self.validateRequiredFields(
+                exerciseName: exerciseName,
+                exerciseBodyParts: exerciseBodyParts)
+        }
+        .store(in: &cancellables)
     }
     
     // MARK: Methods
@@ -64,53 +64,53 @@ class ExerciseEntryViewModel {
     private func checkDuplicateExerciseName(to name: String) {
         var result: Bool
         switch mode {
-            case .add : 
+            case .add :
                 result = viewModel.exercises.contains { $0.name == name }
             case .update(let detailViewModel) :
                 result = viewModel.exercises.contains { $0.name == name }
                 result = result && detailViewModel.exercise.name != name
         }
-
+        
         entryExercise.hasDuplicateName = result
     }
     
     private func validateRequiredFields(
         exerciseName: String, exerciseBodyParts: [BodyPart]) {
-        
-        print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
-        
-        entryExercise.isNameEmpty = exerciseName.isEmpty
-        entryExercise.isBodyPartsEmpty = exerciseBodyParts.isEmpty
-        
-        // 운동 이름 중복 여부
-        if entryExercise.hasDuplicateName {
-            entryExercise.isValidatedRequiredFields = false
+            
+            print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
+            
+            entryExercise.isNameEmpty = exerciseName.isEmpty
+            entryExercise.isBodyPartsEmpty = exerciseBodyParts.isEmpty
+            
+            // 운동 이름 중복 여부
+            if entryExercise.hasDuplicateName {
+                entryExercise.isValidatedRequiredFields = false
+                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+                return
+            }
+            
+            // 운동 이름 비어있는지 여부
+            if entryExercise.isNameEmpty {
+                entryExercise.isValidatedRequiredFields = false
+                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+                return
+            }
+            
+            // 운동 부위 비어있는지 여부
+            if entryExercise.isBodyPartsEmpty {
+                entryExercise.isValidatedRequiredFields = false
+                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+                return
+            }
+            
+            // 필수 요소 체크 끝, 정상이면 true
+            entryExercise.isValidatedRequiredFields = true
             print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
-            return
         }
-        
-        // 운동 이름 비어있는지 여부
-        if entryExercise.isNameEmpty {
-            entryExercise.isValidatedRequiredFields = false
-            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
-            return
-        }
-        
-        // 운동 부위 비어있는지 여부
-        if entryExercise.isBodyPartsEmpty {
-            entryExercise.isValidatedRequiredFields = false
-            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
-            return
-        }
-        
-        // 필수 요소 체크 끝, 정상이면 true
-        entryExercise.isValidatedRequiredFields = true
-        print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
-    }
     
     // MARK: - Realm Methods
     
-    func realmWriteExercise() {
+    func realmAddExercise() {
         guard let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         // 필수 요소 확인
         guard entryExercise.isValidatedRequiredFields else {
@@ -118,8 +118,31 @@ class ExerciseEntryViewModel {
             return
         }
         
-        try! realm.write { // 이부분 try! 강제 언래핑 지울 방법 있을 까요?
-            realm.add(entryExercise.addRealmExerciseObject())
+        realm.writeAsync() { // 이부분 try! 강제 언래핑 지울 방법 있을 까요?
+            realm.add(self.entryExercise.addRealmExerciseObject())
+        }
+    }
+        
+
+    
+    // TODO: 작성중
+    func realmUpdateExercise() {
+        guard case .update(let detailViewModel) = mode 
+        else { return }
+        let id = detailViewModel.exercise.id
+        let data = entryExercise
+        
+        guard let realm = realm else { return }
+        if let update = realm
+            .object(ofType: Exercise.self, forPrimaryKey: id) {
+            realm.writeAsync() {
+                update.name = data.name
+                update.bodyParts.removeAll()
+                update.bodyParts.append(objectsIn: data.bodyParts)
+                update.descriptionText = data.description
+                update.recentWeight = data.recentWeight
+                update.maxWeight = data.maxWeight
+            }
         }
     }
     
