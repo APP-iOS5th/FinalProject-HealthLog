@@ -9,7 +9,7 @@ import UIKit
 
 class MostPerformedTableViewCell: UITableViewCell {
 
-    private lazy var stackView: UIStackView = {
+    private lazy var mostPerformStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
@@ -21,23 +21,23 @@ class MostPerformedTableViewCell: UITableViewCell {
     }()
     
     // test sample
-    let testView1 = PerformedExerciseInfoView()
-    let testView2 = PerformedExerciseInfoView()
+//    let testView1 = PerformedExerciseInfoView()
+//    let testView2 = PerformedExerciseInfoView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        stackView.addArrangedSubview(testView1)
-        stackView.addArrangedSubview(testView2)
+//        stackView.addArrangedSubview(testView1)
+//        stackView.addArrangedSubview(testView2)
         
         
-        self.contentView.addSubview(stackView)
+        self.contentView.addSubview(mostPerformStackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
+            mostPerformStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            mostPerformStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
+            mostPerformStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            mostPerformStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
         ])
         
         
@@ -48,6 +48,20 @@ class MostPerformedTableViewCell: UITableViewCell {
     }
     
     
+    func configureCell(with data: [ExerciseSets]) {
+        
+        mostPerformStackView.arrangedSubviews.forEach {$0.removeFromSuperview()}
+        
+        var index = 1
+        
+        for i in 0..<data.count {
+            let infoView = PerformedExerciseInfoView()
+            infoView.configure(index: index, name: data[i].name , sets: data[i].setsCount, days: data[i].daysCount)
+            mostPerformStackView.addArrangedSubview(infoView)
+            index += 1
+        }
+        
+    }
 
 }
 
@@ -132,6 +146,15 @@ class PerformedExerciseInfoView: UIView {
             setsLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
             dayLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor)
         ])
+    }
+    
+    func configure(index: Int, name: String, sets: Int, days: Int) {
+        
+        exerciseIndexLabel.text = "\(index)."
+        exerciseNameLabel.text = name
+        setsLabel.text = "\(sets)세트"
+        dayLabel.text = "\(days)일"
+        
     }
     
 }

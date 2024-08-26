@@ -11,6 +11,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     private let realm = RealmManager.shared.realm
     
     private var bodyPartDataList: [ReportBodyPartData] = []
+    private var top5Exercises: [ExerciseSets] = []
+    private var top3WeightChangeExercises: [ExerciseSets] = []
     
     private lazy var exerciseRecordTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
@@ -58,9 +60,13 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         ])
         
         let augustSchedules = fetchAugustSchedules()
-        bodyPartDataList = calculateSetsByBodyPartAndExercise(schedules: augustSchedules)
+        (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: augustSchedules)
         
-        print(bodyPartDataList)
+//        print(bodyPartDataList)
+        print("Top5: \(top5Exercises)")
+        print("-------------------")
+        print("Top3: \(top3WeightChangeExercises)")
+        
         exerciseRecordTableView.reloadData()
 
     }
@@ -76,9 +82,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 1:
             return bodyPartDataList.count
         case 2:
-            return 2
+            return top5Exercises.count
         case 3:
-            return 2
+            return top3WeightChangeExercises.count
         default:
             return 0
         }
@@ -118,6 +124,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                cell.configureCell(with: top5Exercises)
                 return cell
             }
         case 3:
@@ -198,39 +205,84 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     
-    func calculateSetsByBodyPartAndExercise(schedules: [Schedule]) -> [ReportBodyPartData] {
+    func calculateSetsByBodyPartAndExercise(schedules: [Schedule]) -> ([ReportBodyPartData], top5Exercises: [ExerciseSets], top3WeightChangeExercises: [ExerciseSets]) {
         var bodyPartDataList: [ReportBodyPartData] = []
+        var exerciseSetsCounter: [String: ExerciseSets] = [:]
+        var exerciseDaysTracker: [String: Set<Date>] = [:]
         
         for schedule in schedules {
+            let date = schedule.date
+            
             for scheduleExercise in schedule.exercises {
-                let setsCount = scheduleExercise.sets.filter { $0.isCompleted }.count // 완료된 set 만 계산
+                let completedSets = scheduleExercise.sets.filter { $0.isCompleted } // 완료된 Set 만 계산
+                let setsCount = completedSets.count
+                let minWeight = completedSets.map { $0.weight }.min() ?? 0
+                let maxWeight = completedSets.map { $0.weight }.max() ?? 0
+                let exerciseName = scheduleExercise.exercise!.name
+                
+                if exerciseDaysTracker[exerciseName] == nil {
+                    exerciseDaysTracker[exerciseName] = Set<Date>()
+                }
+                exerciseDaysTracker[exerciseName]?.insert(date)
                 
                 for bodyPart in scheduleExercise.exercise!.bodyParts { // 에러처리 요망
                     let bodyPartName = bodyPart.rawValue
                     
                     if let index = bodyPartDataList.firstIndex(where: {$0.bodyPart == bodyPartName}) {
                         bodyPartDataList[index].totalSets += setsCount
-                        let exerciseName = scheduleExercise.exercise!.name
+                        
                         if let exerciseIndex = bodyPartDataList[index].exercises.firstIndex(where: {$0.name == exerciseName}) {
                             bodyPartDataList[index].exercises[exerciseIndex].setsCount += setsCount
+                            bodyPartDataList[index].exercises[exerciseIndex].minWeight = min(bodyPartDataList[index].exercises[exerciseIndex].minWeight, minWeight)
+                            bodyPartDataList[index].exercises[exerciseIndex].maxWeight = max(bodyPartDataList[index].exercises[exerciseIndex].maxWeight, maxWeight)
+                            
                         } else {
-                            bodyPartDataList[index].exercises.append(ExerciseSets(name: exerciseName, setsCount: setsCount))
+                            let newExercise = ExerciseSets(name: exerciseName, setsCount: setsCount, daysCount: 1, minWeight: minWeight, maxWeight: maxWeight)
+                            bodyPartDataList[index].exercises.append(newExercise)
                         }
                     } else {
-                        let newData = ReportBodyPartData(bodyPart: bodyPartName, totalSets: setsCount, exercises: [ExerciseSets(name: scheduleExercise.exercise!.name, setsCount: setsCount)])
+                        let newData = ReportBodyPartData(bodyPart: bodyPartName,
+                                                         totalSets: setsCount,
+                                                         exercises: [ExerciseSets(name: exerciseName, setsCount: setsCount, daysCount: 1, minWeight: minWeight, maxWeight: maxWeight)])
                         bodyPartDataList.append(newData)
                     }
+                }
+                
+                if let exerciseData = exerciseSetsCounter[exerciseName] {
+                    exerciseSetsCounter[exerciseName]!.setsCount += setsCount
+                    exerciseSetsCounter[exerciseName]!.minWeight = min(exerciseSetsCounter[exerciseName]!.minWeight, minWeight)
+                    exerciseSetsCounter[exerciseName]!.maxWeight = max(exerciseSetsCounter[exerciseName]!.maxWeight, maxWeight)
+                } else {
+                    exerciseSetsCounter[exerciseName] = ExerciseSets(name: exerciseName, setsCount: setsCount, daysCount: 1, minWeight: minWeight, maxWeight: maxWeight)
                 }
             }
         }
         
+        for (exerciseName, daySet) in exerciseDaysTracker {
+            if var exerciseData = exerciseSetsCounter[exerciseName] {
+                exerciseData.daysCount = daySet.count
+                exerciseSetsCounter[exerciseName] = exerciseData
+            }
+            
+            for i in 0..<bodyPartDataList.count {
+                if let exerciseIndex = bodyPartDataList[i].exercises.firstIndex(where: { $0.name == exerciseName}) {
+                    bodyPartDataList[i].exercises[exerciseIndex].daysCount = daySet.count
+                }
+            }
+        }
+        
+        
+        // 데이터 정렬
         bodyPartDataList.sort { $0.totalSets > $1.totalSets}
         for i in 0..<bodyPartDataList.count {
             bodyPartDataList[i].exercises.sort { $0.setsCount > $1.setsCount}
         }
         
+        let top5Exercises = exerciseSetsCounter.values.sorted { $0.setsCount > $1.setsCount}.prefix(5)
+        let top3WeightChangeExercises = exerciseSetsCounter.values.sorted { ($0.maxWeight - $0.minWeight) > ($1.maxWeight - $1.minWeight) }.prefix(3)
         
-        return bodyPartDataList
+        
+        return (bodyPartDataList, Array(top5Exercises), Array(top3WeightChangeExercises))
     }
     
 }

@@ -18,6 +18,9 @@ struct ReportBodyPartData {
 struct ExerciseSets {
     let name: String
     var setsCount: Int
+    var daysCount: Int
+    var minWeight: Int
+    var maxWeight: Int
 }
 
 
