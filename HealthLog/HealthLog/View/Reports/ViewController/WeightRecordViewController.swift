@@ -44,32 +44,7 @@ class WeightRecordViewController: UIViewController {
     // 화면이 다시 나타날 때마다 호출
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // MARK: (youngwoo) Bindings에서 자동으로 해주므로 삭제
-//        fetchInbodyData()
     }
-    
-    // Realm에서 데이터를 불러와 UI에 반영
-//    private func fetchInbodyData() {
-//        let calendar = Calendar.current
-//        let now = Date()
-//        let startDate = calendar.date(byAdding: .month, value: -1, to: now)! // 1개월 전
-//        let endDate = now
-//
-//        let inbodyRecords = Array(realm.objects(InBody.self)
-//            .filter("date >= %@ AND date <= %@", startDate, endDate)
-//            .sorted(byKeyPath: "date", ascending: false))
-//
-//        if let latestRecord = inbodyRecords.first {
-//            updateInfoBoxes(with: latestRecord)
-//           }
-//       }
-//
-//       private func updateInfoBoxes(with record: InBody) {
-//           weightBox.updateValue(String(format: "%.0f", record.weight))
-//           musclesBox.updateValue(String(format: "%.0f", record.muscleMass))
-//           fatBox.updateValue(String(format: "%.0f", record.bodyFat))
-//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -244,7 +219,7 @@ class WeightRecordViewModel {
     @Published var inbodyRecords: [InBody] = []
     
     // Realm 인스턴스를 저장할 속성 추가
-     private let realm: Realm?
+     private var realm: Realm?
     
     init() {
         print("WeightRecordViewModel")
