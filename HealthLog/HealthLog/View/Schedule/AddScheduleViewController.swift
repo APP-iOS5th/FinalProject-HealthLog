@@ -112,6 +112,8 @@ class AddScheduleViewController: UIViewController {
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
