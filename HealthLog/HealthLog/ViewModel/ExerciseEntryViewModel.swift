@@ -124,26 +124,37 @@ class ExerciseEntryViewModel {
     }
         
 
+    func realmExerciseIsDeleted() {
+        guard case .update(let detailViewModel) = mode
+        else { return }
+        let exercise = detailViewModel.exercise
+        guard let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
+        realm.writeAsync() {
+            exercise.isDeleted = true
+        }
+    }
     
     // TODO: 작성중
     func realmUpdateExercise() {
         guard case .update(let detailViewModel) = mode 
         else { return }
-        let id = detailViewModel.exercise.id
+        let exercise = detailViewModel.exercise
         let data = entryExercise
         
         guard let realm = realm else { return }
-        if let update = realm
-            .object(ofType: Exercise.self, forPrimaryKey: id) {
-            realm.writeAsync() {
-                update.name = data.name
-                update.bodyParts.removeAll()
-                update.bodyParts.append(objectsIn: data.bodyParts)
-                update.descriptionText = data.description
-                update.recentWeight = data.recentWeight
-                update.maxWeight = data.maxWeight
+        do {
+            try realm.write {
+                exercise.name = data.name
+                exercise.bodyParts.removeAll()
+                exercise.bodyParts.append(objectsIn: data.bodyParts)
+                exercise.descriptionText = data.description
+                exercise.recentWeight = data.recentWeight
+                exercise.maxWeight = data.maxWeight
             }
+        } catch {
+            print("realm exercise update error")
         }
+        
     }
     
 }
