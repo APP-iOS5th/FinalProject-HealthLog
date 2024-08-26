@@ -206,6 +206,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func loadSelectedDateSchedule(_ date: Date) {
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         
         // to create todaySchedule
@@ -428,6 +429,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
+        guard let realm = realm else {return nil} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열 // nil return 하는게 맞을까요..?
         return realm.objects(Schedule.self).filter("date == %@", date).first
     }
     

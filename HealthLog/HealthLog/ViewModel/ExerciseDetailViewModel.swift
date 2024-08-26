@@ -10,6 +10,7 @@ import RealmSwift
 import Combine
 
 class ExerciseDetailViewModel: ObservableObject {
+    let realm = RealmManager.shared.realm // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
     
     // MARK: - Properties
     
@@ -22,9 +23,10 @@ class ExerciseDetailViewModel: ObservableObject {
         self.exercise = exercise
     }
     
-    func realmDeleteExercise() {
-        RealmManager.shared.realm.writeAsync() {
-            RealmManager.shared.realm.delete(self.exercise)
+    func realmExerciseIsDeleted() {
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
+        realm.writeAsync() {
+            self.exercise.isDeleted = true
         }
     }
 }

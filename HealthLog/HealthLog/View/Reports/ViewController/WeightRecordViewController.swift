@@ -4,10 +4,19 @@
 //
 //  Created by wonyoul heo on 8/13/24.
 //
-
+import Combine
+import RealmSwift
 import UIKit
 
 class WeightRecordViewController: UIViewController {
+    // MARK: - (youngwoo)
+    // youngwoo - 뷰모델 이 파일 맨 밑
+    let weightRecordViewModel = WeightRecordViewModel()
+    
+    // MARK: - (youngwoo)
+    // youngwoo - WeightRecordViewController 종료시, 구독 Bind 해제
+    private var cancellables = Set<AnyCancellable>()
+    
     private let realm = RealmManager.shared.realm
 
     private lazy var inbodyinfoButton: UIButton = {
@@ -35,34 +44,16 @@ class WeightRecordViewController: UIViewController {
     // 화면이 다시 나타날 때마다 호출
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchInbodyData()
-    }
-    
-    // Realm에서 데이터를 불러와 UI에 반영
-    private func fetchInbodyData() {
-        let calendar = Calendar.current
-        let now = Date()
-        let startDate = calendar.date(byAdding: .month, value: -1, to: now)! // 1개월 전
-        let endDate = now
-
-        let inbodyRecords = Array(realm.objects(InBody.self)
-            .filter("date >= %@ AND date <= %@", startDate, endDate)
-            .sorted(byKeyPath: "date", ascending: false))
-           
-        if let latestRecord = inbodyRecords.first {
-            updateInfoBoxes(with: latestRecord)
-           }
-       }
-
-       private func updateInfoBoxes(with record: InBody) {
-           weightBox.updateValue(String(format: "%.0f", record.weight))
-           musclesBox.updateValue(String(format: "%.0f", record.muscleMass))
-           fatBox.updateValue(String(format: "%.0f", record.bodyFat))
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
+        // youngwoo - 04. setupBindings을 viewDidLoad에서 실행
+        // 이제 자동으로 계속 감지함
+        setupBindings()
+        
     }
     
     func setupUI() {
@@ -189,5 +180,93 @@ class WeightRecordViewController: UIViewController {
             sheet.preferredCornerRadius = 32
         }
         present(vc, animated: true, completion: nil)
+    }
+    
+    // MARK: - (youngwoo) Bindings
+    // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
+    // 한번 구독 Bind 걸어두면 자동으로 작동함
+    private func setupBindings() {
+        
+        // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
+        // DB 값 변경으로 뷰모델의 inbodyRecords가 변경될때 마다 UI에 값 업데이트
+        weightRecordViewModel.$inbodyRecords
+            .sink { inbodyRecords in
+                if let record = inbodyRecords.first {
+                    self.weightBox.updateValue(
+                        String(format: "%.0f", record.weight))
+                    self.musclesBox.updateValue(
+                        String(format: "%.0f", record.muscleMass))
+                    self.fatBox.updateValue(
+                        String(format: "%.0f", record.bodyFat))
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+}
+
+
+// MARK: (youngwoo) WeightRecordViewModel
+// youngwoo - inbody가 DB에서 변경될때, Published 변수에 그대로 전달
+class WeightRecordViewModel {
+    
+    // MARK: (youngwoo) RealmCombine 01.
+    // RealmCombine 01. observeRealmData 함수에서 observe 쓰기 위해 사용하는 변수
+    private var inbodyNotificationToken: NotificationToken?
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    @Published var inbodyRecords: [InBody] = []
+    
+    // Realm 인스턴스를 저장할 속성 추가
+     private var realm: Realm?
+    
+    init() {
+        print("WeightRecordViewModel")
+        // Realm 인스턴스 초기화
+               self.realm = RealmManager.shared.realm
+        
+        // 한번 걸어두면 inbodyNotificationToken와 observe에 의해 자동으로 실행됨
+        observeRealmData()
+    }
+    
+    // MARK: (youngwoo) RealmCombine 02. init에 쓸 observe 함수
+    // RealmCombine 02. inbody가 DB에서 변경될때, Published 변수에 그대로 전달하도록 세팅
+    // observe 걸어서 inbodyNotificationToken에 담아두면 자동으로 작동함
+    private func observeRealmData() {
+        guard let realm = realm else { return }
+        
+        // MARK: (youngwoo) RealmCombine 03. 데이터 불러옴
+        // 일단 filter 삭제. 최신 값이 안불러와짐.
+        // 제가 짠게 아니라 모르겠지만 sort에 fisrt면 충분할수도?
+        let results = realm.objects(InBody.self)
+            .sorted(byKeyPath: "date", ascending: false)
+    
+        // result에 담은 Realm DB 데이터를 observe로 감시, DB 값 변경시 안에 있는 실행
+        inbodyNotificationToken = results.observe { [weak self] changes in
+            switch changes {
+                    
+                case .initial(let collection):
+                    print("results.observe - initial") // 첫 실행시 코드 실행
+
+                    // Realm의 Results<Inbody>타입을 Array로 일반 [Inbody] 타입화
+                    // Combine에 DB 데이터를 넣기
+                    self?.inbodyRecords = Array(collection)
+                    print(self?.inbodyRecords ?? [])
+                    
+                    
+                case .update(let collection, _, _, _):
+                    print("results.observe - update")  // 값 변경시 코드 실행
+                    
+                    // Realm의 Results<Inbody>타입을 Array로 일반 [Inbody] 타입화
+                    // Combine에 DB 데이터를 넣기
+                    self?.inbodyRecords = Array(collection)
+                    print(self?.inbodyRecords ?? [])
+                    
+                    
+                case .error(let error):
+                    print("results.observe - error: \(error)")
+            }
+        }
     }
 }

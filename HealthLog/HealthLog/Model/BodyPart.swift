@@ -20,6 +20,8 @@ enum BodyPart: String, PersistableEnum {
     case adductors = "내전근"
     case abductors = "외전근"
     case calves = "종아리"
+    case trap = "승모근"
+    case forearms = "전완근"
     case other = "기타"
 }
 

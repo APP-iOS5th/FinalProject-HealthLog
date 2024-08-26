@@ -55,7 +55,7 @@ class ExercisesDetailViewController: UIViewController {
     
     @objc func editPushButtonTapped() {
         print("editPushButtonTapped!")
-        let vc = ExercisesUpdateViewController(detailViewModel: detailViewModel)
+        let vc = ExercisesFormViewController(mode: .update(detailViewModel))
         navigationController?.pushViewController(vc, animated: true)
     }
     

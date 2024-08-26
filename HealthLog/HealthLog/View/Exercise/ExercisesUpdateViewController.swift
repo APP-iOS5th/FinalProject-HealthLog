@@ -82,7 +82,7 @@ class ExercisesUpdateViewController: UIViewController {
     
     @objc func deleteButtonTapped() {
         print("deleteButtonTapped!")
-        detailViewModel.realmDeleteExercise()
+        detailViewModel.realmExerciseIsDeleted()
         navigationController?.popToRootViewController(animated: true)
     }
 }

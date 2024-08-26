@@ -9,6 +9,37 @@ import UIKit
 
 class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     
+    // cell의 위치
+    private var indexPath: IndexPath?
+    private var toggleVisibilityAction: ((IndexPath) -> Void)?
+    
+    private var isStackViewVisibility = true {
+        didSet {
+            if isStackViewVisibility {
+                if exerciseStackView.superview == nil {
+                    contentView.addSubview(exerciseStackView)
+                    NSLayoutConstraint.activate([
+                        exerciseStackView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
+                        exerciseStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
+                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 26),
+                        exerciseStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -26)
+                    ])
+                }
+            } else {
+                exerciseStackView.removeFromSuperview()
+            }
+            
+            updateFoldingImage()
+            
+            
+            if let tableView = superview as? UITableView {
+                tableView.beginUpdates()
+                tableView.endUpdates()
+            }
+            
+        }
+    }
+    
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
@@ -43,36 +74,21 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     
     private lazy var foldingImage: UIImageView = {
         let imageView = UIImageView()
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .black)
-        // cell 클릭시 아래 이름 변경
-        let symbolName = "chevron.down"
-        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
-        
-        imageView.image = symbol
         imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    private lazy var detailView: UIStackView = {
+    private lazy var exerciseStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 8
-        stackView.alignment = .fill
-        stackView.isHidden = true
-        
-        let label1 = UILabel()
-        label1.text = "test label 1"
-        let label2 = UILabel()
-        label2.text = "test label 2"
-        
-        
-        stackView.addArrangedSubview(label1)
-        stackView.addArrangedSubview(label2)
-
-        
+//        stackView.alignment = .leading
+        stackView.distribution = .equalSpacing
         return stackView
     }()
+    
+    
+    
     
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -83,22 +99,26 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         contentView.addSubview(totalNumberPerBodyPartLabel)
         contentView.addSubview(foldingImage)
         
-        // detailView 작업
-        contentView.addSubview(detailView)
+
         
         bodyPartLabel.translatesAutoresizingMaskIntoConstraints = false
         progressView.translatesAutoresizingMaskIntoConstraints = false
         totalNumberPerBodyPartLabel.translatesAutoresizingMaskIntoConstraints = false
         foldingImage.translatesAutoresizingMaskIntoConstraints = false
         
-        detailView.translatesAutoresizingMaskIntoConstraints = false
+        
+        exerciseStackView.axis = .vertical
+        exerciseStackView.alignment = .leading
+        exerciseStackView.distribution = .equalSpacing
+        exerciseStackView.translatesAutoresizingMaskIntoConstraints = false
+        
         
         NSLayoutConstraint.activate([
-            bodyPartLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 13),
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            progressView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 82),
+            progressView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 85),
             progressView.widthAnchor.constraint(equalToConstant: 158),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
@@ -106,32 +126,121 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
             totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
-            
-            detailView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
-            detailView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20)
+            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -13),
             
         ])
         
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell(bodyPart: String, setsCount: Int) {
-        
-        bodyPartLabel.text = bodyPart
-        totalNumberPerBodyPartLabel.text = "\(setsCount)세트"
-        // 추후 최대 값에 맞출 예정
-        progressView.progress = Float(setsCount) / 100.0
-        
-        
+    private func updateFoldingImage() {
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .black)
+        let symbolName = isStackViewVisibility ? "chevron.up" : "chevron.down"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        foldingImage.image = symbol
     }
     
     
+    func toggleStackViewVisibility() {
+        isStackViewVisibility.toggle()
+    }
     
-    
-    
+    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath, toggleVisibilityAction: @escaping (IndexPath) -> Void ) {
+        
+        bodyPartLabel.text = data.bodyPart
+        totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
+        // 추후 최대 값에 맞출 예정
+        progressView.progress = Float(data.totalSets) / 100.0
+        
+        exerciseStackView.arrangedSubviews.forEach {$0.removeFromSuperview() }
+        
+        var index = 1
+        
+        for exercise in data.exercises {
+            let exerciseView = HorizontalDetailStackView()
+            exerciseView.configure(index: index , name: exercise.name, setsCount: exercise.setsCount)
+            exerciseStackView.addArrangedSubview(exerciseView)
+            index += 1
+        }
+        
+        self.indexPath = indexPath
+        self.toggleVisibilityAction = toggleVisibilityAction
+        isStackViewVisibility = data.isStackViewVisible
+        
+    }
 }
+
+class HorizontalDetailStackView: UIView {
+    
+    private let indexLabel = UILabel()
+    private let nameLabel = UILabel()
+    private let setsLabel = UILabel()
+    private let stackView = UIStackView()
+    
+    init() {
+        super.init(frame: .zero)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func changeLabelFontAndColor() {
+        indexLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        indexLabel.textColor = .white
+        
+        nameLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        nameLabel.textColor = .white
+        
+        setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        setsLabel.textColor = .white
+    }
+    
+    
+    private func setupView() {
+        
+        changeLabelFontAndColor()
+        
+        indexLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        nameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        setsLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        
+        indexLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        setsLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        
+        
+        stackView.addArrangedSubview(indexLabel)
+        stackView.addArrangedSubview(nameLabel)
+        stackView.addArrangedSubview(setsLabel)
+        
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        
+        
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: self.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
+        
+    }
+    
+    func configure(index: Int, name: String, setsCount: Int) {
+        indexLabel.text = "\(index)."
+        nameLabel.text = name
+        setsLabel.text = "\(setsCount) 세트"
+    }
+}
+

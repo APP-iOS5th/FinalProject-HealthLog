@@ -163,11 +163,13 @@ class SaveRoutineViewController: UIViewController {
     }
     
     private func checkExistRoutineName(_ name: String) -> Bool {
+        guard let realm = realm else {return false} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열 // 이거 false가 default 값일 까요..?
         let routine = realm.objects(Routine.self).filter("name == %@", name).first
         return routine != nil
     }
     
     private func saveRoutineToDatabase(_ name: String) {
+        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
         print(schedule)
         let exercises = realm.objects(Exercise.self)
         
