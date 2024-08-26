@@ -26,11 +26,20 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         return view
     }()
     
+    let searchOptionStackView = SearchBodyPartStackView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .color1E1E1E
         setupTableView()
+        setupSearchOptionStackView()
         setupDividerView()
         setupConstraints()
+    }
+    
+    private func setupSearchOptionStackView() {
+        searchOptionStackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(searchOptionStackView)
     }
     
     private func setupDividerView() {
@@ -39,7 +48,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     private func setupTableView() {
         tableView.register(SearchResultCell.self, forCellReuseIdentifier: "searchResultCell")
-        tableView.backgroundColor = .colorPrimary
+        tableView.backgroundColor = .color1E1E1E
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
@@ -49,7 +58,11 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchOptionStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            searchOptionStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 13),
+            searchOptionStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -13),
+            
+            dividerView.topAnchor.constraint(equalTo: searchOptionStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             dividerView.heightAnchor.constraint(equalToConstant: 1),

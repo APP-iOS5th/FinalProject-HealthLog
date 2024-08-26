@@ -12,10 +12,20 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    var selectedDate: Date = Date() // 스케줄뷰에서 받아와서 할당하기, init
+    var selectedDate: Date?
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: init(date: Date) 저장형식 논의
+//    init(date: Date) {
+//        self.selectedDate = date
+//        super.init(nibName: nil, bundle: nil)
+//    }
+//    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +34,7 @@ class AddScheduleViewController: UIViewController {
         setupDividerView()
         setupTableView()
         setupConstraints()
-        view.backgroundColor = .colorPrimary
+        view.backgroundColor = .color1E1E1E
         
         searchController.searchBar.delegate = self
         bindViewModel()
@@ -40,7 +50,6 @@ class AddScheduleViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // 사용자가 선택한 운동 목록이 변경될 때마다 테이블 뷰를 갱신하고, 완료 버튼의 상태를 갱신
         addScheduleViewModel.$selectedExercises
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -58,10 +67,16 @@ class AddScheduleViewController: UIViewController {
     
     private func setupNavigationBar() {
         self.title = "오늘 할 운동 추가"
-        self.navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.white,
-            .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
-        ]
+        if let navigationBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = .color1E1E1E
+            appearance.titleTextAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
+            ]
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
         
         let leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissView))
         leftBarButtonItem.setTitleTextAttributes([
@@ -91,8 +106,8 @@ class AddScheduleViewController: UIViewController {
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
+        //searchController.searchResultsUpdater = self
         
-        // UITextField는 공개적으로 제공되는 프로퍼티가 아니기 때문에, value(forKey:)를 사용해 이 내부 요소에 접근
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
                 leftView.tintColor = .white
@@ -235,7 +250,8 @@ class AddScheduleViewController: UIViewController {
     }
 }
 
-extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UITableViewDragDelegate, UITableViewDropDelegate {
+// MARK: TableView Delegate
+extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return addScheduleViewModel.selectedExercises.count
     }
@@ -291,11 +307,17 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
-    
+}
+
+// MARK: SearchBar Delegate
+extension AddScheduleViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         exerciseViewModel.setSearchText(to: searchText)
     }
-    
+}
+
+// MARK: Drag and Drop Delegate
+extension AddScheduleViewController: UITableViewDragDelegate, UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         let dragItem = UIDragItem(itemProvider: NSItemProvider())
         dragItem.localObject = addScheduleViewModel.selectedExercises[indexPath.row]
