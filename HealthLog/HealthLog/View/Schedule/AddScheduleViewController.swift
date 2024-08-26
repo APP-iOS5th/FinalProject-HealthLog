@@ -12,7 +12,7 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    
+    var selectedDate: Date = Date() // 스케줄뷰에서 받아와서 할당하기, init
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
@@ -31,7 +31,7 @@ class AddScheduleViewController: UIViewController {
         setupKeyboard()
         hideKeyBoardWhenTappedScreen()
     }
-    
+
     private func bindViewModel() {
         exerciseViewModel.$filteredExercises
             .receive(on: RunLoop.main)
@@ -45,7 +45,13 @@ class AddScheduleViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.tableView.reloadData()
-                self?.validateCompletionButton()
+            }
+            .store(in: &cancellables)
+        
+        addScheduleViewModel.$isValid
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isValid in
+                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
             }
             .store(in: &cancellables)
     }
@@ -70,25 +76,12 @@ class AddScheduleViewController: UIViewController {
             NSAttributedString.Key.foregroundColor: UIColor.white
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
-    
-    // 모든 운동 세트의 필드가 채워졌는지 확인 -> 완료버튼활성화
-    func validateCompletionButton() {
-        let allFieldsFilled = addScheduleViewModel.selectedExercises.allSatisfy { exercise in
-            if let indexPath = addScheduleViewModel.selectedExercises.firstIndex(where: { $0.exerciseName == exercise.exerciseName }) {
-                let cell = tableView.cellForRow(at: IndexPath(row: indexPath, section: 0)) as? SelectedExerciseCell
-                return cell?.areAllFieldsFilled() ?? false
-            }
-            return false
-        }
-        navigationItem.rightBarButtonItem?.isEnabled = !addScheduleViewModel.selectedExercises.isEmpty && allFieldsFilled
-    }
-    
+        
     private func setupSearchController() {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
-            searchResultsController.onExerciseSelected = { [weak self] exerciseName in
-                self?.addSelectedExercise(exerciseName)
+            searchResultsController.onExerciseSelected = { [weak self] exercise in
+                self?.addSelectedExercise(exercise)
             }
             searchResultsController.viewModel = exerciseViewModel
         }
@@ -188,14 +181,12 @@ class AddScheduleViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    func addSelectedExercise(_ exerciseName: String) {
-        addScheduleViewModel.addExercise(exerciseName)
-        validateCompletionButton()
+    func addSelectedExercise(_ exercise: Exercise) {
+        addScheduleViewModel.addExercise(exercise)
     }
     
     func removeSelectedExercise(at index: Int) {
         addScheduleViewModel.removeExercise(at: index)
-        validateCompletionButton()
     }
     
     private func setupKeyboard() {
@@ -247,24 +238,48 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
         let exercise = addScheduleViewModel.selectedExercises[indexPath.row]
-        //print("Configuring cell at 인덱스: \(indexPath.row), 운동이름: \(exercise.exerciseName)")
-        cell.configure(with: exercise.exerciseName, setCount: exercise.setCount)
+        
         cell.selectionStyle = .none
         cell.backgroundColor = .clear
-        // 셀의 삭제버튼이 탭되었을 때 해당인덱스에서 운동 제거하는 클로저
+        cell.configure(exercise)
+        cell.exerciseIndex = indexPath.row
+        cell.updateSet = { [weak self] setIndex, weight, reps in
+            self?.addScheduleViewModel.updateSet(at: indexPath.row, setIndex: setIndex, weight: weight, reps: reps)
+        }
+
+        cell.stackView.repsTextFields.enumerated().forEach { i, repsTextField in
+            NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
+                .compactMap { ($0.object as? UITextField)?.text }
+                .sink { text in
+                    print("repsTextField change")
+                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].reps = Int(text) ?? 0
+                }
+                .store(in: &cancellables)
+        }
+        
+        cell.stackView.weightTextFields.enumerated().forEach { i, weightTextField in
+            NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
+                .compactMap { ($0.object as? UITextField)?.text }
+                .sink { text in
+                    print("weightTextField change")
+                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].weight = Int(text) ?? 0
+                }
+                .store(in: &cancellables)
+        }
+        
+        cell.setCountDidChange = { [weak self] (newSetCount: Int) in
+            print("newSetCount - \(newSetCount)")
+            self?.addScheduleViewModel
+                .updateExerciseSetCount(
+                    for: indexPath.row, setCount: newSetCount)
+            
+            print("cell.currentSetCount - \(cell.currentSetCount)")
+            self?.tableView.reloadRows(at: [indexPath], with: .none)
+        }
+
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
-        // 세트 수 변경될 때 뷰모델 업데이트하고 reload
-        cell.setCountDidChange = { [weak self] newSetCount in
-            self?.addScheduleViewModel.updateExerciseSetCount(for: indexPath.row, setCount: newSetCount)
-            self?.tableView.reloadRows(at: [indexPath], with: .none)
-        }
-        // 셀의 세트 내용을 수정할 때 뷰모델의 운동데이터 업데이트하는 클로저
-        cell.setsDidChange = { [weak self] sets in
-            self?.addScheduleViewModel.updateExerciseSet(for: indexPath.row, sets: sets)
-        }
-        
         return cell
     }
     
@@ -277,9 +292,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     }
 }
 
-
 extension UIView {
-    // 현재 포커스를 받고 있는 뷰(텍스트 필드) 찾기
     func currentFirstResponder() -> UIView? {
         if self.isFirstResponder {
             return self
@@ -292,7 +305,7 @@ extension UIView {
         }
         return nil
     }
-    // 해당 뷰의 부모 뷰 컨트롤러 찾기
+
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {

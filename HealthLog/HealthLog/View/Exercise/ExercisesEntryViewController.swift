@@ -651,7 +651,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
             // 삭제 처리 코드
-            detailViewModel.realmExerciseIsDeleted()
+            self.entryViewModel.realmExerciseIsDeleted()
             self.navigationController?.popToRootViewController(animated: true)
         }
 
