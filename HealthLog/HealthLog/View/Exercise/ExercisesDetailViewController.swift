@@ -49,7 +49,11 @@ class ExercisesDetailViewController: UIViewController {
     }
     
     func setupBindings() {
-        
+        detailViewModel.$exercise
+            .sink { exercise in
+                self.title = exercise.name
+            }
+            .store(in: &cancellables)
     }
     
     @objc func editPushButtonTapped() {
