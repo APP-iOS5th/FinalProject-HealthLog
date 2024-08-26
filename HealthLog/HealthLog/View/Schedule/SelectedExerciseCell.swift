@@ -238,7 +238,7 @@ class SetInputRowView: UIView {
         setLabel.textColor = .white
         
         // MARK: weightTextField
-        weightTextField.text = String(set.weight)
+        weightTextField.text = set.weight == 0 ? "" : String(set.weight)
         weightTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightTextField.textColor = .white
         weightTextField.textAlignment = .center
@@ -259,7 +259,7 @@ class SetInputRowView: UIView {
         weightLabel.textColor = .white
         
         // MARK: repsTextField
-        repsTextField.text = String(set.reps)
+        repsTextField.text = set.reps == 0 ? "" : String(set.reps)
         repsTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsTextField.textColor = .white
         repsTextField.textAlignment = .center
