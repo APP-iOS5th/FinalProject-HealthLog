@@ -331,15 +331,13 @@ class MuscleImageTableViewCell: UITableViewCell {
     }
     
     func configureCell(data: [ReportBodyPartData]) {
-        // 데이터에 따라 이미지 뷰의 isHidden을 false로 설정하고, 이미지 이름을 변경합니다.
+        
         for bodyPartData in data {
             let bodyPart = BodyPart(rawValue: bodyPartData.bodyPart)
             
-            // 이미지 이름과 이미지 뷰 배열을 초기화
             var imageNamePrefixes: [String] = []
             var imageViews: [UIImageView] = []
 
-            // 부위에 따라 알맞은 이미지 뷰와 이미지 이름 설정
             switch bodyPart {
             case .chest:
                 imageViews = [frontMuscleChest]
