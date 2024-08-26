@@ -140,6 +140,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                cell.configureCell(with: top3WeightChangeExercises)
                 return cell
             }
         default:
