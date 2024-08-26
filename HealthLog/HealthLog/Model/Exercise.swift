@@ -39,17 +39,17 @@ class Exercise: Object {
 
 // MARK: -
 // 입력용 Exercise
-class InputExerciseObject: ObservableObject {
+class EntryExercise: ObservableObject {
     @Published var name: String = ""
     @Published var bodyParts: [BodyPart] = []
     @Published var recentWeight: Int = 0
     @Published var maxWeight: Int = 0
     @Published var description: String = ""
     
-    @Published var isValidatedRequiredExerciseFields: Bool = false
-    @Published var hasDuplicateExerciseName: Bool = false
-    @Published var isExerciseNameEmpty: Bool = true
-    @Published var isExerciseBodyPartsEmpty: Bool = true
+    @Published var isValidatedRequiredFields: Bool = false
+    @Published var hasDuplicateName: Bool = false
+    @Published var isNameEmpty: Bool = false
+    @Published var isBodyPartsEmpty: Bool = false
     
     func initInputExercise() {
         name = ""
@@ -58,13 +58,26 @@ class InputExerciseObject: ObservableObject {
         maxWeight = 0
         description = ""
         
-        isValidatedRequiredExerciseFields = false
-        hasDuplicateExerciseName = false
-        isExerciseNameEmpty = true
-        isExerciseBodyPartsEmpty = true
+        isValidatedRequiredFields = false
+        hasDuplicateName = false
+        isNameEmpty = true
+        isBodyPartsEmpty = true
     }
     
     func addRealmExerciseObject() -> Exercise {
+        return Exercise(
+            name: name,
+            bodyParts: bodyParts,
+            descriptionText: description,
+            image: nil,
+            totalReps: 0,
+            recentWeight: recentWeight,
+            maxWeight: maxWeight,
+            isCustom: true
+        )
+    }
+    
+    func updateRealmExerciseObject(id: ObjectId) -> Exercise {
         return Exercise(
             name: name,
             bodyParts: bodyParts,

@@ -8,13 +8,13 @@
 import Combine
 import UIKit
 
-class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
+class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Properties
     
     private var cancellables = Set<AnyCancellable>()
-    private let viewModel = ExerciseViewModel()
-    private let mode: ExerciseFormMode
+    private let entryViewModel: ExerciseEntryViewModel
+    private let viewModel: ExerciseViewModel
     
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
@@ -53,9 +53,10 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Init
     
-    init(mode: ExerciseFormMode) {
-        self.mode = mode
-        switch mode {
+    init(entryViewModel: ExerciseEntryViewModel) {
+        self.entryViewModel = entryViewModel
+        self.viewModel = entryViewModel.viewModel
+        switch entryViewModel.mode {
             case .add: deleteButton = nil
             case .update: deleteButton = UIButton()
         }
@@ -81,14 +82,15 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
         setupImageStackView()
         setupDeleteButton()
         
-        setupBindings()
         setupBindingsUpdateMode()
+        setupBindingsUpdateUI()
+        setupBindingsUpdateData()
     }
     
     // MARK: - Setup UI
     
     func setupNavigationBar() {
-        switch mode {
+        switch entryViewModel.mode {
             case .add: title = "운동 추가"
             case .update: title = "운동 수정"
         }
@@ -187,12 +189,14 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
         titleDuplicateWarningLabel.text = "이미 존재하는 운동 이름입니다."
         titleDuplicateWarningLabel.numberOfLines = 1
         titleDuplicateWarningLabel.textColor = .red
+        titleDuplicateWarningLabel.isHidden = true
         titleStackView.addArrangedSubview(titleDuplicateWarningLabel)
         
         // MARK: titleEmptyWarningLabel
         titleEmptyWarningLabel.text = "운동 이름이 비어있습니다."
         titleEmptyWarningLabel.numberOfLines = 1
         titleEmptyWarningLabel.textColor = .red
+        titleEmptyWarningLabel.isHidden = true
         titleStackView.addArrangedSubview(titleEmptyWarningLabel)
         
         let dividerView = UIView()
@@ -236,6 +240,7 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
         bodypartEmptyWarningLabel.text = "운동 부위가 비어있습니다."
         bodypartEmptyWarningLabel.numberOfLines = 1
         bodypartEmptyWarningLabel.textColor = .red
+        bodypartEmptyWarningLabel.isHidden = true
         bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
         
         let dividerView = UIView()
@@ -428,7 +433,7 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setupDeleteButton() {
-        guard case .update = mode else { return }
+        guard case .update = entryViewModel.mode else { return }
         guard let deleteButton = deleteButton else { return }
         
         deleteButton.backgroundColor = .color2F2F2F
@@ -448,13 +453,12 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Setup Binddings
     
-    private func setupBindings() {
+    private func setupBindingsUpdateData() {
         // MARK: Input titleTextField
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: titleTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-                self.viewModel.exercise.name = text
-                print("titleTextField change - \(self.viewModel.exercise.name)")
+                self.entryViewModel.entryExercise.name = text
             }
             .store(in: &cancellables)
         
@@ -464,10 +468,10 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
             button.buttonPublisher
                 .sink { button in
                     if button.isSelected { // 선택시 삽입
-                        self.viewModel.exercise
+                        self.entryViewModel.entryExercise
                             .bodyParts.append(button.bodypart)
                     } else { // 선택 해제시 제거
-                        self.viewModel.exercise
+                        self.entryViewModel.entryExercise
                             .bodyParts.removeAll { $0 == button.bodypart }
                     }
                     print("\(button.bodypart.rawValue) - \(button.isSelected)")
@@ -480,7 +484,7 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
                 print("recentWeightTextField change")
-                self.viewModel.exercise.recentWeight = Int(text) ?? 0
+                self.entryViewModel.entryExercise.recentWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
         
@@ -489,7 +493,7 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
                 print("maxWeightTextField change")
-                self.viewModel.exercise.maxWeight = Int(text) ?? 0
+                self.entryViewModel.entryExercise.maxWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
         
@@ -498,50 +502,59 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
             .compactMap { ($0.object as? UITextView)?.text }
             .sink { text in
                 print("descriptionTextView change")
-                self.viewModel.exercise.description = text
+                self.entryViewModel.entryExercise.description = text
             }
             .store(in: &cancellables)
+
+    }
+    
+    private func setupBindingsUpdateUI() {
         
-        // MARK: Input Duplicate ExerciseName Warning
-        viewModel.exercise.$hasDuplicateExerciseName
+        // MARK: UI Duplicate ExerciseName Warning
+        self.entryViewModel.entryExercise.$hasDuplicateName
             .sink { [weak self] hasDuplicate in
-                self?.warningLabelAnimation(self?.titleDuplicateWarningLabel, isWarning: hasDuplicate)
+                let label = self?.titleDuplicateWarningLabel
+                self?.warningLabelAnimation(label, isWarning: hasDuplicate)
             }
             .store(in: &cancellables)
         
-        // MARK: UI Empty ExerciseName Warning
-        viewModel.exercise.$isExerciseNameEmpty
+        // MARK: Empty ExerciseName Warning
+        self.entryViewModel.entryExercise.$isNameEmpty
             .sink { [weak self] isEmpty in
-                self?.warningLabelAnimation(self?.titleEmptyWarningLabel, isWarning: isEmpty)
+                print("Empty ExerciseName Warning isEmpty - \(isEmpty)")
+                let label = self?.titleEmptyWarningLabel
+                print("before label isHidden - \(label!.isHidden)")
+                self?.warningLabelAnimation(label, isWarning: isEmpty)
+                print("after label isHidden - \(label!.isHidden)")
             }
             .store(in: &cancellables)
         
-        // MARK: UI Empty Bodyparts Warning
-        viewModel.exercise.$isExerciseBodyPartsEmpty
+        // MARK: Empty Bodyparts Warning
+        self.entryViewModel.entryExercise.$isBodyPartsEmpty
             .sink { [weak self] isEmpty in
-                self?.warningLabelAnimation(self?.bodypartEmptyWarningLabel, isWarning: isEmpty)
+                let label = self?.bodypartEmptyWarningLabel
+                self?.warningLabelAnimation(label, isWarning: isEmpty)
             }
             .store(in: &cancellables)
         
-        // MARK: UI Validated Exercise Fields - Add Button
-        viewModel.exercise.$isValidatedRequiredExerciseFields
+        // MARK: Validated RequiredFields - Done Button
+        self.entryViewModel.entryExercise.$isValidatedRequiredFields
             .sink { [weak self] isValidated in
                 self?.navigationItem.rightBarButtonItem?
                     .isEnabled = isValidated
             }
             .store(in: &cancellables)
-        
-  
     }
     
     private func setupBindingsUpdateMode() {
-        guard case .update(let detailViewModel) = mode else { return }
+        guard case .update(let detailViewModel) = entryViewModel.mode
+        else { return }
         
-        // MARK: detail exercise input
+        // MARK: UI,Input detail exercise
         detailViewModel.$exercise
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-                self?.viewModel.exercise.name = $0.name
+                self?.entryViewModel.entryExercise.name = $0.name
                 self?.titleTextField.text = $0.name
                 
                 $0.bodyParts.forEach { bodypart in
@@ -551,13 +564,13 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
                         .sendActions(for: .touchUpInside)
                 }
                 
-                self?.viewModel.exercise.recentWeight = $0.recentWeight
+                self?.entryViewModel.entryExercise.recentWeight = $0.recentWeight
                 self?.recentWeightTextField.text = String($0.recentWeight)
                 
-                self?.viewModel.exercise.maxWeight = $0.maxWeight
+                self?.entryViewModel.entryExercise.maxWeight = $0.maxWeight
                 self?.maxWeightTextField.text = String($0.maxWeight)
                 
-                self?.viewModel.exercise.description = $0.descriptionText
+                self?.entryViewModel.entryExercise.description = $0.descriptionText
                 self?.descriptionTextView.text = $0.descriptionText
             }
             .store(in: &cancellables)
@@ -593,33 +606,59 @@ class ExercisesFormViewController: UIViewController, UITextFieldDelegate {
     
     @objc func doneButtonTapped() {
         print("doneButtonTapped!")
-        switch mode {
-            case .add: viewModel.realmWriteExercise()
-            case .update: print("TODO realm update")
+        switch entryViewModel.mode {
+            case .add: entryViewModel.realmAddExercise()
+            case .update: 
+                print("TODO realm update") // TODO: realm update
+                entryViewModel.realmUpdateExercise()
         }
         navigationController?.popViewController(animated: true)
     }
     
     @objc func deleteButtonTapped() {
         print("deleteButtonTapped!")
-        switch mode {
-            case .add: return
-            case .update(let detailViewModel):
-                print(viewModel.exercise)
-                detailViewModel.realmExerciseIsDeleted()
-                navigationController?.popToRootViewController(animated: true)
-        }
+        deleteAlertAction()
     }
     
     // MARK: - Methods
     
-    // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (고장남)
+    // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (중복 실행시 고장남)
     private func warningLabelAnimation(_ targetView: UILabel?, isWarning: Bool) {
+        guard entryViewModel.warningCount >= 3 else {
+            return entryViewModel.warningCount += 1
+        } // 첫 실행시에는 경고 표시 안함
         guard let target = targetView else { return }
         guard target.isHidden == isWarning else { return } // 중복 방지
         UIView.animate(withDuration: 0.2) {
             target.isHidden = !isWarning
         }
+    }
+    
+    private func deleteAlertAction() {
+        guard case .update(let detailViewModel) = entryViewModel.mode
+        else { return }
+        
+        let alertController = UIAlertController(
+            title: "삭제 확인",
+            message: "삭제시, 더이상 운동리스트에서는 표시되지 않습니다.",
+            preferredStyle: .alert
+        )
+        
+        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color767676
+        alertController.view.layer.cornerRadius = 15
+        
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
+            // 삭제 처리 코드
+            detailViewModel.realmExerciseIsDeleted()
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+
+        alertController.addAction(cancelAction)
+        alertController.addAction(deleteAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -655,15 +694,3 @@ private class PaddedTextField: UITextField {
     }
 }
 
-enum ExerciseFormMode {
-    case add
-    case update(ExerciseDetailViewModel)
-    
-    var detailViewModel: ExerciseDetailViewModel? {
-        if case .update(let model) = self {
-            return model
-        } else {
-            return nil
-        }
-    }
-}

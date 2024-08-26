@@ -198,7 +198,9 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         
         let exercise = viewModel.filteredExercises[indexPath.row]
         cell.configure(with: exercise)
-        cell.configurePushDetailViewButton(with: exercise, navigationController: self.navigationController!)
+        cell.configurePushDetailViewButton(
+            with: exercise, viewModel: viewModel,
+            navigationController: self.navigationController!)
         cell.selectionStyle = .none
         return cell
     }
@@ -232,7 +234,9 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     @objc private func addButtonTapped() {
         print("addButtonTapped!")
-        let vc = ExercisesFormViewController(mode: .add)
+        let entryViewModel = ExerciseEntryViewModel(
+            mode: .add, viewModel: viewModel)
+        let vc = ExercisesEntryViewController(entryViewModel: entryViewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
     

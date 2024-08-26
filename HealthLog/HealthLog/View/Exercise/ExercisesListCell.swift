@@ -196,11 +196,16 @@ class ExerciseListCell: UITableViewCell {
     }
     
     // 자세히 보기 버튼 - 상세 화면 이동
-    func configurePushDetailViewButton(with exercise: Exercise, navigationController: UINavigationController) {
+    func configurePushDetailViewButton(
+        with exercise: Exercise,
+        viewModel: ExerciseViewModel,
+        navigationController: UINavigationController) {
         detailButton.removeTarget(nil, action: nil, for: .touchUpInside)
         detailButton.addAction(UIAction { _ in
-            let viewModel = ExerciseDetailViewModel(exercise: exercise)
-            let vc = ExercisesDetailViewController(viewModel: viewModel)
+            let detailViewModel = ExerciseDetailViewModel(
+                exercise: exercise, viewModel: viewModel)
+            let vc = ExercisesDetailViewController(
+                detailViewModel: detailViewModel)
             navigationController.pushViewController(vc, animated: true)
         }, for: .touchUpInside)
     }

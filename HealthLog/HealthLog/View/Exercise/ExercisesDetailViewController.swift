@@ -17,8 +17,8 @@ class ExercisesDetailViewController: UIViewController {
     
     // MARK: - Init
     
-    init(viewModel: ExerciseDetailViewModel) {
-        self.detailViewModel = viewModel
+    init(detailViewModel: ExerciseDetailViewModel) {
+        self.detailViewModel = detailViewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,7 +46,6 @@ class ExercisesDetailViewController: UIViewController {
             action: #selector(editPushButtonTapped))
         editPushButton.isEnabled = detailViewModel.exercise.isCustom
         self.navigationItem.rightBarButtonItem = editPushButton
-        
     }
     
     func setupBindings() {
@@ -55,7 +54,9 @@ class ExercisesDetailViewController: UIViewController {
     
     @objc func editPushButtonTapped() {
         print("editPushButtonTapped!")
-        let vc = ExercisesFormViewController(mode: .update(detailViewModel))
+        let entryViewModel = ExerciseEntryViewModel(
+            mode: .update(detailViewModel), viewModel: detailViewModel.viewModel)
+        let vc = ExercisesEntryViewController(entryViewModel: entryViewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
     
