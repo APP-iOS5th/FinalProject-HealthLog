@@ -26,6 +26,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
     
+    // to execute customizeCalendarTextColor one time from decorationFor
+    private var isTextColorCustimzed = false
+    
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -171,7 +174,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            calendarView.heightAnchor.constraint(equalToConstant: 600),
+            calendarView.heightAnchor.constraint(equalToConstant: 500),
             
             exerciseVolumeLabel.heightAnchor.constraint(equalToConstant:20),
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -360,8 +363,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 }
 
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
-    // color of decoration
+    
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
+        
+        if !isTextColorCustimzed {
+            customizeCalendarTextColor()
+            isTextColorCustimzed = true
+        }
+        
         guard let date = dateComponents.date else { return nil }
         
         // selected date color
@@ -396,10 +405,8 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     
     // MARK: - Customize Calendar Text Color
     private func customizeCalendarTextColor() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.changeHeaderTextColor(self.calendarView)
-            self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
-        }
+        self.changeHeaderTextColor(self.calendarView)
+        self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
     }
     
     private func changeHeaderTextColor(_ view: UIView) {
