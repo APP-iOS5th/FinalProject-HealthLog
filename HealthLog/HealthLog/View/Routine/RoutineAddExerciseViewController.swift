@@ -10,7 +10,7 @@ import Combine
 
 struct AddRoutineExercise {
     let name: String
-    var setCount: Int
+    var setCount: Int = 4
     var sets: [ExerciseSet]
     
     struct ExerciseSet {
@@ -21,7 +21,7 @@ struct AddRoutineExercise {
 
 class RoutineAddExerciseViewController: UIViewController {
     
-    var exercises:[AddRoutineExercise] = [
+    var exercises: [AddRoutineExercise] = [
         AddRoutineExercise(name: "벤치 프레스", setCount: 4, sets: Array(repeating: AddRoutineExercise.ExerciseSet(weight: 10, reps: 10), count: 4)),
         AddRoutineExercise(name: "스쿼트", setCount: 3, sets: Array(repeating: AddRoutineExercise.ExerciseSet(weight: 20, reps: 5), count: 3))
     ]
@@ -53,8 +53,9 @@ class RoutineAddExerciseViewController: UIViewController {
     }()
     
     private lazy var collectionView: UICollectionView = {
-        var layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let layout = UICollectionViewFlowLayout()
+        layout.headerReferenceSize = CGSize(width: view.bounds.width, height: 50)
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .color1E1E1E
         
@@ -102,18 +103,21 @@ class RoutineAddExerciseViewController: UIViewController {
     
     private func setupCollectionView() {
         
-        let layout = UICollectionViewFlowLayout()
-        layout.headerReferenceSize = CGSize(width: view.bounds.width, height: 50)
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+       
         
         collectionView.register(SetCell.self, forCellWithReuseIdentifier: SetCell.identifier)
         collectionView.register(SetCountHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SetCountHeaderView.identifier)
+        collectionView.register(DividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DividerFooterView.identifier)
+        
+        
         self.view.addSubview(collectionView)
+        
+        
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor)
         ])
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -134,19 +138,44 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
-        cell.setNumberLabel.text = "\(indexPath.item + 1) 세트"
+        cell.configure(with: indexPath.item + 1)
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 115)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 14)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 50)
+        return CGSize(width: collectionView.bounds.width, height: 40)
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == UICollectionView.elementKindSectionFooter {
+                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DividerFooterView.identifier, for: indexPath) as! DividerFooterView
+                
+                return footer
+            }
+        
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetCountHeaderView.identifier, for: indexPath) as! SetCountHeaderView
+        header.configure(with: exercises[indexPath.section])
+        header.setCountDidChange = { newSetCount in
+            self.exercises[indexPath.section].setCount = newSetCount
+            self.collectionView.reloadSections(IndexSet(integer: indexPath.section))
+            self.collectionView.reloadItems(at: [indexPath])
+            
+            print("운동이름: \(self.exercises[indexPath.section].name), 세트 수: \(self.exercises[indexPath.section].setCount)")
+        }
         
         return header
     }
+    
+    
 }
 
 
