@@ -12,35 +12,23 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     private var bodyPartDataList: [ReportBodyPartData] = []
     
-    private var exerciseRecordTableView = UITableView(frame: .zero, style: .insetGrouped)
-//    private lazy var exerciseRecordTableView: UITableView(frame: .zero, style: .insetGrouped) = {
-//        let tableView = UITableView(frame: .zero, style: .insetGrouped)
-//        tableView.backgroundColor = .clear
-//        tableView.showsVerticalScrollIndicator = false
-//        tableView.separatorColor = UIColor(named: "Color525252")
-//
-//        // 테이믈 가장 맨위 여백 지우기 (insetGroup)
-//        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-//        
-//        return tableView
-//    }()
-    
-    func setupTableView() {
-        exerciseRecordTableView.backgroundColor = .clear
-        exerciseRecordTableView.showsVerticalScrollIndicator = false
-        exerciseRecordTableView.separatorColor = UIColor(named: "Color525252")
+    private lazy var exerciseRecordTableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.backgroundColor = .clear
+        tableView.showsVerticalScrollIndicator = false
+        tableView.separatorColor = UIColor(named: "Color525252")
 
         // 테이믈 가장 맨위 여백 지우기 (insetGroup)
-        exerciseRecordTableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-    }
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        
+        return tableView
+    }()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .clear
-        
-        setupTableView()
         
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
@@ -103,8 +91,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
             cell.backgroundColor = UIColor.clear
-            
             cell.selectionStyle = .none
+            cell.configureCell(data: bodyPartDataList)
+            
             return cell
         case 1:
             let data = bodyPartDataList[indexPath.row]
@@ -116,7 +105,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             cell.configureCell(with: data, at: indexPath) { [weak self] indexPath in
                 self?.toggleStackViewVisibility(for: indexPath)
             }
-            
             
             return cell
             
@@ -164,7 +152,16 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return 372
         case 1:
-            return 100
+            let data = bodyPartDataList[indexPath.row]
+            let defaultCellHeight: CGFloat = 40
+            let exerciseViewHeight: CGFloat = 25
+            
+            if data.isStackViewVisible {
+                let exercisesCount = data.exercises.count
+                return defaultCellHeight + (exerciseViewHeight * CGFloat(exercisesCount))
+            } else {
+                return defaultCellHeight
+            }
         case 2:
             if indexPath.row == 0 {
                 return 42
