@@ -394,5 +394,74 @@ class MuscleImageView: UIView {
             }
         }
     }
-    
+    func highlightBodyParts(bodyPartsWithCompletedSets bodyParts: [String: Int]) {
+        
+        for (bodyPartRawValue, sets) in bodyParts {
+            let bodyPart = BodyPart(rawValue: bodyPartRawValue)
+            
+            var imageNamePrefixes: [String] = []
+            var imageViews: [UIImageView] = []
+
+            switch bodyPart {
+            case .chest:
+                imageViews = [frontMuscleChest]
+                imageNamePrefixes = ["front_body_chest"]
+            case .back:
+                imageViews = [backMuscleback]
+                imageNamePrefixes = ["back_body_back"]
+            case .shoulders:
+                imageViews = [frontMuscleShoulders, backMuscleShoulders]
+                imageNamePrefixes = ["front_body_shoulders", "back_body_shoulders"]
+            case .triceps:
+                imageViews = [backMuscleTriceps]
+                imageNamePrefixes = ["back_body_triceps"]
+            case .biceps:
+                imageViews = [frontMuscleBiceps]
+                imageNamePrefixes = ["front_body_biceps"]
+            case .abs:
+                imageViews = [frontMuscleAbs]
+                imageNamePrefixes = ["front_body_abs"]
+            case .quadriceps:
+                imageViews = [frontMuscleQuadriceps]
+                imageNamePrefixes = ["front_body_quadriceps"]
+            case .hamstrings:
+                imageViews = [backMuscleHamstrings]
+                imageNamePrefixes = ["back_body_hamstrings"]
+            case .glutes:
+                imageViews = [backMuscleGlutes]
+                imageNamePrefixes = ["back_body_glutes"]
+            case .adductors:
+                imageViews = [frontMuscleAdductors, backMuscleAdductors]
+                imageNamePrefixes = ["front_body_adductors", "back_body_adductors"]
+            case .abductors:
+                imageViews = [frontMuscleAbductors, backMuscleAbductors]
+                imageNamePrefixes = ["front_body_abductors", "back_body_abductors"]
+            case .calves:
+                imageViews = [backMuscleCalves]
+                imageNamePrefixes = ["back_body_calves"]
+            case .trap:
+                imageViews = [frontMuscleTrap, backMuscleTrap]
+                imageNamePrefixes = ["front_body_trap", "back_body_trap"]
+            case .forearms:
+                imageViews = [frontMuscleForearms]
+                imageNamePrefixes = ["front_body_forearms"]
+            case .other, .none:
+                continue
+            }
+
+            // totalSets에 따른 이미지 파일 이름을 결정
+            if sets > 0 {
+                var imageSuffix = "_0\(sets)"
+                if sets >= 5 {
+                    imageSuffix = "_05"
+                }
+                
+                // 해당 이미지 뷰들을 보이게 하고 이미지 이름 설정
+                for (index, imageView) in imageViews.enumerated() {
+                    imageView.isHidden = false
+                    imageView.image = UIImage(named: "\(imageNamePrefixes[index])\(imageSuffix)")
+                }
+            }
+        }
+    }
 }
