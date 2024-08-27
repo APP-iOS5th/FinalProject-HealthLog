@@ -7,9 +7,16 @@
 
 import UIKit
 
+protocol SearchResultCellDelegate: AnyObject {
+    func didTapButton(in cell: RoutineExerciseListTableViewCell)
+}
+
 class RoutineExerciseListTableViewCell: UITableViewCell {
     
     static let cellId = "RoutineExerciseListTableViewCell"
+    
+    weak var delegate: SearchResultCellDelegate?
+
     
     // 운동이름
     private lazy var titleLabel: UILabel = {
@@ -29,6 +36,7 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
         button.setImage(plusImage, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -92,7 +100,7 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
 
     
     func setupUI() {
-        self.backgroundColor = .colorPrimary
+        self.backgroundColor = .color1E1E1E
         self.contentView.backgroundColor = .colorSecondary
         self.contentView.layer.cornerRadius = 12
         self.contentView.addSubview(titleLabel)
@@ -109,7 +117,9 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
             
             self.plusButton.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
             self.plusButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -22),
-           
+            self.plusButton.widthAnchor.constraint(equalToConstant: 28),
+            self.plusButton.heightAnchor.constraint(equalToConstant: 28),
+            
             self.recentWeightLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),
             self.recentWeightLabel.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
             self.maxWeightLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor),
@@ -130,6 +140,11 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
         
         
     }
+ 
+    @objc func buttonTapped(_ sender: UIButton) {
+        delegate?.didTapButton(in: self)
+    }
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

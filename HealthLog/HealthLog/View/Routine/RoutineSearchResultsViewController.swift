@@ -7,16 +7,19 @@
 
 import UIKit
 
-class RoutineSerchResultsViewController: UIViewController {
+class RoutineSearchResultsViewController: UIViewController, SearchResultCellDelegate {
+    
+    weak var delegate: SerchResultDelegate?
     
     let viewModel = ExerciseViewModel()
+   
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .colorPrimary
+        tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(RoutineExerciseListTableViewCell.self, forCellReuseIdentifier: RoutineExerciseListTableViewCell.cellId)
         return tableView
@@ -25,7 +28,7 @@ class RoutineSerchResultsViewController: UIViewController {
     
     private lazy var dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "ColorSecondary")
+        view.backgroundColor = UIColor.colorSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -41,7 +44,7 @@ class RoutineSerchResultsViewController: UIViewController {
     
     
     func setupUI() {
-        self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        self.view.backgroundColor = UIColor.color1E1E1E
         navigationController?.setupBarAppearance()
         //MARK: - addSubview
         
@@ -59,15 +62,24 @@ class RoutineSerchResultsViewController: UIViewController {
             self.tableView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 3),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
         ])
         
+    }
+    
+    func didTapButton(in cell: RoutineExerciseListTableViewCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            let selectedItem = viewModel.filteredExercises[indexPath.row]
+            print("RoutinSearchReslutView: \(selectedItem)")
+            delegate?.didSelectItem(selectedItem)
+            dismiss(animated: true, completion: nil)
+        }
     }
     
     
 }
 
-extension RoutineSerchResultsViewController: UITableViewDelegate, UITableViewDataSource {
+extension RoutineSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 107
@@ -79,7 +91,7 @@ extension RoutineSerchResultsViewController: UITableViewDelegate, UITableViewDat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
-        
+        cell.delegate = self
         cell.configure(with: viewModel.filteredExercises[indexPath.row])
         cell.selectionStyle = .none
         return cell

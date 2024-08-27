@@ -8,32 +8,24 @@
 import UIKit
 import Combine
 
-struct AddRoutineExercise {
-    let name: String
-    var setCount: Int = 4
-    var sets: [ExerciseSet]
-    
-    struct ExerciseSet {
-        var weight: Int
-        var reps: Int
-    }
+protocol SerchResultDelegate: AnyObject {
+    func didSelectItem(_ item: Exercise)
 }
 
-class RoutineAddExerciseViewController: UIViewController {
-    
-    var exercises: [AddRoutineExercise] = [
-        AddRoutineExercise(name: "벤치 프레스", setCount: 4, sets: Array(repeating: AddRoutineExercise.ExerciseSet(weight: 10, reps: 10), count: 4)),
-        AddRoutineExercise(name: "스쿼트", setCount: 3, sets: Array(repeating: AddRoutineExercise.ExerciseSet(weight: 20, reps: 5), count: 3))
-    ]
+class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     
-    let viewModel = ExerciseViewModel()
+    
+    let routineViewModel = RoutineViewModel()
+    
     var routineName: String?
     private var cancellables = Set<AnyCancellable>()
     var selectedExercises = [String]()
     
-    var resultsViewController = RoutineSerchResultsViewController()
+    var resultsViewController = RoutineSearchResultsViewController()
+    
     private lazy var searchController: UISearchController = {
+        resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self
@@ -62,18 +54,28 @@ class RoutineAddExerciseViewController: UIViewController {
         
         return collectionView
     }()
+    private lazy var rightBarButtonItem : UIBarButtonItem = {
+        let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneTapped))
+        rightBarButtonItem.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "Pretendard-Semibold", size: 16) as Any,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        return rightBarButtonItem
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addExercise")
         setupUI()
         setupCollectionView()
+        setupObservers()
         
     }
     
     func setupUI() {
         self.navigationController?.setupBarAppearance()
-        
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "운동을 추가해주세요."
         self.navigationItem.hidesSearchBarWhenScrolling = false
@@ -103,8 +105,6 @@ class RoutineAddExerciseViewController: UIViewController {
     
     private func setupCollectionView() {
         
-       
-        
         collectionView.register(SetCell.self, forCellWithReuseIdentifier: SetCell.identifier)
         collectionView.register(SetCountHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SetCountHeaderView.identifier)
         collectionView.register(DividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DividerFooterView.identifier)
@@ -117,31 +117,58 @@ class RoutineAddExerciseViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20)
         ])
         collectionView.dataSource = self
         collectionView.delegate = self
         
+    }
+    
+    func setupObservers() {
+        routineViewModel.$isAddRoutineValid
+            .receive(on: DispatchQueue.main)
+            .sink { isValid in
+                self.navigationItem.rightBarButtonItem?.isEnabled = isValid
+            }
+            .store(in: &cancellables)
+    }
+    
+    func didSelectItem(_ item: Exercise) {
+        let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
+            RoutineExerciseSet(order: index, weight: 0, reps: 0)
+        }
+        routineViewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
+       
+        self.collectionView.reloadData()
+        print("RoutinAddView: \(routineViewModel.routine.exercises)")
+    }
+    
+    @objc func doneTapped() {
+        routineViewModel.addRoutine(routine: Routine(name: routineName ?? "", exercises: routineViewModel.routine.exercises.map { $0 }, exerciseVolume: routineViewModel.routine.exerciseVolume ))
+        self.navigationController?.popToRootViewController(animated: true)
         
     }
     
 }
 
+// MARK: CollectionView
+
 extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return exercises.count
+        return routineViewModel.routine.exercises.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return exercises[section].setCount
+        return routineViewModel.routine.exercises[section].sets.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
-        cell.configure(with: indexPath.item + 1)
+        cell.configure(with: routineViewModel.routine.exercises[indexPath.section].sets[indexPath.item])
+        
         return cell
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 115)
     }
@@ -157,19 +184,16 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if kind == UICollectionView.elementKindSectionFooter {
-                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DividerFooterView.identifier, for: indexPath) as! DividerFooterView
-                
-                return footer
-            }
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DividerFooterView.identifier, for: indexPath) as! DividerFooterView
+            
+            return footer
+        }
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetCountHeaderView.identifier, for: indexPath) as! SetCountHeaderView
-        header.configure(with: exercises[indexPath.section])
+        header.configure(with: routineViewModel.routine.exercises[indexPath.section])
         header.setCountDidChange = { newSetCount in
-            self.exercises[indexPath.section].setCount = newSetCount
+            self.routineViewModel.updateExercisesetCount(for: indexPath.section, setCount: newSetCount)
             self.collectionView.reloadSections(IndexSet(integer: indexPath.section))
-            self.collectionView.reloadItems(at: [indexPath])
-            
-            print("운동이름: \(self.exercises[indexPath.section].name), 세트 수: \(self.exercises[indexPath.section].setCount)")
         }
         
         return header
@@ -187,7 +211,7 @@ extension RoutineAddExerciseViewController: UISearchResultsUpdating {
         }
         
         
-        if let resultcontroller = searchController.searchResultsController as? RoutineSerchResultsViewController {
+        if let resultcontroller = searchController.searchResultsController as? RoutineSearchResultsViewController {
             resultcontroller.viewModel.filterExercises(by: text)
             resultcontroller.tableView.reloadData()
         }
