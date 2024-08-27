@@ -34,7 +34,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func setupUI() {
-        contentView.backgroundColor = .colorPrimary
+        contentView.backgroundColor = .color1E1E1E
         
         exerciseTitleLabel.font = UIFont(name: "Pretendard-Semibold", size: 18)
         exerciseTitleLabel.textColor = .white

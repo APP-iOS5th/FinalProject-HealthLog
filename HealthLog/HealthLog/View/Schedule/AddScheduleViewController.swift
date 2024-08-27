@@ -18,30 +18,28 @@ class AddScheduleViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: init(date: Date) 저장형식 논의
-//    init(date: Date) {
-//        self.selectedDate = date
-//        super.init(nibName: nil, bundle: nil)
-//    }
-//    
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
+    //    init(date: Date) {
+    //        self.selectedDate = date
+    //        super.init(nibName: nil, bundle: nil)
+    //    }
+    //
+    //    required init?(coder: NSCoder) {
+    //        fatalError("init(coder:) has not been implemented")
+    //    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .color1E1E1E
         setupNavigationBar()
         setupSearchController()
         setupDividerView()
         setupTableView()
         setupConstraints()
-        view.backgroundColor = .color1E1E1E
-        
-        searchController.searchBar.delegate = self
         bindViewModel()
         setupKeyboard()
         hideKeyBoardWhenTappedScreen()
     }
-
+    
     private func bindViewModel() {
         exerciseViewModel.$filteredExercises
             .receive(on: RunLoop.main)
@@ -92,7 +90,7 @@ class AddScheduleViewController: UIViewController {
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
-        
+    
     private func setupSearchController() {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exercise in
@@ -100,13 +98,13 @@ class AddScheduleViewController: UIViewController {
             }
             searchResultsController.viewModel = exerciseViewModel
         }
-        
+        //searchController.searchBar.showsBookmarkButton = true
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
-        //searchController.searchResultsUpdater = self
+        searchController.searchResultsUpdater = self
         
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
@@ -267,7 +265,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
         cell.updateSet = { [weak self] setIndex, weight, reps in
             self?.addScheduleViewModel.updateSet(at: indexPath.row, setIndex: setIndex, weight: weight, reps: reps)
         }
-
+        
         cell.stackView.repsTextFields.enumerated().forEach { i, repsTextField in
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
@@ -297,7 +295,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             print("cell.currentSetCount - \(cell.currentSetCount)")
             self?.tableView.reloadRows(at: [indexPath], with: .none)
         }
-
+        
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
@@ -309,10 +307,12 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
     }
 }
 
-// MARK: SearchBar Delegate
-extension AddScheduleViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        exerciseViewModel.setSearchText(to: searchText)
+// MARK: SearchResultsUpdating
+extension AddScheduleViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            exerciseViewModel.setSearchText(to: searchText)
+        }
     }
 }
 
