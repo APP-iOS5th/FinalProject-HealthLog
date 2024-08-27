@@ -43,9 +43,25 @@ class RealmManager {
         if let realm = realm {
             do {
                 try realm.write {
-                    let newInbodyInfo = InBody(value: ["weight": weight, "bodyFat": bodyFat, "muscleMass": muscleMass ])
-                    realm.add(newInbodyInfo)
-                    print("Added new Inbody Info")
+                    // 현재 시간을 한국 시간으로 변환
+                    let koreanDate = Date().toKoreanTime()
+                    // 날짜 범위 설정(같은 날짜의 데이터를 찾기 위함)
+                    let startOfDay = Calendar.current.startOfDay(for: koreanDate)
+                    let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+                    // 현재 날짜만 선택하여 기존 데이터를 조회
+                    let existingInbody = realm.objects(InBody.self).filter("date >= %@ AND date < %@", startOfDay, endOfDay)
+                    // 같은 날짜에 이미 기록이 존재하면 데이터를 업데이트
+                    if let existingInBodyRecord = existingInbody.first {
+                        existingInBodyRecord.weight = weight
+                        existingInBodyRecord.bodyFat = bodyFat
+                        existingInBodyRecord.muscleMass = muscleMass
+                        existingInBodyRecord.date = koreanDate
+                    } else {
+                        // 같은 날짜에 기록이 없으면 새로운 기록 추가
+                        let newInbodyInfo = InBody(value: ["weight": weight, "bodyFat": bodyFat, "muscleMass": muscleMass, "date": koreanDate])
+                        realm.add(newInbodyInfo)
+                        print("Added new Inbody Info")
+                    }
                 }
             } catch {
                 print("Error adding task to Realm: \(error)")
@@ -54,6 +70,14 @@ class RealmManager {
     }
 }
 
+// KoreanTime Date Extension 추가
+extension Date {
+    func toKoreanTime() -> Date {
+        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+        let seconds = TimeInterval(timeZone.secondsFromGMT(for: self))
+        return addingTimeInterval(seconds)
+    }
+}
 
 //extension RealmManager {
 //    func bodyPartSearch (_ bodyPartTypes: [BodyPart]) -> [BodyPart] {
