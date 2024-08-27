@@ -21,7 +21,7 @@ class RealmManager {
         
         initializeRealmExercise()
         initializeRealmRoutine()
-//        initializeRealmSchedule()
+//        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
         
         generateScheduleSampleData()
     }

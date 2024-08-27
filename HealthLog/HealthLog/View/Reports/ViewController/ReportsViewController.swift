@@ -106,7 +106,7 @@ class ReportsViewController: UIViewController {
         setTranslatesAutoresizing()
         
         updateTitleMonthLabel()
-//        updateDataForCurrentMonth()
+        updateDataForCurrentMonth()
         
         
         let initialViewController = exerciseRecordVC
@@ -159,6 +159,7 @@ class ReportsViewController: UIViewController {
             currentMonth -= 1
         }
         updateTitleMonthLabel()
+        updateDataForCurrentMonth()
     }
     
     private func didTapNextMonth() {
@@ -170,7 +171,15 @@ class ReportsViewController: UIViewController {
             currentMonth += 1
         }
         updateTitleMonthLabel()
+        updateDataForCurrentMonth()
     }
+    
+    private func updateDataForCurrentMonth() {
+        if let exerciseVC = currentVC as? ExerciseRecordViewController {
+            _ = exerciseVC.fetchMonthSchedules(year: currentYear, month: currentMonth)
+        }
+    }
+    
     
     // MARK: SegmentControl
     @objc private func didChangeValue(_ sender: UISegmentedControl) {

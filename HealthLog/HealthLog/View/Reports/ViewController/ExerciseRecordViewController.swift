@@ -26,6 +26,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         return tableView
     }()
     
+   
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,13 +61,10 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             exerciseRecordTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        let augustSchedules = fetchAugustSchedules()
-        (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: augustSchedules)
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let currentMonth = Calendar.current.component(.month, from: Date())
         
-//        print(bodyPartDataList)
-        print("Top5: \(top5Exercises)")
-        print("-------------------")
-        print("Top3: \(top3WeightChangeExercises)")
+        let fetchMonthData = fetchMonthSchedules(year: currentYear, month: currentMonth)
         
         exerciseRecordTableView.reloadData()
 
@@ -191,17 +190,23 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     
     // MARK: 부위별 세트수 계산 (1달간)
-    func fetchAugustSchedules() -> [Schedule] {
+    func fetchMonthSchedules(year: Int, month: Int) -> [Schedule] {
         guard let realm = realm else { return []}
         let calendar = Calendar.current
-        let startDate = calendar.date(from: DateComponents(year: 2024, month: 6, day: 1))!
-        let endDate = calendar.date(from: DateComponents(year: 2024, month: 6, day: 30))!
+        let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
+        let range = calendar.range(of: .day, in: .month, for: startDate)!
+        let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range.count))!
         
         let result = Array(realm.objects(Schedule.self).filter { $0.date >= startDate && $0.date <= endDate } )
-        print(" August Data fetch success")
+        print("\(year)년 \(month)월 데이터 fetch 성공")
+        
+        (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: result)
+        
+        exerciseRecordTableView.reloadData()
         
         return result
     }
+    
     
     
     func calculateSetsByBodyPartAndExercise(schedules: [Schedule]) -> ([ReportBodyPartData], top5Exercises: [ExerciseSets], top3WeightChangeExercises: [ExerciseSets]) {
