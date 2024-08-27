@@ -388,15 +388,43 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         // selected date color
         if let schedule = getScheduleForDate(date), !schedule.exercises.isEmpty {
-            if isScheduleCompleted(schedule) {
-                return .default(color: .colorAccent, size: .large)
-            } else {
-                return .default(color: .color767676, size: .large)
+            let numberOfExercises = "\(schedule.exercises.count)"
+            let label = calendarDecoLabel(text: numberOfExercises, bgColor: isScheduleCompleted(schedule) ? .colorAccent : .color525252)
+            
+            return .customView {
+                return label
             }
         }
         
         return nil
     }
+    
+    private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
+        let label = UILabel()
+        label.text = text
+        label.textAlignment = .center
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
+        label.backgroundColor = bgColor
+        
+        let size: CGFloat = 17.0
+        label.frame = CGRect(x: 0, y: 0, width: size, height: size)
+        label.layer.cornerRadius = size / 2
+        label.layer.masksToBounds = true
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: size, height: size))
+        containerView.addSubview(label)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.widthAnchor.constraint(equalToConstant: size),
+            label.heightAnchor.constraint(equalToConstant: size),
+            label.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+        ])
+        return containerView
+    }
+
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
         guard let realm = realm else { return nil }
@@ -524,7 +552,6 @@ extension ScheduleViewController {
                 }
             } else {
                 // reset body part highlights
-                print("no sets, \(scheduleExercise)")
                 if let bodyParts = scheduleExercise.exercise?.bodyParts {
                     for bodyPart in bodyParts {
                         bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
