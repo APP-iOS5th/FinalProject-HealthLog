@@ -74,7 +74,7 @@ class SectionTitleTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureCell() {
+    func configureMonstChangedCell() {
         let bgSymbolConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .black)
         let bgSymbolName = "dumbbell"
         let bgSymbol = UIImage(systemName: bgSymbolName, withConfiguration: bgSymbolConfig)
@@ -85,6 +85,20 @@ class SectionTitleTableViewCell: UITableViewCell {
         let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
         titleImage.image = symbol
         titleLabel.text = "무게 변화가 가장 큰 운동"
+    }
+    
+    func configureMostPerformCell() {
+        
+        let bgSymbolConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .black)
+        let bgSymbolName = "trophy"
+        let bgSymbol = UIImage(systemName: bgSymbolName, withConfiguration: bgSymbolConfig)
+        titleBackgroundImage.image = bgSymbol
+        
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16)
+        let symbolName = "trophy.fill"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        titleImage.image = symbol
+        titleLabel.text = "가장 많이 한 운동"
     }
     
     

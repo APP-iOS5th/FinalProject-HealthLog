@@ -9,7 +9,7 @@ import UIKit
 
 class MostChangedTableViewCell: UITableViewCell {
 
-    private lazy var stackView: UIStackView = {
+    private lazy var mostChangedStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
@@ -20,25 +20,25 @@ class MostChangedTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    let testView1 = ExerciseRankingInfoView()
-    let testView2 = ExerciseRankingInfoView()
-    let testView3 = ExerciseRankingInfoView()
+//    let testView1 = ExerciseRankingInfoView()
+//    let testView2 = ExerciseRankingInfoView()
+//    let testView3 = ExerciseRankingInfoView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        stackView.addArrangedSubview(testView1)
-        stackView.addArrangedSubview(testView2)
-        stackView.addArrangedSubview(testView3)
+//        mostChangedStackView.addArrangedSubview(testView1)
+//        mostChangedStackView.addArrangedSubview(testView2)
+//        mostChangedStackView.addArrangedSubview(testView3)
         
         
-        self.contentView.addSubview(stackView)
+        self.contentView.addSubview(mostChangedStackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
+            mostChangedStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            mostChangedStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
+            mostChangedStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            mostChangedStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
         ])
         
         
@@ -46,6 +46,21 @@ class MostChangedTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureCell(with data: [ExerciseSets]) {
+        
+        mostChangedStackView.arrangedSubviews.forEach {$0.removeFromSuperview()}
+        
+        
+        for i in 0..<data.count {
+            let infoView = ExerciseRankingInfoView()
+            infoView.configure(index: i+1, name: data[i].name, preWeight: data[i].minWeight, heavyWeight: data[i].maxWeight)
+            mostChangedStackView.addArrangedSubview(infoView)
+            
+        }
+        
+        
     }
     
 
@@ -159,6 +174,15 @@ class ExerciseRankingInfoView: UIView {
             squareView.widthAnchor.constraint(equalToConstant: 50),
            
         ])
+    }
+    
+    func configure(index: Int, name: String, preWeight: Int, heavyWeight: Int) {
+        
+        exerciseIndexLabel.text = "\(index)."
+        exerciseNameLabel.text = name
+        previousWeightlabel.text = "\(preWeight)KG"
+        heaviestWeightlabel.text = "\(heavyWeight)KG"
+        
     }
     
 }

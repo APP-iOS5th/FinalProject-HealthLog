@@ -21,7 +21,9 @@ class RealmManager {
         
         initializeRealmExercise()
         initializeRealmRoutine()
-        initializeRealmSchedule()
+//        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
+        
+        generateScheduleSampleData()
     }
     
     
@@ -282,4 +284,57 @@ extension RealmManager {
         return calendar.date(from: dateComponents) ?? Date()
     }
     
+}
+
+extension RealmManager {
+    
+    func generateScheduleSampleData() {
+        guard let realm = realm else {return}
+        
+        if realm.objects(Schedule.self).isEmpty {
+            let allExercises = realm.objects(Exercise.self)
+            var schedules: [Schedule] = []
+            
+            var date = DateComponents(calendar: Calendar.current, year: 2024, month: 5, day: 1).date!
+            let endDate = DateComponents(calendar: Calendar.current, year: 2024, month: 6, day: 30).date!
+            
+            while date <= endDate {
+                var scheduleExercises: [ScheduleExercise] = []
+                
+                for i in 0..<3 {
+                    guard let exercise = allExercises.randomElement() else {return}
+                    
+                    let weights = [10,20,30,40,50,60,70,80,90,100]
+                    
+                    let sets = [
+                        ScheduleExerciseSet(order: 1, weight: weights.randomElement() ?? 60, reps: 10, isCompleted: Bool.random()),
+                        ScheduleExerciseSet(order: 2, weight: weights.randomElement() ?? 60, reps: 10, isCompleted: Bool.random()),
+                        ScheduleExerciseSet(order: 3, weight: weights.randomElement() ?? 60, reps: 10, isCompleted: Bool.random()),
+                    ]
+                    
+                    let scheduleExercise = ScheduleExercise(exercise: exercise, order: i+1, isCompleted: Bool.random(), sets: sets)
+                    scheduleExercises.append(scheduleExercise)
+                }
+                let schedule = Schedule(date: date, exercises: scheduleExercises)
+                schedules.append(schedule)
+                
+                date = Calendar.current.date(byAdding: .day, value: 1, to: date)!
+                
+            }
+            
+            do {
+                try realm.write {
+                    realm.add(schedules)
+                }
+                
+                print("5,6월 Schedule 샘플 데이터를 추가하였습니다.")
+            } catch {
+                print("5,6월 Schedule 샘플 데이터를 추가에 실패했습니다. \(error)")
+            }
+        }
+        
+        else {
+            print(" 5,6월 Schedule 샘플 데이터가 이미 존재합니다.")
+        }
+    }
 }

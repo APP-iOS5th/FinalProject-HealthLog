@@ -12,7 +12,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     // cell의 위치
     private var indexPath: IndexPath?
     
-    private var isStackViewVisibility = true {
+    private var isStackViewVisibility = false {
         didSet {
             if isStackViewVisibility {
                 if exerciseStackView.superview == nil {
