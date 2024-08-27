@@ -144,7 +144,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
-        
+        routineViewModel.addRoutine(routine: Routine(name: routineName ?? "", exercises: routineViewModel.routine.exercises.map { $0 }, exerciseVolume: routineViewModel.routine.exerciseVolume ))
         self.navigationController?.popToRootViewController(animated: true)
         
     }

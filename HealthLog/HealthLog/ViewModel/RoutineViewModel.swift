@@ -71,6 +71,18 @@ class RoutineViewModel: ObservableObject{
         .print()
         .eraseToAnyPublisher()
     
+    func addRoutine(routine: Routine) {
+        guard let realm = realm else {return}
+        do {
+            try realm.write {
+                realm.add(routine)
+            }
+        } catch {
+            print("저장 실패")
+        }
+            
+    }
+    
     func fillteRoutines(by searchText: String) {
         if searchText.isEmpty {
             filteredRoutines = routines
