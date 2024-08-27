@@ -41,7 +41,10 @@ class RealmManager {
         if let realm = realm {
             do {
                 try realm.write {
-                    let newInbodyInfo = InBody(value: ["weight": weight, "bodyFat": bodyFat, "muscleMass": muscleMass ])
+                    // 현재 시간을 한국 시간으로 변환
+                    let koreanDate = Date().toKoreanTime()
+                    
+                    let newInbodyInfo = InBody(value: ["weight": weight, "bodyFat": bodyFat, "muscleMass": muscleMass, "date": koreanDate])
                     realm.add(newInbodyInfo)
                     print("Added new Inbody Info")
                 }
@@ -52,6 +55,14 @@ class RealmManager {
     }
 }
 
+// KoreanTime Date Extension 추가
+extension Date {
+    func toKoreanTime() -> Date {
+        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+        let seconds = TimeInterval(timeZone.secondsFromGMT(for: self))
+        return addingTimeInterval(seconds)
+    }
+}
 
 //extension RealmManager {
 //    func bodyPartSearch (_ bodyPartTypes: [BodyPart]) -> [BodyPart] {
