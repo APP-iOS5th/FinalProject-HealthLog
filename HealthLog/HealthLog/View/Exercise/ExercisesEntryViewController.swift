@@ -442,13 +442,14 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         deleteButton.addTarget(
             self, action: #selector(deleteButtonTapped),
             for: .touchUpInside)
-        view.addSubview(deleteButton)
+        stackView.addArrangedSubview(deleteButton)
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
-        deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        deleteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        deleteButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
-            .isActive = true
-        deleteButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        NSLayoutConstraint.activate([
+            deleteButton.widthAnchor.constraint(
+                equalTo: stackView.widthAnchor),
+            deleteButton.heightAnchor.constraint(
+                equalToConstant: 50),
+        ])
     }
     
     // MARK: - Setup Binddings
@@ -608,9 +609,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         print("doneButtonTapped!")
         switch entryViewModel.mode {
             case .add: entryViewModel.realmAddExercise()
-            case .update: 
-                print("TODO realm update") // TODO: realm update
+            case .update(let detailViewModel):
                 entryViewModel.realmUpdateExercise()
+                let prevVC = navigationController?.viewControllers.first( where: {
+                    $0 is ExercisesDetailViewController
+                }) as? ExercisesDetailViewController
+                prevVC?.navigationItem.title = detailViewModel.exercise.name
         }
         navigationController?.popViewController(animated: true)
     }
@@ -635,7 +639,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func deleteAlertAction() {
-        guard case .update(let detailViewModel) = entryViewModel.mode
+        guard case .update = entryViewModel.mode
         else { return }
         
         let alertController = UIAlertController(

@@ -47,9 +47,8 @@ class ExerciseListCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // 셀 마진
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(
-            top: 13, left: 10, bottom: 0, right: 10))
+            top: 13, left: 17, bottom: 0, right: 17))
     }
     
     // MARK: - Setup UI
