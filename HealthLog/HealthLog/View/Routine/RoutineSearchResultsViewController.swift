@@ -28,7 +28,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
     
     private lazy var dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "ColorSecondary")
+        view.backgroundColor = UIColor.colorSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -44,7 +44,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
     
     
     func setupUI() {
-        self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        self.view.backgroundColor = UIColor.colorPrimary
         navigationController?.setupBarAppearance()
         //MARK: - addSubview
         

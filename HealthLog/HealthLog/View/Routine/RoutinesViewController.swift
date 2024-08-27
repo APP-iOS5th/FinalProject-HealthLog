@@ -9,6 +9,9 @@ import UIKit
 
 class RoutinesViewController: UIViewController {
     
+    let viewModel = RoutineViewModel()
+    
+    
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -31,9 +34,23 @@ class RoutinesViewController: UIViewController {
         return barButton
     }()
     
+    private lazy var tableView: UITableView = {
+       let tableView = UITableView()
+        tableView.separatorStyle = .none
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = .color1E1E1E
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(RoutineCell.self, forCellReuseIdentifier: RoutineCell.cellId)
+        
+       return tableView
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        isRoutineData()
         
         setupUI()
     }
@@ -44,6 +61,14 @@ class RoutinesViewController: UIViewController {
         
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
+    }
+    
+    func isRoutineData() {
+        if viewModel.routines.isEmpty {
+            self.tableView.isHidden = true
+        } else {
+            self.tableView.isHidden = false
+        }
     }
     func setupUI() {
         
@@ -58,13 +83,18 @@ class RoutinesViewController: UIViewController {
         
         //MARK: - addSubview
         self.view.addSubview(textLabel)
-        
-        
+        self.view.addSubview(tableView)
         self.navigationItem.rightBarButtonItem = self.addButton
         
         let safeArea = self.view.safeAreaLayoutGuide
         //MARK: - NSLayoutconstraint
         NSLayoutConstraint.activate([
+            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
+            
+            
             self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 115),
             self.textLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
             
@@ -73,3 +103,25 @@ class RoutinesViewController: UIViewController {
     }
 }
 
+
+//tableView
+extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 170
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.routines.count
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineCell.cellId, for: indexPath) as! RoutineCell
+        cell.selectionStyle = .none
+        cell.configure(with: viewModel.routines[indexPath.row])
+        return cell
+    }
+    
+    
+}
