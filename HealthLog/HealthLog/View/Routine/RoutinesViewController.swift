@@ -7,7 +7,11 @@
 
 import UIKit
 
-class RoutinesViewController: UIViewController {
+class RoutinesViewController: UIViewController, UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+    }
+    
     
     let viewModel = RoutineViewModel()
     
@@ -20,6 +24,15 @@ class RoutinesViewController: UIViewController {
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private lazy var searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.placeholder = "루틴 검색"
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchResultsUpdater = self
+        
+        return searchController
     }()
     
     private lazy var addButton: UIBarButtonItem = {
@@ -73,7 +86,9 @@ class RoutinesViewController: UIViewController {
     func setupUI() {
         
         self.view.backgroundColor = .color1E1E1E
-        self.title = "루틴"
+        self.navigationItem.hidesSearchBarWhenScrolling = true
+        self.navigationItem.searchController = searchController
+        self.navigationItem.title = "루틴"
         self.view.tintColor = .white
         
         
