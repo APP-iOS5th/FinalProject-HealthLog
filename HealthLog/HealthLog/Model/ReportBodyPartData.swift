@@ -12,7 +12,7 @@ struct ReportBodyPartData {
     let bodyPart: String
     var totalSets: Int
     var exercises: [ExerciseSets]
-    var isStackViewVisible: Bool = true // 기본값: 안보이기
+    var isStackViewVisible: Bool = false // 기본값: 안보이기
 }
 
 struct ExerciseSets {

@@ -151,7 +151,6 @@ class ReportsViewController: UIViewController {
     
     
     private func didTapPreviousMonth() {
-        print("이전 달로 이동")
         if currentMonth == 1 {
             currentMonth = 12
             currentYear -= 1
@@ -163,7 +162,6 @@ class ReportsViewController: UIViewController {
     }
     
     private func didTapNextMonth() {
-        print("다음 달로 이동")
         if currentMonth == 12 {
             currentMonth = 1
             currentYear += 1

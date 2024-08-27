@@ -11,7 +11,6 @@ class MuscleImageTableViewCell: UITableViewCell {
     
     private let muscleImageView = MuscleImageView()
     
-    
     private lazy var monthLabel: UILabel = {
         let label = UILabel()
         label.text = "8월 운동 기록"

@@ -20,6 +20,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorColor = UIColor(named: "Color525252")
 
+        
+
         // 테이믈 가장 맨위 여백 지우기 (insetGroup)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         
@@ -36,12 +38,14 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
+                
         
         exerciseRecordTableView.register(MuscleImageTableViewCell.self, forCellReuseIdentifier: "muscle")
         exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
         exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
         exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
         exerciseRecordTableView.register(MostChangedTableViewCell.self, forCellReuseIdentifier: "mostChanged")
+        exerciseRecordTableView.register(NoDataTableViewCell.self, forCellReuseIdentifier: NoDataTableViewCell.identifier)
         
         self.view.addSubview(exerciseRecordTableView)
         
@@ -49,7 +53,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         exerciseRecordTableView.layoutMargins = .zero
         exerciseRecordTableView.separatorInset = .zero
-        
         // ipad와 같은 넓은 화면에서 테이블 뷰 셀이 전체 화면 너비를 사용하게 됨.
         exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
         
@@ -64,17 +67,22 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         let currentYear = Calendar.current.component(.year, from: Date())
         let currentMonth = Calendar.current.component(.month, from: Date())
         
-        let fetchMonthData = fetchMonthSchedules(year: currentYear, month: currentMonth)
+        _ = fetchMonthSchedules(year: currentYear, month: currentMonth)
         
         exerciseRecordTableView.reloadData()
 
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        4
+        return bodyPartDataList.isEmpty ? 1 : 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if bodyPartDataList.isEmpty {
+            return 1
+        }
+        
         switch section {
         case 0:
             return 1
@@ -91,6 +99,14 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if bodyPartDataList.isEmpty {
+            let cell = tableView.dequeueReusableCell(withIdentifier: NoDataTableViewCell.identifier, for: indexPath) as! NoDataTableViewCell
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
+            return cell
+        }
+        
         
         switch indexPath.section {
         case 0:
@@ -117,6 +133,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                cell.configureMostPerformCell()
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "mostPerform", for: indexPath) as! MostPerformedTableViewCell
@@ -130,7 +147,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
-                cell.configureCell()
+                cell.configureMonstChangedCell()
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 return cell
@@ -187,6 +204,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
+    
     
     
     // MARK: 부위별 세트수 계산 (1달간)
@@ -252,7 +270,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                     }
                 }
                 
-                if let exerciseData = exerciseSetsCounter[exerciseName] {
+                if exerciseSetsCounter[exerciseName] != nil {
                     exerciseSetsCounter[exerciseName]!.setsCount += setsCount
                     exerciseSetsCounter[exerciseName]!.minWeight = min(exerciseSetsCounter[exerciseName]!.minWeight, minWeight)
                     exerciseSetsCounter[exerciseName]!.maxWeight = max(exerciseSetsCounter[exerciseName]!.maxWeight, maxWeight)
@@ -289,4 +307,20 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         return (bodyPartDataList, Array(top5Exercises), Array(top3WeightChangeExercises))
     }
     
+}
+
+public extension UIView {
+    func addBottomBorderWithColor(color: UIColor) {
+        let border = CALayer()
+        border.backgroundColor = color.cgColor
+        border.frame = CGRect(x: 0, y: self.frame.size.height, width: self.frame.size.width, height: 1)
+        self.layer.addSublayer(border)
+    }
+
+    func addAboveTheBottomBorderWithColor(color: UIColor) {
+        let border = CALayer()
+        border.backgroundColor = color.cgColor
+        border.frame = CGRect(x: 0, y: self.frame.size.height - 1, width: self.frame.size.width, height: 1)
+        self.layer.addSublayer(border)
+    }
 }
