@@ -59,7 +59,7 @@ class RoutinesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        viewModel.fillteRoutines(by: "")
         isRoutineData()
         
         setupUI()
@@ -68,7 +68,7 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        
+        isRoutineData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
     }

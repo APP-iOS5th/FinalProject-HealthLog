@@ -44,7 +44,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
     
     
     func setupUI() {
-        self.view.backgroundColor = UIColor.colorPrimary
+        self.view.backgroundColor = UIColor.color1E1E1E
         navigationController?.setupBarAppearance()
         //MARK: - addSubview
         
