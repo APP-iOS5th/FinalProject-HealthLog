@@ -394,6 +394,8 @@ class MuscleImageView: UIView {
             }
         }
     }
+    
+    // for scheduleView
     func highlightBodyParts(bodyPartsWithCompletedSets bodyParts: [String: Int]) {
         
         for (bodyPartRawValue, sets) in bodyParts {
@@ -449,7 +451,7 @@ class MuscleImageView: UIView {
                 continue
             }
 
-            // totalSets에 따른 이미지 파일 이름을 결정
+            // Sets에 따른 이미지 파일 이름을 결정
             if sets > 0 {
                 var imageSuffix = "_0\(sets)"
                 if sets >= 5 {
