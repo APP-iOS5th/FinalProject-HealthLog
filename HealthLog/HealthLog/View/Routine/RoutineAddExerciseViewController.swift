@@ -145,7 +145,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     @objc func doneTapped() {
         
-        
+        self.navigationController?.popToRootViewController(animated: true)
         
     }
     
