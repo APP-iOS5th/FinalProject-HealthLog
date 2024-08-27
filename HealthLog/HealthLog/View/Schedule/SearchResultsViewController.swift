@@ -7,9 +7,10 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class SearchResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+    private var cancellables = Set<AnyCancellable>()
     var viewModel = ExerciseViewModel()
     var onExerciseSelected: ((Exercise) -> Void)?
     
@@ -35,6 +36,14 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         setupSearchOptionStackView()
         setupDividerView()
         setupConstraints()
+    }
+    
+    func setupBindings() {
+        // MARK: SearchBodyPartOption Select
+        searchOptionStackView
+            .bodyPartOptionPublisher
+            .sink { self.viewModel.selectedOption = $0 }
+            .store(in: &cancellables)
     }
     
     private func setupSearchOptionStackView() {
