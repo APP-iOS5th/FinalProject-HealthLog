@@ -12,26 +12,34 @@ class AddScheduleViewController: UIViewController {
     let searchController = UISearchController(searchResultsController: SearchResultsViewController())
     let dividerView = UIView()
     let tableView = UITableView()
-    var selectedDate: Date = Date() // 스케줄뷰에서 받아와서 할당하기, init
+    var selectedDate: Date?
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: init(date: Date) 저장형식 논의
+    //    init(date: Date) {
+    //        self.selectedDate = date
+    //        super.init(nibName: nil, bundle: nil)
+    //    }
+    //
+    //    required init?(coder: NSCoder) {
+    //        fatalError("init(coder:) has not been implemented")
+    //    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .color1E1E1E
         setupNavigationBar()
         setupSearchController()
         setupDividerView()
         setupTableView()
         setupConstraints()
-        view.backgroundColor = .colorPrimary
-        
-        searchController.searchBar.delegate = self
         bindViewModel()
         setupKeyboard()
         hideKeyBoardWhenTappedScreen()
     }
-
+    
     private func bindViewModel() {
         exerciseViewModel.$filteredExercises
             .receive(on: RunLoop.main)
@@ -40,7 +48,6 @@ class AddScheduleViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // 사용자가 선택한 운동 목록이 변경될 때마다 테이블 뷰를 갱신하고, 완료 버튼의 상태를 갱신
         addScheduleViewModel.$selectedExercises
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -58,10 +65,16 @@ class AddScheduleViewController: UIViewController {
     
     private func setupNavigationBar() {
         self.title = "오늘 할 운동 추가"
-        self.navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.white,
-            .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
-        ]
+        if let navigationBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = .color1E1E1E
+            appearance.titleTextAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
+            ]
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
         
         let leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(dismissView))
         leftBarButtonItem.setTitleTextAttributes([
@@ -77,22 +90,23 @@ class AddScheduleViewController: UIViewController {
         ], for: .normal)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
     }
-        
+    
     private func setupSearchController() {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exercise in
                 self?.addSelectedExercise(exercise)
             }
             searchResultsController.viewModel = exerciseViewModel
+            searchController.searchBar.delegate = searchResultsController
         }
-        
+        //searchController.searchBar.showsBookmarkButton = true
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = self
         
-        // UITextField는 공개적으로 제공되는 프로퍼티가 아니기 때문에, value(forKey:)를 사용해 이 내부 요소에 접근
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
                 leftView.tintColor = .white
@@ -118,6 +132,9 @@ class AddScheduleViewController: UIViewController {
         tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
+        tableView.dragInteractionEnabled = true
         
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
         headerView.backgroundColor = .clear
@@ -232,7 +249,8 @@ class AddScheduleViewController: UIViewController {
     }
 }
 
-extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+// MARK: TableView Delegate
+extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return addScheduleViewModel.selectedExercises.count
     }
@@ -248,7 +266,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
         cell.updateSet = { [weak self] setIndex, weight, reps in
             self?.addScheduleViewModel.updateSet(at: indexPath.row, setIndex: setIndex, weight: weight, reps: reps)
         }
-
+        
         cell.stackView.repsTextFields.enumerated().forEach { i, repsTextField in
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
@@ -278,7 +296,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
             print("cell.currentSetCount - \(cell.currentSetCount)")
             self?.tableView.reloadRows(at: [indexPath], with: .none)
         }
-
+        
         cell.deleteButtonTapped = { [weak self] in
             self?.removeSelectedExercise(at: indexPath.row)
         }
@@ -288,9 +306,42 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource,
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
+}
+
+// MARK: SearchResultsUpdating
+extension AddScheduleViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text {
+            exerciseViewModel.setSearchText(to: searchText)
+        }
+    }
+}
+
+// MARK: Drag and Drop Delegate
+extension AddScheduleViewController: UITableViewDragDelegate, UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dragItem = UIDragItem(itemProvider: NSItemProvider())
+        dragItem.localObject = addScheduleViewModel.selectedExercises[indexPath.row]
+        return [dragItem]
+    }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        exerciseViewModel.setSearchText(to: searchText)
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if session.localDragSession != nil {
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if let item = coordinator.items.first,
+           let sourceIndexPath = item.sourceIndexPath,
+           let _ = item.dragItem.localObject as? ScheduleExercise {
+            addScheduleViewModel.moveExercise(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+            coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+        }
     }
 }
 
@@ -307,7 +358,7 @@ extension UIView {
         }
         return nil
     }
-
+    
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {
