@@ -22,7 +22,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     private var cancellables = Set<AnyCancellable>()
     var selectedExercises = [String]()
     
-    var resultsViewController = RoutineSerchResultsViewController()
+    var resultsViewController = RoutineSearchResultsViewController()
     
     private lazy var searchController: UISearchController = {
         resultsViewController.delegate = self
@@ -211,7 +211,7 @@ extension RoutineAddExerciseViewController: UISearchResultsUpdating {
         }
         
         
-        if let resultcontroller = searchController.searchResultsController as? RoutineSerchResultsViewController {
+        if let resultcontroller = searchController.searchResultsController as? RoutineSearchResultsViewController {
             resultcontroller.viewModel.filterExercises(by: text)
             resultcontroller.tableView.reloadData()
         }

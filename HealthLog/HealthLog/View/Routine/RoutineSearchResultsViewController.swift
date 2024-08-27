@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RoutineSerchResultsViewController: UIViewController, SearchResultCellDelegate {
+class RoutineSearchResultsViewController: UIViewController, SearchResultCellDelegate {
     
     weak var delegate: SerchResultDelegate?
     
@@ -19,7 +19,7 @@ class RoutineSerchResultsViewController: UIViewController, SearchResultCellDeleg
         tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = .colorPrimary
+        tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(RoutineExerciseListTableViewCell.self, forCellReuseIdentifier: RoutineExerciseListTableViewCell.cellId)
         return tableView
@@ -79,7 +79,7 @@ class RoutineSerchResultsViewController: UIViewController, SearchResultCellDeleg
     
 }
 
-extension RoutineSerchResultsViewController: UITableViewDelegate, UITableViewDataSource {
+extension RoutineSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 107
