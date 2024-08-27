@@ -142,8 +142,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         setupUI()
         loadSelectedDateSchedule(today)
         customizeCalendarTextColor()
-        
-        highlightBodyPartsAtSelectedDate(today)
     }
     
     private func setupUI() {
@@ -262,6 +260,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             exerciseVolumeLabel.text = "오늘의 볼륨량: \(selectedDateExerciseVolume)"
             updateTableView()
         }
+        
+        highlightBodyPartsAtSelectedDate(date)
     }
     
     @objc func addSchedule() {
@@ -512,6 +512,7 @@ extension ScheduleViewController {
             }
             
             if completedSetsForExercise > 0 {
+                // apply highlight saturation to body parts according to the number of sets
                 if let bodyParts = scheduleExercise.exercise?.bodyParts {
                     for bodyPart in bodyParts {
                         if let currentCount = bodyPartsWithCompletedSets[bodyPart.rawValue] {
@@ -519,6 +520,14 @@ extension ScheduleViewController {
                         } else {
                             bodyPartsWithCompletedSets[bodyPart.rawValue] = completedSetsForExercise
                         }
+                    }
+                }
+            } else {
+                // reset body part highlights
+                print("no sets, \(scheduleExercise)")
+                if let bodyParts = scheduleExercise.exercise?.bodyParts {
+                    for bodyPart in bodyParts {
+                        bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
                     }
                 }
             }

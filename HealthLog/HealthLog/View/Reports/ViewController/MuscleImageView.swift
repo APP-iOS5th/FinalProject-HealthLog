@@ -451,17 +451,22 @@ class MuscleImageView: UIView {
                 continue
             }
 
-            // Sets에 따른 이미지 파일 이름을 결정
             if sets > 0 {
+                // apply number of sets to the body parts
                 var imageSuffix = "_0\(sets)"
                 if sets >= 5 {
                     imageSuffix = "_05"
                 }
                 
-                // 해당 이미지 뷰들을 보이게 하고 이미지 이름 설정
+                // highlight body parts
                 for (index, imageView) in imageViews.enumerated() {
                     imageView.isHidden = false
                     imageView.image = UIImage(named: "\(imageNamePrefixes[index])\(imageSuffix)")
+                }
+            } else {
+                // hide body parts
+                for (index, imageView) in imageViews.enumerated() {
+                    imageView.isHidden = true
                 }
             }
         }
