@@ -350,7 +350,7 @@ class MuscleImageView: UIView {
                 imageNamePrefixes = ["back_body_glutes"]
             case .adductors:
                 imageViews = [frontMuscleAdductors, backMuscleAdductors]
-                imageNamePrefixes = ["front_body_adductors", "back_body_adductors"]
+                imageNamePrefixes = ["front_body_adductors", "back_body_adductors"] 
             case .abductors:
                 imageViews = [frontMuscleAbductors, backMuscleAbductors]
                 imageNamePrefixes = ["front_body_abductors", "back_body_abductors"]

@@ -9,6 +9,9 @@ import UIKit
 
 class ReportsViewController: UIViewController {
     
+    private var currentYear: Int = Calendar.current.component(.year, from: Date())
+    private var currentMonth: Int = Calendar.current.component(.month, from: Date())
+    
     private lazy var titleStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -102,6 +105,9 @@ class ReportsViewController: UIViewController {
         //AutoresizingMask 관리
         setTranslatesAutoresizing()
         
+        updateTitleMonthLabel()
+//        updateDataForCurrentMonth()
+        
         
         let initialViewController = exerciseRecordVC
         addChild(initialViewController)
@@ -133,17 +139,37 @@ class ReportsViewController: UIViewController {
         
     }
     
+    private func updateTitleMonthLabel() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "yyyy년 M월 리포트"
+        
+        if let date = Calendar.current.date(from: DateComponents(year: currentYear, month: currentMonth)) {
+            titleMonthLabel.text = dateFormatter.string(from: date)
+        }
+    }
     
     
     private func didTapPreviousMonth() {
         print("이전 달로 이동")
-        // TODO: 이전 달로 이동 버튼 구현
-        
+        if currentMonth == 1 {
+            currentMonth = 12
+            currentYear -= 1
+        } else {
+            currentMonth -= 1
+        }
+        updateTitleMonthLabel()
     }
     
     private func didTapNextMonth() {
         print("다음 달로 이동")
-        // TODO: 다음 달로 이동 버튼 구현
+        if currentMonth == 12 {
+            currentMonth = 1
+            currentYear += 1
+        } else {
+            currentMonth += 1
+        }
+        updateTitleMonthLabel()
     }
     
     // MARK: SegmentControl

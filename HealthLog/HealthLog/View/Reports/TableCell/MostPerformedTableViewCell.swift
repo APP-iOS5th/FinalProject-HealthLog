@@ -13,7 +13,7 @@ class MostPerformedTableViewCell: UITableViewCell {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
-        
+        stackView.spacing = 10
         stackView.alignment = .fill
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,13 +52,12 @@ class MostPerformedTableViewCell: UITableViewCell {
         
         mostPerformStackView.arrangedSubviews.forEach {$0.removeFromSuperview()}
         
-        var index = 1
+        
         
         for i in 0..<data.count {
             let infoView = PerformedExerciseInfoView()
-            infoView.configure(index: index, name: data[i].name , sets: data[i].setsCount, days: data[i].daysCount)
+            infoView.configure(index: i+1, name: data[i].name , sets: data[i].setsCount, days: data[i].daysCount)
             mostPerformStackView.addArrangedSubview(infoView)
-            index += 1
         }
         
     }

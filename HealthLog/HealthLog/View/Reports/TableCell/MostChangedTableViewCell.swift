@@ -52,14 +52,12 @@ class MostChangedTableViewCell: UITableViewCell {
         
         mostChangedStackView.arrangedSubviews.forEach {$0.removeFromSuperview()}
         
-        var index = 1
         
         for i in 0..<data.count {
             let infoView = ExerciseRankingInfoView()
-            infoView.configure(index: index, name: data[i].name, preWeight: data[i].minWeight, heavyWeight: data[i].maxWeight)
+            infoView.configure(index: i+1, name: data[i].name, preWeight: data[i].minWeight, heavyWeight: data[i].maxWeight)
             mostChangedStackView.addArrangedSubview(infoView)
             
-            index += 1
         }
         
         
@@ -180,7 +178,7 @@ class ExerciseRankingInfoView: UIView {
     
     func configure(index: Int, name: String, preWeight: Int, heavyWeight: Int) {
         
-        exerciseNameLabel.text = "\(index)."
+        exerciseIndexLabel.text = "\(index)."
         exerciseNameLabel.text = name
         previousWeightlabel.text = "\(preWeight)KG"
         heaviestWeightlabel.text = "\(heavyWeight)KG"

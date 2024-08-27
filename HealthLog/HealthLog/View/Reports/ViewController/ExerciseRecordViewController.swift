@@ -82,9 +82,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 1:
             return bodyPartDataList.count
         case 2:
-            return top5Exercises.count
+            return 2
         case 3:
-            return top3WeightChangeExercises.count
+            return 2
         default:
             return 0
         }
@@ -167,7 +167,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 return 42
             } else {
-                return 79
+                return 150
             }
         case 3:
             if indexPath.row == 0 {
@@ -191,13 +191,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     
     // MARK: 부위별 세트수 계산 (1달간)
-    
-    // 8월로 되어있는 걸 달 이동 기능과 연결 해야함.
     func fetchAugustSchedules() -> [Schedule] {
         guard let realm = realm else { return []}
         let calendar = Calendar.current
-        let startDate = calendar.date(from: DateComponents(year: 2024, month: 8, day: 1))!
-        let endDate = calendar.date(from: DateComponents(year: 2024, month: 8, day: 31))!
+        let startDate = calendar.date(from: DateComponents(year: 2024, month: 6, day: 1))!
+        let endDate = calendar.date(from: DateComponents(year: 2024, month: 6, day: 30))!
         
         let result = Array(realm.objects(Schedule.self).filter { $0.date >= startDate && $0.date <= endDate } )
         print(" August Data fetch success")
