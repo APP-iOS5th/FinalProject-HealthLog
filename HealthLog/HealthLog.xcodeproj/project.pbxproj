@@ -63,6 +63,7 @@
 		CE4779262C7B205C00F6DE74 /* TestAddScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779252C7B205C00F6DE74 /* TestAddScheduleViewModel.swift */; };
 		CE4779282C7B212300F6DE74 /* TestSelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779272C7B212300F6DE74 /* TestSelectedExerciseCell.swift */; };
 		CE47792A2C7B23E700F6DE74 /* TestSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779292C7B23E700F6DE74 /* TestSearchResultsViewController.swift */; };
+		CEA171B82C7DA311000EB11A /* FunctionInfoPrint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA171B72C7DA311000EB11A /* FunctionInfoPrint.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
 		CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */; };
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
@@ -149,6 +150,7 @@
 		CE4779252C7B205C00F6DE74 /* TestAddScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAddScheduleViewModel.swift; sourceTree = "<group>"; };
 		CE4779272C7B212300F6DE74 /* TestSelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSelectedExerciseCell.swift; sourceTree = "<group>"; };
 		CE4779292C7B23E700F6DE74 /* TestSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSearchResultsViewController.swift; sourceTree = "<group>"; };
+		CEA171B72C7DA311000EB11A /* FunctionInfoPrint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionInfoPrint.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
 		CEE29B902C69A22E00D82571 /* ExerciseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseViewModel.swift; sourceTree = "<group>"; };
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				CE4779252C7B205C00F6DE74 /* TestAddScheduleViewModel.swift */,
 				CE4779272C7B212300F6DE74 /* TestSelectedExerciseCell.swift */,
 				CE4779292C7B23E700F6DE74 /* TestSearchResultsViewController.swift */,
+				CEA171B72C7DA311000EB11A /* FunctionInfoPrint.swift */,
 			);
 			path = Exercise;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 				18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */,
 				CE4779242C7B204400F6DE74 /* TestAddScheduleViewController.swift in Sources */,
 				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
+				CEA171B82C7DA311000EB11A /* FunctionInfoPrint.swift in Sources */,
 				CE4779222C7A284500F6DE74 /* ExerciseEntryViewModel.swift in Sources */,
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */,

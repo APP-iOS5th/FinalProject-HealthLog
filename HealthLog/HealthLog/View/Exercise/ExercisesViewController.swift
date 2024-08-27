@@ -53,9 +53,12 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     // MARK: - Setup
     
     func setupNavigationBar() {
-        title = "운동 목록"
+        title = "운동리스트"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
+        
+        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        self.navigationItem.backBarButtonItem = backbarButtonItem 
         
         // MARK: addButton
         var buttonConfig = UIButton.Configuration.filled()
