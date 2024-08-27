@@ -17,14 +17,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private var muscleImageView = MuscleImageView()
     
-    private var todaySchedule: Schedule?
+    private var selectedDateSchedule: Schedule?
     
     private var viewModel = ScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     private let today = Calendar.current.startOfDay(for: Date())
     private var selectedDate: Date?
-    private var todayExerciseVolume: Int = 0
+    private var selectedDateExerciseVolume: Int = 0
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
     
@@ -142,8 +142,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         setupUI()
         loadSelectedDateSchedule(today)
         customizeCalendarTextColor()
-        
-        highlightMusclePerDate(today)
     }
     
     private func setupUI() {
@@ -218,48 +216,52 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             view.layoutIfNeeded()
     }
     
+    fileprivate func createTodaysDummySchedule() -> Schedule? {
+        guard let realm = realm else { return nil }
+
+        let exercises = realm.objects(Exercise.self)
+        let scheduleExerciseSet1 = ScheduleExerciseSet(order: 1, weight: 10, reps: 10, isCompleted: true)
+        let scheduleExerciseSet2 = ScheduleExerciseSet(order: 2, weight: 11, reps: 10, isCompleted: true)
+        let scheduleExerciseSet3 = ScheduleExerciseSet(order: 3, weight: 12, reps: 10, isCompleted: false)
+        let scheduleExerciseSet4 = ScheduleExerciseSet(order: 1, weight: 10, reps: 12, isCompleted: true)
+        let scheduleExerciseSet5 = ScheduleExerciseSet(order: 2, weight: 12, reps: 12, isCompleted: false)
+        let scheduleExerciseSet6 = ScheduleExerciseSet(order: 3, weight: 14, reps: 12, isCompleted: false)
+        
+        let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
+        let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
+        
+        let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2])
+        
+        // add today schedule to realm
+        try! realm.write {
+            realm.add(newSchedule)
+        }
+        
+        return realm.objects(Schedule.self).filter("date == %@", today).first
+    }
+    
     func loadSelectedDateSchedule(_ date: Date) {
-        guard let realm = realm else {return}
+        guard let realm = realm else { return }
         
-        todaySchedule = realm.objects(Schedule.self).filter("date == %@", date).first
+        selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         
-        // to create todaySchedule
-//        if todaySchedule == nil {
-//            let exercises = realm.objects(Exercise.self)
-//            let scheduleExerciseSet1 = ScheduleExerciseSet(order: 1, weight: 10, reps: 10, isCompleted: true)
-//            let scheduleExerciseSet2 = ScheduleExerciseSet(order: 2, weight: 11, reps: 10, isCompleted: true)
-//            let scheduleExerciseSet3 = ScheduleExerciseSet(order: 3, weight: 12, reps: 10, isCompleted: false)
-//            let scheduleExerciseSet4 = ScheduleExerciseSet(order: 1, weight: 10, reps: 12, isCompleted: true)
-//            let scheduleExerciseSet5 = ScheduleExerciseSet(order: 2, weight: 12, reps: 12, isCompleted: false)
-//            let scheduleExerciseSet6 = ScheduleExerciseSet(order: 3, weight: 14, reps: 12, isCompleted: false)
-//            
-//            let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
-//            let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
-//            
-////            let highlightedBodyParts1 = HighlightedBodyPart(bodyPart: .chest, step: 6)
-////            let highlightedBodyParts2 = HighlightedBodyPart(bodyPart: .triceps, step: 3)
-////            let highlightedBodyParts3 = HighlightedBodyPart(bodyPart: .shoulders, step: 3)
-//            
-//            let newSchedule = Schedule(date: today, exercises: [scheduleExercise1,scheduleExercise2]/*, highlightedBodyParts: [highlightedBodyParts1, highlightedBodyParts2, highlightedBodyParts3]*/)
-//            
-//            // add today schedule to realm
-//            try! realm.write {
-//                realm.add(newSchedule)
-//            }
-//            
-//            todaySchedule = realm.objects(Schedule.self).filter("date == %@", today).first
-//        }
-        todayExerciseVolume = 0
-        if let selectedSchedule = todaySchedule {
+        if date == today && selectedDateSchedule == nil {
+            selectedDateSchedule = createTodaysDummySchedule()
+        }
+
+        selectedDateExerciseVolume = 0
+        if let selectedSchedule = selectedDateSchedule {
             // calculate exercise volume
             for scheduleExercise in selectedSchedule.exercises {
                 for set in scheduleExercise.sets {
-                    todayExerciseVolume += set.weight * set.reps
+                    selectedDateExerciseVolume += set.weight * set.reps
                 }
             }
-            exerciseVolumeLabel.text = "오늘의 볼륨량: \(todayExerciseVolume)"
+            exerciseVolumeLabel.text = "오늘의 볼륨량: \(selectedDateExerciseVolume)"
             updateTableView()
         }
+        
+        highlightBodyPartsAtSelectedDate(date)
     }
     
     @objc func addSchedule() {
@@ -272,8 +274,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func didTapSaveRoutine() {
-        if todaySchedule != nil {
-            let saveRoutineVC = SaveRoutineViewController(schedule: todaySchedule!)
+        if selectedDateSchedule != nil {
+            let saveRoutineVC = SaveRoutineViewController(schedule: selectedDateSchedule!)
             let navigationController = UINavigationController(rootViewController: saveRoutineVC)
             
             // transparent black background
@@ -306,13 +308,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return todaySchedule?.exercises.count ?? 0
+        return selectedDateSchedule?.exercises.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ExerciseCheckCell.identifier, for: indexPath) as! ExerciseCheckCell
         
-        if let scheduleExercise = todaySchedule?.exercises[indexPath.row] {
+        if let scheduleExercise = selectedDateSchedule?.exercises[indexPath.row] {
             cell.configure(with: scheduleExercise)
             cell.delegate = self
         }
@@ -386,15 +388,43 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         // selected date color
         if let schedule = getScheduleForDate(date), !schedule.exercises.isEmpty {
-            if isScheduleCompleted(schedule) {
-                return .default(color: .colorAccent, size: .large)
-            } else {
-                return .default(color: .color767676, size: .large)
+            let numberOfExercises = "\(schedule.exercises.count)"
+            let label = calendarDecoLabel(text: numberOfExercises, bgColor: isScheduleCompleted(schedule) ? .colorAccent : .color525252)
+            
+            return .customView {
+                return label
             }
         }
         
         return nil
     }
+    
+    private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
+        let label = UILabel()
+        label.text = text
+        label.textAlignment = .center
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
+        label.backgroundColor = bgColor
+        
+        let size: CGFloat = 17.0
+        label.frame = CGRect(x: 0, y: 0, width: size, height: size)
+        label.layer.cornerRadius = size / 2
+        label.layer.masksToBounds = true
+        
+        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: size, height: size))
+        containerView.addSubview(label)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            label.widthAnchor.constraint(equalToConstant: size),
+            label.heightAnchor.constraint(equalToConstant: size),
+            label.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+        ])
+        return containerView
+    }
+
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
         guard let realm = realm else { return nil }
@@ -491,7 +521,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 
 
 extension ScheduleViewController {
-    private func highlightMusclePerDate(_ date: Date) {
+    private func highlightBodyPartsAtSelectedDate(_ date: Date) {
         guard let realm = realm else {return}
         
         guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date).first else { return }
@@ -510,6 +540,7 @@ extension ScheduleViewController {
             }
             
             if completedSetsForExercise > 0 {
+                // apply highlight saturation to body parts according to the number of sets
                 if let bodyParts = scheduleExercise.exercise?.bodyParts {
                     for bodyPart in bodyParts {
                         if let currentCount = bodyPartsWithCompletedSets[bodyPart.rawValue] {
@@ -519,90 +550,16 @@ extension ScheduleViewController {
                         }
                     }
                 }
+            } else {
+                // reset body part highlights
+                if let bodyParts = scheduleExercise.exercise?.bodyParts {
+                    for bodyPart in bodyParts {
+                        bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
+                    }
+                }
             }
         }
         
-        print("Completed Sets Count: \(completedSetsCount)")
-        print("Body Parts with Completed Sets: \(bodyPartsWithCompletedSets)")
-
-//        for bodyPartData in data {
-//            let bodyPart = BodyPart(rawValue: bodyPartData.bodyPart)
-//            
-//            var imageNamePrefixes: [String] = []
-//            var imageViews: [UIImageView] = []
-//
-//            switch bodyPart {
-//            case .chest:
-//                imageViews = [frontMuscleChest]
-//                imageNamePrefixes = ["front_body_chest"]
-//            case .back:
-//                imageViews = [backMuscleback]
-//                imageNamePrefixes = ["back_body_back"]
-//            case .shoulders:
-//                imageViews = [frontMuscleShoulders, backMuscleShoulders]
-//                imageNamePrefixes = ["front_body_shoulders", "back_body_shoulders"]
-//            case .triceps:
-//                imageViews = [backMuscleTriceps]
-//                imageNamePrefixes = ["back_body_triceps"]
-//            case .biceps:
-//                imageViews = [frontMuscleBiceps]
-//                imageNamePrefixes = ["front_body_biceps"]
-//            case .abs:
-//                imageViews = [frontMuscleAbs]
-//                imageNamePrefixes = ["front_body_abs"]
-//            case .quadriceps:
-//                imageViews = [frontMuscleQuadriceps]
-//                imageNamePrefixes = ["front_body_quadriceps"]
-//            case .hamstrings:
-//                imageViews = [backMuscleHamstrings]
-//                imageNamePrefixes = ["back_body_hamstrings"]
-//            case .glutes:
-//                imageViews = [backMuscleGlutes]
-//                imageNamePrefixes = ["back_body_glutes"]
-//            case .adductors:
-//                imageViews = [frontMuscleAdductors, backMuscleAdductors]
-//                imageNamePrefixes = ["front_body_adductors", "back_body_adductors"]
-//            case .abductors:
-//                imageViews = [frontMuscleAbductors, backMuscleAbductors]
-//                imageNamePrefixes = ["front_body_abductors", "back_body_abductors"]
-//            case .calves:
-//                imageViews = [backMuscleCalves]
-//                imageNamePrefixes = ["back_body_calves"]
-//            case .trap:
-//                imageViews = [frontMuscleTrap, backMuscleTrap]
-//                imageNamePrefixes = ["front_body_trap", "back_body_trap"]
-//            case .forearms:
-//                imageViews = [frontMuscleForearms]
-//                imageNamePrefixes = ["front_body_forearms"]
-//            case .other, .none:
-//                continue
-//            }
-//
-//            // totalSets에 따른 이미지 파일 이름을 결정
-//            if bodyPartData.totalSets > 0 {
-//                var imageSuffix = "_01"
-//                
-//                switch bodyPartData.totalSets {
-//                case 1...5:
-//                    imageSuffix = "_01"
-//                case 6...15:
-//                    imageSuffix = "_02"
-//                case 16...25:
-//                    imageSuffix = "_03"
-//                case 26...35:
-//                    imageSuffix = "_04"
-//                case 36...:
-//                    imageSuffix = "_05"
-//                default:
-//                    break
-//                }
-//                
-//                // 해당 이미지 뷰들을 보이게 하고 이미지 이름 설정
-//                for (index, imageView) in imageViews.enumerated() {
-//                    imageView.isHidden = false
-//                    imageView.image = UIImage(named: "\(imageNamePrefixes[index])\(imageSuffix)")
-//                }
-//            }
-//        }
+        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
     }
 }
