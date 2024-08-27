@@ -38,6 +38,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         setupConstraints()
         setupBinding()
     }
+    
     private func setupBinding() {
         viewModel.$filteredExercises
             .receive(on: DispatchQueue.main)
@@ -48,6 +49,11 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         searchOptionStackView
             .bodyPartOptionPublisher
             .sink { self.viewModel.selectedOption = $0 }
+            .store(in: &cancellables)
+        
+        // MARK: bodypartOptionShowUIChange
+        viewModel.$bodypartOptionShow
+            .sink { self.bodypartOptionShowUIChange($0) }
             .store(in: &cancellables)
     }
     
