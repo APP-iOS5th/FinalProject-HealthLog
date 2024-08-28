@@ -11,6 +11,7 @@ class SetCountHeaderView: UICollectionReusableView {
     static let identifier = "SetCountHeaderView"
     
     var setCountDidChange: ((Int) -> Void)?
+    var setDelete: (() -> Void)?
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -23,6 +24,7 @@ class SetCountHeaderView: UICollectionReusableView {
     private lazy var xButton: UIButton = {
         let buttonAction = UIAction { _ in
             print("x 클릭")
+            self.setDelete?()
            
         }
         

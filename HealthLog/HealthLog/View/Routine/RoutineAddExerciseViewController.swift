@@ -196,6 +196,10 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
             self?.collectionView.reloadSections(IndexSet(integer: indexPath.section))
         }
         
+        header.setDelete = { 
+            self.routineViewModel.deleteExercise(for: indexPath.section)
+            self.collectionView.reloadData()
+        }
         return header
     }
     

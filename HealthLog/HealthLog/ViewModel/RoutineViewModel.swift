@@ -102,6 +102,11 @@ class RoutineViewModel: ObservableObject{
         validateExercise()
     }
     
+    func deleteExercise(for setcion: Int) {
+        self.routine.exercises.remove(at: setcion)
+        validateExercise()
+    }
+    
     private func validateExercise() {
         let isExercise = !routine.exercises.isEmpty
         let allFieldsFilled = routine.exercises.allSatisfy { exercise in
