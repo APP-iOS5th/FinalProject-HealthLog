@@ -8,7 +8,7 @@
 import UIKit
 
 class GetRoutineCell: UITableViewCell {
-    static let cellId = "RoutineCell"
+    static let cellId = "GetRoutineCell"
     var addButtonTapped: (() -> Void)?
     var routine: Routine?
     

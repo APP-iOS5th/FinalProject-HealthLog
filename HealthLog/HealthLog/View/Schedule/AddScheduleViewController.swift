@@ -220,6 +220,7 @@ class AddScheduleViewController: UIViewController {
         self.routine = routine
         // 루틴 정보를 기반으로 UI 업데이트
         print("받아온 루틴 이름: \(routine.name)")
+        addScheduleViewModel.addExercises(from: routine)
     }
     
     private func setupKeyboard() {
