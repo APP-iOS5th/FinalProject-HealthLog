@@ -408,20 +408,16 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         let size: CGFloat = 17.0
         label.frame = CGRect(x: 0, y: 0, width: size, height: size)
-        label.layer.cornerRadius = size / 2
-        label.layer.masksToBounds = true
         
         let containerView = UIView(frame: CGRect(x: 0, y: 0, width: size, height: size))
+        
+        containerView.layer.cornerRadius = size / 2
+        containerView.layer.masksToBounds = true
+        containerView.backgroundColor = bgColor
+        
         containerView.addSubview(label)
+        label.center = CGPoint(x: containerView.bounds.width / 2, y: containerView.bounds.height / 2)
         
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            label.widthAnchor.constraint(equalToConstant: size),
-            label.heightAnchor.constraint(equalToConstant: size),
-            label.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-        ])
         return containerView
     }
 
