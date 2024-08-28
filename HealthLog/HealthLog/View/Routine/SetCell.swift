@@ -16,13 +16,14 @@ class SetCell: UICollectionViewCell {
     
     private lazy var setNumberLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var weightTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "무게"
+        textField.attributedPlaceholder = NSAttributedString(string: "무게", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
         textField.keyboardType = .numberPad
         textField.layer.cornerRadius = 10
         textField.textAlignment = .center
@@ -36,6 +37,7 @@ class SetCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "kg"
+        label.textColor = .white
         label.font =  UIFont.font(.pretendardMedium, ofSize: 14)
         return label
     }()
@@ -54,11 +56,11 @@ class SetCell: UICollectionViewCell {
     
     private lazy var repsTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "횟수"
         textField.layer.cornerRadius = 10
         textField.keyboardType = .numberPad
         textField.textAlignment = .center
         textField.borderStyle = .none
+        textField.attributedPlaceholder = NSAttributedString(string: "횟수", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
         textField.backgroundColor = .color2F2F2F
 
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -71,6 +73,7 @@ class SetCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "회"
+        label.textColor = .white
         label.font =  UIFont.font(.pretendardMedium, ofSize: 14)
         return label
     }()

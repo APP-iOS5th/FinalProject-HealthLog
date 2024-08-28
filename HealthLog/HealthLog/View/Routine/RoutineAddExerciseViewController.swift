@@ -127,8 +127,8 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     func setupObservers() {
         routineViewModel.$isAddRoutineValid
             .receive(on: DispatchQueue.main)
-            .sink { isValid in
-                self.navigationItem.rightBarButtonItem?.isEnabled = isValid
+            .sink { [weak self] isValid in
+                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
             }
             .store(in: &cancellables)
     }
@@ -191,11 +191,16 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetCountHeaderView.identifier, for: indexPath) as! SetCountHeaderView
         header.configure(with: routineViewModel.routine.exercises[indexPath.section])
-        header.setCountDidChange = { newSetCount in
-            self.routineViewModel.updateExercisesetCount(for: indexPath.section, setCount: newSetCount)
-            self.collectionView.reloadSections(IndexSet(integer: indexPath.section))
+        
+        header.setCountDidChange = { [weak self] newSetCount in
+            self?.routineViewModel.updateExerciseSetCount(for: indexPath.section, setCount: newSetCount)
+            self?.collectionView.reloadSections(IndexSet(integer: indexPath.section))
         }
         
+        header.setDelete = { 
+            self.routineViewModel.deleteExercise(for: indexPath.section)
+            self.collectionView.reloadData()
+        }
         return header
     }
     

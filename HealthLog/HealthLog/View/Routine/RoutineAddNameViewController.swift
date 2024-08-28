@@ -18,7 +18,7 @@ class RoutineAddNameViewController: UIViewController {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.borderStyle = .roundedRect
-        textField.backgroundColor = UIColor(named: "ColorSecondary")
+        textField.backgroundColor = .color2F2F2F
         // 더 좋은 방법 있으면 수정
         textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
         textField.textColor = .white
@@ -31,7 +31,7 @@ class RoutineAddNameViewController: UIViewController {
         let label = UILabel()
         label.text = viewModel.rutineNameConfirmation
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
-        
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
        
         return label

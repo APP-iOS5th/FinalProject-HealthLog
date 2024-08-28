@@ -98,7 +98,7 @@ class RoutineCell: UITableViewCell {
     
     func setupUI() {
         
-        self.backgroundColor = .color1E1E1E
+        self.backgroundColor = .clear
         self.contentView.backgroundColor = .color2F2F2F
         self.contentView.layer.cornerRadius = 12
         self.contentView.addSubview(titleLabel)
@@ -119,7 +119,7 @@ class RoutineCell: UITableViewCell {
             self.titleLabel.trailingAnchor.constraint(equalTo: addExerciseButton.leadingAnchor),
             
             
-            self.addExerciseButton.topAnchor.constraint(equalTo: self.titleLabel.topAnchor),
+            self.addExerciseButton.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
             self.addExerciseButton.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
             self.addExerciseButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             
@@ -164,12 +164,6 @@ class RoutineCell: UITableViewCell {
         
     }
     
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
     
     func configure(with routine: Routine) {
      

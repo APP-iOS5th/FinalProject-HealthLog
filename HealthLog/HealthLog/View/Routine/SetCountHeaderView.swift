@@ -11,11 +11,13 @@ class SetCountHeaderView: UICollectionReusableView {
     static let identifier = "SetCountHeaderView"
     
     var setCountDidChange: ((Int) -> Void)?
+    var setDelete: (() -> Void)?
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "운동 이름"
         label.font =  UIFont.font(.pretendardMedium, ofSize: 16)
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -23,6 +25,7 @@ class SetCountHeaderView: UICollectionReusableView {
     private lazy var xButton: UIButton = {
         let buttonAction = UIAction { _ in
             print("x 클릭")
+            self.setDelete?()
            
         }
         
@@ -37,6 +40,7 @@ class SetCountHeaderView: UICollectionReusableView {
     private lazy var setNumberLabel: UILabel = {
         let label = UILabel()
         label.text = "1"
+        label.textColor = .white
         label.font =  UIFont.font(.pretendardMedium, ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -56,6 +60,7 @@ class SetCountHeaderView: UICollectionReusableView {
     private lazy var titleNumberLabel: UILabel = {
         let label = UILabel()
         label.text = "세트 수"
+        label.textColor = .white
         label.font =  UIFont.font(.pretendardMedium, ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

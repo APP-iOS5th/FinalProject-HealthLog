@@ -100,7 +100,7 @@ class RoutineExerciseListTableViewCell: UITableViewCell {
 
     
     func setupUI() {
-        self.backgroundColor = .color1E1E1E
+        self.backgroundColor = .clear
         self.contentView.backgroundColor = .colorSecondary
         self.contentView.layer.cornerRadius = 12
         self.contentView.addSubview(titleLabel)

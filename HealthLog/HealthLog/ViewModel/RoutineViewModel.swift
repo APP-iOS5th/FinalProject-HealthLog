@@ -93,12 +93,17 @@ class RoutineViewModel: ObservableObject{
         }
     }
     
-    func updateExercisesetCount(for section: Int, setCount: Int) {
+    func updateExerciseSetCount(for section: Int, setCount: Int) {
         if self.routine.exercises[section].sets.count < setCount {
             self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
         } else {
             self.routine.exercises[section].sets.removeLast()
         }
+        validateExercise()
+    }
+    
+    func deleteExercise(for setcion: Int) {
+        self.routine.exercises.remove(at: setcion)
         validateExercise()
     }
     

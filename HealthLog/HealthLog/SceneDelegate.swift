@@ -19,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let scheduleViewController = ScheduleViewController()
         let firstNC = UINavigationController(rootViewController: scheduleViewController)
-        
         let routinesViewController = RoutinesViewController()
         let secondNC = UINavigationController(rootViewController: routinesViewController)
         secondNC.setupBarAppearance()
