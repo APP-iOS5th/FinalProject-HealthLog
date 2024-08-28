@@ -173,6 +173,7 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
         
         print("cell 선택 \(indexPath.row )")
         let routineDetailViewController = RoutineDetailViewController()
+        routineDetailViewController.routine = viewModel.routines[indexPath.row]
         self.navigationController?.pushViewController(routineDetailViewController, animated: true)
     }
     

@@ -19,7 +19,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let scheduleViewController = ScheduleViewController()
         let firstNC = UINavigationController(rootViewController: scheduleViewController)
-        firstNC.setupBarAppearance() // 재선 - 스크롤시 휜색으로 변하는 부분 수정
         let routinesViewController = RoutinesViewController()
         let secondNC = UINavigationController(rootViewController: routinesViewController)
         secondNC.setupBarAppearance()
