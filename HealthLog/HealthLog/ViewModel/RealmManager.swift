@@ -24,6 +24,8 @@ class RealmManager {
 //        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
         
         generateScheduleSampleData()
+        
+        addInBodySampleData()
     }
     
     
@@ -68,6 +70,18 @@ class RealmManager {
             }
         }
     }
+    
+    func getInBodyDataForChart() -> [InBody] {
+        if let realm = realm {
+            let inBodyData = realm.objects(InBody.self)
+            print("inbody Data를 불러왔습니다.")
+            return Array(inBodyData)
+        } else {
+            print("inbody Data를 불러오는데 실패하였습니다.")
+            return []
+        }
+    }
+    
 }
 
 // KoreanTime Date Extension 추가
@@ -360,5 +374,37 @@ extension RealmManager {
         else {
             print(" 5,6월 Schedule 샘플 데이터가 이미 존재합니다.")
         }
+    }
+    
+    func addInBodySampleData() {
+        guard let realm = realm else {return}
+        
+        var sampleData = [InBody]()
+        
+        for day in 1...30 {
+            let date = makeDate(year: 2024, month: 8, day: day)
+            let weight = Float.random(in: 60...90)
+            let bodyFat = Float.random(in: 10...25)
+            let muscleMass = Float.random(in: 20...40)
+            
+            let inBody = InBody(date: date, weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+            sampleData.append(inBody)
+        }
+        
+        if realm.objects(InBody.self).isEmpty {
+            try! realm.write {
+                realm.add(sampleData)
+                print("인바디 샘플 데이터를 추가하였습니다.")
+            }
+        }
+    }
+    
+    func makeDate(year: Int, month: Int, day: Int) -> Date {
+        var dateComponents = DateComponents()
+        dateComponents.year = year
+        dateComponents.month = month
+        dateComponents.day = day
+        
+        return Calendar.current.date(from: dateComponents) ?? Date()
     }
 }

@@ -202,7 +202,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
         
-        tableView.reloadRows(at: [indexPath], with: .automatic)
+//        let offset = CGPoint(x: 0, y: tableView.contentOffset.y - 10)
+//        tableView.setContentOffset(offset, animated: true)
+        tableView.reloadRows(at: [indexPath], with: .fade)
     }
     
     

@@ -7,11 +7,14 @@
 import Combine
 import RealmSwift
 import UIKit
+import SwiftUI
 
 class WeightRecordViewController: UIViewController {
     // MARK: - (youngwoo)
     // youngwoo - 뷰모델 이 파일 맨 밑
     let weightRecordViewModel = WeightRecordViewModel()
+    
+    
     
     // MARK: - (youngwoo)
     // youngwoo - WeightRecordViewController 종료시, 구독 Bind 해제
@@ -53,6 +56,21 @@ class WeightRecordViewController: UIViewController {
         // youngwoo - 04. setupBindings을 viewDidLoad에서 실행
         // 이제 자동으로 계속 감지함
         setupBindings()
+        
+        
+        // MARK: chartView (SwiftUI) 삽입
+        let inBodyChartView = InBodyChartView()
+        let hostingController = UIHostingController(rootView: inBodyChartView)
+        
+        self.addChild(hostingController)
+        view.addSubview(hostingController.view)
+        
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 8),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
         
     }
     
