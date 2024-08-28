@@ -16,6 +16,7 @@ class AddScheduleViewController: UIViewController {
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
+    var routine: Routine?
     
     // MARK: init(date: Date) 저장형식 논의
     //    init(date: Date) {
@@ -192,7 +193,11 @@ class AddScheduleViewController: UIViewController {
     }
     
     @objc func routineButtonTapped() {
-        let routineVC = RoutinesViewController()
+        let routineVC = GetRoutineViewController()
+        routineVC.onRoutineSelected = { [weak self] selectedRoutine in
+            self?.receiveRoutine(selectedRoutine)
+        }
+        
         routineVC.modalPresentationStyle = .pageSheet
         self.present(routineVC, animated: true, completion: nil)
     }
@@ -209,6 +214,12 @@ class AddScheduleViewController: UIViewController {
     
     func removeSelectedExercise(at index: Int) {
         addScheduleViewModel.removeExercise(at: index)
+    }
+    
+    func receiveRoutine(_ routine: Routine) {
+        self.routine = routine
+        // 루틴 정보를 기반으로 UI 업데이트
+        print("받아온 루틴 이름: \(routine.name)")
     }
     
     private func setupKeyboard() {

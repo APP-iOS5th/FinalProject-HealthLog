@@ -51,6 +51,8 @@
 		7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3232C69C4E300BDF142 /* ReportsViewController.swift */; };
 		7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */; };
 		756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756E39182C74755D00EDDBC6 /* AddScheduleViewModel.swift */; };
+		7573384B2C7EE1CF00AB05B2 /* GetRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573384A2C7EE1CF00AB05B2 /* GetRoutineViewController.swift */; };
+		7573384D2C7EE35900AB05B2 /* GetRoutineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573384C2C7EE35900AB05B2 /* GetRoutineCell.swift */; };
 		7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */; };
 		7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0002C69FE05004CB285 /* SearchResultCell.swift */; };
 		7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */; };
@@ -141,6 +143,8 @@
 		7566B3232C69C4E300BDF142 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
 		7566B3252C69C4E300BDF142 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		756E39182C74755D00EDDBC6 /* AddScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewModel.swift; sourceTree = "<group>"; };
+		7573384A2C7EE1CF00AB05B2 /* GetRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRoutineViewController.swift; sourceTree = "<group>"; };
+		7573384C2C7EE35900AB05B2 /* GetRoutineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRoutineCell.swift; sourceTree = "<group>"; };
 		7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		7590C0002C69FE05004CB285 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedExerciseCell.swift; sourceTree = "<group>"; };
@@ -273,6 +277,8 @@
 				7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */,
 				7590C0002C69FE05004CB285 /* SearchResultCell.swift */,
 				7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */,
+				7573384A2C7EE1CF00AB05B2 /* GetRoutineViewController.swift */,
+				7573384C2C7EE35900AB05B2 /* GetRoutineCell.swift */,
 			);
 			path = Schedule;
 			sourceTree = "<group>";
@@ -492,6 +498,7 @@
 				CE4779262C7B205C00F6DE74 /* TestAddScheduleViewModel.swift in Sources */,
 				4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */,
 				4BE243C52C78642E00FD2BA5 /* SetCountHeaderView.swift in Sources */,
+				7573384D2C7EE35900AB05B2 /* GetRoutineCell.swift in Sources */,
 				4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */,
 				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
@@ -508,6 +515,7 @@
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
 				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
 				CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */,
+				7573384B2C7EE1CF00AB05B2 /* GetRoutineViewController.swift in Sources */,
 				184A58C12C6C8521009F2848 /* SectionTitleTableViewCell.swift in Sources */,
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
