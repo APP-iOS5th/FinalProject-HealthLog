@@ -96,24 +96,24 @@ extension RealmManager {
         
         if realm.objects(Exercise.self).isEmpty {
             let sampleExercises = [
-                Exercise(name: "스쿼트", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동", image: nil, totalReps: 75, recentWeight: 80, maxWeight: 120, isCustom: true),
-                Exercise(name: "Shoulder Press", bodyParts: [.shoulders], descriptionText: "Shoulder exercise Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test TestTest TestTestTest Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test ", image: nil, totalReps: 60, recentWeight: 40, maxWeight: 60, isCustom: false),
-                Exercise(name: "Bicep Curl", bodyParts: [.biceps], descriptionText: "Arm exercise", image: nil, totalReps: 90, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Tricep Dip", bodyParts: [.triceps], descriptionText: "Arm exercise", image: nil, totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
-                Exercise(name: "Lateral Raise", bodyParts: [.shoulders], descriptionText: "Shoulder isolation exercise", image: nil, totalReps: 70, recentWeight: 10, maxWeight: 15, isCustom: false),
-                Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", image: nil, totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: true),
-                Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", image: nil, totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Leg Curl", bodyParts: [.hamstrings], descriptionText: "Hamstring exercise", image: nil, totalReps: 60, recentWeight: 50, maxWeight: 60, isCustom: false),
-                Exercise(name: "Calf Raise", bodyParts: [.calves], descriptionText: "Calf exercise", image: nil, totalReps: 100, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Pull-up", bodyParts: [.back, .biceps], descriptionText: "Back and biceps exercise", image: nil, totalReps: 40, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Chest Fly", bodyParts: [.chest], descriptionText: "Chest isolation exercise", image: nil, totalReps: 70, recentWeight: 25, maxWeight: 40, isCustom: false),
-                Exercise(name: "Russian Twist", bodyParts: [.abs], descriptionText: "Core rotational exercise", image: nil, totalReps: 50, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Glute Bridge", bodyParts: [.glutes], descriptionText: "Glute exercise", image: nil, totalReps: 30, recentWeight: 40, maxWeight: 60, isCustom: false),
-                Exercise(name: "Lunges", bodyParts: [.quadriceps, .glutes], descriptionText: "Leg exercise", image: nil, totalReps: 60, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Hammer Curl", bodyParts: [.biceps], descriptionText: "Bicep exercise", image: nil, totalReps: 80, recentWeight: 15, maxWeight: 25, isCustom: false),
-                Exercise(name: "Tricep Kickback", bodyParts: [.triceps], descriptionText: "Tricep isolation exercise", image: nil, totalReps: 75, recentWeight: 10, maxWeight: 15, isCustom: false),
-                Exercise(name: "Side Plank", bodyParts: [.abs], descriptionText: "Core stabilization exercise", image: nil, totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Hip Thrust", bodyParts: [.glutes], descriptionText: "Glute exercise", image: nil, totalReps: 50, recentWeight: 60, maxWeight: 80, isCustom: false)
+                Exercise(name: "스쿼트", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동", images: [], totalReps: 75, recentWeight: 80, maxWeight: 120, isCustom: true),
+                Exercise(name: "Shoulder Press", bodyParts: [.shoulders], descriptionText: "Shoulder exercise Test TestTestTestTestTestTest Test TestTestTestTestTestTestTestTestTestTest Test Test TestTest TestTestTestTest TestTestTest Test TestTestTest TestTest TestTest Test Test TestTestTestTestTest TestTest Test TestTestTest Test ", images: [], totalReps: 60, recentWeight: 40, maxWeight: 60, isCustom: false),
+                Exercise(name: "Bicep Curl", bodyParts: [.biceps], descriptionText: "Arm exercise", images: [], totalReps: 90, recentWeight: 20, maxWeight: 30, isCustom: false),
+                Exercise(name: "Tricep Dip", bodyParts: [.triceps], descriptionText: "Arm exercise", images: [], totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
+                Exercise(name: "Lateral Raise", bodyParts: [.shoulders], descriptionText: "Shoulder isolation exercise", images: [], totalReps: 70, recentWeight: 10, maxWeight: 15, isCustom: false),
+                Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", images: [], totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: true),
+                Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", images: [], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
+                Exercise(name: "Leg Curl", bodyParts: [.hamstrings], descriptionText: "Hamstring exercise", images: [], totalReps: 60, recentWeight: 50, maxWeight: 60, isCustom: false),
+                Exercise(name: "Calf Raise", bodyParts: [.calves, .biceps, .forearms, .abductors, .quadriceps, .triceps], descriptionText: "Calf exercise", images: [], totalReps: 100, recentWeight: 20, maxWeight: 30, isCustom: false),
+                Exercise(name: "Pull-up", bodyParts: [.back, .biceps], descriptionText: "Back and biceps exercise", images: [], totalReps: 40, recentWeight: 0, maxWeight: 0, isCustom: false),
+                Exercise(name: "Chest Fly", bodyParts: [.chest], descriptionText: "Chest isolation exercise", images: [], totalReps: 70, recentWeight: 25, maxWeight: 40, isCustom: false),
+                Exercise(name: "Russian Twist", bodyParts: [.abs], descriptionText: "Core rotational exercise", images: [], totalReps: 50, recentWeight: 0, maxWeight: 0, isCustom: false),
+                Exercise(name: "Glute Bridge", bodyParts: [.glutes], descriptionText: "Glute exercise", images: [], totalReps: 30, recentWeight: 40, maxWeight: 60, isCustom: false),
+                Exercise(name: "Lunges", bodyParts: [.quadriceps, .glutes], descriptionText: "Leg exercise", images: [], totalReps: 60, recentWeight: 20, maxWeight: 30, isCustom: false),
+                Exercise(name: "Hammer Curl", bodyParts: [.biceps], descriptionText: "Bicep exercise", images: [], totalReps: 80, recentWeight: 15, maxWeight: 25, isCustom: false),
+                Exercise(name: "Tricep Kickback", bodyParts: [.triceps], descriptionText: "Tricep isolation exercise", images: [], totalReps: 75, recentWeight: 10, maxWeight: 15, isCustom: false),
+                Exercise(name: "Side Plank", bodyParts: [.abs], descriptionText: "Core stabilization exercise", images: [], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
+                Exercise(name: "Hip Thrust", bodyParts: [.glutes], descriptionText: "Glute exercise", images: [], totalReps: 50, recentWeight: 60, maxWeight: 80, isCustom: false)
             ]
             
             try! realm.write {

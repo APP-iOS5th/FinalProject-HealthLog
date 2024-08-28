@@ -7,8 +7,9 @@
 
 import Combine
 import UIKit
+import PhotosUI
 
-class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
+class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPickerViewControllerDelegate {
     
     // MARK: - Properties
     
@@ -48,6 +49,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
+    private let imageViews = [UIImageView(), UIImageView()]
+    private let imageEntryButton = UIButton(type: .system)
+    
     
     private let deleteButton: UIButton?
     
@@ -421,8 +425,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     func setupImageStackView() {
         // MARK: ImageStackView
         imageStackView.axis = .vertical
-        imageStackView.distribution = .equalSpacing
+        imageStackView.distribution = .fill
         imageStackView.spacing = 10
+        imageStackView.alignment = .fill
         imageStackView.backgroundColor = .color1E1E1E
         stackView.addArrangedSubview(imageStackView)
         
@@ -430,6 +435,39 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         imageLabel.textColor = .white
         imageLabel.text = "운동 이미지"
         imageStackView.addArrangedSubview(imageLabel)
+        
+        // MARK: imageViews
+        imageViews.forEach { imageView in
+//            imageView.contentMode = .scaleAspectFit
+            imageView.layer.borderWidth = 1
+            imageView.layer.borderColor = UIColor.lightGray.cgColor
+            imageView.layer.cornerRadius = 50
+            imageView.clipsToBounds = true
+            imageStackView.addArrangedSubview(imageView)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(
+                    equalTo: stackView.widthAnchor),
+                imageView.heightAnchor.constraint(
+                    equalToConstant: 380)
+            ])
+        }
+        
+        // MARK: imageEntryButton
+        imageEntryButton.setTitle("이미지 선택", for: .normal)
+        imageEntryButton.backgroundColor = .color2F2F2F
+        imageEntryButton.addTarget(
+            self, action: #selector(selectTapImageButton), 
+            for: .touchUpInside)
+        imageStackView.addArrangedSubview(imageEntryButton)
+        imageEntryButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageEntryButton.widthAnchor.constraint(
+                equalTo: stackView.widthAnchor),
+            imageEntryButton.heightAnchor.constraint(
+                equalToConstant: 30)
+        ])
+        
     }
     
     func setupDeleteButton() {
@@ -510,6 +548,22 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func setupBindingsUpdateUI() {
+        
+        // MARK: Selected Image Show
+        self.entryViewModel.entryExercise.$images
+            .sink { [weak self] imagesData in
+                imagesData.enumerated().forEach { index, data in
+                    let uiImage = UIImage(data: data)
+                    self?.imageViews[index].image = uiImage
+//                    self?.imageViews[index].widthAnchor.constraint(
+//                        equalToConstant: uiImage?.size.width ?? 0)
+//                    .isActive = true
+//                    self?.imageViews[index].heightAnchor.constraint(
+//                        equalToConstant: uiImage?.size.height ?? 0)
+//                    .isActive = true
+                }
+            }
+            .store(in: &cancellables)
         
         // MARK: UI Duplicate ExerciseName Warning
         self.entryViewModel.entryExercise.$hasDuplicateName
@@ -603,6 +657,35 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
+    // MARK: - PHPickerViewControllerDelegate
+    
+    // 이미지를 선택한 후 호출되는 메서드
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true, completion: nil)
+//        self.entryViewModel.entryExercise.images.removeAll()
+        
+        results.enumerated().forEach { index, result in
+            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+                result.itemProvider.loadObject(ofClass: UIImage.self) {
+                    [weak self] (image, error) in
+                    guard let uiImage = image as? UIImage
+                    else { return }
+                    let resizedImage = uiImage.resized(toMaxDimension: 480)
+                    guard let resizedImage = resizedImage,
+                          let imageData = resizedImage
+                        .jpegData(compressionQuality: 0.8)
+                    else { return }
+                    
+                    DispatchQueue.main.async {
+                        self?.entryViewModel.entryExercise
+                            .images[index] = imageData
+                    }
+                }
+            }
+        }
+    }
+    
+    
     // MARK: - Selector Methods
     
     @objc func doneButtonTapped() {
@@ -623,6 +706,20 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate {
         print("deleteButtonTapped!")
         deleteAlertAction()
     }
+    
+    // 이미지 선택 버튼 눌렀을 때 호출되는 함수
+    @objc private func selectTapImageButton() {
+        print("selectTapImageButton")
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 2
+        configuration.filter = .images
+        print("selectTapImageButton--")
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        present(picker, animated: true, completion: nil)
+        print("selectTapImageButton----")
+    }
+    
     
     // MARK: - Methods
     
@@ -698,3 +795,33 @@ private class PaddedTextField: UITextField {
     }
 }
 
+
+
+
+
+private extension UIImage {
+    /// 이미지를 주어진 최대 크기로 리사이즈하며 원본 비율을 유지합니다.
+    func resized(toMaxDimension maxDimension: CGFloat) -> UIImage? {
+        // 원본 그대로 리턴
+        guard size.width > maxDimension ||
+                size.height > maxDimension else { return self }
+        
+        let aspectRatio = size.width / size.height
+        
+        // SD 해상도를 기준으로 한 가로/세로 값 계산
+        var newSize: CGSize
+        if size.width > size.height {
+            newSize = CGSize(width: maxDimension, height: maxDimension / aspectRatio)
+        } else {
+            newSize = CGSize(width: maxDimension * aspectRatio, height: maxDimension)
+        }
+        
+        // 새로운 크기로 리사이즈
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
+        draw(in: CGRect(origin: .zero, size: newSize))
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resizedImage
+    }
+}

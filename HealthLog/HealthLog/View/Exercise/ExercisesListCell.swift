@@ -180,7 +180,8 @@ class ExerciseListCell: UITableViewCell {
         titleLabel.heightAnchor.constraint(equalToConstant: titleLabel.calculateHeight(for: titleLabel.frame.width)).isActive = true
 
         // exercise.Image
-        exerciseImageView.image = UIImage(data: exercise.image ?? Data())
+        exerciseImageView.image = UIImage(
+            data: exercise.images.first?.image ?? Data())
         
         // exercise.bodyParts
         bodypartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
