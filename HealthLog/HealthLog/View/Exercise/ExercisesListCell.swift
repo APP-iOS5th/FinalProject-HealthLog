@@ -47,9 +47,8 @@ class ExerciseListCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // 셀 마진
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(
-            top: 13, left: 10, bottom: 0, right: 10))
+            top: 13, left: 17, bottom: 0, right: 17))
     }
     
     // MARK: - Setup UI
@@ -181,7 +180,8 @@ class ExerciseListCell: UITableViewCell {
         titleLabel.heightAnchor.constraint(equalToConstant: titleLabel.calculateHeight(for: titleLabel.frame.width)).isActive = true
 
         // exercise.Image
-        exerciseImageView.image = UIImage(data: exercise.image ?? Data())
+        exerciseImageView.image = UIImage(
+            data: exercise.images.first?.image ?? Data())
         
         // exercise.bodyParts
         bodypartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
