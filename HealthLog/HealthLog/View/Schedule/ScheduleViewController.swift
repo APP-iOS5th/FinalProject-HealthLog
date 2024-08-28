@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 import Combine
 
-class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate, EditScheduleExerciseViewControllerDelegate {
+class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate, EditScheduleExerciseViewControllerDelegate, UIScrollViewDelegate {
     
     // MARK: - declare
 //    let realm = try! Realm()
@@ -33,6 +33,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        scrollView.delegate = self
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
@@ -153,8 +154,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
         view.backgroundColor = .colorPrimary
         
+        updateBarColors()
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addArrangedSubview(calendarView)
@@ -207,6 +209,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
+        updateBarColors()
     }
     
     private func updateTableViewHeight() {
@@ -214,6 +217,19 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let height = self.tableView.contentSize.height
             tableViewHeightConstraint?.constant = height
             view.layoutIfNeeded()
+    }
+    
+    private func updateBarColors() {
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.setBackgroundImage(UIImage(), for: .default)
+            navigationBar.shadowImage = UIImage()
+            navigationBar.isTranslucent = false
+            navigationBar.backgroundColor = .colorPrimary
+            navigationBar.barTintColor = .colorPrimary
+        }
+        
+        tabBarController?.tabBar.barTintColor = .colorSecondary
+        tabBarController?.tabBar.isTranslucent = false
     }
     
     fileprivate func createTodaysDummySchedule() -> Schedule? {
@@ -303,7 +319,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     private func updateTableView() {
         tableView.reloadData()
         updateTableViewHeight()
-        
     }
     
     // MARK: - UITableViewDataSource
@@ -389,9 +404,11 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         // selected date color
         if let schedule = getScheduleForDate(date), !schedule.exercises.isEmpty {
             let numberOfExercises = "\(schedule.exercises.count)"
-            let label = calendarDecoLabel(text: numberOfExercises, bgColor: isScheduleCompleted(schedule) ? .colorAccent : .color525252)
+            let bgColor: UIColor = isScheduleCompleted(schedule) ? .colorAccent : .color525252
             
             return .customView {
+                let label = self.calendarDecoLabel(text: numberOfExercises, bgColor: bgColor)
+                
                 return label
             }
         }
@@ -404,7 +421,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         label.text = text
         label.textAlignment = .center
         label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
-        label.backgroundColor = bgColor
+        label.textColor = .white
         
         let size: CGFloat = 17.0
         label.frame = CGRect(x: 0, y: 0, width: size, height: size)
@@ -416,7 +433,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         containerView.backgroundColor = bgColor
         
         containerView.addSubview(label)
-        label.center = CGPoint(x: containerView.bounds.width / 2, y: containerView.bounds.height / 2)
+        label.center = containerView.center
         
         return containerView
     }
