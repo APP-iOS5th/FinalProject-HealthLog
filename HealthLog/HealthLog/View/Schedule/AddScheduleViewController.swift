@@ -99,13 +99,16 @@ class AddScheduleViewController: UIViewController {
             searchResultsController.viewModel = exerciseViewModel
             searchController.searchBar.delegate = searchResultsController
         }
-        //searchController.searchBar.showsBookmarkButton = true
+        //searchController.searchBar.delegate = self
+        searchController.delegate = self
+        searchController.searchBar.showsBookmarkButton = false
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
+        searchController.showsSearchResultsController = true
         
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
@@ -309,13 +312,22 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
 }
 
 // MARK: SearchResultsUpdating
-extension AddScheduleViewController: UISearchResultsUpdating {
+extension AddScheduleViewController: UISearchResultsUpdating, UISearchControllerDelegate {
+    func willPresentSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.showsBookmarkButton = true
+    }
+
+    func didDismissSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.showsBookmarkButton = false
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             exerciseViewModel.setSearchText(to: searchText)
         }
     }
 }
+
 
 // MARK: Drag and Drop Delegate
 extension AddScheduleViewController: UITableViewDragDelegate, UITableViewDropDelegate {
