@@ -37,6 +37,15 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         setupDividerView()
         setupConstraints()
         setupBinding()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchBar(_:)))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    // 키보드 안 내려감 확인필요
+    @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
+        //print("Tapped outside search bar")
+        view.endEditing(true)
     }
     
     private func setupBinding() {
