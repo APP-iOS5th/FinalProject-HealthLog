@@ -168,6 +168,13 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
 //        }
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        print("cell 선택 \(indexPath.row )")
+        let routineDetailViewController = RoutineDetailViewController()
+        self.navigationController?.pushViewController(routineDetailViewController, animated: true)
+    }
     
     
 }

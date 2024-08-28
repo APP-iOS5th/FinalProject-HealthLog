@@ -35,6 +35,7 @@
 		3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */; };
 		3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
+		4B2A2A2C2C7F0880007F5F55 /* RoutineDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
@@ -126,6 +127,7 @@
 		3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScheduleExerciseViewController.swift; sourceTree = "<group>"; };
 		3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveRoutineViewController.swift; sourceTree = "<group>"; };
 		4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddNameViewController.swift; sourceTree = "<group>"; };
+		4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailViewController.swift; sourceTree = "<group>"; };
 		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/View/Extension/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIFont.swift"; sourceTree = "<group>"; };
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 			isa = PBXGroup;
 			children = (
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
+				4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */,
 				4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */,
 				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
 				4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */,
@@ -504,6 +507,7 @@
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
+				4B2A2A2C2C7F0880007F5F55 /* RoutineDetailViewController.swift in Sources */,
 				CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */,
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
 				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
