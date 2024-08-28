@@ -64,6 +64,7 @@ class WeightRecordViewController: UIViewController {
         
         self.addChild(hostingController)
         view.addSubview(hostingController.view)
+        hostingController.view.backgroundColor = .clear
         
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
