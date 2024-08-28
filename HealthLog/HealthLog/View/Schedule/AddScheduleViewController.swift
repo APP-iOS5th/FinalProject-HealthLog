@@ -16,6 +16,7 @@ class AddScheduleViewController: UIViewController {
     private var exerciseViewModel = ExerciseViewModel()
     private var addScheduleViewModel = AddScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
+    var routine: Routine?
     
     // MARK: init(date: Date) 저장형식 논의
     //    init(date: Date) {
@@ -99,13 +100,16 @@ class AddScheduleViewController: UIViewController {
             searchResultsController.viewModel = exerciseViewModel
             searchController.searchBar.delegate = searchResultsController
         }
-        //searchController.searchBar.showsBookmarkButton = true
+        //searchController.searchBar.delegate = self
+        searchController.delegate = self
+        searchController.searchBar.showsBookmarkButton = false
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
+        searchController.showsSearchResultsController = true
         
         if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
             if let leftView = textField.leftView as? UIImageView {
@@ -189,7 +193,11 @@ class AddScheduleViewController: UIViewController {
     }
     
     @objc func routineButtonTapped() {
-        let routineVC = RoutinesViewController()
+        let routineVC = GetRoutineViewController()
+        routineVC.onRoutineSelected = { [weak self] selectedRoutine in
+            self?.receiveRoutine(selectedRoutine)
+        }
+        
         routineVC.modalPresentationStyle = .pageSheet
         self.present(routineVC, animated: true, completion: nil)
     }
@@ -206,6 +214,13 @@ class AddScheduleViewController: UIViewController {
     
     func removeSelectedExercise(at index: Int) {
         addScheduleViewModel.removeExercise(at: index)
+    }
+    
+    func receiveRoutine(_ routine: Routine) {
+        self.routine = routine
+        // 루틴 정보를 기반으로 UI 업데이트
+        print("받아온 루틴 이름: \(routine.name)")
+        addScheduleViewModel.addExercises(from: routine)
     }
     
     private func setupKeyboard() {
@@ -309,13 +324,22 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
 }
 
 // MARK: SearchResultsUpdating
-extension AddScheduleViewController: UISearchResultsUpdating {
+extension AddScheduleViewController: UISearchResultsUpdating, UISearchControllerDelegate {
+    func willPresentSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.showsBookmarkButton = true
+    }
+
+    func didDismissSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.showsBookmarkButton = false
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             exerciseViewModel.setSearchText(to: searchText)
         }
     }
 }
+
 
 // MARK: Drag and Drop Delegate
 extension AddScheduleViewController: UITableViewDragDelegate, UITableViewDropDelegate {

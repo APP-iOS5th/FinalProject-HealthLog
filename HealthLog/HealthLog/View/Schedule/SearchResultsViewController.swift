@@ -37,6 +37,15 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         setupDividerView()
         setupConstraints()
         setupBinding()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchBar(_:)))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    // 키보드 안 내려감 확인필요
+    @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
+        //print("Tapped outside search bar")
+        view.endEditing(true)
     }
     
     private func setupBinding() {
@@ -128,14 +137,14 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     // .all 버튼의 터치를 동작시켜서 옵션 초기화
-    private func resetBodyPartsOption() {
+    func resetBodyPartsOption() {
         searchOptionStackView.bodypartButtonList
             .first(where: { $0.bodypartOption == .all })?
             .sendActions(for: .touchUpInside)
     }
     
     // Combine 용 운동부위옵션 접고 피는 함수
-    private func bodypartOptionShowUIChange(_ bodypartOptionShow: Bool) {
+    func bodypartOptionShowUIChange(_ bodypartOptionShow: Bool) {
         let iconName: String
         guard let searchController = self.parent as? UISearchController else { return }
         let searchBar = searchController.searchBar
@@ -162,9 +171,13 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
 extension SearchResultsViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("searchBar CancelButton Clicked")
-//        if viewModel.bodypartOptionShow {
-//            viewModel.bodypartOptionShow = false
-//        }
+        viewModel.bodypartOptionShow = true
         resetBodyPartsOption()
     }
+    
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+        print("Bookmark button clicked")
+        viewModel.bodypartOptionShow.toggle()
+    }
+    
 }
