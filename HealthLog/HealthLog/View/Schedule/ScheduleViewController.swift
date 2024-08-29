@@ -146,15 +146,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func setupUI() {
-        let titleColor = UIColor.white
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
-        
         navigationItem.title = "운동 일정"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
+        
+        self.navigationController?.setupBarAppearance()
+        self.tabBarController?.setupBarAppearance()
+        
         view.backgroundColor = .colorPrimary
         
-        updateBarColors()
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(scrollView)
@@ -209,7 +208,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
-        updateBarColors()
     }
     
     private func updateTableViewHeight() {
@@ -217,19 +215,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let height = self.tableView.contentSize.height
             tableViewHeightConstraint?.constant = height
             view.layoutIfNeeded()
-    }
-    
-    private func updateBarColors() {
-        if let navigationBar = navigationController?.navigationBar {
-            navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationBar.shadowImage = UIImage()
-            navigationBar.isTranslucent = false
-            navigationBar.backgroundColor = .colorPrimary
-            navigationBar.barTintColor = .colorPrimary
-        }
-        
-        tabBarController?.tabBar.barTintColor = .colorSecondary
-        tabBarController?.tabBar.isTranslucent = false
     }
     
     fileprivate func createTodaysDummySchedule() -> Schedule? {

@@ -35,6 +35,7 @@
 		18F4F30B2C7EFBBB00F2006C /* InBodyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */; };
 		3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */; };
 		3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */; };
+		3CD063C72C7FF80900EBCAB8 /* Extension+UITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD063C62C7FF80900EBCAB8 /* Extension+UITabBarController.swift */; };
 		4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */; };
 		4B2A2A2C2C7F0880007F5F55 /* RoutineDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */; };
 		4B2A2A2E2C7F0B5C007F5F55 /* RoutineDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailTableViewCell.swift */; };
@@ -133,6 +134,7 @@
 		18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyChartView.swift; sourceTree = "<group>"; };
 		3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScheduleExerciseViewController.swift; sourceTree = "<group>"; };
 		3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveRoutineViewController.swift; sourceTree = "<group>"; };
+		3CD063C62C7FF80900EBCAB8 /* Extension+UITabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UITabBarController.swift"; sourceTree = "<group>"; };
 		4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddNameViewController.swift; sourceTree = "<group>"; };
 		4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailViewController.swift; sourceTree = "<group>"; };
 		4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */,
+				3CD063C62C7FF80900EBCAB8 /* Extension+UITabBarController.swift */,
 				4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */,
 			);
 			path = Extension;
@@ -509,6 +512,7 @@
 				4B2A2A2E2C7F0B5C007F5F55 /* RoutineDetailTableViewCell.swift in Sources */,
 				18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */,
 				CE4779242C7B204400F6DE74 /* TestAddScheduleViewController.swift in Sources */,
+				3CD063C72C7FF80900EBCAB8 /* Extension+UITabBarController.swift in Sources */,
 				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
 				CEA171B82C7DA311000EB11A /* FunctionInfoPrint.swift in Sources */,
 				CE4779222C7A284500F6DE74 /* ExerciseEntryViewModel.swift in Sources */,
