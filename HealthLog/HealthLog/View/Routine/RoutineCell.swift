@@ -157,7 +157,7 @@ class RoutineCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(
-            by: UIEdgeInsets(top: 10, left: 24, bottom: 0, right: 24))
+            by: UIEdgeInsets(top: 10, left: 17, bottom: 0, right: 17))
     }
     
     @objc func buttonTapped() {
