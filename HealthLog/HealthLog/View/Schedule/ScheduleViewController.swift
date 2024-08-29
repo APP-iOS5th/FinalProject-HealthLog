@@ -208,6 +208,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
+        customizeCalendarTextColor()
     }
     
     private func updateTableViewHeight() {
@@ -266,9 +267,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func addSchedule() {
-//        let date = selectedDate ?? today
-//        let addScheduleViewController = AddScheduleViewController(date)
-        
         let addScheduleViewController = AddScheduleViewController()
         
         navigationController?.pushViewController(addScheduleViewController, animated: true)
@@ -378,10 +376,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-        
-        // apply customize calendar text color to the last date
-        if let date = dateComponents.date,
-           isLastDayOfMonth(date: date) {            customizeCalendarTextColor()
+        // check if it's last day
+        if let date = dateComponents.date, isLastDayOfMonth(date: date) {
+            customizeCalendarTextColor()
         }
         
         guard let date = dateComponents.date else { return nil }
@@ -402,9 +399,31 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     private func isLastDayOfMonth(date: Date) -> Bool {
-        let calendar = Calendar.current
-        let nextDay = calendar.date(byAdding: .day, value: 1, to: date)!
-        return calendar.component(.month, from: date) != calendar.component(.month, from: nextDay)
+        // Set Korean timezone
+        var koreanCalendar = Calendar(identifier: .gregorian)
+        koreanCalendar.locale = Locale(identifier: "ko_KR")
+        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+
+        // Convert date to Korean timezone
+        let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
+        
+        // Get the next day
+        let calendar = calendarView.calendar
+        let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
+        
+        let currentMonth = koreanCalendar.component(.month, from: koreanDate)
+        let nextDayMonth = koreanCalendar.component(.month, from: nextDay)
+        // Check if the current day is the last day of the month
+        let isLastDay = (currentMonth != nextDayMonth)
+        
+//        print("Date: \(koreanDate), Next Day: \(nextDay), Current Month: \(currentMonth), Next day Month: \(nextDayMonth), Is last day: \(isLastDay)")
+        return isLastDay
+    }
+
+    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
+        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+        let seconds = timeZone.secondsFromGMT(for: date)
+        return Date(timeInterval: TimeInterval(seconds), since: date)
     }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
