@@ -77,8 +77,6 @@ class ExerciseEntryViewModel {
     private func validateRequiredFields(
         exerciseName: String, exerciseBodyParts: [BodyPart]) {
             
-            print("name - \(exerciseName.isEmpty) bodypart - \(exerciseBodyParts.isEmpty)") // log
-            
             entryExercise.isNameEmpty = exerciseName.isEmpty
             entryExercise.isBodyPartsEmpty = exerciseBodyParts.isEmpty
             

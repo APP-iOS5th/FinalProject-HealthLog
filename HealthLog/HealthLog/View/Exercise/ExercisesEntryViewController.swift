@@ -513,7 +513,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                         self.entryViewModel.entryExercise
                             .bodyParts.removeAll { $0 == button.bodypart }
                     }
-                    print("\(button.bodypart.rawValue) - \(button.isSelected)")
                 }
                 .store(in: &cancellables)
         }
@@ -633,8 +632,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        print("textField.tag - \(textField.tag)")
-        
         // 문자 입력수 제한
         let currentText = textField.text ?? ""
         let newLength = currentText.count + string.count - range.length
@@ -714,11 +711,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 2
         configuration.filter = .images
-        print("selectTapImageButton--")
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
         present(picker, animated: true, completion: nil)
-        print("selectTapImageButton----")
     }
     
     

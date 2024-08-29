@@ -80,7 +80,6 @@ class ExerciseViewModel: ObservableObject {
                 scheduler: RunLoop.main, latest: true)
         )
         .sink { [weak self] _ in
-            print("Search Exercises Filter - \(String(describing: self?.selectedOption))")
             self?.filterExercises()
         }
         .store(in: &cancellables)
