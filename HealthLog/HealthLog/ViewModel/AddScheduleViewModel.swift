@@ -14,6 +14,11 @@ class AddScheduleViewModel {
     @Published var isValid: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
+    private var realm: Realm?
+    
+    init() {
+        self.realm = RealmManager.shared.realm
+    }
     
     func addExercise(_ exercise: Exercise) {
         let setCount = 4
@@ -22,7 +27,7 @@ class AddScheduleViewModel {
                 order: order, weight: 0, reps: 0, isCompleted: false)
         }
         
-        let scheduleExercise = ScheduleExercise(exercise: exercise, order: selectedExercises.count, isCompleted: false, sets: sets)
+        let scheduleExercise = ScheduleExercise(exercise: exercise, order: selectedExercises.count + 1, isCompleted: false, sets: sets)
         selectedExercises.append(scheduleExercise)
         validateExercises()
     }
@@ -35,7 +40,7 @@ class AddScheduleViewModel {
                 ScheduleExerciseSet(order: routineSet.order, weight: routineSet.weight, reps: routineSet.reps, isCompleted: false)
             }
             
-            return ScheduleExercise(exercise: exercise, order: self.selectedExercises.count, isCompleted: false, sets: Array(sets))
+            return ScheduleExercise(exercise: exercise, order: self.selectedExercises.count + 1, isCompleted: false, sets: Array(sets))
         }
         
         selectedExercises.append(contentsOf: convertedExercises)
@@ -43,14 +48,11 @@ class AddScheduleViewModel {
     }
     
     func updateExerciseSetCount(for index: Int, setCount: Int) {
-        //print("setCount-\(setCount)--count-\(selectedExercises[index].sets.count)")
         if(setCount > selectedExercises[index].sets.count) {
-            //print("--append--)")
             let set = ScheduleExerciseSet(
-                order: setCount, weight: 0, reps: 0, isCompleted: false)
+                order: setCount + 1, weight: 0, reps: 0, isCompleted: false)
             selectedExercises[index].sets.append(set)
         } else if (setCount < selectedExercises[index].sets.count) {
-            //print("--delete--")
             selectedExercises[index].sets.removeLast()
         }
         validateExercises()
@@ -59,9 +61,11 @@ class AddScheduleViewModel {
     func updateSet(at exerciseIndex: Int, setIndex: Int, weight: Int, reps: Int) {
         guard exerciseIndex < selectedExercises.count,
               setIndex < selectedExercises[exerciseIndex].sets.count else { return }
-        
-        selectedExercises[exerciseIndex].sets[setIndex].weight = weight
-        selectedExercises[exerciseIndex].sets[setIndex].reps = reps
+        guard let realm = realm else { return }
+        try! realm.write {
+            selectedExercises[exerciseIndex].sets[setIndex].weight = weight
+            selectedExercises[exerciseIndex].sets[setIndex].reps = reps
+        }
         validateExercises()
     }
     
@@ -84,12 +88,7 @@ class AddScheduleViewModel {
                 set.weight > 0 && set.reps > 0
             }
         }
-        let noEmptyFields = selectedExercises.allSatisfy { exercise in
-            exercise.sets.allSatisfy { set in
-                set.weight != 0 && set.reps != 0
-            }
-        }
-        isValid = exercisesExist && allFieldsFilled && noEmptyFields
+        isValid = exercisesExist && allFieldsFilled
     }
     
     func removeExercise(at index: Int) {
@@ -99,7 +98,21 @@ class AddScheduleViewModel {
     }
     
     func saveSchedule(for date: Date) {
-        let schedule = Schedule(date: date, exercises: selectedExercises)
-        print(schedule) // 생성된 데이터 확인
+        guard let realm = realm else { return }
+        // 특정 날짜에 해당하는 스케줄 검색
+        if let existingSchedule = realm.objects(Schedule.self).filter("date == %@", date).first {
+            // 스케줄이 이미 있는 경우, 운동을 추가
+            try! realm.write {
+                existingSchedule.exercises.append(objectsIn: selectedExercises)
+            }
+            // print("Existing schedule found and updated with new exercises.")
+        } else {
+            // 스케줄이 없는 경우, 새로운 스케줄 생성 및 저장
+            let newSchedule = Schedule(date: date, exercises: selectedExercises)
+            try! realm.write {
+                realm.add(newSchedule)
+            }
+            // print("New schedule created and saved.")
+        }
     }
 }
