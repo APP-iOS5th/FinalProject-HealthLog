@@ -69,6 +69,7 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
+        self.tableView.reloadData()
         isRoutineData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
@@ -172,8 +173,7 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         print("cell 선택 \(indexPath.row )")
-        let routineDetailViewController = RoutineDetailViewController()
-        routineDetailViewController.routine = viewModel.routines[indexPath.row]
+        let routineDetailViewController = RoutineDetailViewController(routineViewModel: viewModel, index: indexPath.row)
         self.navigationController?.pushViewController(routineDetailViewController, animated: true)
     }
     

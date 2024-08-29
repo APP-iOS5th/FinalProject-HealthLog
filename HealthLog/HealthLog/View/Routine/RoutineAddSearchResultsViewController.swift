@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RoutineSearchResultsViewController: UIViewController, SearchResultCellDelegate {
+class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellDelegate {
     
     weak var delegate: SerchResultDelegate?
     
@@ -21,7 +21,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         tableView.delegate = self
         tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(RoutineExerciseListTableViewCell.self, forCellReuseIdentifier: RoutineExerciseListTableViewCell.cellId)
+        tableView.register(RoutineAddSearchResultCell.self, forCellReuseIdentifier: RoutineAddSearchResultCell.cellId)
         return tableView
         
     }()
@@ -67,7 +67,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         
     }
     
-    func didTapButton(in cell: RoutineExerciseListTableViewCell) {
+    func didTapButton(in cell: RoutineAddSearchResultCell) {
         if let indexPath = tableView.indexPath(for: cell) {
             let selectedItem = viewModel.filteredExercises[indexPath.row]
             print("RoutinSearchReslutView: \(selectedItem)")
@@ -79,7 +79,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
     
 }
 
-extension RoutineSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
+extension RoutineAddSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 107
@@ -90,7 +90,7 @@ extension RoutineSearchResultsViewController: UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineExerciseListTableViewCell.cellId, for: indexPath) as! RoutineExerciseListTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineAddSearchResultCell.cellId, for: indexPath) as! RoutineAddSearchResultCell
         cell.delegate = self
         cell.configure(with: viewModel.filteredExercises[indexPath.row])
         cell.selectionStyle = .none

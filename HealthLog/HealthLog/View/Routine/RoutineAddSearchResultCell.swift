@@ -8,10 +8,10 @@
 import UIKit
 
 protocol SearchResultCellDelegate: AnyObject {
-    func didTapButton(in cell: RoutineExerciseListTableViewCell)
+    func didTapButton(in cell: RoutineAddSearchResultCell)
 }
 
-class RoutineExerciseListTableViewCell: UITableViewCell {
+class RoutineAddSearchResultCell: UITableViewCell {
     
     static let cellId = "RoutineExerciseListTableViewCell"
     

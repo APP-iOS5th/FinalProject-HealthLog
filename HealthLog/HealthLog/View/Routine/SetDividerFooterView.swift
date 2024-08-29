@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DividerFooterView: UICollectionReusableView {
+class SetDividerFooterView: UICollectionReusableView {
     static let identifier = "DividerFooterView"
     
     override init(frame: CGRect) {

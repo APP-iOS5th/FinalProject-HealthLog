@@ -18,11 +18,20 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     let routineViewModel = RoutineViewModel()
     
-    var routineName: String?
+    let routineName: String
     private var cancellables = Set<AnyCancellable>()
     var selectedExercises = [String]()
     
-    var resultsViewController = RoutineSearchResultsViewController()
+    var resultsViewController = RoutineAddSearchResultsViewController()
+    
+    init(routineName: String) {
+        self.routineName = routineName
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var searchController: UISearchController = {
         resultsViewController.delegate = self
@@ -107,7 +116,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         
         collectionView.register(SetCell.self, forCellWithReuseIdentifier: SetCell.identifier)
         collectionView.register(SetCountHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SetCountHeaderView.identifier)
-        collectionView.register(DividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: DividerFooterView.identifier)
+        collectionView.register(SetDividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: SetDividerFooterView.identifier)
         
         
         self.view.addSubview(collectionView)
@@ -144,7 +153,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
-        routineViewModel.addRoutine(routine: Routine(name: routineName ?? "", exercises: routineViewModel.routine.exercises.map { $0 }, exerciseVolume: routineViewModel.routine.exerciseVolume ))
+        routineViewModel.addRoutine(routine: Routine(name: routineName, exercises: routineViewModel.routine.exercises.map { $0 }, exerciseVolume: routineViewModel.routine.exerciseVolume ))
         self.navigationController?.popToRootViewController(animated: true)
         
     }
@@ -184,7 +193,7 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if kind == UICollectionView.elementKindSectionFooter {
-            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: DividerFooterView.identifier, for: indexPath) as! DividerFooterView
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetDividerFooterView.identifier, for: indexPath) as! SetDividerFooterView
             
             return footer
         }
@@ -216,7 +225,7 @@ extension RoutineAddExerciseViewController: UISearchResultsUpdating {
         }
         
         
-        if let resultcontroller = searchController.searchResultsController as? RoutineSearchResultsViewController {
+        if let resultcontroller = searchController.searchResultsController as? RoutineAddSearchResultsViewController {
             resultcontroller.viewModel.filterExercises(by: text)
             resultcontroller.tableView.reloadData()
         }
