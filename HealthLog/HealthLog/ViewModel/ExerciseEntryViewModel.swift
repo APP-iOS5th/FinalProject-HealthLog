@@ -141,20 +141,49 @@ class ExerciseEntryViewModel {
         let exercise = detailViewModel.exercise
         let data = entryExercise
         
+        let images: [ExerciseImage] = data.images.map { image in
+            ExerciseImage(image: image, url: nil, urlAccessCount: nil)
+        }
+        
         guard let realm = realm else { return }
         do {
             try realm.write {
-                exercise.name = data.name
-                exercise.bodyParts.removeAll()
-                exercise.bodyParts.append(objectsIn: data.bodyParts)
-                exercise.descriptionText = data.description
-                exercise.recentWeight = data.recentWeight
-                exercise.maxWeight = data.maxWeight
+                update(&exercise.name, with: data.name)
+                updateList(exercise.bodyParts, with: data.bodyParts)
+                update(&exercise.recentWeight, with: data.recentWeight)
+                update(&exercise.maxWeight, with: data.maxWeight)
+                update(&exercise.descriptionText, with: data.description)
+                updateImages(exercise.images, with: images)
             }
         } catch {
             print("realm exercise update error")
         }
         
+    }
+
+    private func update<T: Equatable>(_ property: inout T, with newValue: T) {
+        if property != newValue {
+            print("realmUpdateExercise update - \(newValue)")
+            property = newValue
+        }
+    }
+    
+    private func updateList<T: Equatable>(_ property: List<T>, with newValue: [T]) {
+        if !property.elementsEqual(newValue) {
+            print("realmUpdateExercise updateList - \(newValue)")
+            property.removeAll()
+            property.append(objectsIn: newValue)
+        }
+    }
+    
+    private func updateImages<T: ExerciseImage>(_ property: List<T>, with newValue: [T]) {
+        let oldValue = Array(property) as [ExerciseImage]
+        let equalImages = zip(oldValue, newValue).allSatisfy { $0.image == $1.image }
+        if !equalImages {
+            print("realmUpdateExercise updateImages - \(newValue)")
+            property.removeAll()
+            property.append(objectsIn: newValue)
+        }
     }
     
 }

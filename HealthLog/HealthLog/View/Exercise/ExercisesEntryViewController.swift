@@ -553,14 +553,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         self.entryViewModel.entryExercise.$images
             .sink { [weak self] imagesData in
                 imagesData.enumerated().forEach { index, data in
-                    let uiImage = UIImage(data: data)
+                    let uiImage = UIImage(data: data ?? Data())
                     self?.imageViews[index].image = uiImage
-//                    self?.imageViews[index].widthAnchor.constraint(
-//                        equalToConstant: uiImage?.size.width ?? 0)
-//                    .isActive = true
-//                    self?.imageViews[index].heightAnchor.constraint(
-//                        equalToConstant: uiImage?.size.height ?? 0)
-//                    .isActive = true
                 }
             }
             .store(in: &cancellables)
@@ -627,6 +621,13 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 
                 self?.entryViewModel.entryExercise.description = $0.descriptionText
                 self?.descriptionTextView.text = $0.descriptionText
+                
+                let images = Array($0.images.map { $0.image })
+                self?.entryViewModel.entryExercise.images = images
+//                images.enumerated().forEach { index, image in
+//                    let uiImage = UIImage(data: image ?? Data())
+//                    self?.imageViews[index].image = uiImage
+//                }
             }
             .store(in: &cancellables)
     }
