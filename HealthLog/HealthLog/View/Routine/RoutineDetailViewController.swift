@@ -18,14 +18,13 @@ class RoutineDetailViewController: UIViewController {
         tableView.dataSource = self
         tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(RoutineDetailTableViewCell.self, forCellReuseIdentifier: RoutineDetailTableViewCell.cellId)
-        tableView.register(RoutineDetailTableHeaderView.self, forHeaderFooterViewReuseIdentifier: RoutineDetailTableHeaderView.cellId)
+        tableView.register(RoutineDetailViewCell.self, forCellReuseIdentifier: RoutineDetailViewCell.cellId)
+        tableView.register(RoutineDetailHeaderView.self, forHeaderFooterViewReuseIdentifier: RoutineDetailHeaderView.cellId)
         return tableView
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(routine)
         self.navigationItem.title = routine?.name ?? "루틴 이름"
         setupUI()
 
@@ -49,25 +48,44 @@ class RoutineDetailViewController: UIViewController {
 }
 
 extension RoutineDetailViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 28
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if let routine = routine {
+            return routine.exercises.count
+        }
+        return 0
+        
+    }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineDetailTableHeaderView.cellId) as! RoutineDetailTableHeaderView
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineDetailHeaderView.cellId) as! RoutineDetailHeaderView
         header.configure(with: routine?.exercises[section].exercise?.name ?? "" )
         return header
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let routine = routine {
+            return routine.exercises[section].sets.count
+            
+        }
+        return 0
         
-        return routine?.exercises.count ?? 0
     }
     
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: RoutineDetailTableViewCell.cellId, for: indexPath) as! RoutineDetailTableViewCell
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: RoutineDetailViewCell.cellId, for: indexPath) as! RoutineDetailViewCell
         
         cell.selectionStyle = .none
+        
+        if let routine = routine {
+            cell.configure(with: routine.exercises[indexPath.section].sets[indexPath.row])
+        }
         return cell
     }
     
