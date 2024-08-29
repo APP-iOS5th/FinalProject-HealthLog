@@ -16,7 +16,7 @@ class EntryExercise: ObservableObject {
     var recentWeight: Int = 0
     var maxWeight: Int = 0
     var description: String = ""
-    @Published var images: [Data] = [Data(), Data()]
+    @Published var images: [Data] = []
     
     @Published var isValidatedRequiredFields: Bool = false
     @Published var hasDuplicateName: Bool = false

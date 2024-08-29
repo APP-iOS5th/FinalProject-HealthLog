@@ -58,7 +58,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         navigationController?.navigationBar.tintColor = UIColor.white
         
         let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        self.navigationItem.backBarButtonItem = backbarButtonItem 
+        self.navigationItem.backBarButtonItem = backbarButtonItem
         
         // MARK: addButton
         var buttonConfig = UIButton.Configuration.filled()
@@ -191,7 +191,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("tableView Count - \(viewModel.filteredExercises.count)")
+//        print("tableView Count - \(viewModel.filteredExercises.count)")
         return viewModel.filteredExercises.count
     }
     

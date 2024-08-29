@@ -119,7 +119,7 @@ class ExerciseListCell: UITableViewCell {
         stackView.addArrangedSubview(bottomStackView)
         
         // MARK: exerciseImageView
-        exerciseImageView.contentMode = .scaleToFill
+        exerciseImageView.contentMode = .scaleAspectFit
         exerciseImageView.clipsToBounds = true
         exerciseImageView.backgroundColor = .color3E3E3E
         exerciseImageView.layer.borderColor = UIColor.black.cgColor
