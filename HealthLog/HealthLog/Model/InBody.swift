@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-class InBody: Object, Identifiable {
+class InBody: Object, Identifiable{
     @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
     @Persisted var date: Date = Date() // 날짜
     @Persisted var weight: Float // 몸무게
