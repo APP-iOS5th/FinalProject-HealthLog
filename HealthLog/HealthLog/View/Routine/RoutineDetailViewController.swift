@@ -20,6 +20,8 @@ class RoutineDetailViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(RoutineDetailViewCell.self, forCellReuseIdentifier: RoutineDetailViewCell.cellId)
         tableView.register(RoutineDetailHeaderView.self, forHeaderFooterViewReuseIdentifier: RoutineDetailHeaderView.cellId)
+        tableView.register(RoutineDetailFooterView.self, forHeaderFooterViewReuseIdentifier: RoutineDetailFooterView.cellId)
+        
         return tableView
     }()
     
@@ -51,6 +53,10 @@ extension RoutineDetailViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 28
     }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 4
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         if let routine = routine {
@@ -64,6 +70,11 @@ extension RoutineDetailViewController: UITableViewDelegate, UITableViewDataSourc
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineDetailHeaderView.cellId) as! RoutineDetailHeaderView
         header.configure(with: routine?.exercises[section].exercise?.name ?? "" )
         return header
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footer = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineDetailFooterView.cellId) as! RoutineDetailFooterView
+        return footer
     }
     
     

@@ -39,6 +39,7 @@
 		4B2A2A2C2C7F0880007F5F55 /* RoutineDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */; };
 		4B2A2A2E2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift */; };
 		4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */; };
+		4B2A2A322C800FC3007F5F55 /* RoutineDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
@@ -137,6 +138,7 @@
 		4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailViewController.swift; sourceTree = "<group>"; };
 		4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailViewCell.swift; sourceTree = "<group>"; };
 		4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailHeaderView.swift; sourceTree = "<group>"; };
+		4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailFooterView.swift; sourceTree = "<group>"; };
 		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/View/Extension/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIFont.swift"; sourceTree = "<group>"; };
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
@@ -370,6 +372,7 @@
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
 				4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */,
 				4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */,
+				4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */,
 				4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift */,
 				4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */,
 				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
@@ -558,6 +561,7 @@
 				186301E22C73313900CA32AA /* MuscleImageTableViewCell.swift in Sources */,
 				184A58B72C6B28C9009F2848 /* ExerciseRecordViewController.swift in Sources */,
 				CEE918AA2C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift in Sources */,
+				4B2A2A322C800FC3007F5F55 /* RoutineDetailFooterView.swift in Sources */,
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,

@@ -22,7 +22,7 @@ class RoutineDetailHeaderView: UITableViewHeaderFooterView {
     
     private lazy var divider: UIView = {
        let view = UIView()
-        view.backgroundColor = .colorSecondary
+        view.backgroundColor = .color2F2F2F
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
         
@@ -33,6 +33,7 @@ class RoutineDetailHeaderView: UITableViewHeaderFooterView {
         
         self.addSubview(titleLabel)
         self.addSubview(divider)
+        self.backgroundColor = .clear
         let padding:CGFloat = 43
         
         NSLayoutConstraint.activate([
