@@ -9,8 +9,21 @@ import UIKit
 
 class RoutineDetailViewController: UIViewController {
     
-    var routine: Routine?
-
+    let routineViewModel: RoutineViewModel
+    let index: Int
+    
+    init(routineViewModel: RoutineViewModel, index: Int) {
+        
+       
+        self.routineViewModel = routineViewModel
+        self.index = index
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
@@ -25,17 +38,29 @@ class RoutineDetailViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var rightBarButtonItem : UIBarButtonItem = {
+        let rightBarButtonItem = UIBarButtonItem(title: "수정", style: .done, target: self, action: #selector(editTapped))
+        rightBarButtonItem.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "Pretendard-Semibold", size: 16) as Any,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        return rightBarButtonItem
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = routine?.name ?? "루틴 이름"
+        self.navigationItem.title = routineViewModel.routines[index].name
         setupUI()
-
-     
+        
+        
     }
     
     func setupUI() {
         self.view.backgroundColor = .color1E1E1E
         self.view.addSubview(tableView)
+        self.navigationItem.rightBarButtonItem = self.rightBarButtonItem
+        
+        
         
         NSLayoutConstraint.activate([
             self.tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -46,6 +71,10 @@ class RoutineDetailViewController: UIViewController {
         
     }
     
+    @objc func editTapped() {
+        let  routineEditViewController = RoutineEditViewController()
+        self.navigationController?.pushViewController(routineEditViewController, animated: true)
+    }
     
 }
 
@@ -53,22 +82,21 @@ extension RoutineDetailViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 28
     }
-
+    
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 4
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if let routine = routine {
-            return routine.exercises.count
-        }
-        return 0
+        
+        return routineViewModel.routines[index].exercises.count
+        
         
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineDetailHeaderView.cellId) as! RoutineDetailHeaderView
-        header.configure(with: routine?.exercises[section].exercise?.name ?? "" )
+        header.configure(with: routineViewModel.routines[index].exercises[section].exercise?.name ?? "" )
         return header
     }
     
@@ -79,11 +107,11 @@ extension RoutineDetailViewController: UITableViewDelegate, UITableViewDataSourc
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let routine = routine {
-            return routine.exercises[section].sets.count
-            
-        }
-        return 0
+        
+        return routineViewModel.routines[index].exercises[section].sets.count
+        
+        
+        
         
     }
     
@@ -94,9 +122,9 @@ extension RoutineDetailViewController: UITableViewDelegate, UITableViewDataSourc
         
         cell.selectionStyle = .none
         
-        if let routine = routine {
-            cell.configure(with: routine.exercises[indexPath.section].sets[indexPath.row])
-        }
+        
+        cell.configure(with: routineViewModel.routines[index].exercises[indexPath.section].sets[indexPath.row])
+        
         return cell
     }
     

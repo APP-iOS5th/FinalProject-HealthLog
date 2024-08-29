@@ -40,13 +40,14 @@
 		4B2A2A2E2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift */; };
 		4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */; };
 		4B2A2A322C800FC3007F5F55 /* RoutineDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */; };
+		4B2A2A342C804E31007F5F55 /* RoutineEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
-		4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */; };
-		4B8D65DD2C7B5C9700B8AFA0 /* DividerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D65DC2C7B5C9700B8AFA0 /* DividerFooterView.swift */; };
+		4B89D3642C6C6C180094C852 /* RoutineAddSearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3632C6C6C180094C852 /* RoutineAddSearchResultCell.swift */; };
+		4B8D65DD2C7B5C9700B8AFA0 /* SetDividerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D65DC2C7B5C9700B8AFA0 /* SetDividerFooterView.swift */; };
 		4B8D65DF2C7D63D700B8AFA0 /* RoutineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B8D65DE2C7D63D700B8AFA0 /* RoutineCell.swift */; };
-		4B911CFA2C741F770032F438 /* RoutineSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B911CF92C741F770032F438 /* RoutineSearchResultsViewController.swift */; };
+		4B911CFA2C741F770032F438 /* RoutineAddSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B911CF92C741F770032F438 /* RoutineAddSearchResultsViewController.swift */; };
 		4B911CFC2C746DBB0032F438 /* RoutineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */; };
 		4BE243C12C76D66800FD2BA5 /* SetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE243C02C76D66800FD2BA5 /* SetCell.swift */; };
 		4BE243C52C78642E00FD2BA5 /* SetCountHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE243C42C78642E00FD2BA5 /* SetCountHeaderView.swift */; };
@@ -139,13 +140,14 @@
 		4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailViewCell.swift; sourceTree = "<group>"; };
 		4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailHeaderView.swift; sourceTree = "<group>"; };
 		4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailFooterView.swift; sourceTree = "<group>"; };
+		4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditViewController.swift; sourceTree = "<group>"; };
 		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/View/Extension/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIFont.swift"; sourceTree = "<group>"; };
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
-		4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineExerciseListTableViewCell.swift; sourceTree = "<group>"; };
-		4B8D65DC2C7B5C9700B8AFA0 /* DividerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerFooterView.swift; sourceTree = "<group>"; };
+		4B89D3632C6C6C180094C852 /* RoutineAddSearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddSearchResultCell.swift; sourceTree = "<group>"; };
+		4B8D65DC2C7B5C9700B8AFA0 /* SetDividerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetDividerFooterView.swift; sourceTree = "<group>"; };
 		4B8D65DE2C7D63D700B8AFA0 /* RoutineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineCell.swift; sourceTree = "<group>"; };
-		4B911CF92C741F770032F438 /* RoutineSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineSearchResultsViewController.swift; sourceTree = "<group>"; };
+		4B911CF92C741F770032F438 /* RoutineAddSearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddSearchResultsViewController.swift; sourceTree = "<group>"; };
 		4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineViewModel.swift; sourceTree = "<group>"; };
 		4BE243C02C76D66800FD2BA5 /* SetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCell.swift; sourceTree = "<group>"; };
 		4BE243C42C78642E00FD2BA5 /* SetCountHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetCountHeaderView.swift; sourceTree = "<group>"; };
@@ -369,19 +371,20 @@
 		CEE623B92C6CAAEB00863699 /* Routine */ = {
 			isa = PBXGroup;
 			children = (
+				4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */,
 				7566B3222C69C4E300BDF142 /* RoutinesViewController.swift */,
+				4B8D65DE2C7D63D700B8AFA0 /* RoutineCell.swift */,
 				4B2A2A2B2C7F0880007F5F55 /* RoutineDetailViewController.swift */,
 				4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */,
 				4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */,
 				4B2A2A2D2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift */,
-				4B89D3632C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift */,
 				4B16457A2C69E482008B09C9 /* RoutineAddNameViewController.swift */,
 				4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */,
+				4B911CF92C741F770032F438 /* RoutineAddSearchResultsViewController.swift */,
+				4B89D3632C6C6C180094C852 /* RoutineAddSearchResultCell.swift */,
 				4BE243C42C78642E00FD2BA5 /* SetCountHeaderView.swift */,
 				4BE243C02C76D66800FD2BA5 /* SetCell.swift */,
-				4B8D65DC2C7B5C9700B8AFA0 /* DividerFooterView.swift */,
-				4B911CF92C741F770032F438 /* RoutineSearchResultsViewController.swift */,
-				4B8D65DE2C7D63D700B8AFA0 /* RoutineCell.swift */,
+				4B8D65DC2C7B5C9700B8AFA0 /* SetDividerFooterView.swift */,
 			);
 			path = Routine;
 			sourceTree = "<group>";
@@ -524,7 +527,7 @@
 				CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */,
-				4B89D3642C6C6C180094C852 /* RoutineExerciseListTableViewCell.swift in Sources */,
+				4B89D3642C6C6C180094C852 /* RoutineAddSearchResultCell.swift in Sources */,
 				3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */,
 				18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */,
 				4BE243C12C76D66800FD2BA5 /* SetCell.swift in Sources */,
@@ -542,8 +545,8 @@
 				4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
 				184A58C52C6CFDC0009F2848 /* MostChangedTableViewCell.swift in Sources */,
-				4B8D65DD2C7B5C9700B8AFA0 /* DividerFooterView.swift in Sources */,
-				4B911CFA2C741F770032F438 /* RoutineSearchResultsViewController.swift in Sources */,
+				4B8D65DD2C7B5C9700B8AFA0 /* SetDividerFooterView.swift in Sources */,
+				4B911CFA2C741F770032F438 /* RoutineAddSearchResultsViewController.swift in Sources */,
 				189401342C528B2000533E0A /* AppDelegate.swift in Sources */,
 				CEE918B22C745E4A00B8DEF7 /* InputBodyPartButtonStackView.swift in Sources */,
 				7566B3272C69C4E300BDF142 /* ReportsViewController.swift in Sources */,
@@ -568,6 +571,7 @@
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
 				CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */,
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
+				4B2A2A342C804E31007F5F55 /* RoutineEditViewController.swift in Sources */,
 				CEA171BC2C7EF158000EB11A /* entryExercise.swift in Sources */,
 				CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */,
 				CE4779282C7B212300F6DE74 /* TestSelectedExerciseCell.swift in Sources */,

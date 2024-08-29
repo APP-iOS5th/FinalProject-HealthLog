@@ -44,8 +44,8 @@ class RoutineAddNameViewController: UIViewController {
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 17, leading: 0, bottom: 17, trailing: 0)
         let button = UIButton(configuration: configuration,
                               primaryAction: UIAction { _ in
-            let routineAddExerciseViewController = RoutineAddExerciseViewController()
-            routineAddExerciseViewController.routineName = self.viewModel.rutineNameinput
+            let routineAddExerciseViewController = RoutineAddExerciseViewController(routineName: self.viewModel.rutineNameinput)
+            
             self.navigationController?.pushViewController(routineAddExerciseViewController, animated: true)
             print("확인 버튼 눌림")
         })
