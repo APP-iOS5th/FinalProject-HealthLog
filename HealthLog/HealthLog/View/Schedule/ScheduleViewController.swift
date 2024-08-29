@@ -146,15 +146,14 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func setupUI() {
-        let titleColor = UIColor.white
-        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: titleColor]
-        
         navigationItem.title = "운동 일정"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
+        
+        self.navigationController?.setupBarAppearance()
+        self.tabBarController?.setupBarAppearance()
+        
         view.backgroundColor = .colorPrimary
         
-        updateBarColors()
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(scrollView)
@@ -209,7 +208,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
-        updateBarColors()
+        customizeCalendarTextColor()
     }
     
     private func updateTableViewHeight() {
@@ -217,19 +216,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             let height = self.tableView.contentSize.height
             tableViewHeightConstraint?.constant = height
             view.layoutIfNeeded()
-    }
-    
-    private func updateBarColors() {
-        if let navigationBar = navigationController?.navigationBar {
-            navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationBar.shadowImage = UIImage()
-            navigationBar.isTranslucent = false
-            navigationBar.backgroundColor = .colorPrimary
-            navigationBar.barTintColor = .colorPrimary
-        }
-        
-        tabBarController?.tabBar.barTintColor = .colorSecondary
-        tabBarController?.tabBar.isTranslucent = false
     }
     
     fileprivate func createTodaysDummySchedule() -> Schedule? {
@@ -393,10 +379,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-        
-        if !isTextColorCustimzed {
+        // check if it's last day
+        if let date = dateComponents.date, isLastDayOfMonth(date: date) {
             customizeCalendarTextColor()
-            isTextColorCustimzed = true
         }
         
         guard let date = dateComponents.date else { return nil }
@@ -414,6 +399,34 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         }
         
         return nil
+    }
+    
+    private func isLastDayOfMonth(date: Date) -> Bool {
+        // Set Korean timezone
+        var koreanCalendar = Calendar(identifier: .gregorian)
+        koreanCalendar.locale = Locale(identifier: "ko_KR")
+        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+
+        // Convert date to Korean timezone
+        let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
+        
+        // Get the next day
+        let calendar = calendarView.calendar
+        let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
+        
+        let currentMonth = koreanCalendar.component(.month, from: koreanDate)
+        let nextDayMonth = koreanCalendar.component(.month, from: nextDay)
+        // Check if the current day is the last day of the month
+        let isLastDay = (currentMonth != nextDayMonth)
+        
+//        print("Date: \(koreanDate), Next Day: \(nextDay), Current Month: \(currentMonth), Next day Month: \(nextDayMonth), Is last day: \(isLastDay)")
+        return isLastDay
+    }
+
+    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
+        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+        let seconds = timeZone.secondsFromGMT(for: date)
+        return Date(timeInterval: TimeInterval(seconds), since: date)
     }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
@@ -437,7 +450,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         return containerView
     }
-
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
         guard let realm = realm else { return nil }
@@ -524,11 +536,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
               let year = displayedMonthDate.year else { return nil }
         
         return DateComponents(year: year, month: month, day: day)
-    }
-    
-    // reload calendar when month is changed
-    func calendarView(_ calendarView: UICalendarView, didChangeMonth dateComponents: DateComponents) {
-        customizeCalendarTextColor()
     }
 }
 

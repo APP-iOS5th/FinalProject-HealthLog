@@ -41,6 +41,17 @@ class RealmManager {
         }
     }
     
+    
+    func getRealm() -> Realm {
+        do {
+            let realm = try Realm()
+            return realm
+        } catch {
+            fatalError("Could not access Realm database: \(error)")
+        }
+    }
+    
+    
     func addInbody(weight: Float, bodyFat:Float, muscleMass: Float) {
         if let realm = realm {
             do {
@@ -71,13 +82,14 @@ class RealmManager {
         }
     }
     
-    func getInBodyDataForChart() -> [InBody] {
-        if let realm = realm {
-            let inBodyData = realm.objects(InBody.self)
-            print("inbody Data를 불러왔습니다.")
-            return Array(inBodyData)
-        } else {
-            print("inbody Data를 불러오는데 실패하였습니다.")
+    func getInBodyDataForChart(from startDate: Date, to endDate: Date) -> [InBody] {
+        do {
+            let realm = try Realm()
+            let results = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
+            print("Realm query results count: \(results.count)") // 쿼리 결과의 개수를 출력
+            return Array(results)
+        } catch {
+            print("Error fetching data from Realm: \(error)")
             return []
         }
     }
@@ -381,7 +393,18 @@ extension RealmManager {
         
         var sampleData = [InBody]()
         
-        for day in 1...30 {
+        for day in 1...14 {
+            let date = makeDate(year: 2024, month: 7, day: day)
+            let weight = Float.random(in: 50...70)
+            let bodyFat = Float.random(in: 10...25)
+            let muscleMass = Float.random(in: 20...40)
+            
+            let inBody = InBody(date: date, weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+            sampleData.append(inBody)
+        }
+        
+        
+        for day in 1...25 {
             let date = makeDate(year: 2024, month: 8, day: day)
             let weight = Float.random(in: 60...90)
             let bodyFat = Float.random(in: 10...25)
