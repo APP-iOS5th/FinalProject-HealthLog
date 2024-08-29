@@ -16,15 +16,23 @@ class InBodyChartViewModel: ObservableObject {
     private var notificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     
+    
+    private var currentStartDate: Date?
+    private var currentEndDate: Date?
+    
     init() {
         self.realm = RealmManager.shared.getRealm()
         observeInBodyDataChanges()
     }
-   
+    
     func loadData(for startDate: Date, to endDate: Date) {
         
-//        print("---------------------------------")
-//        print("\(startDate) ~ \(endDate)")
+        // weightRecordVC에서 view did load할 때 현재 날짜 받아서 적용됨
+        self.currentStartDate = startDate
+        self.currentEndDate = endDate
+        
+        print("---------------------------------")
+        print("\(startDate) ~ \(endDate)")
         
         fetchInBodyData(from: startDate, to: endDate)
             .receive(on: DispatchQueue.main)
@@ -34,9 +42,9 @@ class InBodyChartViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] data in
                 self?.inBodyData = data
-//                print("Fetched data: \(data.count)") // 데이터를 확인합니다.
-//                print("Assigned data: \(self?.inBodyData.count ?? 0)") // 할당 후 데이터를 확인합니다.
-//                print("-----------------------------------")
+                print("Fetched data: \(data.count)") // 데이터를 확인합니다.
+                print("Assigned data: \(self?.inBodyData.count ?? 0)") // 할당 후 데이터를 확인합니다.
+                print("-----------------------------------")
             })
             .store(in: &cancellables)
         
@@ -47,8 +55,6 @@ class InBodyChartViewModel: ObservableObject {
             do {
                 let data = self.realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
                 result(.success(Array(data)))
-            } catch {
-                result(.failure(error))
             }
         }
     }
@@ -60,10 +66,14 @@ class InBodyChartViewModel: ObservableObject {
         notificationToken = results.observe { [weak self] changes in
             guard let self = self else { return }
             switch changes {
-            case .initial(let initialResults):
-                self.inBodyData = Array(initialResults)
-            case .update(let updatedResults, _, _, _):
-                self.inBodyData = Array(updatedResults)
+                
+            case .initial:
+                break
+            case .update:
+                if let startDate = self.currentStartDate, let endDate = self.currentEndDate {
+                    self.loadData(for: startDate, to: endDate)
+                    print("값 변화됨!")
+                }
             case .error(let error):
                 print("Realm error: \(error)")
             }
