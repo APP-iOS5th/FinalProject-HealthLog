@@ -438,7 +438,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: imageViews
         imageViews.forEach { imageView in
-//            imageView.contentMode = .scaleAspectFit
+            imageView.contentMode = .scaleAspectFit
             imageView.layer.borderWidth = 1
             imageView.layer.borderColor = UIColor.lightGray.cgColor
             imageView.layer.cornerRadius = 50
@@ -553,7 +553,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         self.entryViewModel.entryExercise.$images
             .sink { [weak self] imagesData in
                 imagesData.enumerated().forEach { index, data in
-                    let uiImage = UIImage(data: data ?? Data())
+                    let uiImage = UIImage(data: data)
                     self?.imageViews[index].image = uiImage
                 }
             }
@@ -570,11 +570,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         // MARK: Empty ExerciseName Warning
         self.entryViewModel.entryExercise.$isNameEmpty
             .sink { [weak self] isEmpty in
-                print("Empty ExerciseName Warning isEmpty - \(isEmpty)")
                 let label = self?.titleEmptyWarningLabel
-                print("before label isHidden - \(label!.isHidden)")
                 self?.warningLabelAnimation(label, isWarning: isEmpty)
-                print("after label isHidden - \(label!.isHidden)")
             }
             .store(in: &cancellables)
         
@@ -622,7 +619,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 self?.entryViewModel.entryExercise.description = $0.descriptionText
                 self?.descriptionTextView.text = $0.descriptionText
                 
-                let images = Array($0.images.map { $0.image })
+                let images = Array($0.images.map { $0.image ?? Data() })
                 self?.entryViewModel.entryExercise.images = images
 //                images.enumerated().forEach { index, image in
 //                    let uiImage = UIImage(data: image ?? Data())
@@ -663,7 +660,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     // 이미지를 선택한 후 호출되는 메서드
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true, completion: nil)
-//        self.entryViewModel.entryExercise.images.removeAll()
+        let entryImagesCount = entryViewModel.entryExercise.images.count
         
         results.enumerated().forEach { index, result in
             if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
@@ -678,8 +675,11 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     else { return }
                     
                     DispatchQueue.main.async {
-                        self?.entryViewModel.entryExercise
-                            .images[index] = imageData
+                        if entryImagesCount == 0 {
+                            self?.entryViewModel.entryExercise.images.append(imageData)
+                        } else {
+                            self?.entryViewModel.entryExercise.images[index] = imageData
+                        }
                     }
                 }
             }

@@ -146,8 +146,8 @@ class ExercisesDetailViewController: UIViewController {
         
         // MARK: profileStackView
         profileStackView.axis = .vertical
-        profileStackView.alignment = .center
-        profileStackView.distribution = .equalSpacing
+//        profileStackView.alignment = .fill
+//        profileStackView.distribution = .equalCentering
         profileStackView.spacing = 15
         profileStackView.layer.cornerRadius = 10
         profileStackView.clipsToBounds = true
@@ -156,6 +156,25 @@ class ExercisesDetailViewController: UIViewController {
             top: 15, left: 15, bottom: 15, right: 15)
         profileStackView.backgroundColor = .color3E3E3E
         stackView.addArrangedSubview(profileStackView)
+        
+        // MARK: imageViewPaddingContainer
+        let imageViewPaddingContainer = UIView()
+        profileStackView.addArrangedSubview(imageViewPaddingContainer)
+        imageViewPaddingContainer.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageViewPaddingContainer.heightAnchor.constraint(equalToConstant: 360),
+        ])
+        
+        // MARK: imageView
+        imageView.contentMode = .scaleAspectFit
+        imageViewPaddingContainer.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalTo: imageViewPaddingContainer.widthAnchor, multiplier: 0.8),
+            imageView.heightAnchor.constraint(equalTo: imageViewPaddingContainer.heightAnchor, multiplier: 0.8),
+            imageView.centerXAnchor.constraint(equalTo: imageViewPaddingContainer.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: imageViewPaddingContainer.centerYAnchor)
+        ])
         
         // MARK: bodypartStackView
         profileStackView.addArrangedSubview(bodypartStackView)
@@ -205,18 +224,31 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupBindings() {
         detailViewModel.$exercise
-            .sink { exercise in
-                self.bodypartStackView.arrangedSubviews
+            .sink { [weak self] exercise in
+                self?.bodypartStackView.arrangedSubviews
                     .forEach { $0.removeFromSuperview() }
                 
-                self.title = exercise.name
-                self.bodypartStackView.configure(
+                self?.title = exercise.name
+                self?.bodypartStackView.configure(
                     bodyparts: Array(exercise.bodyParts),
-                    maxRowWidth: self.view.bounds.width - 70)
-                self.descriptionLabel.text = exercise.descriptionText
-                self.totalRepsLogContentStackView.reloadValueLabel(unit: "Reps", value: "\(exercise.totalReps)")
-                self.recentWeightLogContentStackView.reloadValueLabel(unit: "KG", value: "\(exercise.recentWeight)")
-                self.maxWeightLogContentStackView.reloadValueLabel(unit: "KG", value: "\(exercise.maxWeight)")
+                    maxRowWidth: (self?.view.bounds.width ?? 0) - 70)
+                self?.descriptionLabel.text = exercise.descriptionText
+                self?.totalRepsLogContentStackView.reloadValueLabel(unit: "Reps", value: "\(exercise.totalReps)")
+                self?.recentWeightLogContentStackView.reloadValueLabel(unit: "KG", value: "\(exercise.recentWeight)")
+                self?.maxWeightLogContentStackView.reloadValueLabel(unit: "KG", value: "\(exercise.maxWeight)")
+                self?.imageView.image = UIImage(
+                    data: exercise.images.first?.image ?? Data())
+            }
+            .store(in: &cancellables)
+        
+        detailViewModel.$currentImageIndex
+            .sink { [weak self] index in
+                guard let self = self else { return }
+                let images = Array(self.detailViewModel.exercise.images)
+                if images.count > 0 {
+                    self.imageView.image = UIImage(
+                        data: images[index].image ?? Data())
+                }
             }
             .store(in: &cancellables)
     }

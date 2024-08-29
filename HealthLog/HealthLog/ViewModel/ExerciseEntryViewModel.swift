@@ -179,7 +179,7 @@ class ExerciseEntryViewModel {
     private func updateImages<T: ExerciseImage>(_ property: List<T>, with newValue: [T]) {
         let oldValue = Array(property) as [ExerciseImage]
         let equalImages = zip(oldValue, newValue).allSatisfy { $0.image == $1.image }
-        if !equalImages {
+        if !equalImages || oldValue.count == 0 {
             print("realmUpdateExercise updateImages - \(newValue)")
             property.removeAll()
             property.append(objectsIn: newValue)
