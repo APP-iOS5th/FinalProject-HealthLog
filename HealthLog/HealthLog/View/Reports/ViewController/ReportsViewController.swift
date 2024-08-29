@@ -200,6 +200,8 @@ class ReportsViewController: UIViewController {
         newVC.didMove(toParent: self)
         currentVC = newVC
         
+        updateDataForCurrentMonth()
+        
     }
     
     override func addChild(_ viewController: UIViewController) {
