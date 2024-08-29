@@ -41,6 +41,17 @@ class RealmManager {
         }
     }
     
+    
+    func getRealm() -> Realm {
+        do {
+            let realm = try Realm()
+            return realm
+        } catch {
+            fatalError("Could not access Realm database: \(error)")
+        }
+    }
+    
+    
     func addInbody(weight: Float, bodyFat:Float, muscleMass: Float) {
         if let realm = realm {
             do {
@@ -393,7 +404,7 @@ extension RealmManager {
         }
         
         
-        for day in 1...30 {
+        for day in 1...25 {
             let date = makeDate(year: 2024, month: 8, day: day)
             let weight = Float.random(in: 60...90)
             let bodyFat = Float.random(in: 10...25)

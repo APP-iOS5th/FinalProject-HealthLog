@@ -12,7 +12,6 @@ import Charts
 struct InBodyChartView: View {
     @ObservedObject var viewModel: InBodyChartViewModel
     
-    @Environment(\.calendar) var calendar
     @State private var chartSelection: Date?
     
     
@@ -21,7 +20,7 @@ struct InBodyChartView: View {
             Text("몸무게")
                 .font(.custom("Pretendard-Bold", size: 22))
                 .foregroundStyle(Color.white)
-                
+            
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color.color2F2F2F)
@@ -37,13 +36,14 @@ struct InBodyChartView: View {
                         
                         if let chartSelection {
                             RuleMark(x: .value("Day", chartSelection, unit: .day))
-                                .foregroundStyle(.gray.opacity(0.5))
+                                .foregroundStyle(.white)
                                 .annotation(position: .top) {
                                     ZStack {
                                         Text("\(viewModel.getWeight(for: chartSelection)) KG")
                                             .padding(8)
+                                            .foregroundStyle(Color.white)
                                             .background(RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color.accentColor.opacity(0.2))
+                                                .fill(Color("ColorAccent").opacity(0.2))
                                             )
                                     }
                                 }

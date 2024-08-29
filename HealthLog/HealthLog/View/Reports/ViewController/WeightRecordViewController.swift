@@ -14,6 +14,9 @@ class WeightRecordViewController: UIViewController {
     // youngwoo - 뷰모델 이 파일 맨 밑
     let weightRecordViewModel = WeightRecordViewModel()
     
+    private var currentYear: Int = Calendar.current.component(.year, from: Date())
+    private var currentMonth: Int = Calendar.current.component(.month, from: Date())
+    
     private var viewModel = InBodyChartViewModel()
     private var hostingController: UIHostingController<InBodyChartView>?
     
@@ -64,6 +67,8 @@ class WeightRecordViewController: UIViewController {
         let chartView = InBodyChartView(viewModel: viewModel)
         hostingController = UIHostingController(rootView: chartView)
         
+        fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
+        
         addChild(hostingController!)
         view.addSubview(hostingController!.view)
         hostingController?.view.backgroundColor = .clear
@@ -71,9 +76,6 @@ class WeightRecordViewController: UIViewController {
         
         hostingController!.didMove(toParent: self)
         
-        let startDate = makeDate(year: 2024, month: 8, day: 1)
-        let endDate = makeDate(year: 2024, month: 8, day: 29)
-        viewModel.loadData(for: startDate, to: endDate)
         
         hostingController!.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
