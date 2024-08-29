@@ -20,11 +20,12 @@ struct InBodyChartView: View {
             Text("몸무게")
                 .font(.custom("Pretendard-Bold", size: 22))
                 .foregroundStyle(Color.white)
+                .padding(.leading, 8)
             
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color.color2F2F2F)
-                    .frame(height: 250)
+                    .frame(height: 270)
                 
                 if #available(iOS 17.0, *) {
                     Chart(viewModel.inBodyData) {
@@ -37,6 +38,7 @@ struct InBodyChartView: View {
                         if let chartSelection {
                             RuleMark(x: .value("Day", chartSelection, unit: .day))
                                 .foregroundStyle(.white)
+                                .lineStyle(StrokeStyle(lineWidth: 1))
                                 .annotation(position: .top) {
                                     ZStack {
                                         Text("\(viewModel.getWeight(for: chartSelection)) KG")
@@ -73,9 +75,11 @@ struct InBodyChartView: View {
                         }
                     }
                     .background(.clear)
+                    .chartXScale(domain: viewModel.xAxisDomain())
                     .chartYScale(domain: viewModel.yAxisDomain())
                     .frame(height: 200)
                     .padding()
+                    .padding(.top, 30)
                     .chartXSelection(value: $chartSelection)
                 } else {
                     // MARK: iOS 17이하 (chartSelection 없음)
@@ -112,6 +116,8 @@ struct InBodyChartView: View {
                     .background(.clear)
                     .chartYScale(domain: viewModel.yAxisDomain())
                     .frame(height: 200)
+                    .padding()
+                    .padding(.top, 30)
                     .padding()
                     
                 }

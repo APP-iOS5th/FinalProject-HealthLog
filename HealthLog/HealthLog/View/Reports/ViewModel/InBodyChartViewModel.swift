@@ -98,13 +98,26 @@ class InBodyChartViewModel: ObservableObject {
         let maxWeight = weights.max() ?? 100.0
         
         // 위 아래 여백을 위한 조절
-        let minDomain = minWeight - 10.0
-        let maxDomain = maxWeight + 10.0
+        let minDomain = minWeight - 10
+        let maxDomain = maxWeight + 10
         
         // 최소 몸무게 = 0
         let adjustedMinDomain = minDomain < 0 ? 0 : minDomain
         
         return adjustedMinDomain...maxDomain
+    }
+    
+    func xAxisDomain() -> ClosedRange<Date> {
+        guard let firstDate = inBodyData.map({ $0.date }).min(),
+              let lastDate = inBodyData.map({ $0.date }).max() else {
+            let today = Date()
+            return today...today
+        }
+
+        let calendar = Calendar.current
+        let adjustedLastDate = calendar.date(byAdding: .day, value: 1, to: lastDate) ?? lastDate
+        
+        return firstDate...adjustedLastDate
     }
     
 }
