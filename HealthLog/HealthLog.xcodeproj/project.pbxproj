@@ -32,6 +32,7 @@
 		18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */; };
 		18F4F30B2C7EFBBB00F2006C /* InBodyChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */; };
+		18F4F30D2C802E0B00F2006C /* InBodyChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F4F30C2C802E0B00F2006C /* InBodyChartViewModel.swift */; };
 		3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */; };
 		3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */; };
 		3CD063C72C7FF80900EBCAB8 /* Extension+UITabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD063C62C7FF80900EBCAB8 /* Extension+UITabBarController.swift */; };
@@ -134,6 +135,7 @@
 		18D991232C7C1ACE0007F115 /* MuscleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleImageView.swift; sourceTree = "<group>"; };
 		18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataTableViewCell.swift; sourceTree = "<group>"; };
 		18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyChartView.swift; sourceTree = "<group>"; };
+		18F4F30C2C802E0B00F2006C /* InBodyChartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyChartViewModel.swift; sourceTree = "<group>"; };
 		3C8CD5872C731AB90025B059 /* EditScheduleExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScheduleExerciseViewController.swift; sourceTree = "<group>"; };
 		3C8CD5892C7418920025B059 /* SaveRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveRoutineViewController.swift; sourceTree = "<group>"; };
 		3CD063C62C7FF80900EBCAB8 /* Extension+UITabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UITabBarController.swift"; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 		184A589E2C69E42B009F2848 /* Reports */ = {
 			isa = PBXGroup;
 			children = (
+				18F4F30E2C8032CD00F2006C /* View */,
 				18FAA0792C76C9EE00B62B8F /* ViewModel */,
 				CEE623B82C6CAACC00863699 /* ViewController */,
 				CEE623B72C6CAA9A00863699 /* TableCell */,
@@ -262,9 +265,19 @@
 			path = HealthLog;
 			sourceTree = "<group>";
 		};
+		18F4F30E2C8032CD00F2006C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				18D991232C7C1ACE0007F115 /* MuscleImageView.swift */,
+				18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		18FAA0792C76C9EE00B62B8F /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				18F4F30C2C802E0B00F2006C /* InBodyChartViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -364,8 +377,6 @@
 				184A58B62C6B28C9009F2848 /* ExerciseRecordViewController.swift */,
 				184A58B82C6B28DD009F2848 /* WeightRecordViewController.swift */,
 				8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */,
-				18D991232C7C1ACE0007F115 /* MuscleImageView.swift */,
-				18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -548,6 +559,7 @@
 				3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */,
 				4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
+				18F4F30D2C802E0B00F2006C /* InBodyChartViewModel.swift in Sources */,
 				184A58C52C6CFDC0009F2848 /* MostChangedTableViewCell.swift in Sources */,
 				4B8D65DD2C7B5C9700B8AFA0 /* SetDividerFooterView.swift in Sources */,
 				4B911CFA2C741F770032F438 /* RoutineAddSearchResultsViewController.swift in Sources */,

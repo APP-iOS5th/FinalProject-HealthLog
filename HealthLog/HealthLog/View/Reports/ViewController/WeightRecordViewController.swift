@@ -10,10 +10,22 @@ import UIKit
 import SwiftUI
 
 class WeightRecordViewController: UIViewController {
+    // MARK: - (youngwoo)
+    // youngwoo - 뷰모델 이 파일 맨 밑
+    let weightRecordViewModel = WeightRecordViewModel()
+    
+    private var currentYear: Int = Calendar.current.component(.year, from: Date())
+    private var currentMonth: Int = Calendar.current.component(.month, from: Date())
+    
+    private var viewModel = InBodyChartViewModel()
+    private var hostingController: UIHostingController<InBodyChartView>?
+    
+    // MARK: - (youngwoo)
+    // youngwoo - WeightRecordViewController 종료시, 구독 Bind 해제
+    private var cancellables = Set<AnyCancellable>()
+    
+    private let realm = RealmManager.shared.realm
 
-    private let weightRecordViewModel = WeightRecordViewModel()
-    private var cancellables = Set<AnyCancellable>() // youngwoo - WeightRecordViewController 종료시, 구독 Bind 해제
-    private var realm = RealmManager.shared.realm
 
     private lazy var inbodyinfoButton: UIButton = {
         let button = UIButton(type: .system)
@@ -46,17 +58,25 @@ class WeightRecordViewController: UIViewController {
         
         
         // MARK: chartView (SwiftUI) 삽입
-        let inBodyChartView = InBodyChartView()
-        let hostingController = UIHostingController(rootView: inBodyChartView)
         
-        self.addChild(hostingController)
-        view.addSubview(hostingController.view)
+        let chartView = InBodyChartView(viewModel: viewModel)
+        hostingController = UIHostingController(rootView: chartView)
         
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
+        
+        addChild(hostingController!)
+        view.addSubview(hostingController!.view)
+        hostingController?.view.backgroundColor = .clear
+        
+        
+        hostingController!.didMove(toParent: self)
+        
+        
+        hostingController!.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            hostingController.view.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 8),
-            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            hostingController!.view.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 8),
+            hostingController!.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController!.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
     }
@@ -205,7 +225,26 @@ class WeightRecordViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
-}
+
+    
+    // MARK: (원열) 특정 월 단위 데이터 fetch
+    func fetchInBodyDataForMonth(year: Int, month: Int) {
+        let startDate = makeDate(year: year, month: month, day: 1)
+        let endDate = makeDate(year: year, month: month + 1, day: 1).addingTimeInterval(-1)
+        
+        viewModel.loadData(for: startDate, to: endDate)
+    }
+    
+    
+    private func makeDate(year: Int, month: Int, day: Int) -> Date {
+        var dateComponents = DateComponents()
+        dateComponents.year = year
+        dateComponents.month = month
+        dateComponents.day = day
+        return Calendar.current.date(from: dateComponents) ?? Date()
+    }
+    
+
 
 // MARK: (youngwoo) WeightRecordViewModel
 class WeightRecordViewModel {
@@ -236,6 +275,11 @@ class WeightRecordViewModel {
             switch changes {
                 case .initial(let collection):
                     self?.inbodyRecords = Array(collection)
+
+//                    print(self?.inbodyRecords ?? [])
+                    
+                    
+
                 case .update(let collection, _, _, _):
                     self?.inbodyRecords = Array(collection)
                 case .error(let error):
