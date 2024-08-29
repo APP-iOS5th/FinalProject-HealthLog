@@ -379,9 +379,9 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         
-        if !isTextColorCustimzed {
-            customizeCalendarTextColor()
-            isTextColorCustimzed = true
+        // apply customize calendar text color to the last date
+        if let date = dateComponents.date,
+           isLastDayOfMonth(date: date) {            customizeCalendarTextColor()
         }
         
         guard let date = dateComponents.date else { return nil }
@@ -399,6 +399,12 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         }
         
         return nil
+    }
+    
+    private func isLastDayOfMonth(date: Date) -> Bool {
+        let calendar = Calendar.current
+        let nextDay = calendar.date(byAdding: .day, value: 1, to: date)!
+        return calendar.component(.month, from: date) != calendar.component(.month, from: nextDay)
     }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
@@ -422,7 +428,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         return containerView
     }
-
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
         guard let realm = realm else { return nil }
@@ -509,11 +514,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
               let year = displayedMonthDate.year else { return nil }
         
         return DateComponents(year: year, month: month, day: day)
-    }
-    
-    // reload calendar when month is changed
-    func calendarView(_ calendarView: UICalendarView, didChangeMonth dateComponents: DateComponents) {
-        customizeCalendarTextColor()
     }
 }
 
