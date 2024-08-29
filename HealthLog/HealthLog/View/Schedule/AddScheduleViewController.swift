@@ -19,14 +19,24 @@ class AddScheduleViewController: UIViewController {
     var routine: Routine?
     
     // MARK: init(date: Date) 저장형식 논의
-    //    init(date: Date) {
-    //        self.selectedDate = date
-    //        super.init(nibName: nil, bundle: nil)
-    //    }
-    //
-    //    required init?(coder: NSCoder) {
-    //        fatalError("init(coder:) has not been implemented")
-    //    }
+    init(_ date: Date) {
+        super.init(nibName: nil, bundle: nil)
+        dateFormat(date: date)
+        //print(selectedDate)
+    }
+    
+    func dateFormat(date: Date) {
+        // 한국 시간대로 변환하기 위해 Calendar와 TimeZone을 설정했으나 계속 UTC 시간임,,
+        var calendar = Calendar.current
+        // calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+        // 그래서 야매로 9시간을 더해둠..
+        let newDate = calendar.date(byAdding: .hour, value: 9, to: date)
+        self.selectedDate = newDate
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -203,7 +213,7 @@ class AddScheduleViewController: UIViewController {
     }
     
     @objc func doneTapped() {
-        let date = Date() // 임시로 현재 날짜 넣음, scheduleviewcontroller에서 받아오는 날짜 사용 예정
+        guard let date = selectedDate else { return }
         addScheduleViewModel.saveSchedule(for: date) // 스케줄 저장
         navigationController?.popViewController(animated: true)
     }
@@ -218,8 +228,6 @@ class AddScheduleViewController: UIViewController {
     
     func receiveRoutine(_ routine: Routine) {
         self.routine = routine
-        // 루틴 정보를 기반으로 UI 업데이트
-        print("받아온 루틴 이름: \(routine.name)")
         addScheduleViewModel.addExercises(from: routine)
     }
     
@@ -286,7 +294,6 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
                 .sink { text in
-                    print("repsTextField change")
                     self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].reps = Int(text) ?? 0
                 }
                 .store(in: &cancellables)
@@ -296,19 +303,15 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
                 .sink { text in
-                    print("weightTextField change")
                     self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].weight = Int(text) ?? 0
                 }
                 .store(in: &cancellables)
         }
         
         cell.setCountDidChange = { [weak self] (newSetCount: Int) in
-            print("newSetCount - \(newSetCount)")
             self?.addScheduleViewModel
                 .updateExerciseSetCount(
                     for: indexPath.row, setCount: newSetCount)
-            
-            print("cell.currentSetCount - \(cell.currentSetCount)")
             self?.tableView.reloadRows(at: [indexPath], with: .none)
         }
         

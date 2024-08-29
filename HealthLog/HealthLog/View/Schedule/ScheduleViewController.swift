@@ -267,7 +267,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func addSchedule() {
-        let addScheduleViewController = AddScheduleViewController()
+        let date = selectedDate ?? today
+        let addScheduleViewController = AddScheduleViewController(date)
+        
+        //let addScheduleViewController = AddScheduleViewController()
         
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
