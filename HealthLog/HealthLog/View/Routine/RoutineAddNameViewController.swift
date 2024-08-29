@@ -147,7 +147,7 @@ extension UITextField {
             .compactMap{ $0.object as? UITextField}
         // String 가져옴
             .map{ $0.text ?? ""}
-            .print()
+//            .print()
             .eraseToAnyPublisher()
     }
 }

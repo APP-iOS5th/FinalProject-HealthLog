@@ -20,7 +20,6 @@ class RoutineDetailFooterView: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         self.addSubview(divider)
-        self.backgroundColor = .clear
         let padding: CGFloat = 24
         
         

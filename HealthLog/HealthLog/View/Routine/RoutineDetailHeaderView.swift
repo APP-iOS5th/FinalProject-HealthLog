@@ -33,7 +33,6 @@ class RoutineDetailHeaderView: UITableViewHeaderFooterView {
         
         self.addSubview(titleLabel)
         self.addSubview(divider)
-        self.backgroundColor = .clear
         let padding:CGFloat = 43
         
         NSLayoutConstraint.activate([
