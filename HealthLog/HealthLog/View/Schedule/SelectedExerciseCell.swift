@@ -130,13 +130,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     @objc func stepperValueChanged(sender: UIStepper) {
         let value = Int(sender.value)
         setCountDidChange?(value)
-        
-        // + - 버튼 클릭 출력용
-        //        if value > currentSetCount {
-        //            print("Stepper + button pressed : value - \(value), currentSetCount - \(currentSetCount)")
-        //        } else if value < currentSetCount {
-        //            print("Stepper - button pressed : value - \(value), -currentSetCount - \(currentSetCount)")
-        //        }
     }
     
     @objc func deleteTapped() {
@@ -231,6 +224,10 @@ class SetInputRowView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: 35)
+    }
+    
     func createSetInputView(setNumber: Int, set: ScheduleExerciseSet) {
         // MARK: setLabel
         setLabel.text = "\(setNumber) 세트"
@@ -294,7 +291,7 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
+            //self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
             
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),

@@ -21,15 +21,34 @@ class AddScheduleViewModel {
     }
     
     func addExercise(_ exercise: Exercise) {
-        let setCount = 4
-        let sets = (1...setCount).map { order in
-            ScheduleExerciseSet(
-                order: order, weight: 0, reps: 0, isCompleted: false)
+        if let recentSets = getRecentRecord(for: exercise) {
+                let scheduleExercise = ScheduleExercise(exercise: exercise, order: selectedExercises.count + 1, isCompleted: false, sets: recentSets)
+                selectedExercises.append(scheduleExercise)
+        } else {
+            let setCount = 4
+            let sets = (1...setCount).map { order in
+                ScheduleExerciseSet(
+                    order: order, weight: 0, reps: 0, isCompleted: false)
+            }
+            let scheduleExercise = ScheduleExercise(exercise: exercise, order: selectedExercises.count + 1, isCompleted: false, sets: sets)
+            selectedExercises.append(scheduleExercise)
         }
-        
-        let scheduleExercise = ScheduleExercise(exercise: exercise, order: selectedExercises.count + 1, isCompleted: false, sets: sets)
-        selectedExercises.append(scheduleExercise)
         validateExercises()
+    }
+    
+    private func getRecentRecord(for exercise: Exercise) -> [ScheduleExerciseSet]? {
+        guard let realm = realm else { return nil }
+        
+        let recentSchedule = realm.objects(Schedule.self)
+            .filter("ANY exercises.exercise == %@", exercise)
+            .sorted(byKeyPath: "date", ascending: false)
+            .first
+        
+        return recentSchedule?.exercises
+            .filter("exercise == %@", exercise)
+            .first?
+            .sets
+            .map { ScheduleExerciseSet(order: $0.order, weight: $0.weight, reps: $0.reps, isCompleted: false) }
     }
     
     func addExercises(from routine: Routine) {
@@ -103,6 +122,10 @@ class AddScheduleViewModel {
         if let existingSchedule = realm.objects(Schedule.self).filter("date == %@", date).first {
             // 스케줄이 이미 있는 경우, 운동을 추가
             try! realm.write {
+                let maxOrder = existingSchedule.exercises.max(of: \.order) ?? 0
+                for (index, exercise) in selectedExercises.enumerated() {
+                    exercise.order = maxOrder + index + 1
+                }
                 existingSchedule.exercises.append(objectsIn: selectedExercises)
             }
             // print("Existing schedule found and updated with new exercises.")

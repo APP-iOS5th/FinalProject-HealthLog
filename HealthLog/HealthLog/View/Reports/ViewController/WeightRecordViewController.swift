@@ -11,6 +11,7 @@ import SwiftUI
 
 class WeightRecordViewController: UIViewController {
     // MARK: - (youngwoo)
+    
     // youngwoo - 뷰모델 이 파일 맨 밑
     let weightRecordViewModel = WeightRecordViewModel()
     
@@ -51,74 +52,94 @@ class WeightRecordViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupUI()
         setupBindings()   // youngwoo - 04. setupBindings을 viewDidLoad에서 실행, 자동으로 계속 감지함
         
-        
-        // MARK: chartView (SwiftUI) 삽입
-        
-        let chartView = InBodyChartView(viewModel: viewModel)
-        hostingController = UIHostingController(rootView: chartView)
-        
         fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
-        
-        addChild(hostingController!)
-        view.addSubview(hostingController!.view)
-        hostingController?.view.backgroundColor = .clear
-        
-        
-        hostingController!.didMove(toParent: self)
-        
-        
-        hostingController!.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            hostingController!.view.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 8),
-            hostingController!.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            hostingController!.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
         
     }
     
     func setupUI() {
-        //배경색 변경
         view.backgroundColor = UIColor(named: "ColorPrimary")
         
-        // UI에 추가
-        view.addSubview(inbodyinfoButton)
-        view.addSubview(weightBox)
-        view.addSubview(musclesBox)
-        view.addSubview(fatBox)
+        // MARK: chartView (SwiftUI) 삽입
+        let chartView = InBodyChartView(viewModel: viewModel)
+        hostingController = UIHostingController(rootView: chartView)
+        hostingController?.view.backgroundColor = .clear
         
-        // Auto Layout 설정
+        
+        
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(inbodyinfoButton)
+        contentView.addSubview(weightBox)
+        contentView.addSubview(musclesBox)
+        contentView.addSubview(fatBox)
+        contentView.addSubview(hostingController!.view)
+        
         inbodyinfoButton.translatesAutoresizingMaskIntoConstraints = false
         weightBox.translatesAutoresizingMaskIntoConstraints = false
         musclesBox.translatesAutoresizingMaskIntoConstraints = false
         fatBox.translatesAutoresizingMaskIntoConstraints = false
+
+
+        hostingController?.view.translatesAutoresizingMaskIntoConstraints = false
+
         
         NSLayoutConstraint.activate([
-            inbodyinfoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            inbodyinfoButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            inbodyinfoButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            inbodyinfoButton.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             inbodyinfoButton.widthAnchor.constraint(equalToConstant: 345),
             inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
             
             weightBox.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 13),
-            weightBox.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            weightBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             weightBox.widthAnchor.constraint(equalToConstant: 94),
             weightBox.heightAnchor.constraint(equalToConstant: 88),
             
             musclesBox.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 13),
-            musclesBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            musclesBox.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             musclesBox.widthAnchor.constraint(equalToConstant: 94),
             musclesBox.heightAnchor.constraint(equalToConstant: 88),
             
             fatBox.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 13),
-            fatBox.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            fatBox.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             fatBox.widthAnchor.constraint(equalToConstant: 94),
-            fatBox.heightAnchor.constraint(equalToConstant: 88)
+            fatBox.heightAnchor.constraint(equalToConstant: 88),
+            
+            hostingController!.view.topAnchor.constraint(equalTo: fatBox.bottomAnchor, constant: 12),
+            hostingController!.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            hostingController!.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            hostingController!.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
+        
+        // ScrollView 제약 조건 설정 (UI 요소들이 모두 contentView에 추가된 후 설정)
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor)
+        ])
+        
     }
+    
     
     // MARK: - InfoBox
     

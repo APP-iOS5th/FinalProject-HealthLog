@@ -465,7 +465,7 @@ class MuscleImageView: UIView {
                 }
             } else {
                 // hide body parts
-                for (index, imageView) in imageViews.enumerated() {
+                for (_, imageView) in imageViews.enumerated() {
                     imageView.isHidden = true
                 }
             }

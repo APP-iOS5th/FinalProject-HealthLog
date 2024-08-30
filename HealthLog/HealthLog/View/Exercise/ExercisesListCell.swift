@@ -16,7 +16,7 @@ class ExerciseListCell: UITableViewCell {
     // 상단 영역
     let topStackView = UIStackView()
     let titleLabel = UILabel()
-    let detailButton = UIButton(type: .system)
+    let detailLabel = UILabel()
     
     // 구분선
     let dividerView = UIView()
@@ -92,12 +92,12 @@ class ExerciseListCell: UITableViewCell {
         titleLabel.numberOfLines = 1
         topStackView.addArrangedSubview(titleLabel)
         
-        // MARK: detailButton
-        detailButton.setTitle("자세히 보기 ❯", for: .normal)
-        detailButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 12)
-        detailButton.setTitleColor(.lightGray, for: .normal)
-        detailButton.setContentCompressionResistancePriority(.required, for: .horizontal)
-        topStackView.addArrangedSubview(detailButton)
+        // MARK: detailLabel
+        detailLabel.text = "자세히 보기 ❯"
+        detailLabel.textColor = .lightGray
+        detailLabel.font = UIFont(name: "Pretendard-Medium", size: 12)
+        detailLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        topStackView.addArrangedSubview(detailLabel)
     }
     
     func setupDivider() {
@@ -193,21 +193,6 @@ class ExerciseListCell: UITableViewCell {
         
         // exercise.descriptionText
         descriptionTextView.text = exercise.descriptionText
-    }
-    
-    // 자세히 보기 버튼 - 상세 화면 이동
-    func configurePushDetailViewButton(
-        with exercise: Exercise,
-        viewModel: ExerciseViewModel,
-        navigationController: UINavigationController) {
-        detailButton.removeTarget(nil, action: nil, for: .touchUpInside)
-        detailButton.addAction(UIAction { _ in
-            let detailViewModel = ExerciseDetailViewModel(
-                exercise: exercise, viewModel: viewModel)
-            let vc = ExercisesDetailViewController(
-                detailViewModel: detailViewModel)
-            navigationController.pushViewController(vc, animated: true)
-        }, for: .touchUpInside)
     }
     
 }
