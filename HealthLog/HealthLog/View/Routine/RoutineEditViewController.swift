@@ -9,7 +9,7 @@ import UIKit
 
 class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
-    var routineViewModel: RoutineViewModel
+    let routineViewModel: RoutineViewModel
     
     let index: Int
     
