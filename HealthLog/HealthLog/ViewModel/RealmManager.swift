@@ -11,7 +11,7 @@ import Foundation
 class RealmManager {
     static let shared = RealmManager()
     private(set) var realm: Realm?
-//    var bodyParts: Results<BodyPart>
+    //    var bodyParts: Results<BodyPart>
     
     private init() {
         if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
@@ -21,11 +21,13 @@ class RealmManager {
         
         initializeRealmExercise()
         initializeRealmRoutine()
-//        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
+        //        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
         
         generateScheduleSampleData()
         
         addInBodySampleData()
+        
+        Task{ await initializeRealmExerciseImages() }
     }
     
     
@@ -122,10 +124,22 @@ extension RealmManager {
         
         if realm.objects(Exercise.self).isEmpty {
             let sampleExercises = [
-                Exercise(name: "스쿼트", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동", images: [], totalReps: 75, recentWeight: 80, maxWeight: 120, isCustom: true),
-                Exercise(name: "Shoulder Press", bodyParts: [.shoulders], descriptionText: "Shoulder exercise Test TestTestTestTestTestTest Test TestTestTestTestTestTestTestTestTestTest Test Test TestTest TestTestTestTest TestTestTest Test TestTestTest TestTest TestTest Test Test TestTestTestTestTest TestTest Test TestTestTest Test ", images: [], totalReps: 60, recentWeight: 40, maxWeight: 60, isCustom: false),
+                Exercise(
+                    name: "스쿼트", bodyParts: [.quadriceps, .glutes],
+                    descriptionText: "다리 운동", images: [],
+                    totalReps: 75, recentWeight: 80, maxWeight: 120,
+                    isCustom: true
+                ),
+                Exercise(name: "Shoulder Press", bodyParts: [.shoulders], descriptionText: "Shoulder exercise TestTe stTestTestTestT estTest TestTestTestTestT estTestT TestTestTestTestTestTe stTestTe stTestTestTes tTestTestTestTest ", images: [], totalReps: 60, recentWeight: 40, maxWeight: 60, isCustom: false),
                 Exercise(name: "Bicep Curl", bodyParts: [.biceps], descriptionText: "Arm exercise", images: [], totalReps: 90, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Tricep Dip", bodyParts: [.triceps], descriptionText: "Arm exercise", images: [], totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
+                Exercise(name: "Tricep Dip", bodyParts: [.triceps], descriptionText: "Arm exercise", images: [
+                    ExerciseImage(
+                        image: nil, url: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Squats-1.png",
+                        urlAccessCount: 0),
+                    ExerciseImage(
+                        image: nil, url: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Squats-2.png",
+                        urlAccessCount: 0)
+                ], totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
                 Exercise(name: "Lateral Raise", bodyParts: [.shoulders], descriptionText: "Shoulder isolation exercise", images: [], totalReps: 70, recentWeight: 10, maxWeight: 15, isCustom: false),
                 Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", images: [], totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: true),
                 Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", images: [], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
@@ -150,6 +164,71 @@ extension RealmManager {
         } else {
             print("기본 Exercise 데이터가 이미 존재합니다.")
         }
+    }
+    
+    @MainActor
+    func initializeRealmExerciseImages() async {
+        print("initializeRealmExerciseImages")
+        guard let realm = realm else { return }
+        
+        let exercises = realm.objects(Exercise.self)
+        
+        let exercisesCount = exercises.count
+        for exercisesIndex in 0..<exercisesCount {
+            let exercise = exercises[exercisesIndex]
+            print("--start exercise \(exercise.name) --")
+            print(exercise)
+            guard exercise.isCustom == false
+            else {
+                print("-- end \(exercise.name) 유저가 추가했으므로, 이미지 url 없음 - exercise.isCustom - \(exercise.isCustom) --")
+                continue
+            }
+            
+            guard !exercise.images.isEmpty else {
+                print("-- end \(exercise.name) 더미 데이터지만, 이미지 배열은 비어있음 - exercise.images.isEmpty - \(exercise.images.isEmpty) --")
+                continue
+            }
+            
+            let imagesCount = exercise.images.count
+            print("exercise.images.count - \(imagesCount)")
+            for index in 0..<imagesCount {
+                print("-- start exerciseImage \(index) --")
+                let exerciseImage = exercise.images[index]
+                print(exerciseImage)
+                
+                let accessCount = exerciseImage.urlAccessCount ?? -1
+                
+                guard let url = URL(string: String(exerciseImage.url ?? "")),
+                      exerciseImage.image == nil,
+                      0 <= accessCount && accessCount < 3
+                else {
+                    print("-- end exerciseImage -- initializeRealmExerciseImages - not url, not nil")
+                    continue
+                }
+                
+                do {
+                    print("image \(index) url - \(url)")
+                    let (imageData, _) = try await URLSession.shared.data(from: url)
+                    print(imageData)
+                    print("image \(index) write realm")
+                    realm.writeAsync {
+                        exerciseImage.image = imageData
+                        exerciseImage.urlAccessCount = -1
+                    }
+                    
+                } catch {
+                    print("image\(index) 이미지 다운로드 실패: \(error)")
+                    realm.writeAsync {
+                        exerciseImage.urlAccessCount = accessCount + 1
+                    }
+                }
+                
+                print("--end exerciseImage \(index) --")
+            }
+            
+            print("--end exercise \(exercise.name) --")
+        }
+        
     }
     
     
@@ -227,7 +306,7 @@ extension RealmManager {
             try! realm.write {
                 realm.add([routine1, routine2, routine3])
             }
-
+            
             
             print("기본 Routine 더미데이터 넣기")
         } else {
