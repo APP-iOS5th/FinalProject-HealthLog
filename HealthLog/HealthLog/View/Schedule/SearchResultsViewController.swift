@@ -38,6 +38,10 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         setupDividerView()
         setupConstraints()
         setupBinding()
+        hideKeyboard()
+    }
+    
+    private func hideKeyboard() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchBar(_:)))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
@@ -48,6 +52,11 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         if let searchController = self.parent as? UISearchController {
             searchController.searchBar.showsBookmarkButton = false
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        resetBodyPartsOption()
     }
 
     @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
@@ -184,7 +193,6 @@ extension SearchResultsViewController: UISearchBarDelegate {
             searchController.searchBar.showsBookmarkButton = false
         }
         viewModel.bodypartOptionShow = true
-        resetBodyPartsOption()
     }
     
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
