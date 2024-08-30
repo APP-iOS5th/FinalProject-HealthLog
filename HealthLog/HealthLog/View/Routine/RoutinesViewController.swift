@@ -105,7 +105,7 @@ class RoutinesViewController: UIViewController {
             self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor),
             
             
             self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 115),
@@ -135,11 +135,8 @@ extension RoutinesViewController: UISearchResultsUpdating {
         guard let text = searchController.searchBar.text else {
             return
         }
-        
         viewModel.fillteRoutines(by: text)
         self.tableView.reloadData()
-        
-        
     }
     
     

@@ -27,7 +27,7 @@ class SetCell: UICollectionViewCell {
         textField.keyboardType = .numberPad
         textField.layer.cornerRadius = 10
         textField.textAlignment = .center
-        
+        textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
         textField.borderStyle = .none
         textField.backgroundColor = .color2F2F2F
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +38,7 @@ class SetCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "kg"
         label.textColor = .white
-        label.font =  UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font =  UIFont.font(.pretendardRegular, ofSize: 14)
         return label
     }()
     
@@ -62,7 +62,7 @@ class SetCell: UICollectionViewCell {
         textField.borderStyle = .none
         textField.attributedPlaceholder = NSAttributedString(string: "횟수", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
         textField.backgroundColor = .color2F2F2F
-
+        textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -74,7 +74,7 @@ class SetCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "회"
         label.textColor = .white
-        label.font =  UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font =  UIFont.font(.pretendardRegular, ofSize: 14)
         return label
     }()
     private lazy var repsStackView: UIStackView = {

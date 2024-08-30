@@ -62,7 +62,7 @@ class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellD
             self.tableView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 3),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor),
         ])
         
     }
@@ -82,7 +82,7 @@ class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellD
 extension RoutineAddSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 107
+        return 120
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

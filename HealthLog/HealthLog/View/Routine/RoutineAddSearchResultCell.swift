@@ -44,7 +44,7 @@ class RoutineAddSearchResultCell: UITableViewCell {
     private lazy var recentWeightLabel: UILabel = {
         let label = UILabel()
         label.text = "최근 무게"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textColor = .systemGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -54,7 +54,7 @@ class RoutineAddSearchResultCell: UITableViewCell {
     private lazy var maxWeightLabel: UILabel = {
         let label = UILabel()
         label.text = "최대 무게"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textColor = .systemGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -95,7 +95,7 @@ class RoutineAddSearchResultCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(
-            by: UIEdgeInsets(top: 10, left: 24, bottom: 0, right: 24))
+            by: UIEdgeInsets(top: 10, left: 24, bottom: 10, right: 24))
     }
 
     
@@ -128,7 +128,7 @@ class RoutineAddSearchResultCell: UITableViewCell {
             self.bodypartScrollView.topAnchor.constraint(equalTo: self.recentWeightLabel.bottomAnchor,constant: 4),
             self.bodypartScrollView.leadingAnchor.constraint(equalTo: self.recentWeightLabel.leadingAnchor),
             self.bodypartScrollView.trailingAnchor.constraint(equalTo: self.plusButton.leadingAnchor),
-            self.bodypartScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: 12),
+            self.bodypartScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -13),
             
             self.bodypartStackView.topAnchor.constraint(equalTo: self.bodypartScrollView.topAnchor),
             self.bodypartStackView.leadingAnchor.constraint(equalTo: self.bodypartScrollView.leadingAnchor),
