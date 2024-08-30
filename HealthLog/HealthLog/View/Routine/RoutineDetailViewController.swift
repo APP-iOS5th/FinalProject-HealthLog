@@ -59,7 +59,8 @@ class RoutineDetailViewController: UIViewController {
         self.view.backgroundColor = .color1E1E1E
         self.view.addSubview(tableView)
         self.navigationItem.rightBarButtonItem = self.rightBarButtonItem
-        
+        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        self.navigationItem.backBarButtonItem = backbarButtonItem
         
         
         NSLayoutConstraint.activate([
@@ -72,7 +73,7 @@ class RoutineDetailViewController: UIViewController {
     }
     
     @objc func editTapped() {
-        let  routineEditViewController = RoutineEditViewController()
+        let  routineEditViewController = RoutineEditViewController(routineViewModel: routineViewModel, index: index)
         self.navigationController?.pushViewController(routineEditViewController, animated: true)
     }
     

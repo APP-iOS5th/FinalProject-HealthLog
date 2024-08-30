@@ -10,7 +10,7 @@ import Combine
 
 class RoutineAddNameViewController: UIViewController {
     
-    var viewModel = RoutineViewModel()
+    let viewModel = RoutineViewModel()
     private var cancellables = Set<AnyCancellable>()
     private var isValid: Bool = false
     
@@ -62,11 +62,13 @@ class RoutineAddNameViewController: UIViewController {
         super.viewDidLoad()
         print("addName")
         self.hideKeyBoardWenTappedAround()
-        
         setupUI()
         setupObservers()
-
-        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+            self.view.endEditing(true)
     }
     
     func setupObservers() {
