@@ -31,6 +31,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.bodypartOptionShow = true
         view.backgroundColor = .color1E1E1E
         setupTableView()
         setupSearchOptionStackView()
@@ -42,10 +43,19 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         view.addGestureRecognizer(tapGesture)
     }
     
-    // 키보드 안 내려감 확인필요
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let searchController = self.parent as? UISearchController {
+            searchController.searchBar.showsBookmarkButton = false
+        }
+    }
+
     @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
-        //print("Tapped outside search bar")
-        view.endEditing(true)
+        if let searchController = self.parent as? UISearchController {
+            if searchController.searchBar.isFirstResponder {
+                searchController.searchBar.resignFirstResponder()
+            }
+        }
     }
     
     private func setupBinding() {
@@ -170,13 +180,14 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
 
 extension SearchResultsViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("searchBar CancelButton Clicked")
+        if let searchController = self.parent as? UISearchController {
+            searchController.searchBar.showsBookmarkButton = false
+        }
         viewModel.bodypartOptionShow = true
         resetBodyPartsOption()
     }
     
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
-        print("Bookmark button clicked")
         viewModel.bodypartOptionShow.toggle()
     }
     

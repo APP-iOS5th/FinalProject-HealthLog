@@ -18,20 +18,9 @@ class AddScheduleViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     var routine: Routine?
     
-    // MARK: init(date: Date) 저장형식 논의
     init(_ date: Date) {
         super.init(nibName: nil, bundle: nil)
-        dateFormat(date: date)
-        //print(selectedDate)
-    }
-    
-    func dateFormat(date: Date) {
-        // 한국 시간대로 변환하기 위해 Calendar와 TimeZone을 설정했으나 계속 UTC 시간임,,
-        var calendar = Calendar.current
-        // calendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
-        // 그래서 야매로 9시간을 더해둠..
-        let newDate = calendar.date(byAdding: .hour, value: 9, to: date)
-        self.selectedDate = newDate
+        self.selectedDate = date.toKoreanTime()
     }
     
     required init?(coder: NSCoder) {
@@ -83,6 +72,7 @@ class AddScheduleViewController: UIViewController {
                 NSAttributedString.Key.foregroundColor: UIColor.white,
                 .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
             ]
+            appearance.shadowColor = nil
             navigationBar.standardAppearance = appearance
             navigationBar.scrollEdgeAppearance = appearance
         }
@@ -330,6 +320,9 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
 extension AddScheduleViewController: UISearchResultsUpdating, UISearchControllerDelegate {
     func willPresentSearchController(_ searchController: UISearchController) {
         searchController.searchBar.showsBookmarkButton = true
+        if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
+            searchResultsController.bodypartOptionShowUIChange(true)
+        }
     }
 
     func didDismissSearchController(_ searchController: UISearchController) {
