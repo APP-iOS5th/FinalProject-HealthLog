@@ -42,7 +42,7 @@ class RoutineCell: UITableViewCell {
     private lazy var exercisesLabel: UILabel = {
         let label = UILabel()
         label.text = "운동들"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -51,7 +51,7 @@ class RoutineCell: UITableViewCell {
     private lazy var exercisesVolumLabel: UILabel = {
         let label = UILabel()
         label.text = "운동 볼륨 : 0 kg"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textColor = .darkGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -89,6 +89,11 @@ class RoutineCell: UITableViewCell {
         return stackView
         
     }()
+    
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0))
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -157,7 +162,7 @@ class RoutineCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(
-            by: UIEdgeInsets(top: 10, left: 24, bottom: 0, right: 24))
+            by: UIEdgeInsets(top: 10, left: 17, bottom: 0, right: 17))
     }
     
     @objc func buttonTapped() {
@@ -184,11 +189,13 @@ class RoutineCell: UITableViewCell {
         
         routine.exercises.forEach { exercise in
             exercise.exercise?.bodyParts.forEach{ bodyPart in
-                bodyParts.append(bodyPart.rawValue)
+                if !bodyParts.contains(bodyPart.rawValue){
+                    bodyParts.append(bodyPart.rawValue)
+                }
             }
         }
         
-        for part in Array(Set(bodyParts)) {
+        for part in bodyParts {
             let label = CustomBodyPartLabel()
             label.text = part
             bodypartStackView.addArrangedSubview(label)

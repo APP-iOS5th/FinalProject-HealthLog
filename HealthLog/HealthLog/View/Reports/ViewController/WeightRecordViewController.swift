@@ -93,7 +93,9 @@ class WeightRecordViewController: UIViewController {
         musclesBox.translatesAutoresizingMaskIntoConstraints = false
         fatBox.translatesAutoresizingMaskIntoConstraints = false
 
+
         hostingController?.view.translatesAutoresizingMaskIntoConstraints = false
+
         
         NSLayoutConstraint.activate([
             inbodyinfoButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),

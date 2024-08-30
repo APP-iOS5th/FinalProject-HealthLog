@@ -16,7 +16,7 @@ class SetCountHeaderView: UICollectionReusableView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "운동 이름"
-        label.font =  UIFont.font(.pretendardMedium, ofSize: 16)
+        label.font =  UIFont.font(.pretendardRegular, ofSize: 16)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -41,7 +41,7 @@ class SetCountHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.text = "1"
         label.textColor = .white
-        label.font =  UIFont.font(.pretendardMedium, ofSize: 16)
+        label.font =  UIFont.font(.pretendardRegular, ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -61,7 +61,7 @@ class SetCountHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.text = "세트 수"
         label.textColor = .white
-        label.font =  UIFont.font(.pretendardMedium, ofSize: 16)
+        label.font =  UIFont.font(.pretendardRegular, ofSize: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
