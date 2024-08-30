@@ -132,7 +132,7 @@ extension RoutinesViewController: UISearchResultsUpdating {
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text, !text.isEmpty else {
+        guard let text = searchController.searchBar.text else {
             return
         }
         
@@ -153,20 +153,20 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.routines.count
-//        self.isFiltering ? self.viewModel.filteredRoutines.count : self.viewModel.routines.count
+        return self.isFiltering ? self.viewModel.filteredRoutines.count : self.viewModel.routines.count
+//        self.viewModel.routines.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineCell.cellId, for: indexPath) as! RoutineCell
         cell.selectionStyle = .none
-        cell.configure(with: viewModel.routines[indexPath.row])
-//        if isFiltering {
-//            cell.configure(with: viewModel.filteredRoutines[indexPath.row])
-//        } else {
-//            cell.configure(with: viewModel.routines[indexPath.row])
-//        }
+//        cell.configure(with: viewModel.routines[indexPath.row])
+        if isFiltering {
+            cell.configure(with: viewModel.filteredRoutines[indexPath.row])
+        } else {
+            cell.configure(with: viewModel.routines[indexPath.row])
+        }
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

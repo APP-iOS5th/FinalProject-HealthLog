@@ -38,7 +38,9 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self
-        definesPresentationContext = true
+        
+
+        searchController.showsSearchResultsController = true
         return searchController
     }()
     
@@ -220,7 +222,7 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
 // 검색 기능
 extension RoutineAddExerciseViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text, !text.isEmpty else {
+        guard let text = searchController.searchBar.text else {
             return
         }
         
