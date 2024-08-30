@@ -184,11 +184,13 @@ class RoutineCell: UITableViewCell {
         
         routine.exercises.forEach { exercise in
             exercise.exercise?.bodyParts.forEach{ bodyPart in
-                bodyParts.append(bodyPart.rawValue)
+                if !bodyParts.contains(bodyPart.rawValue){
+                    bodyParts.append(bodyPart.rawValue)
+                }
             }
         }
         
-        for part in Array(Set(bodyParts)) {
+        for part in bodyParts {
             let label = CustomBodyPartLabel()
             label.text = part
             bodypartStackView.addArrangedSubview(label)
