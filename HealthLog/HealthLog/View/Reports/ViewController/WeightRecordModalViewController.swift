@@ -23,6 +23,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+//        button.isEnabled = false
         return button
     }()
     
@@ -116,7 +117,6 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
-    // 스택뷰에서 텍스트필드 값만 huggingPriority주고 싶었지만 원하는 대로 잘 안되서 UIView로 가야하나 고민이 됩니다. -> UIView로 변경
     private func createInputView(title: String, unit: String) -> UIView {
         let containerView = UIView()
 
@@ -201,3 +201,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         }
     
 }
+
+//private func validateInput() {
+//
+//}
