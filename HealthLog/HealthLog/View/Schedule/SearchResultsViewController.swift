@@ -31,21 +31,40 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.bodypartOptionShow = true
         view.backgroundColor = .color1E1E1E
         setupTableView()
         setupSearchOptionStackView()
         setupDividerView()
         setupConstraints()
         setupBinding()
+        hideKeyboard()
+    }
+    
+    private func hideKeyboard() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchBar(_:)))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
     }
     
-    // 키보드 안 내려감 확인필요
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let searchController = self.parent as? UISearchController {
+            searchController.searchBar.showsBookmarkButton = false
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        resetBodyPartsOption()
+    }
+
     @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
-        //print("Tapped outside search bar")
-        view.endEditing(true)
+        if let searchController = self.parent as? UISearchController {
+            if searchController.searchBar.isFirstResponder {
+                searchController.searchBar.resignFirstResponder()
+            }
+        }
     }
     
     private func setupBinding() {
@@ -119,6 +138,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         cell.addButtonTapped = { [weak self] in
             self?.onExerciseSelected?(exercise)
             self?.clearSearchAndDismiss()
+            self?.prepareForDismissal(true)
         }
         return cell
     }
@@ -166,18 +186,27 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
             searchBar.setImage(icon, for: .bookmark, state: .normal)
         }
     }
+    
+    func prepareForDismissal(_ close: Bool) {
+        tableView.isHidden = close
+    }
 }
 
+// MARK: UISearchBarDelegate
 extension SearchResultsViewController: UISearchBarDelegate {
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("searchBar CancelButton Clicked")
-        viewModel.bodypartOptionShow = true
-        resetBodyPartsOption()
-    }
-    
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
-        print("Bookmark button clicked")
         viewModel.bodypartOptionShow.toggle()
     }
     
+}
+
+// MARK: UIScrollViewDelegate
+extension SearchResultsViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if let searchController = self.parent as? UISearchController {
+            UIView.animate(withDuration: 0.3) {
+                searchController.searchBar.resignFirstResponder()
+            }
+        }
+    }
 }

@@ -91,6 +91,9 @@ class SaveRoutineViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelSave))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveRoutine))
         
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .white
+        
         container.addArrangedSubview(pageTitle)
         container.addArrangedSubview(routineName)
         

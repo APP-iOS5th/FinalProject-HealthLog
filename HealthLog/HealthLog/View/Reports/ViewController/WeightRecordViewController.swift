@@ -92,6 +92,7 @@ class WeightRecordViewController: UIViewController {
         weightBox.translatesAutoresizingMaskIntoConstraints = false
         musclesBox.translatesAutoresizingMaskIntoConstraints = false
         fatBox.translatesAutoresizingMaskIntoConstraints = false
+
         hostingController?.view.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
