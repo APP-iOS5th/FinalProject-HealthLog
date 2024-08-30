@@ -146,7 +146,7 @@ class ExercisesDetailViewController: UIViewController {
         
         // MARK: profileStackView
         profileStackView.axis = .vertical
-//        profileStackView.alignment = .fill
+        profileStackView.alignment = .center
 //        profileStackView.distribution = .equalCentering
         profileStackView.spacing = 15
         profileStackView.layer.cornerRadius = 10
@@ -158,22 +158,22 @@ class ExercisesDetailViewController: UIViewController {
         stackView.addArrangedSubview(profileStackView)
         
         // MARK: imageViewPaddingContainer
-        let imageViewPaddingContainer = UIView()
-        profileStackView.addArrangedSubview(imageViewPaddingContainer)
-        imageViewPaddingContainer.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageViewPaddingContainer.heightAnchor.constraint(equalToConstant: 360),
-        ])
+//        imageViewPaddingContainer.layer.borderWidth = 1
+//        profileStackView.addArrangedSubview(imageViewPaddingContainer)
+//        imageViewPaddingContainer.translatesAutoresizingMaskIntoConstraints = false
+//        NSLayoutConstraint.activate([
+//            imageViewPaddingContainer.heightAnchor.constraint(equalToConstant: 360),
+//        ])
         
         // MARK: imageView
         imageView.contentMode = .scaleAspectFit
-        imageViewPaddingContainer.addSubview(imageView)
+        imageView.layer.cornerRadius = 12
+        profileStackView.addArrangedSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalTo: imageViewPaddingContainer.widthAnchor, multiplier: 0.8),
-            imageView.heightAnchor.constraint(equalTo: imageViewPaddingContainer.heightAnchor, multiplier: 0.8),
-            imageView.centerXAnchor.constraint(equalTo: imageViewPaddingContainer.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: imageViewPaddingContainer.centerYAnchor)
+            imageView.widthAnchor.constraint(
+                equalTo: stackView.widthAnchor,
+                constant: -50),
         ])
         
         // MARK: bodypartStackView
@@ -238,6 +238,8 @@ class ExercisesDetailViewController: UIViewController {
                 self?.maxWeightLogContentStackView.reloadValueLabel(unit: "KG", value: "\(exercise.maxWeight)")
                 self?.imageView.image = UIImage(
                     data: exercise.images.first?.image ?? Data())
+                self?.updateImageViewWithImage()
+                
             }
             .store(in: &cancellables)
         
@@ -252,6 +254,32 @@ class ExercisesDetailViewController: UIViewController {
             }
             .store(in: &cancellables)
     }
+    
+    // MARK: - Methods
+    
+    private func updateImageViewWithImage() {
+        guard imageView.image != nil else { return }
+        
+        if let heightConstraint = imageView.constraints.first(where: { $0.firstAttribute == .height }) {
+            heightConstraint.isActive = false
+            imageView.removeConstraint(heightConstraint)
+        }
+        
+        let newImageWidth = (imageView.image?.size.width ?? 0)
+        let newImageHeight = (imageView.image?.size.height ?? 0)
+        
+        let aspectRatio = newImageHeight / newImageWidth
+        
+        imageView.heightAnchor.constraint(
+            equalTo: stackView.widthAnchor, 
+            multiplier: aspectRatio,
+            constant: -50)
+        .isActive = true
+        
+        imageView.layoutIfNeeded()
+    }
+    
+    // MARK: - Selector Methods
     
     @objc func editPushButtonTapped() {
         print("editPushButtonTapped!")
