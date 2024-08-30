@@ -97,6 +97,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         configuration.cornerStyle = .medium
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
         button.configuration = configuration
+        button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         
         let stackView = UIStackView(arrangedSubviews: [label, button])

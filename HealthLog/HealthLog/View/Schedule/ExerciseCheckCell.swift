@@ -146,7 +146,8 @@ class ExerciseCheckCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor),
             
-            exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100),
+            exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
+            exerciseEditButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
             exerciseCompletedSwitch.widthAnchor.constraint(greaterThanOrEqualToConstant: 51),
         ])
     }
