@@ -248,9 +248,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date).first
         
-        if date == today && selectedDateSchedule == nil {
-            selectedDateSchedule = createTodaysDummySchedule()
-        }
+//        if date == today && selectedDateSchedule == nil {
+//            selectedDateSchedule = createTodaysDummySchedule()
+//        }
 
         selectedDateExerciseVolume = 0
         if let selectedSchedule = selectedDateSchedule {
@@ -270,8 +270,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     @objc func addSchedule() {
         let date = selectedDate ?? today
         let addScheduleViewController = AddScheduleViewController(date)
-        
-        //let addScheduleViewController = AddScheduleViewController()
         
         navigationController?.pushViewController(addScheduleViewController, animated: true)
     }
@@ -372,9 +370,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
-    
-    // MARK: - UITableViewDelegate
-    
 }
 
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
@@ -412,7 +407,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
         
         // Get the next day
-        let calendar = calendarView.calendar
         let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
         
         let currentMonth = koreanCalendar.component(.month, from: koreanDate)
@@ -539,7 +533,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         return DateComponents(year: year, month: month, day: day)
     }
 }
-
 
 extension ScheduleViewController {
     private func highlightBodyPartsAtSelectedDate(_ date: Date) {

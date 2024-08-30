@@ -52,12 +52,15 @@ class ExerciseCheckCell: UITableViewCell {
         return button
     }()
     
-    lazy var exerciseCompletedSwitch: UISwitch = {
-        let checkbox = UISwitch()
-        checkbox.onTintColor = .colorAccent
-        checkbox.addTarget(self, action: #selector(didToggleCheckboxExercise(_:)), for: .valueChanged)
-        checkbox.translatesAutoresizingMaskIntoConstraints = false
-        return checkbox
+    lazy var checkboxButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(systemName: "square"), for: .normal)
+        button.setImage(UIImage(systemName: "checkmark.square"), for: .selected)
+        button.tintColor = .white
+        button.addTarget(self, action: #selector(didToggleCheckboxExercise(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
     }()
     
     lazy var separatorLine: UIView = {
@@ -124,14 +127,16 @@ class ExerciseCheckCell: UITableViewCell {
     
     private func createExerciseEditView(_ scheduleExercise: ScheduleExercise) {
         exerciseEditButton.addTarget(self, action: #selector(editExercise), for: .touchUpInside)
-        exerciseCompletedSwitch.isOn = scheduleExercise.isCompleted
-        [exerciseEditButton, exerciseCompletedSwitch].forEach {
+        
+        checkboxButton.isSelected = scheduleExercise.isCompleted
+        [exerciseEditButton, checkboxButton].forEach {
             $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         }
         let stackView = UIStackView(arrangedSubviews: [
-            exerciseEditButton, exerciseCompletedSwitch
+            exerciseEditButton, checkboxButton
         ])
+        
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
@@ -146,9 +151,11 @@ class ExerciseCheckCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor),
             
+            stackView.heightAnchor.constraint(equalToConstant: 24),
+            
             exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
-            exerciseEditButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
-            exerciseCompletedSwitch.widthAnchor.constraint(greaterThanOrEqualToConstant: 51),
+            checkboxButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            checkboxButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
         ])
     }
     
@@ -171,18 +178,21 @@ class ExerciseCheckCell: UITableViewCell {
         repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.textColor = .white
         
-        let checkbox = UISwitch()
-        checkbox.isOn = set.isCompleted
-        checkbox.onTintColor = .colorAccent
-        checkbox.tag = set.order
-        checkbox.addTarget(self, action: #selector(didToggleCheckboxSet(_:)), for: .valueChanged)
+        let checkboxBtn = UIButton(type: .custom)
+        checkboxBtn.setImage(UIImage(systemName: "square"), for: .normal)
+        checkboxBtn.setImage(UIImage(systemName: "checkmark.square"), for: .selected)
+        checkboxBtn.tintColor = .white
+        checkboxBtn.isSelected = set.isCompleted
+        checkboxBtn.tag = set.order
+        checkboxBtn.addTarget(self, action: #selector(didToggleCheckboxSet(_:)), for: .touchUpInside)
+        checkboxBtn.translatesAutoresizingMaskIntoConstraints = false
         
-        [setNumber, weightLabel, repsLabel, checkbox].forEach {
+        [setNumber, weightLabel, repsLabel, checkboxBtn].forEach {
             $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
             $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         }
         let stackView = UIStackView(arrangedSubviews: [
-            setNumber, weightLabel, repsLabel, checkbox
+            setNumber, weightLabel, repsLabel, checkboxBtn
         ])
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -197,14 +207,19 @@ class ExerciseCheckCell: UITableViewCell {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
             
-            view.heightAnchor.constraint(equalToConstant: 50),
+            checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            
+            view.heightAnchor.constraint(equalToConstant: 37),
         ])
 
         return view
     }
     
-    @objc private func didToggleCheckboxSet(_ sender: UISwitch) {
+    @objc private func didToggleCheckboxSet(_ sender: UIButton) {
+        sender.isSelected.toggle()
         // save it to the database
         guard let exercise = currentExercise, let realm = realm else { return }
         
@@ -214,12 +229,12 @@ class ExerciseCheckCell: UITableViewCell {
                 if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {
                     // update scheduleExerciseSet
                     try realm.write {
-                        scheduleExercise.sets[setIndex].isCompleted = sender.isOn
+                        scheduleExercise.sets[setIndex].isCompleted = sender.isSelected
                     }
                     
                     // update ScheduleExercise
                     let allSetsCompleted = scheduleExercise.sets.allSatisfy { $0.isCompleted }
-                    exerciseCompletedSwitch.isOn = allSetsCompleted
+                    checkboxButton.isSelected = allSetsCompleted
                     try realm.write {
                         scheduleExercise.isCompleted = allSetsCompleted
                     }
@@ -234,7 +249,8 @@ class ExerciseCheckCell: UITableViewCell {
         }
     }
     
-    @objc private func didToggleCheckboxExercise(_ sender: UISwitch) {
+    @objc private func didToggleCheckboxExercise(_ sender: UIButton) {
+        sender.isSelected.toggle()
         // save it to the database
         guard let exercise = currentExercise, let realm = realm else { return } // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
         
@@ -242,8 +258,8 @@ class ExerciseCheckCell: UITableViewCell {
             if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {
                 // update scheduleExercise and the sets
                 try realm.write {
-                    scheduleExercise.isCompleted = sender.isOn
-                    scheduleExercise.sets.forEach { $0.isCompleted = sender.isOn }
+                    scheduleExercise.isCompleted = sender.isSelected
+                    scheduleExercise.sets.forEach { $0.isCompleted = sender.isSelected }
                 }
                 
                 // update calendar and bodyparts image
