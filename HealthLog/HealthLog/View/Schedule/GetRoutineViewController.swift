@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import Combine
+
 class GetRoutineViewController: UIViewController {
     private var selectedRoutine: Routine?
     let viewModel = RoutineViewModel()
     var onRoutineSelected: ((Routine) -> Void)?
-    
+    private var cancellables = Set<AnyCancellable>()
+
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "추가된 루틴이 없습니다."
@@ -18,27 +21,6 @@ class GetRoutineViewController: UIViewController {
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
-    }()
-    
-    private lazy var searchController: UISearchController = {
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = "루틴 검색"
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.hidesBottomBarWhenPushed = true
-        
-        return searchController
-    }()
-    
-    private lazy var addButton: UIBarButtonItem = {
-        let buttonAction = UIAction { _ in
-            print("addButton 클릭")
-            let routineAddNameViewController = RoutineAddNameViewController()
-            self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
-        }
-        
-        let barButton = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill")?.withTintColor(.white, renderingMode: .alwaysTemplate), primaryAction: buttonAction)
-        barButton.tintColor = UIColor(named: "ColorAccent")
-        return barButton
     }()
     
     private lazy var tableView: UITableView = {
@@ -53,19 +35,30 @@ class GetRoutineViewController: UIViewController {
         return tableView
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        isRoutineData()
         setupUI()
+        setupBindings()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
         isRoutineData()
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-        
+    }
+    
+    private func setupBindings() {
+        viewModel.$routines
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateUI()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateUI() {
+        isRoutineData()
+        tableView.reloadData()
     }
     
     func didSelectRoutine(_ routine: Routine) {
@@ -81,21 +74,12 @@ class GetRoutineViewController: UIViewController {
     }
     
     func setupUI() {
-        
         self.view.backgroundColor = .color1E1E1E
-        self.navigationItem.searchController = searchController
-        self.navigationItem.title = "루틴"
         self.view.tintColor = .white
-        
-        
-        
-        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        self.navigationItem.backBarButtonItem = backbarButtonItem
         
         //MARK: - addSubview
         self.view.addSubview(textLabel)
         self.view.addSubview(tableView)
-        self.navigationItem.rightBarButtonItem = self.addButton
         
         let safeArea = self.view.safeAreaLayoutGuide
         //MARK: - NSLayoutconstraint
@@ -103,19 +87,16 @@ class GetRoutineViewController: UIViewController {
             self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
-            
+            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             
             self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 115),
-            self.textLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-            
+            self.textLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
     }
 }
 
 //tableView
 extension GetRoutineViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 170
     }

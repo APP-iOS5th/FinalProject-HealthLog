@@ -79,8 +79,6 @@ class ReportsViewController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
-    
-        
         
         titleStackView.addArrangedSubview(moveToPreviousMonthButton)
         titleStackView.addArrangedSubview(titleMonthLabel)
@@ -115,6 +113,13 @@ class ReportsViewController: UIViewController {
         currentVC = initialViewController
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        updateDataForCurrentMonth()
+    }
+    
     
     private func createMonthButton(action: UIAction, imageName: String) -> UIButton {
         let button = UIButton(type: .custom)
@@ -199,6 +204,8 @@ class ReportsViewController: UIViewController {
         addChild(newVC)
         newVC.didMove(toParent: self)
         currentVC = newVC
+        
+        updateDataForCurrentMonth()
         
     }
     

@@ -181,7 +181,10 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
-                
+        
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .white
+        
         stepperContainer.addSubview(stepperLabel)
         stepperContainer.addSubview(stepperCountLabel)
         stepperContainer.addSubview(stepper)
