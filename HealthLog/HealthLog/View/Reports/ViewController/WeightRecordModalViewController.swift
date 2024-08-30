@@ -130,7 +130,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         numberTextField.layer.cornerRadius = 12
         numberTextField.keyboardType = .numberPad
         numberTextField.textColor = .white
-        numberTextField.textAlignment = .left
+        numberTextField.textAlignment = .right
         
         // Placeholder 폰트, 색상 변경
         numberTextField.attributedPlaceholder = NSAttributedString(
