@@ -22,7 +22,11 @@ class RoutineAddNameViewController: UIViewController {
         // 더 좋은 방법 있으면 수정
         textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
         textField.textColor = .white
-        textField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
+        textField.autocorrectionType = .no
+        textField.spellCheckingType = .no
+        
+        
         return textField
         
     }()
@@ -30,7 +34,7 @@ class RoutineAddNameViewController: UIViewController {
     private lazy var subTextLabel: UILabel = {
         let label = UILabel()
         label.text = viewModel.rutineNameConfirmation
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
        
@@ -57,7 +61,7 @@ class RoutineAddNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addName")
-        
+        self.hideKeyBoardWenTappedAround()
         
         setupUI()
         setupObservers()
@@ -138,6 +142,20 @@ class RoutineAddNameViewController: UIViewController {
         ])
     }
 }
+
+extension RoutineAddNameViewController {
+    // 키보드 내리기
+    func hideKeyBoardWenTappedAround() {
+        let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dissmissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dissmissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
 
 extension UITextField {
     var textPublisher: AnyPublisher<String, Never> {
