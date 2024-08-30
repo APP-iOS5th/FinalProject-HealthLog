@@ -148,7 +148,20 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private func setupUI() {
         navigationItem.title = "운동 일정"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addSchedule))
+        
+        let button = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .small)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        button.setImage(plusImage, for: .normal)
+        button.backgroundColor = .colorAccent
+        button.frame = CGRect(x: 0, y: 0, width: 28, height: 28)
+        button.layer.cornerRadius = 8
+        
+        button.addTarget(self, action: #selector(addSchedule), for: .touchUpInside)
+        
+        let barButtonItem = UIBarButtonItem(customView: button)
+                
+        navigationItem.rightBarButtonItem = barButtonItem
         
         self.navigationController?.setupBarAppearance()
         self.tabBarController?.setupBarAppearance()
