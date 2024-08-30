@@ -516,7 +516,6 @@
 			files = (
 				4B2A2A2E2C7F0B5C007F5F55 /* RoutineDetailViewCell.swift in Sources */,
 				18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */,
-				CE4779242C7B204400F6DE74 /* TestAddScheduleViewController.swift in Sources */,
 				3CD063C72C7FF80900EBCAB8 /* Extension+UITabBarController.swift in Sources */,
 				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
 				CEA171B82C7DA311000EB11A /* FunctionInfoPrint.swift in Sources */,
