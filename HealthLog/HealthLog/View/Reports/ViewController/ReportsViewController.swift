@@ -79,8 +79,6 @@ class ReportsViewController: UIViewController {
         super.viewDidLoad()
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
-    
-        
         
         titleStackView.addArrangedSubview(moveToPreviousMonthButton)
         titleStackView.addArrangedSubview(titleMonthLabel)

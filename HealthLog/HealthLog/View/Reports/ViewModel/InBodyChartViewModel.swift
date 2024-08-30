@@ -84,6 +84,13 @@ class InBodyChartViewModel: ObservableObject {
         notificationToken?.invalidate()
     }
     
+    func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "d일"
+        return formatter.string(from: date)
+    }
+    
     
     
     func getWeight(for date: Date) -> Int {
@@ -96,6 +103,12 @@ class InBodyChartViewModel: ObservableObject {
         return Float(inBodyData.first(where: {
             Calendar.current.isDate($0.date, inSameDayAs: date)
         })?.muscleMass ?? 0)
+    }
+    
+    func getBodyFat(for date: Date) -> Float {
+        return Float(inBodyData.first(where: {
+            Calendar.current.isDate($0.date, inSameDayAs: date)
+        })?.bodyFat ?? 0)
     }
     
     
@@ -126,6 +139,20 @@ class InBodyChartViewModel: ObservableObject {
         
         return adjustedMinDomain...maxDomain
     }
+    
+    func fatYAxisDomain() -> ClosedRange<Double> {
+        let fats = inBodyData.map { Double($0.bodyFat)}
+        let minFat = fats.min() ?? 5
+        let maxFat = fats.max() ?? 40
+        
+        let minDomain = minFat - 5
+        let maxDomain = maxFat + 5
+        
+        let adjustedMinDomain = minDomain < 0 ? 0 : minDomain
+        
+        return adjustedMinDomain...maxDomain
+    }
+    
     
     func xAxisDomain() -> ClosedRange<Date> {
         guard let firstDate = inBodyData.map({ $0.date }).min(),
