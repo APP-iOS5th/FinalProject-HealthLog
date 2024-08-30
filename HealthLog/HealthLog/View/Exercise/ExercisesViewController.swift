@@ -8,7 +8,7 @@
 import Combine
 import UIKit
 
-class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, UITableViewDataSource  {
+class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate  {
     
     // MARK: - Properties
     
@@ -37,7 +37,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         super.viewDidLoad()
         view.backgroundColor = .color1E1E1E
         
-        setupNavigationBar()
+        setupMain()
         setupSearchController()
         setupSearchOptionStackView()
         setupDivider()
@@ -52,7 +52,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     // MARK: - Setup
     
-    func setupNavigationBar() {
+    func setupMain() {
         title = "운동리스트"
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
@@ -78,7 +78,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         self.navigationItem.leftBarButtonItem = tempStepperButton
         
         // MARK: handleTapOutsideSearchArea
-        // 검색영역 바깥을 터치시, 운동부위옵션 및 키보드 접기
+        // 검색바 및 운동부위 옵션 영역의 바깥을 터치시, 운동부위옵션 및 키보드 접기
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchArea))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
@@ -148,7 +148,8 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     func setupTableView() {
         tableView.backgroundColor = .color1E1E1E
         tableView.dataSource = self
-        tableView.register(ExerciseListCell.self, 
+        tableView.delegate = self
+        tableView.register(ExerciseListCell.self,
                            forCellReuseIdentifier: "ExerciseCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -201,11 +202,22 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         
         let exercise = viewModel.filteredExercises[indexPath.row]
         cell.configure(with: exercise)
-        cell.configurePushDetailViewButton(
-            with: exercise, viewModel: viewModel,
-            navigationController: self.navigationController!)
+//        cell.configurePushDetailViewButton(
+//            with: exercise, viewModel: viewModel,
+//            navigationController: self.navigationController!)
         cell.selectionStyle = .none
         return cell
+    }
+    
+    // UITableViewDelegate
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let exercise = viewModel.filteredExercises[indexPath.row]
+        let detailViewModel = ExerciseDetailViewModel(
+            exercise: exercise, viewModel: viewModel)
+        let vc = ExercisesDetailViewController(
+            detailViewModel: detailViewModel)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     // MARK: - UISearchBarDelegate
