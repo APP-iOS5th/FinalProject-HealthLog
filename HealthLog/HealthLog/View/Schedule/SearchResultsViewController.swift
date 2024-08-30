@@ -138,6 +138,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         cell.addButtonTapped = { [weak self] in
             self?.onExerciseSelected?(exercise)
             self?.clearSearchAndDismiss()
+            self?.prepareForDismissal(true)
         }
         return cell
     }
@@ -185,18 +186,27 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
             searchBar.setImage(icon, for: .bookmark, state: .normal)
         }
     }
+    
+    func prepareForDismissal(_ close: Bool) {
+        tableView.isHidden = close
+    }
 }
 
+// MARK: UISearchBarDelegate
 extension SearchResultsViewController: UISearchBarDelegate {
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        if let searchController = self.parent as? UISearchController {
-            searchController.searchBar.showsBookmarkButton = false
-        }
-        viewModel.bodypartOptionShow = true
-    }
-    
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
         viewModel.bodypartOptionShow.toggle()
     }
     
+}
+
+// MARK: UIScrollViewDelegate
+extension SearchResultsViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if let searchController = self.parent as? UISearchController {
+            UIView.animate(withDuration: 0.3) {
+                searchController.searchBar.resignFirstResponder()
+            }
+        }
+    }
 }

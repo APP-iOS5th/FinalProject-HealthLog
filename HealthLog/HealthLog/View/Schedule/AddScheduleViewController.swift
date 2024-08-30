@@ -40,6 +40,16 @@ class AddScheduleViewController: UIViewController {
         hideKeyBoardWhenTappedScreen()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     private func bindViewModel() {
         exerciseViewModel.$filteredExercises
             .receive(on: RunLoop.main)
@@ -178,16 +188,6 @@ class AddScheduleViewController: UIViewController {
         ])
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        tabBarController?.tabBar.isHidden = false
-    }
-    
     @objc func dismissView() {
         navigationController?.popViewController(animated: true)
     }
@@ -204,7 +204,7 @@ class AddScheduleViewController: UIViewController {
     
     @objc func doneTapped() {
         guard let date = selectedDate else { return }
-        addScheduleViewModel.saveSchedule(for: date) // 스케줄 저장
+        addScheduleViewModel.saveSchedule(for: date)
         navigationController?.popViewController(animated: true)
     }
     
@@ -322,6 +322,13 @@ extension AddScheduleViewController: UISearchResultsUpdating, UISearchController
         searchController.searchBar.showsBookmarkButton = true
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.bodypartOptionShowUIChange(true)
+            searchResultsController.prepareForDismissal(false)
+        }
+    }
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
+            searchResultsController.prepareForDismissal(true)
         }
     }
 
