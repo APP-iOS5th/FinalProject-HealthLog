@@ -23,27 +23,6 @@ class GetRoutineViewController: UIViewController {
         return label
     }()
     
-    private lazy var searchController: UISearchController = {
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = "루틴 검색"
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.hidesBottomBarWhenPushed = true
-        
-        return searchController
-    }()
-    
-    private lazy var addButton: UIBarButtonItem = {
-        let buttonAction = UIAction { _ in
-            print("addButton 클릭")
-            let routineAddNameViewController = RoutineAddNameViewController()
-            self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
-        }
-        
-        let barButton = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill")?.withTintColor(.white, renderingMode: .alwaysTemplate), primaryAction: buttonAction)
-        barButton.tintColor = UIColor(named: "ColorAccent")
-        return barButton
-    }()
-    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
@@ -65,7 +44,6 @@ class GetRoutineViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        self.navigationController?.navigationBar.prefersLargeTitles = false
         isRoutineData()
     }
     
@@ -97,17 +75,11 @@ class GetRoutineViewController: UIViewController {
     
     func setupUI() {
         self.view.backgroundColor = .color1E1E1E
-        self.navigationItem.searchController = searchController
-        self.navigationItem.title = "루틴"
         self.view.tintColor = .white
-
-        let backbarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        self.navigationItem.backBarButtonItem = backbarButtonItem
         
         //MARK: - addSubview
         self.view.addSubview(textLabel)
         self.view.addSubview(tableView)
-        self.navigationItem.rightBarButtonItem = self.addButton
         
         let safeArea = self.view.safeAreaLayoutGuide
         //MARK: - NSLayoutconstraint
@@ -115,7 +87,7 @@ class GetRoutineViewController: UIViewController {
             self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
+            self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             
             self.textLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 115),
             self.textLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -125,7 +97,6 @@ class GetRoutineViewController: UIViewController {
 
 //tableView
 extension GetRoutineViewController: UITableViewDelegate, UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 170
     }
