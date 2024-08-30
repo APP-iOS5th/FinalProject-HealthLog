@@ -116,6 +116,13 @@ class ReportsViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        updateDataForCurrentMonth()
+    }
+    
+    
     private func createMonthButton(action: UIAction, imageName: String) -> UIButton {
         let button = UIButton(type: .custom)
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .black)

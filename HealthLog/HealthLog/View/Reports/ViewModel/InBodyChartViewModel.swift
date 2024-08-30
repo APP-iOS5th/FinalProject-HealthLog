@@ -92,7 +92,14 @@ class InBodyChartViewModel: ObservableObject {
         })?.weight ?? 0)
     }
     
-    func yAxisDomain() -> ClosedRange<Double> {
+    func getMuscleMass(for date: Date) -> Float {
+        return Float(inBodyData.first(where: {
+            Calendar.current.isDate($0.date, inSameDayAs: date)
+        })?.muscleMass ?? 0)
+    }
+    
+    
+    func weightYAxisDomain() -> ClosedRange<Double> {
         let weights = inBodyData.map { Double($0.weight) }
         let minWeight = weights.min() ?? 30.0
         let maxWeight = weights.max() ?? 100.0
@@ -102,6 +109,19 @@ class InBodyChartViewModel: ObservableObject {
         let maxDomain = maxWeight + 10
         
         // 최소 몸무게 = 0
+        let adjustedMinDomain = minDomain < 0 ? 0 : minDomain
+        
+        return adjustedMinDomain...maxDomain
+    }
+    
+    func muscleYAxisDomain() -> ClosedRange<Double> {
+        let muscles = inBodyData.map { Double($0.muscleMass)}
+        let minMuscle = muscles.min() ?? 10.0
+        let maxMuscle = muscles.max() ?? 50
+        
+        let minDomain = minMuscle - 10
+        let maxDomain = maxMuscle + 10
+        
         let adjustedMinDomain = minDomain < 0 ? 0 : minDomain
         
         return adjustedMinDomain...maxDomain

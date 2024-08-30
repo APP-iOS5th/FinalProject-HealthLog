@@ -14,10 +14,121 @@ struct InBodyChartView: View {
     
     @State private var chartSelection: Date?
     
-    
     var body: some View {
+        VStack{
+            // MARK: 몸무게 차트
+            VStack(alignment: .leading) {
+                Text("몸무게")
+                    .font(.custom("Pretendard-Bold", size: 22))
+                    .foregroundStyle(Color.white)
+                    .padding(.leading, 8)
+                
+                ZStack {
+                    RoundedRectangle(cornerRadius: 15)
+                        .fill(Color.color2F2F2F)
+                        .frame(height: 270)
+                    
+                    if #available(iOS 17.0, *) {
+                        Chart(viewModel.inBodyData) {
+                            LineMark(x: .value("Day", $0.date, unit: .day) ,
+                                     y: .value("Weight", $0.weight))
+                            .symbol(.circle)
+                            .interpolationMethod(.linear)
+                            .foregroundStyle(.colorAccent)
+                            
+                            if let chartSelection {
+                                RuleMark(x: .value("Day", chartSelection, unit: .day))
+                                    .foregroundStyle(.white)
+                                    .lineStyle(StrokeStyle(lineWidth: 1))
+                                    .annotation(position: .top) {
+                                        ZStack {
+                                            Text("\(viewModel.getWeight(for: chartSelection)) KG")
+                                                .padding(8)
+                                                .foregroundStyle(Color.white)
+                                                .background(RoundedRectangle(cornerRadius: 4)
+                                                    .fill(Color("ColorAccent").opacity(0.2))
+                                                )
+                                        }
+                                    }
+                            }
+                            
+                        }
+                        .chartXAxis {
+                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                                if let date = value.as(Date.self) {
+                                    AxisValueLabel {
+                                        Text("\(date, format: .dateTime.day())일")
+                                    }
+                                    .foregroundStyle(Color.white)
+                                }
+                                
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(values: .stride(by: 10)) { value in
+                                AxisValueLabel {
+                                    if let double = value.as(Double.self) {
+                                        Text("\(Int(double))KG")
+                                    }
+                                }
+                                .foregroundStyle(Color.white)
+                                AxisGridLine().foregroundStyle(Color.white)
+                            }
+                        }
+                        .background(.clear)
+                        .chartXScale(domain: viewModel.xAxisDomain())
+                        .chartYScale(domain: viewModel.weightYAxisDomain())
+                        .frame(height: 200)
+                        .padding()
+                        .padding(.top, 30)
+                        .chartXSelection(value: $chartSelection)
+                    } else {
+                        // MARK: iOS 17이하 (chartSelection 없음)
+                        Chart(viewModel.inBodyData) {
+                            LineMark(x: .value("Day", $0.date, unit: .day) ,
+                                     y: .value("Weight", $0.weight))
+                            .symbol(.circle)
+                            .interpolationMethod(.linear)
+                            .foregroundStyle(.colorAccent)
+                            
+                        }
+                        .chartXAxis {
+                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                                if let date = value.as(Date.self) {
+                                    AxisValueLabel {
+                                        Text("\(date, format: .dateTime.day())일")
+                                    }
+                                    .foregroundStyle(Color.white)
+                                }
+                                
+                            }
+                        }
+                        .chartYAxis {
+                            AxisMarks(values: .stride(by: 10)) { value in
+                                AxisValueLabel {
+                                    if let double = value.as(Double.self) {
+                                        Text("\(Int(double))KG")
+                                    }
+                                }
+                                .foregroundStyle(Color.white)
+                                AxisGridLine().foregroundStyle(Color.white)
+                            }
+                        }
+                        .background(.clear)
+                        .chartYScale(domain: viewModel.weightYAxisDomain())
+                        .frame(height: 200)
+                        .padding()
+                        .padding(.top, 30)
+                        .padding()
+                        
+                    }
+                }
+            }
+        }
+        
+        // MARK: 근골격량 차트
         VStack(alignment: .leading) {
-            Text("몸무게")
+            Text("근골격량")
                 .font(.custom("Pretendard-Bold", size: 22))
                 .foregroundStyle(Color.white)
                 .padding(.leading, 8)
@@ -30,7 +141,7 @@ struct InBodyChartView: View {
                 if #available(iOS 17.0, *) {
                     Chart(viewModel.inBodyData) {
                         LineMark(x: .value("Day", $0.date, unit: .day) ,
-                                 y: .value("Weight", $0.weight))
+                                 y: .value("Musle", $0.muscleMass))
                         .symbol(.circle)
                         .interpolationMethod(.linear)
                         .foregroundStyle(.colorAccent)
@@ -41,7 +152,7 @@ struct InBodyChartView: View {
                                 .lineStyle(StrokeStyle(lineWidth: 1))
                                 .annotation(position: .top) {
                                     ZStack {
-                                        Text("\(viewModel.getWeight(for: chartSelection)) KG")
+                                        Text("\(String(format: "%.1f", viewModel.getMuscleMass(for: chartSelection)))KG")
                                             .padding(8)
                                             .foregroundStyle(Color.white)
                                             .background(RoundedRectangle(cornerRadius: 4)
@@ -76,7 +187,7 @@ struct InBodyChartView: View {
                     }
                     .background(.clear)
                     .chartXScale(domain: viewModel.xAxisDomain())
-                    .chartYScale(domain: viewModel.yAxisDomain())
+                    .chartYScale(domain: viewModel.muscleYAxisDomain())
                     .frame(height: 200)
                     .padding()
                     .padding(.top, 30)
@@ -85,11 +196,10 @@ struct InBodyChartView: View {
                     // MARK: iOS 17이하 (chartSelection 없음)
                     Chart(viewModel.inBodyData) {
                         LineMark(x: .value("Day", $0.date, unit: .day) ,
-                                 y: .value("Weight", $0.weight))
+                                 y: .value("Musle", $0.muscleMass))
                         .symbol(.circle)
                         .interpolationMethod(.linear)
                         .foregroundStyle(.colorAccent)
-                        
                     }
                     .chartXAxis {
                         AxisMarks(values: .stride(by: .day, count: 5)) { value in
@@ -114,15 +224,15 @@ struct InBodyChartView: View {
                         }
                     }
                     .background(.clear)
-                    .chartYScale(domain: viewModel.yAxisDomain())
+                    .chartXScale(domain: viewModel.xAxisDomain())
+                    .chartYScale(domain: viewModel.muscleYAxisDomain())
                     .frame(height: 200)
                     .padding()
                     .padding(.top, 30)
-                    .padding()
-                    
                 }
             }
         }
     }
 }
+
 
