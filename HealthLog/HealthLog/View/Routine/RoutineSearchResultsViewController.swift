@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellDelegate {
+class RoutineSearchResultsViewController: UIViewController, SearchResultCellDelegate {
     
     weak var delegate: SerchResultDelegate?
     
@@ -21,7 +21,7 @@ class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellD
         tableView.delegate = self
         tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(RoutineAddSearchResultCell.self, forCellReuseIdentifier: RoutineAddSearchResultCell.cellId)
+        tableView.register(RoutineSearchResultCell.self, forCellReuseIdentifier: RoutineSearchResultCell.cellId)
         return tableView
         
     }()
@@ -67,7 +67,7 @@ class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellD
         
     }
     
-    func didTapButton(in cell: RoutineAddSearchResultCell) {
+    func didTapButton(in cell: RoutineSearchResultCell) {
         if let indexPath = tableView.indexPath(for: cell) {
             let selectedItem = viewModel.filteredExercises[indexPath.row]
             print("RoutinSearchReslutView: \(selectedItem)")
@@ -79,7 +79,7 @@ class RoutineAddSearchResultsViewController: UIViewController, SearchResultCellD
     
 }
 
-extension RoutineAddSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
+extension RoutineSearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
@@ -90,7 +90,7 @@ extension RoutineAddSearchResultsViewController: UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineAddSearchResultCell.cellId, for: indexPath) as! RoutineAddSearchResultCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: RoutineSearchResultCell.cellId, for: indexPath) as! RoutineSearchResultCell
         cell.delegate = self
         cell.configure(with: viewModel.filteredExercises[indexPath.row])
         cell.selectionStyle = .none

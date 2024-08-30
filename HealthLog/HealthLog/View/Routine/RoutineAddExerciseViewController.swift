@@ -18,11 +18,12 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     let routineViewModel = RoutineViewModel()
     
+    
     let routineName: String
     private var cancellables = Set<AnyCancellable>()
-    var selectedExercises = [String]()
+   
     
-    var resultsViewController = RoutineAddSearchResultsViewController()
+    var resultsViewController = RoutineSearchResultsViewController()
     
     init(routineName: String) {
         self.routineName = routineName
@@ -38,8 +39,6 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self
-        
-
         searchController.showsSearchResultsController = true
         return searchController
     }()
@@ -93,7 +92,6 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         self.navigationItem.searchController = searchController
         self.view.backgroundColor = .color1E1E1E
         tabBarController?.tabBar.isHidden = true
-        navigationController?.setupBarAppearance()
         
         
         
@@ -227,7 +225,7 @@ extension RoutineAddExerciseViewController: UISearchResultsUpdating {
         }
         
         
-        if let resultcontroller = searchController.searchResultsController as? RoutineAddSearchResultsViewController {
+        if let resultcontroller = searchController.searchResultsController as? RoutineSearchResultsViewController {
             resultcontroller.viewModel.filterExercises(by: text)
             resultcontroller.tableView.reloadData()
         }
