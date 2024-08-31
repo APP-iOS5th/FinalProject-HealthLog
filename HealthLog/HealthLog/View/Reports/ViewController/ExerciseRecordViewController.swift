@@ -20,7 +20,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorColor = UIColor(named: "Color525252")
 
-        
 
         // 테이믈 가장 맨위 여백 지우기 (insetGroup)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))

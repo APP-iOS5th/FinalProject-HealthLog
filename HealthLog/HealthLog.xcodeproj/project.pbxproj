@@ -28,6 +28,7 @@
 		189401342C528B2000533E0A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401332C528B2000533E0A /* AppDelegate.swift */; };
 		189401362C528B2000533E0A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 189401352C528B2000533E0A /* SceneDelegate.swift */; };
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
+		18949EF02C82F8670068112A /* InfoBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18949EEF2C82F8670068112A /* InfoBoxView.swift */; };
 		18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991232C7C1ACE0007F115 /* MuscleImageView.swift */; };
 		18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */; };
@@ -128,6 +129,7 @@
 		1894013C2C528B2100533E0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1894013F2C528B2100533E0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18949EEF2C82F8670068112A /* InfoBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoBoxView.swift; sourceTree = "<group>"; };
 		18D991232C7C1ACE0007F115 /* MuscleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleImageView.swift; sourceTree = "<group>"; };
 		18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataTableViewCell.swift; sourceTree = "<group>"; };
 		18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyChartView.swift; sourceTree = "<group>"; };
@@ -262,6 +264,7 @@
 			children = (
 				18D991232C7C1ACE0007F115 /* MuscleImageView.swift */,
 				18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */,
+				18949EEF2C82F8670068112A /* InfoBoxView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -557,6 +560,7 @@
 				184A58BD2C6BA63C009F2848 /* TotalNumberPerBodyPartTableViewCell.swift in Sources */,
 				4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */,
 				CEE29B912C69A22E00D82571 /* ExerciseViewModel.swift in Sources */,
+				18949EF02C82F8670068112A /* InfoBoxView.swift in Sources */,
 				7573384B2C7EE1CF00AB05B2 /* GetRoutineViewController.swift in Sources */,
 				184A58C12C6C8521009F2848 /* SectionTitleTableViewCell.swift in Sources */,
 				18F4F30B2C7EFBBB00F2006C /* InBodyChartView.swift in Sources */,

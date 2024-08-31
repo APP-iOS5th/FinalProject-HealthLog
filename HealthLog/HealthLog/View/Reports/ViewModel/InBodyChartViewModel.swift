@@ -9,11 +9,16 @@ import Combine
 import RealmSwift
 import Foundation
 
+
 class InBodyChartViewModel: ObservableObject {
-    @Published var inBodyData: [InBody] = []
     
-    private var realm: Realm
-    private var notificationToken: NotificationToken?
+    @Published var inBodyData: [InBody] = []
+    @Published var inbodyRecords: [InBody] = []
+    
+    private var realm: Realm?
+    private var inputNotificationToken: NotificationToken?
+    private var monthNotificationToken: NotificationToken?
+    
     private var cancellables = Set<AnyCancellable>()
     
     
@@ -23,6 +28,29 @@ class InBodyChartViewModel: ObservableObject {
     init() {
         self.realm = RealmManager.shared.getRealm()
         observeInBodyDataChanges()
+        observeRealmData()
+    }
+    
+    private func observeRealmData() {
+        guard let realm = realm else { return }
+        
+        // MARK: (youngwoo) RealmCombine 03. 데이터 불러옴
+        let results = realm.objects(InBody.self)
+            .sorted(byKeyPath: "date", ascending: false)
+        
+        // result에 담은 Realm DB 데이터를 observe로 감시, DB 값 변경시 안에 있는 실행
+        inputNotificationToken = results.observe { [weak self] changes in
+            switch changes {
+            case .initial(let collection):
+                self?.inbodyRecords = Array(collection)
+                
+                //                    print(self?.inbodyRecords ?? [])
+            case .update(let collection, _, _, _):
+                self?.inbodyRecords = Array(collection)
+            case .error(let error):
+                print("results.observe - error: \(error)")
+            }
+        }
     }
     
     func loadData(for startDate: Date, to endDate: Date) {
@@ -53,17 +81,31 @@ class InBodyChartViewModel: ObservableObject {
     private func fetchInBodyData(from startDate: Date, to endDate: Date) -> Future<[InBody], Error> {
         return Future { result in
             do {
-                let data = self.realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
+                // 옵셔널 바인딩을 통해 realm이 nil이 아닌지 확인
+                guard let realm = self.realm else {
+                    result(.failure(realmError.realmInstanceUnavailable)) // 여기서 SomeError는 적절한 에러 타입으로 대체
+                    return
+                }
+
+                let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
                 result(.success(Array(data)))
+            } catch {
+                result(.failure(realmError.dataFetchFailed))
             }
         }
     }
     
     private func observeInBodyDataChanges() {
+        guard let realm = realm else {
+            print("Realm 인스턴스가 nil입니다.")
+            return
+        }
+        
+        
         let results = realm.objects(InBody.self)
         
         // Realm 데이터를 Combine으로 변환하여 관찰
-        notificationToken = results.observe { [weak self] changes in
+        monthNotificationToken = results.observe { [weak self] changes in
             guard let self = self else { return }
             switch changes {
                 
@@ -81,7 +123,7 @@ class InBodyChartViewModel: ObservableObject {
     }
     
     deinit {
-        notificationToken?.invalidate()
+        monthNotificationToken?.invalidate()
     }
     
     func formatDate(_ date: Date) -> String {
@@ -167,4 +209,9 @@ class InBodyChartViewModel: ObservableObject {
         return firstDate...adjustedLastDate
     }
     
+    enum realmError: Error {
+        case realmInstanceUnavailable
+        case dataFetchFailed
+        case unknownError
+    }
 }
