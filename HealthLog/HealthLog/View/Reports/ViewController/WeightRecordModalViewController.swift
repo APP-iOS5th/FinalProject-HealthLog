@@ -140,6 +140,10 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
                 NSAttributedString.Key.font: UIFont.font(.pretendardMedium, ofSize: 14)
             ]
         )
+        // Placeholder 오른쪽 패딩
+        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 13, height: numberTextField.frame.height))
+        numberTextField.rightView = rightPaddingView
+        numberTextField.rightViewMode = .always
         
         // textfield delegate 설정
         numberTextField.delegate = self
