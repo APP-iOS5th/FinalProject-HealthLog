@@ -23,7 +23,8 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        button.isEnabled = false
+        button.isEnabled = false
+        button.alpha = 0.4  // 완료버튼 비활성화시 컬러 40% 투명
         return button
     }()
     
@@ -58,6 +59,10 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
+        weightTextField?.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        musclesTextField?.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        fatTextField?.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
     private func setupUI() {
@@ -198,14 +203,27 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        validateInput()
+    }
+
+    private func validateInput() {
+       // 각 텍스트 필드가 비어있지 않은지 확인
+       let isWeightFilled = !(weightTextField?.text?.isEmpty ?? true)
+       let isMusclesFilled = !(musclesTextField?.text?.isEmpty ?? true)
+       let isFatFilled = !(fatTextField?.text?.isEmpty ?? true)
+       
+       // 모든 텍스트 필드에 값이 있을 때만 버튼 활성화
+       let shouldEnableButton = isWeightFilled && isMusclesFilled && isFatFilled
+       completeButton.isEnabled = shouldEnableButton
+       completeButton.alpha = shouldEnableButton ? 1.0 : 0.5
+        }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             let currentText = textField.text ?? ""
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            return newText.count <= 3
+            let isWithinLimit = newText.count <= 3
+        
+        return isWithinLimit
         }
-    
 }
-
-//private func validateInput() {
-//
-//}
