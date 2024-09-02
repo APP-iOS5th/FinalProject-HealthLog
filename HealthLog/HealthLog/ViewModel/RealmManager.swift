@@ -239,6 +239,8 @@ extension RealmManager {
     func initializeRealmRoutine() {
         guard let realm = realm else { return }
         
+        
+        
         if realm.objects(Routine.self).isEmpty {
             
             // 1. 기존 Exercise 객체 조회
