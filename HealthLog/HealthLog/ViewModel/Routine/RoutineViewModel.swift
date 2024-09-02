@@ -16,6 +16,8 @@ class RoutineViewModel {
     
     
     private var routineNotificationToken: NotificationToken?
+    
+    // RoutineAddName
     @Published var rutineNameinput: String = ""
     @Published var rutineNameConfirmation: String = " "
     @Published var isValid: Bool = false
@@ -23,14 +25,17 @@ class RoutineViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
+    // Routine 배열
     @Published var routines: [Routine] = []
-    @Published var routine: Routine = Routine()
     
+    @Published var routine: Routine = Routine()
+    // 검색된 값 추가
     @Published var filteredRoutines: [Routine] = []
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
-        fillteRoutines(by: "")
+        
+        $routines.assign(to: &$filteredRoutines)
     }
     
     lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
@@ -80,9 +85,6 @@ class RoutineViewModel {
         realmManger.addRoutine(routine: routine)
     }
     
-    func fetchRoutine() {
-        routines = realmManger.fetchRoutine()
-    }
     
     func fillteRoutines(by searchText: String) {
         if searchText.isEmpty {
@@ -96,13 +98,10 @@ class RoutineViewModel {
     
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         if self.routine.exercises[section].sets.count < setCount {
-//            try! realm?.write {
                 self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
-//            }
         } else {
-//            try! realm?.write {
                 self.routine.exercises[section].sets.removeLast()
-//            }
+
         }
         validateExercise()
     }
