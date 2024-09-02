@@ -169,13 +169,14 @@ class ReportsViewController: UIViewController {
         }
         updateTitleMonthLabel()
         updateDataForCurrentMonth()
+        
     }
     
     private func updateDataForCurrentMonth() {
         if let exerciseVC = currentVC as? ExerciseRecordViewController {
             _ = exerciseVC.fetchMonthSchedules(year: currentYear, month: currentMonth)
         } else if let inBodyVC = currentVC as? WeightRecordViewController {
-            inbodyViewModel.loadCurrentMonthData()
+            inBodyVC.fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
         }
     }
     

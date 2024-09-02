@@ -47,7 +47,11 @@ class WeightRecordViewController: UIViewController {
         setupUI()
         setupBindings()   // youngwoo - 04. setupBindings을 viewDidLoad에서 실행, 자동으로 계속 감지함
         
+        fetchInBodyDataForMonth(year: viewModel.currentYear, month: viewModel.currentMonth)
+        
     }
+    
+    
     
     func setupUI() {
         view.backgroundColor = UIColor(named: "ColorPrimary")
@@ -159,6 +163,21 @@ class WeightRecordViewController: UIViewController {
             .store(in: &cancellables)
     }
     
+    func fetchInBodyDataForMonth(year: Int, month: Int) {
+            let startDate = makeDate(year: year, month: month, day: 1)
+            let endDate = makeDate(year: year, month: month + 1, day: 1).addingTimeInterval(-1)
+            
+            viewModel.loadData(for: startDate, to: endDate)
+        }
+        
+        
+        private func makeDate(year: Int, month: Int, day: Int) -> Date {
+            var dateComponents = DateComponents()
+            dateComponents.year = year
+            dateComponents.month = month
+            dateComponents.day = day
+            return Calendar.current.date(from: dateComponents) ?? Date()
+        }
     
     
 }

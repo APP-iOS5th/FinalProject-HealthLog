@@ -18,7 +18,6 @@ class InBodyChartViewModel: ObservableObject {
     private var realm: Realm?
     
     
-    
     private var inputNotificationToken: NotificationToken?
     private var monthNotificationToken: NotificationToken?
     
@@ -34,7 +33,6 @@ class InBodyChartViewModel: ObservableObject {
         self.realm = RealmManager.shared.getRealm()
         observeInBodyDataChanges()
         observeRealmData()
-        loadCurrentMonthData()
     }
     
     private func observeRealmData() {
@@ -75,12 +73,14 @@ class InBodyChartViewModel: ObservableObject {
                     print("\(error)")
                 }
             }, receiveValue: { [weak self] data in
+                self?.inBodyData = []
                 self?.inBodyData = data
                 print("Fetched data: \(data.count)") // 데이터를 확인합니다.
                 print("Assigned data: \(self?.inBodyData.count ?? 0)") // 할당 후 데이터를 확인합니다.
                 print("-----------------------------------")
             })
             .store(in: &cancellables)
+        
         
     }
     
@@ -99,21 +99,6 @@ class InBodyChartViewModel: ObservableObject {
                 result(.failure(realmError.dataFetchFailed))
             }
         }
-    }
-    
-    func loadCurrentMonthData() {
-        let startDate = makeDate(year: currentYear, month: currentMonth, day: 1)
-        let endDate = makeDate(year: currentYear, month: currentMonth + 1, day: 1).addingTimeInterval(-1)
-        
-        loadData(for: startDate, to: endDate)
-    }
-    
-    private func makeDate(year: Int, month: Int, day: Int) -> Date {
-        var dateComponents = DateComponents()
-        dateComponents.year = year
-        dateComponents.month = month
-        dateComponents.day = day
-        return Calendar.current.date(from: dateComponents) ?? Date()
     }
     
     private func observeInBodyDataChanges() {
