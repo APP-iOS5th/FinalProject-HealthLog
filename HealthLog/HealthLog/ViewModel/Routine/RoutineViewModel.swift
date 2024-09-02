@@ -12,6 +12,8 @@ import RealmSwift
 class RoutineViewModel {
     
     private var realm: Realm?
+    private var realmManger = RealmManager.shared
+    
     
     private var routineNotificationToken: NotificationToken?
     @Published var rutineNameinput: String = ""
@@ -74,15 +76,11 @@ class RoutineViewModel {
         .eraseToAnyPublisher()
     
     func addRoutine(routine: Routine) {
-        guard let realm = realm else {return}
-        do {
-            try realm.write {
-                realm.add(routine)
-            }
-        } catch {
-            print("저장 실패")
-        }
-            
+        realmManger.addRoutine(routine: routine)
+    }
+    
+    func fetchRoutine() {
+        routines = realmManger.fetchRoutine()
     }
     
     func fillteRoutines(by searchText: String) {

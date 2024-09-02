@@ -6,17 +6,18 @@
 //
 
 import UIKit
+import RealmSwift
 
 class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
     let viewModel = RoutineEditViewModel()
     let index: Int
-    
+    let id: ObjectId
     
     init(routineViewModel: RoutineViewModel, index: Int) {
         self.viewModel.getRoutine(routine: routineViewModel.routines[index])
         self.index = index
-        
+        self.id = routineViewModel.routines[index].id
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -186,6 +187,10 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
+        if let text = nameTextField.text {
+            viewModel.routine.name = text
+        }
+        viewModel.updateRoutine(routine: viewModel.routine, index: index)
         self.navigationController?.popToRootViewController(animated: true)
         
     }
@@ -217,7 +222,7 @@ extension RoutineEditViewController: UICollectionViewDataSource, UICollectionVie
         
         if indexPath.section == viewModel.routine.exercises.count {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeleteButtonCollectionViewCell.identifier, for: indexPath) as! DeleteButtonCollectionViewCell
-            
+            cell.buttonTapped()
             return cell
         }
         

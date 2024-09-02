@@ -12,14 +12,9 @@ import RealmSwift
 class RoutineEditViewModel {
     
     private var realm: Realm?
-    
+    private var realmManager = RealmManager.shared
     @Published var routine: Routine = Routine()
-    private var routines: [Routine] = []
-    
-    init() {
-        
-    }
-    
+
     
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         print(self.routine.exercises[section].sets.count)
@@ -37,6 +32,10 @@ class RoutineEditViewModel {
     
     func deleteExercise(for setcion: Int) {
         self.routine.exercises.remove(at: setcion)
+    }
+    
+    func updateRoutine(routine: Routine, index: Int) {
+        realmManager.updetaRoutine(newRoutine: routine, index: index)
     }
     
     func getRoutine(routine: Routine) {

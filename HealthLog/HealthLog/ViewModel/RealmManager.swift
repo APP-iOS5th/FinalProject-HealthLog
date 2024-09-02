@@ -20,7 +20,6 @@ class RealmManager {
         openRealm()
         
         initializeRealmExercise()
-        initializeRealmRoutine()
         //        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
         
         generateScheduleSampleData()
@@ -180,23 +179,23 @@ extension RealmManager {
         let exercisesCount = exercises.count
         for exercisesIndex in 0..<exercisesCount {
             let exercise = exercises[exercisesIndex]
-//            print("--start exercise \(exercise.name) --")
-//            print(exercise.images)
+            //            print("--start exercise \(exercise.name) --")
+            //            print(exercise.images)
             guard exercise.isCustom == false
             else {
-//                print("-- end \(exercise.name) 유저가 추가했으므로, 이미지 url 없음 - exercise.isCustom - \(exercise.isCustom) --")
+                //                print("-- end \(exercise.name) 유저가 추가했으므로, 이미지 url 없음 - exercise.isCustom - \(exercise.isCustom) --")
                 continue
             }
             
             guard !exercise.images.isEmpty else {
-//                print("-- end \(exercise.name) 더미 데이터지만, 이미지 배열은 비어있음 - exercise.images.isEmpty - \(exercise.images.isEmpty) --")
+                //                print("-- end \(exercise.name) 더미 데이터지만, 이미지 배열은 비어있음 - exercise.images.isEmpty - \(exercise.images.isEmpty) --")
                 continue
             }
             
             let imagesCount = exercise.images.count
-//            print("exercise.images.count - \(imagesCount)")
+            //            print("exercise.images.count - \(imagesCount)")
             for index in 0..<imagesCount {
-//                print("-- start exerciseImage \(index) --")
+                //                print("-- start exerciseImage \(index) --")
                 let exerciseImage = exercise.images[index]
                 print(exerciseImage)
                 
@@ -206,7 +205,7 @@ extension RealmManager {
                       exerciseImage.image == nil,
                       0 <= accessCount && accessCount < 3
                 else {
-//                    print("-- end exerciseImage -- initializeRealmExerciseImages - not url, not nil")
+                    //                    print("-- end exerciseImage -- initializeRealmExerciseImages - not url, not nil")
                     continue
                 }
                 
@@ -227,98 +226,14 @@ extension RealmManager {
                     }
                 }
                 
-//                print("--end exerciseImage \(index) --")
+                //                print("--end exerciseImage \(index) --")
             }
             
-//            print("--end exercise \(exercise.name) --")
+            //            print("--end exercise \(exercise.name) --")
         }
         
     }
     
-    
-    func initializeRealmRoutine() {
-        guard let realm = realm else { return }
-        
-        
-        
-        if realm.objects(Routine.self).isEmpty {
-            
-            // 1. 기존 Exercise 객체 조회
-            let exercises = realm.objects(Exercise.self)
-            
-            // Exercise 데이터가 존재하지 않는 경우 처리
-            guard !exercises.isEmpty else {
-                print("Routine - 기존 Exercise 데이터가 없습니다.")
-                return
-            }
-            
-            // 2. RoutineExercise 및 RoutineExerciseSet 생성
-            let routineExercises1 = [
-                RoutineExercise(
-                    exercise: exercises.first(where: { $0.name == "스쿼트" })!,
-                    sets: [
-                        RoutineExerciseSet(order: 2, weight: 90, reps: 12)
-                    ]
-                ),
-                RoutineExercise(
-                    exercise: exercises.first(where: { $0.name == "레그 프레스" })!,
-                    sets: [
-                        RoutineExerciseSet(order: 1, weight: 150, reps: 10),
-                        RoutineExerciseSet(order: 2, weight: 160, reps: 8)
-                    ]
-                )
-            ]
-            
-            let routineExercises2 = [
-                RoutineExercise(
-                    exercise: exercises.first(where: { $0.name == "스쿼트" })!,
-                    sets: [
-                        RoutineExerciseSet(order: 1, weight: 85, reps: 15),
-                        RoutineExerciseSet(order: 2, weight: 95, reps: 12)
-                    ]
-                ),
-                RoutineExercise(
-                    exercise: exercises.first(where: { $0.name == "레그 프레스" })!,
-                    sets: [
-                        RoutineExerciseSet(order: 1, weight: 160, reps: 10),
-                        RoutineExerciseSet(order: 2, weight: 170, reps: 8)
-                    ]
-                )
-            ]
-            
-            let routineExercises3 = [
-                RoutineExercise(
-                    exercise: exercises.first(where: { $0.name == "스쿼트" })!,
-                    sets: [
-                        RoutineExerciseSet(order: 1, weight: 90, reps: 12),
-                        RoutineExerciseSet(order: 2, weight: 100, reps: 10)
-                    ]
-                ),
-                RoutineExercise(
-                    exercise: exercises.first(where: { $0.name == "레그 프레스" })!,
-                    sets: [
-                        RoutineExerciseSet(order: 1, weight: 160, reps: 12),
-                        RoutineExerciseSet(order: 1, weight: 170, reps: 10),
-                        RoutineExerciseSet(order: 2, weight: 180, reps: 8)
-                    ]
-                )
-            ]
-            
-            let routine1 = Routine(name: "하체 루틴 1", exercises: routineExercises1, exerciseVolume: 2)
-            let routine2 = Routine(name: "하체 루틴 2", exercises: routineExercises2, exerciseVolume: 2)
-            let routine3 = Routine(name: "하체 루틴 3", exercises: routineExercises3, exerciseVolume: 2)
-            
-            // 3. Realm에 샘플 데이터 추가
-            try! realm.write {
-                realm.add([routine1, routine2, routine3])
-            }
-            
-            
-            print("기본 Routine 더미데이터 넣기")
-        } else {
-            print("기본 Routine 데이터가 이미 존재합니다.")
-        }
-    }
     
     func initializeRealmSchedule() {
         guard let realm = realm else {return}
@@ -521,4 +436,60 @@ extension RealmManager {
     
 }
 
-
+// MARK: - Routine Fucntion
+extension RealmManager {
+    
+    func addRoutine(routine: Routine) {
+        guard let realm = realm else { return }
+        do {
+            try realm.write {
+                realm.add(routine)
+            }
+        } catch {
+            print("저장 실패")
+        }
+    }
+    
+    func fetchRoutine() -> [Routine] {
+        var routine: [Routine] = []
+        guard let realm = realm else { return routine }
+        let fetchRoutine = realm.objects(Routine.self)
+        fetchRoutine.forEach {
+            routine.append($0)
+            
+        }
+        return routine
+    }
+    
+    func updetaRoutine(newRoutine: Routine, index: Int) {
+        guard let realm = realm else { return }
+        var oldRoutine = fetchRoutine()[index]
+        
+        do {
+            try realm.write {
+                oldRoutine.exercises = newRoutine.exercises
+                oldRoutine.name = newRoutine.name
+                oldRoutine.exerciseVolume = newRoutine.exerciseVolume
+            }
+        } catch {
+            print("수정 실패")
+        }
+    }
+    
+    func deleteRoutine(id: ObjectId) {
+        guard let realm = realm else { return }
+        
+        
+        do{
+            let routine = realm.objects(Routine.self).filter {
+                $0.id == id
+            }
+            try realm.write {
+                realm.delete(routine)
+            }
+        } catch {
+            print("삭제 실패")
+        }
+        
+    }
+}
