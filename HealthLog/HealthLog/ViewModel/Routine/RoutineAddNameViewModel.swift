@@ -13,6 +13,7 @@ class RoutineAddNameViewModel: ObservableObject {
     
     private var realm: Realm?
     
+    //TODO: - ViewModel 분리
     
     
     

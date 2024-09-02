@@ -7,26 +7,32 @@
 
 import Foundation
 import Combine
+import RealmSwift
 
 class RoutineEditViewModel {
     
-   @Published var routine: Routine = Routine()
+    private var realm: Realm?
     
+    @Published var routine: Routine = Routine()
+    private var routines: [Routine] = []
     
+    init() {
+        
+    }
     
     
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         print(self.routine.exercises[section].sets.count)
         print(setCount)
         if self.routine.exercises[section].sets.count < setCount {
-          
-                self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
+            
+            self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
             
         } else {
-                self.routine.exercises[section].sets.removeLast()
+            self.routine.exercises[section].sets.removeLast()
             
         }
-     
+        
     }
     
     func deleteExercise(for setcion: Int) {

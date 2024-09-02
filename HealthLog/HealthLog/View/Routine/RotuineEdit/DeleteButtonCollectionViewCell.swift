@@ -15,12 +15,12 @@ class DeleteButtonCollectionViewCell: UICollectionViewCell {
         configuration.title = "삭제"
         configuration.baseForegroundColor = .red
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 11, leading: 0, bottom: 11, trailing: 0)
-        let button = UIButton(configuration: configuration,
-                              primaryAction: UIAction { _ in
-            
-        })
+        configuration.attributedTitle?.font = UIFont.font(.pretendardBold, ofSize: 14)
+        let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .color2F2F2F
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
         return button
     }()
     override func layoutSublayers(of layer: CALayer) {
@@ -39,6 +39,10 @@ class DeleteButtonCollectionViewCell: UICollectionViewCell {
             self.deleteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
         
         ])
+    }
+    
+    @objc func buttonTapped() {
+        
     }
     
     required init?(coder: NSCoder) {
