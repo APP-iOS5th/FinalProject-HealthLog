@@ -142,7 +142,11 @@ extension RealmManager {
                 ], totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
                 Exercise(name: "Lateral Raise", bodyParts: [.shoulders], descriptionText: "Shoulder isolation exercise", images: [], totalReps: 70, recentWeight: 10, maxWeight: 15, isCustom: false),
                 Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", images: [], totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: true),
-                Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", images: [], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
+                Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", images: [
+                    ExerciseImage(
+                        image: nil, url: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Squats-2.png",
+                        urlAccessCount: 0)
+                ], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
                 Exercise(name: "Leg Curl", bodyParts: [.hamstrings], descriptionText: "Hamstring exercise", images: [], totalReps: 60, recentWeight: 50, maxWeight: 60, isCustom: false),
                 Exercise(name: "Calf Raise", bodyParts: [.calves, .biceps, .forearms, .abductors, .quadriceps, .triceps], descriptionText: "Calf exercise", images: [], totalReps: 100, recentWeight: 20, maxWeight: 30, isCustom: false),
                 Exercise(name: "Pull-up", bodyParts: [.back, .biceps], descriptionText: "Back and biceps exercise", images: [], totalReps: 40, recentWeight: 0, maxWeight: 0, isCustom: false),
@@ -176,23 +180,23 @@ extension RealmManager {
         let exercisesCount = exercises.count
         for exercisesIndex in 0..<exercisesCount {
             let exercise = exercises[exercisesIndex]
-            print("--start exercise \(exercise.name) --")
-            print(exercise)
+//            print("--start exercise \(exercise.name) --")
+//            print(exercise.images)
             guard exercise.isCustom == false
             else {
-                print("-- end \(exercise.name) 유저가 추가했으므로, 이미지 url 없음 - exercise.isCustom - \(exercise.isCustom) --")
+//                print("-- end \(exercise.name) 유저가 추가했으므로, 이미지 url 없음 - exercise.isCustom - \(exercise.isCustom) --")
                 continue
             }
             
             guard !exercise.images.isEmpty else {
-                print("-- end \(exercise.name) 더미 데이터지만, 이미지 배열은 비어있음 - exercise.images.isEmpty - \(exercise.images.isEmpty) --")
+//                print("-- end \(exercise.name) 더미 데이터지만, 이미지 배열은 비어있음 - exercise.images.isEmpty - \(exercise.images.isEmpty) --")
                 continue
             }
             
             let imagesCount = exercise.images.count
-            print("exercise.images.count - \(imagesCount)")
+//            print("exercise.images.count - \(imagesCount)")
             for index in 0..<imagesCount {
-                print("-- start exerciseImage \(index) --")
+//                print("-- start exerciseImage \(index) --")
                 let exerciseImage = exercise.images[index]
                 print(exerciseImage)
                 
@@ -202,7 +206,7 @@ extension RealmManager {
                       exerciseImage.image == nil,
                       0 <= accessCount && accessCount < 3
                 else {
-                    print("-- end exerciseImage -- initializeRealmExerciseImages - not url, not nil")
+//                    print("-- end exerciseImage -- initializeRealmExerciseImages - not url, not nil")
                     continue
                 }
                 
@@ -223,10 +227,10 @@ extension RealmManager {
                     }
                 }
                 
-                print("--end exerciseImage \(index) --")
+//                print("--end exerciseImage \(index) --")
             }
             
-            print("--end exercise \(exercise.name) --")
+//            print("--end exercise \(exercise.name) --")
         }
         
     }

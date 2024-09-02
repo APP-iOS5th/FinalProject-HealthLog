@@ -71,6 +71,7 @@
 		CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */; };
 		CE4779202C777F2800F6DE74 /* SearchBodyPartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791F2C777F2800F6DE74 /* SearchBodyPartButton.swift */; };
 		CE4779222C7A284500F6DE74 /* ExerciseEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779212C7A284500F6DE74 /* ExerciseEntryViewModel.swift */; };
+		CE75B9D02C85770900F95008 /* ExerciseCalculateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE75B9CF2C85770900F95008 /* ExerciseCalculateViewModel.swift */; };
 		CEA171B82C7DA311000EB11A /* FunctionInfoPrint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA171B72C7DA311000EB11A /* FunctionInfoPrint.swift */; };
 		CEA171BC2C7EF158000EB11A /* entryExercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA171BB2C7EF158000EB11A /* entryExercise.swift */; };
 		CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B892C69950900D82571 /* ScheduleViewModel.swift */; };
@@ -167,6 +168,7 @@
 		CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartStackView.swift; sourceTree = "<group>"; };
 		CE47791F2C777F2800F6DE74 /* SearchBodyPartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartButton.swift; sourceTree = "<group>"; };
 		CE4779212C7A284500F6DE74 /* ExerciseEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseEntryViewModel.swift; sourceTree = "<group>"; };
+		CE75B9CF2C85770900F95008 /* ExerciseCalculateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseCalculateViewModel.swift; sourceTree = "<group>"; };
 		CEA171B72C7DA311000EB11A /* FunctionInfoPrint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionInfoPrint.swift; sourceTree = "<group>"; };
 		CEA171BB2C7EF158000EB11A /* entryExercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = entryExercise.swift; sourceTree = "<group>"; };
 		CEE29B892C69950900D82571 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 				4B911CFB2C746DBB0032F438 /* RoutineViewModel.swift */,
 				CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */,
 				CE4779212C7A284500F6DE74 /* ExerciseEntryViewModel.swift */,
+				CE75B9CF2C85770900F95008 /* ExerciseCalculateViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -568,6 +571,7 @@
 				CEE918AA2C6FAA6500B8DEF7 /* ExercisesEntryViewController.swift in Sources */,
 				4B2A2A322C800FC3007F5F55 /* RoutineDetailFooterView.swift in Sources */,
 				184A58B32C6A3409009F2848 /* ExercisesViewController.swift in Sources */,
+				CE75B9D02C85770900F95008 /* ExerciseCalculateViewModel.swift in Sources */,
 				7566B3262C69C4E300BDF142 /* RoutinesViewController.swift in Sources */,
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
