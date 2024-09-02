@@ -42,6 +42,7 @@
 		4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */; };
 		4B2A2A322C800FC3007F5F55 /* RoutineDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */; };
 		4B2A2A342C804E31007F5F55 /* RoutineEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */; };
+		4B7D55292C857D320079B170 /* DeleteButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7D55282C857D320079B170 /* DeleteButtonCollectionViewCell.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
@@ -143,6 +144,7 @@
 		4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailHeaderView.swift; sourceTree = "<group>"; };
 		4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailFooterView.swift; sourceTree = "<group>"; };
 		4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditViewController.swift; sourceTree = "<group>"; };
+		4B7D55282C857D320079B170 /* DeleteButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonCollectionViewCell.swift; sourceTree = "<group>"; };
 		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/View/Extension/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIFont.swift"; sourceTree = "<group>"; };
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 			isa = PBXGroup;
 			children = (
 				4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */,
+				4B7D55282C857D320079B170 /* DeleteButtonCollectionViewCell.swift */,
 			);
 			path = RotuineEdit;
 			sourceTree = "<group>";
@@ -586,6 +589,7 @@
 				18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */,
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */,
+				4B7D55292C857D320079B170 /* DeleteButtonCollectionViewCell.swift in Sources */,
 				4B911CFC2C746DBB0032F438 /* RoutineViewModel.swift in Sources */,
 				184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
