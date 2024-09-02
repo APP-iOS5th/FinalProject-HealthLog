@@ -50,7 +50,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
     private let noteLabel: UILabel = {
         let label = UILabel()
         label.text = "*당일 마지막 기록으로만 적용됩니다"
-        label.textColor = .systemGray     // 임시로 색상 정함
+        label.textColor = .color969696
         label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textAlignment = .center
         return label
@@ -133,7 +133,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         let numberTextField = UITextField()
         numberTextField.backgroundColor = .color2F2F2F
         numberTextField.layer.cornerRadius = 12
-        numberTextField.keyboardType = .numberPad
+        numberTextField.keyboardType = .decimalPad
         numberTextField.textColor = .white
         numberTextField.textAlignment = .right
         
@@ -222,8 +222,26 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             let currentText = textField.text ?? ""
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            let isWithinLimit = newText.count <= 3
-        
-        return isWithinLimit
+            let decimalSeparator = Locale.current.decimalSeparator ?? "."
+            
+            // 소수점이 있는지 확인
+            let isDecimal = newText.contains(decimalSeparator)
+            
+            // 소수점이 없는 경우, 최대 3자리 정수
+            if !isDecimal {
+                return newText.count <= 3
+            }
+            
+            // 소수점이 있는 경우, 정수 3자리 + 소수점 1자리
+            let components = newText.components(separatedBy: decimalSeparator)
+            if components.count > 2 {
+                return false
+            }
+            
+            let integerPart = components[0]
+            let decimalPart = components.count > 1 ? components[1] : ""
+            
+            // 정수는 최대 3자리, 소수는 최대 1자리
+            return integerPart.count <= 3 && decimalPart.count <= 1
         }
 }
