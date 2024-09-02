@@ -14,6 +14,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     private var cancellables = Set<AnyCancellable>()
     private let viewModel = ExerciseViewModel()
+    private let calculateViewModel = ExerciseCalculateViewModel()
     
     private let addButton = UIButton(type: .custom)
     private let searchController = UISearchController(searchResultsController: nil)
