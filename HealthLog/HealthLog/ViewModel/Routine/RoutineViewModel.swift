@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import RealmSwift
 
-class RoutineViewModel: ObservableObject{
+class RoutineViewModel {
     
     private var realm: Realm?
     
@@ -97,9 +97,13 @@ class RoutineViewModel: ObservableObject{
     
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         if self.routine.exercises[section].sets.count < setCount {
-            self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
+//            try! realm?.write {
+                self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
+//            }
         } else {
-            self.routine.exercises[section].sets.removeLast()
+//            try! realm?.write {
+                self.routine.exercises[section].sets.removeLast()
+//            }
         }
         validateExercise()
     }

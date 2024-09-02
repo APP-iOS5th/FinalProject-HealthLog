@@ -149,7 +149,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         routineViewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
        
         self.collectionView.reloadData()
-        print("RoutinAddView: \(routineViewModel.routine.exercises)")
+//        print("RoutinAddView: \(routineViewModel.routine.exercises)")
     }
     
     @objc func doneTapped() {

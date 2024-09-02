@@ -9,16 +9,16 @@ import UIKit
 
 class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
-    let routineViewModel: RoutineViewModel
+    let routineViewModel = RoutineEditViewModel()
     
     let index: Int
     
+    
+    
     init(routineViewModel: RoutineViewModel, index: Int) {
-        
-       
-        self.routineViewModel = routineViewModel
+        self.routineViewModel.getRoutine(routine: routineViewModel.routines[index])
         self.index = index
-        self.routineViewModel.routine = routineViewModel.routines[index]
+        
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -29,6 +29,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     var resultsViewController = RoutineSearchResultsViewController()
     
     private lazy var searchController: UISearchController = {
+        resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self

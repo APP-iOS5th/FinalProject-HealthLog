@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import RealmSwift
+import Combine
+
+class RoutineAddNameViewModel: ObservableObject {
+    
+    private var realm: Realm?
+    
+    
+    
+    
+}
+
