@@ -52,7 +52,9 @@ class RoutineViewModel: ObservableObject{
         
     }()
     
-    
+    func getselectedRoutine(index: Int) -> Routine {
+        return routines[index]
+    }
     
     
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
