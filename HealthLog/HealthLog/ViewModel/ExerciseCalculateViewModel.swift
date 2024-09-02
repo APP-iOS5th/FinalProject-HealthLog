@@ -27,7 +27,7 @@ class ExerciseCalculateViewModel {
         
     }
     
-    // Realm 데이터 -> Combine Published 변수
+    // 스케줄의 운동 데이터 변경 -> 운동 수치 계산 (총운동횟수, 최근무게, 최대무게)
     private func observeRealmData() {
         guard let realm = realm else { return }
         let resultsScheduleExercise = realm.objects(ScheduleExercise.self)
