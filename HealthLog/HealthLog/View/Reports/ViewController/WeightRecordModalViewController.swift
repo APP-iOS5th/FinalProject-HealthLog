@@ -23,7 +23,8 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-//        button.isEnabled = false
+        button.isEnabled = false
+        button.alpha = 0.4  // 완료버튼 비활성화시 컬러 40% 투명
         return button
     }()
     
@@ -49,7 +50,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
     private let noteLabel: UILabel = {
         let label = UILabel()
         label.text = "*당일 마지막 기록으로만 적용됩니다"
-        label.textColor = .systemGray     // 임시로 색상 정함
+        label.textColor = .color969696
         label.font = UIFont.font(.pretendardRegular, ofSize: 14)
         label.textAlignment = .center
         return label
@@ -58,6 +59,10 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        
+        weightTextField?.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        musclesTextField?.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        fatTextField?.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
     private func setupUI() {
@@ -128,7 +133,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         let numberTextField = UITextField()
         numberTextField.backgroundColor = .color2F2F2F
         numberTextField.layer.cornerRadius = 12
-        numberTextField.keyboardType = .numberPad
+        numberTextField.keyboardType = .decimalPad
         numberTextField.textColor = .white
         numberTextField.textAlignment = .right
         
@@ -140,6 +145,10 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
                 NSAttributedString.Key.font: UIFont.font(.pretendardMedium, ofSize: 14)
             ]
         )
+        // Placeholder 오른쪽 패딩
+        let rightPaddingView = UIView(frame: CGRect(x: 0, y: 0, width: 13, height: numberTextField.frame.height))
+        numberTextField.rightView = rightPaddingView
+        numberTextField.rightViewMode = .always
         
         // textfield delegate 설정
         numberTextField.delegate = self
@@ -194,14 +203,45 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         dismiss(animated: true, completion: nil)
     }
     
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        validateInput()
+    }
+
+    private func validateInput() {
+       // 각 텍스트 필드가 비어있지 않은지 확인
+       let isWeightFilled = !(weightTextField?.text?.isEmpty ?? true)
+       let isMusclesFilled = !(musclesTextField?.text?.isEmpty ?? true)
+       let isFatFilled = !(fatTextField?.text?.isEmpty ?? true)
+       
+       // 모든 텍스트 필드에 값이 있을 때만 버튼 활성화
+       let shouldEnableButton = isWeightFilled && isMusclesFilled && isFatFilled
+       completeButton.isEnabled = shouldEnableButton
+       completeButton.alpha = shouldEnableButton ? 1.0 : 0.5
+        }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             let currentText = textField.text ?? ""
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            return newText.count <= 3
+            let decimalSeparator = Locale.current.decimalSeparator ?? "."
+            
+            // 소수점이 있는지 확인
+            let isDecimal = newText.contains(decimalSeparator)
+            
+            // 소수점이 없는 경우, 최대 3자리 정수
+            if !isDecimal {
+                return newText.count <= 3
+            }
+            
+            // 소수점이 있는 경우, 정수 3자리 + 소수점 1자리
+            let components = newText.components(separatedBy: decimalSeparator)
+            if components.count > 2 {
+                return false
+            }
+            
+            let integerPart = components[0]
+            let decimalPart = components.count > 1 ? components[1] : ""
+            
+            // 정수는 최대 3자리, 소수는 최대 1자리
+            return integerPart.count <= 3 && decimalPart.count <= 1
         }
-    
 }
-
-//private func validateInput() {
-//
-//}
