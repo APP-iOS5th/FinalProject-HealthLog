@@ -222,7 +222,10 @@ extension RoutineEditViewController: UICollectionViewDataSource, UICollectionVie
         
         if indexPath.section == viewModel.routine.exercises.count {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeleteButtonCollectionViewCell.identifier, for: indexPath) as! DeleteButtonCollectionViewCell
-            cell.buttonTapped()
+            cell.delete = {
+                self.viewModel.deleteRoutine(id: self.id)
+                self.navigationController?.popToRootViewController(animated: true)
+            }
             return cell
         }
         

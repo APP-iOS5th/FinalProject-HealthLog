@@ -463,7 +463,7 @@ extension RealmManager {
     
     func updetaRoutine(newRoutine: Routine, index: Int) {
         guard let realm = realm else { return }
-        var oldRoutine = fetchRoutine()[index]
+        let oldRoutine = fetchRoutine()[index]
         
         do {
             try realm.write {
@@ -481,9 +481,10 @@ extension RealmManager {
         
         
         do{
-            let routine = realm.objects(Routine.self).filter {
-                $0.id == id
-            }
+            let routine = realm.objects(Routine.self)
+                .filter { $0.id == id }
+                .map{ $0 }
+            
             try realm.write {
                 realm.delete(routine)
             }

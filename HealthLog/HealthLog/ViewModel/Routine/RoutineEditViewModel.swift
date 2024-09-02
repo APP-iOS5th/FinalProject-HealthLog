@@ -38,6 +38,10 @@ class RoutineEditViewModel {
         realmManager.updetaRoutine(newRoutine: routine, index: index)
     }
     
+    func deleteRoutine(id: ObjectId){
+        realmManager.deleteRoutine(id: id)
+    }
+    
     func getRoutine(routine: Routine) {
         self.routine.name = routine.name
         for routineExercise in routine.exercises {

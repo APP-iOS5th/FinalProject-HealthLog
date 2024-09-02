@@ -30,6 +30,7 @@ class RoutineViewModel {
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
+        fillteRoutines(by: "")
     }
     
     lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
