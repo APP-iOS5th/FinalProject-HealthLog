@@ -11,9 +11,6 @@ import SwiftUI
 
 class WeightRecordViewController: UIViewController {
     
-    private var currentYear: Int = Calendar.current.component(.year, from: Date())
-    private var currentMonth: Int = Calendar.current.component(.month, from: Date())
-    
     private var viewModel = InBodyChartViewModel()
     private var hostingController: UIHostingController<InBodyChartView>?
     
@@ -43,16 +40,12 @@ class WeightRecordViewController: UIViewController {
     private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "84", unit: "kg")
     private lazy var fatBox = InfoBoxView(title: "체지방률", value: "84", unit: "%")
     
-    private var inbodyRecords: [InBody] = []   // 인바디 기록을 담는 배열
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         setupBindings()   // youngwoo - 04. setupBindings을 viewDidLoad에서 실행, 자동으로 계속 감지함
-        
-        fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
         
     }
     
@@ -134,8 +127,6 @@ class WeightRecordViewController: UIViewController {
     }
     
     
-    
-    
     // MARK: - Actions
     @objc private func inputModalView() {
         let vc = WeightRecordModalViewController()
@@ -169,61 +160,5 @@ class WeightRecordViewController: UIViewController {
     }
     
     
-    // MARK: (원열) 특정 월 단위 데이터 fetch
-    func fetchInBodyDataForMonth(year: Int, month: Int) {
-        let startDate = makeDate(year: year, month: month, day: 1)
-        let endDate = makeDate(year: year, month: month + 1, day: 1).addingTimeInterval(-1)
-        
-        viewModel.loadData(for: startDate, to: endDate)
-    }
     
-    
-    private func makeDate(year: Int, month: Int, day: Int) -> Date {
-        var dateComponents = DateComponents()
-        dateComponents.year = year
-        dateComponents.month = month
-        dateComponents.day = day
-        return Calendar.current.date(from: dateComponents) ?? Date()
-    }
-    
-    
-    
-//    // MARK: (youngwoo) WeightRecordViewModel
-//    class WeightRecordViewModel {
-//        // MARK: (youngwoo) RealmCombine 01.
-//        // RealmCombine 01. observeRealmData 함수에서 observe 쓰기 위해 사용하는 변수
-////        private var inbodyNotificationToken: NotificationToken?
-////        private var cancellables = Set<AnyCancellable>()
-//        @Published var inbodyRecords: [InBody] = []
-////        private var realm: Realm?
-//        init() {
-////            self.realm = RealmManager.shared.realm
-//            
-//            observeRealmData()  // inbodyNotificationToken와 observe에 의해 자동으로 실행됨
-//        }
-//        
-//        // MARK: (youngwoo) RealmCombine 02. init에 쓸 observe 함수
-//        // RealmCombine 02. inbody가 DB에서 변경될때, Published 변수에 그대로 전달하도록 세팅
-//        private func observeRealmData() {
-//            guard let realm = realm else { return }
-//            
-//            // MARK: (youngwoo) RealmCombine 03. 데이터 불러옴
-//            let results = realm.objects(InBody.self)
-//                .sorted(byKeyPath: "date", ascending: false)
-//            
-//            // result에 담은 Realm DB 데이터를 observe로 감시, DB 값 변경시 안에 있는 실행
-//            inbodyNotificationToken = results.observe { [weak self] changes in
-//                switch changes {
-//                case .initial(let collection):
-//                    self?.inbodyRecords = Array(collection)
-//                    
-//                    //                    print(self?.inbodyRecords ?? [])
-//                case .update(let collection, _, _, _):
-//                    self?.inbodyRecords = Array(collection)
-//                case .error(let error):
-//                    print("results.observe - error: \(error)")
-//                }
-//            }
-//        }
-//    }
 }

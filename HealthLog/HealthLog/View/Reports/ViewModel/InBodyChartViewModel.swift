@@ -16,11 +16,16 @@ class InBodyChartViewModel: ObservableObject {
     @Published var inbodyRecords: [InBody] = []
     
     private var realm: Realm?
+    
+    
+    
     private var inputNotificationToken: NotificationToken?
     private var monthNotificationToken: NotificationToken?
     
     private var cancellables = Set<AnyCancellable>()
     
+    var currentYear: Int = Calendar.current.component(.year, from: Date())
+    var currentMonth: Int = Calendar.current.component(.month, from: Date())
     
     private var currentStartDate: Date?
     private var currentEndDate: Date?
@@ -29,6 +34,7 @@ class InBodyChartViewModel: ObservableObject {
         self.realm = RealmManager.shared.getRealm()
         observeInBodyDataChanges()
         observeRealmData()
+        loadCurrentMonthData()
     }
     
     private func observeRealmData() {
@@ -95,12 +101,26 @@ class InBodyChartViewModel: ObservableObject {
         }
     }
     
+    func loadCurrentMonthData() {
+        let startDate = makeDate(year: currentYear, month: currentMonth, day: 1)
+        let endDate = makeDate(year: currentYear, month: currentMonth + 1, day: 1).addingTimeInterval(-1)
+        
+        loadData(for: startDate, to: endDate)
+    }
+    
+    private func makeDate(year: Int, month: Int, day: Int) -> Date {
+        var dateComponents = DateComponents()
+        dateComponents.year = year
+        dateComponents.month = month
+        dateComponents.day = day
+        return Calendar.current.date(from: dateComponents) ?? Date()
+    }
+    
     private func observeInBodyDataChanges() {
         guard let realm = realm else {
             print("Realm 인스턴스가 nil입니다.")
             return
         }
-        
         
         let results = realm.objects(InBody.self)
         
@@ -125,6 +145,10 @@ class InBodyChartViewModel: ObservableObject {
     deinit {
         monthNotificationToken?.invalidate()
     }
+    
+   
+    
+    
     
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
