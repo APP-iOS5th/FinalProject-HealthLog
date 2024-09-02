@@ -9,6 +9,8 @@ import UIKit
 
 class ReportsViewController: UIViewController {
     
+    let inbodyViewModel = InBodyChartViewModel()
+    
     private var currentYear: Int = Calendar.current.component(.year, from: Date())
     private var currentMonth: Int = Calendar.current.component(.month, from: Date())
     
@@ -17,6 +19,7 @@ class ReportsViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
         stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
         
     }()
@@ -25,6 +28,7 @@ class ReportsViewController: UIViewController {
         let button = createMonthButton(action: UIAction {[weak self] _ in
             self?.didTapPreviousMonth()
         }, imageName: "chevron.left")
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -33,6 +37,7 @@ class ReportsViewController: UIViewController {
         label.text = "2024년 7월 리포트"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 20)
         label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
@@ -41,6 +46,7 @@ class ReportsViewController: UIViewController {
         let button = createMonthButton(action: UIAction {[weak self] _ in
             self?.didTapNextMonth()
         }, imageName: "chevron.right")
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
@@ -65,7 +71,7 @@ class ReportsViewController: UIViewController {
             NSAttributedString.Key.font: UIFont(name: "Pretendard-SemiBold", size: 13) ?? UIFont.systemFont(ofSize: 13)
         ], for: .selected)
         
-        
+        control.translatesAutoresizingMaskIntoConstraints = false
         return control
     }()
     
@@ -100,8 +106,6 @@ class ReportsViewController: UIViewController {
             segmentedControl.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
             
         ])
-        //AutoresizingMask 관리
-        setTranslatesAutoresizing()
         
         updateTitleMonthLabel()
         updateDataForCurrentMonth()
@@ -132,17 +136,7 @@ class ReportsViewController: UIViewController {
         button.addAction(action, for: .touchUpInside)
         return button
     }
-    
-    // MARK: Set translatesAutoresizingMaskIntoConstraints
-    private func setTranslatesAutoresizing() {
-        titleStackView.translatesAutoresizingMaskIntoConstraints = false
-        moveToPreviousMonthButton.translatesAutoresizingMaskIntoConstraints = false
-        titleMonthLabel.translatesAutoresizingMaskIntoConstraints = false
-        moveToNextMonthButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        
-    }
+
     
     private func updateTitleMonthLabel() {
         let dateFormatter = DateFormatter()
@@ -175,6 +169,7 @@ class ReportsViewController: UIViewController {
         }
         updateTitleMonthLabel()
         updateDataForCurrentMonth()
+        
     }
     
     private func updateDataForCurrentMonth() {

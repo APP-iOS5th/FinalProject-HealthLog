@@ -13,7 +13,7 @@ class MuscleImageTableViewCell: UITableViewCell {
     
     private lazy var monthLabel: UILabel = {
         let label = UILabel()
-        label.text = "8월 운동 기록"
+        label.text = "한달 간 운동 기록"
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

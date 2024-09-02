@@ -20,7 +20,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorColor = UIColor(named: "Color525252")
 
-        
 
         // 테이믈 가장 맨위 여백 지우기 (insetGroup)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
@@ -202,8 +201,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
         
-//        let offset = CGPoint(x: 0, y: tableView.contentOffset.y - 10)
-//        tableView.setContentOffset(offset, animated: true)
         tableView.reloadRows(at: [indexPath], with: .fade)
     }
     
@@ -311,18 +308,3 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
 }
 
-public extension UIView {
-    func addBottomBorderWithColor(color: UIColor) {
-        let border = CALayer()
-        border.backgroundColor = color.cgColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height, width: self.frame.size.width, height: 1)
-        self.layer.addSublayer(border)
-    }
-
-    func addAboveTheBottomBorderWithColor(color: UIColor) {
-        let border = CALayer()
-        border.backgroundColor = color.cgColor
-        border.frame = CGRect(x: 0, y: self.frame.size.height - 1, width: self.frame.size.width, height: 1)
-        self.layer.addSublayer(border)
-    }
-}
