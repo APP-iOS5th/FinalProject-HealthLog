@@ -441,6 +441,13 @@ extension RealmManager {
     
     func addRoutine(routine: Routine) {
         guard let realm = realm else { return }
+        var volume: Int = 0
+        for exercise in routine.exercises {
+            for sets in exercise.sets {
+                volume += sets.weight * sets.reps
+            }
+        }
+        routine.exerciseVolume = volume
         do {
             try realm.write {
                 realm.add(routine)

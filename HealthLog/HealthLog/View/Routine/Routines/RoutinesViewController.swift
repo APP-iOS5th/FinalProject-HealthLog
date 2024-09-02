@@ -67,7 +67,6 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        viewModel.fillteRoutines(by: "")
         self.tableView.reloadData()
         isRoutineData()
         self.navigationController?.navigationBar.prefersLargeTitles = false

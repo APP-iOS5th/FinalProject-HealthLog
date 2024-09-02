@@ -36,6 +36,8 @@ class RoutineViewModel {
         observeRealmData()
         
         $routines.assign(to: &$filteredRoutines)
+
+        
     }
     
     lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
