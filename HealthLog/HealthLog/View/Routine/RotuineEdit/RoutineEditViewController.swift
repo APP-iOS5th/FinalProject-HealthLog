@@ -59,6 +59,15 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         
     }()
     
+    private lazy var rightBarButtonItem : UIBarButtonItem = {
+        let rightBarButtonItem = UIBarButtonItem(title: "완료", style: .done, target: self, action: #selector(doneTapped))
+        rightBarButtonItem.setTitleTextAttributes([
+            NSAttributedString.Key.font: UIFont(name: "Pretendard-Semibold", size: 16) as Any,
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ], for: .normal)
+        return rightBarButtonItem
+    }()
+    
     
     private lazy var searchController: UISearchController = {
         resultsViewController.delegate = self
@@ -100,6 +109,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         
         self.navigationItem.searchController = searchController
         self.navigationItem.title = "수정하기"
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.view.backgroundColor = .color1E1E1E
         tabBarController?.tabBar.isHidden = true
@@ -146,19 +156,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         
     }
     
-    func didSelectItem(_ item: Exercise) {
-        let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
-            RoutineExerciseSet(order: index, weight: 0, reps: 0)
-        }
-        routineViewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
-        
-        self.collectionView.reloadData()
-        //        print("RoutinAddView: \(routineViewModel.routine.exercises.count)")
-    }
-    
-    
     private func setupCollectionView() {
-        
         collectionView.register(SetCell.self, forCellWithReuseIdentifier: SetCell.identifier)
         collectionView.register(SetCountHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SetCountHeaderView.identifier)
         collectionView.register(SetDividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: SetDividerFooterView.identifier)
@@ -171,18 +169,29 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
             collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 14),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
+            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor),
             
         ])
         collectionView.dataSource = self
         collectionView.delegate = self
         
     }
+    func didSelectItem(_ item: Exercise) {
+        let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
+            RoutineExerciseSet(order: index, weight: 0, reps: 0)
+        }
+        routineViewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
+        
+        self.collectionView.reloadData()
+        //        print("RoutinAddView: \(routineViewModel.routine.exercises.count)")
+    }
     
-    
+    @objc func doneTapped() {
+        self.navigationController?.popToRootViewController(animated: true)
+        
+    }
     
 }
-
 
 // MARK: CollectionView
 
