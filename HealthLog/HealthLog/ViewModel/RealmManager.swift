@@ -472,6 +472,7 @@ extension RealmManager {
         guard let realm = realm else { return }
         let oldRoutine = fetchRoutine()[index]
         
+        
         do {
             try realm.write {
                 oldRoutine.exercises = newRoutine.exercises

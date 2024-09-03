@@ -85,6 +85,10 @@ class RoutineViewModel {
     func addRoutine(routine: Routine) {
         realmManger.addRoutine(routine: routine)
     }
+    //임시 사용 우선순위: 3
+    func syncRotuine() {
+        filteredRoutines = routines
+    }
     
     
     func fillteRoutines(by searchText: String) {

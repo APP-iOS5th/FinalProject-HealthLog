@@ -69,6 +69,7 @@ class RoutinesViewController: UIViewController {
         tabBarController?.tabBar.isHidden = false
         self.tableView.reloadData()
         isRoutineData()
+        viewModel.syncRotuine() //임시 사용
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
     }

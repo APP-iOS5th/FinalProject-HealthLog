@@ -29,18 +29,28 @@ class RoutineEditViewModel {
         }
         
     }
-    
+ 
     func deleteExercise(for setcion: Int) {
         self.routine.exercises.remove(at: setcion)
     }
     
     func updateRoutine(routine: Routine, index: Int) {
-        realmManager.updetaRoutine(newRoutine: routine, index: index)
+        var volume: Int = 0
+        for exercise in routine.exercises {
+            for sets in exercise.sets {
+                volume += sets.weight * sets.reps
+            }
+        }
+        routine.exerciseVolume = volume
+        self.realmManager.updetaRoutine(newRoutine: routine, index: index)
     }
     
     func deleteRoutine(id: ObjectId){
-        realmManager.deleteRoutine(id: id)
+        self.realmManager.deleteRoutine(id: id)
     }
+    
+    
+    
     
     func getRoutine(routine: Routine) {
         self.routine.name = routine.name
