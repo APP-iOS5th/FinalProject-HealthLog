@@ -62,14 +62,16 @@ class RoutinesViewController: UIViewController {
         super.viewDidLoad()
         isRoutineData()
         setupUI()
+        viewModel.syncRotuine() //임시 사용
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        self.tableView.reloadData()
         isRoutineData()
         viewModel.syncRotuine() //임시 사용
+        self.tableView.reloadData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
     }

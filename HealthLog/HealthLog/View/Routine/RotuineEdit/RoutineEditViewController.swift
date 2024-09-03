@@ -7,12 +7,14 @@
 
 import UIKit
 import RealmSwift
+import Combine
 
 class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
     let viewModel = RoutineEditViewModel()
     let index: Int
     let id: ObjectId
+    private var cancellables = Set<AnyCancellable>()
     
     init(routineViewModel: RoutineViewModel, index: Int) {
         self.viewModel.getRoutine(routine: routineViewModel.routines[index])
@@ -33,6 +35,16 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         label.text = "루틴 이름"
         label.font = UIFont.font(.pretendardBold, ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var nameVaildLabel: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .red
+        label.isHidden = viewModel.isValid
         return label
     }()
     
@@ -104,6 +116,44 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         super.viewDidLoad()
         setupUI()
         setupCollectionView()
+        setupObservers()
+    }
+    
+    func setupObservers() {
+        nameTextField
+            .textPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: \.editNameTextField, on: viewModel)
+            .store(in: &cancellables)
+        
+        Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
+            .map { !$0 && !$1 }
+            .print("유효성 검사")
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                self?.nameVaildLabel.isHidden = isValid
+            }
+            .store(in: &cancellables)
+        
+        viewModel.isRoutineNameEmptyPulisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                if isValid {
+                    self?.nameVaildLabel.text = "이름이 비어 있습니다."
+                } else {
+                    self?.nameVaildLabel.text = ""
+                }
+            }
+            .store(in: &cancellables)
+        viewModel.isRoutineNameMatchingPulisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                if isValid {
+                    self?.nameVaildLabel.text = "중복된 이름이 있습니다."
+                }
+            }
+            .store(in: &cancellables)
+        
     }
     
     func setupUI() {
@@ -125,6 +175,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         self.view.addSubview(nameTextField)
         self.view.addSubview(exerciseTitleLabel)
         self.view.addSubview(dividerView)
+        self.view.addSubview(nameVaildLabel)
         
         
         
@@ -137,13 +188,15 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
             
             self.nameTitleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
             self.nameTitleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
-            
             self.nameTextField.topAnchor.constraint(equalTo: self.nameTitleLabel.bottomAnchor, constant: 13),
             self.nameTextField.leadingAnchor.constraint(equalTo: self.nameTitleLabel.leadingAnchor),
             self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             self.nameTextField.heightAnchor.constraint(equalToConstant: 44),
             
-            self.exerciseTitleLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor, constant: 26),
+            self.nameVaildLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor),
+            self.nameVaildLabel.leadingAnchor.constraint(equalTo: self.nameTextField.leadingAnchor),
+            
+            self.exerciseTitleLabel.topAnchor.constraint(equalTo: self.nameVaildLabel.bottomAnchor, constant: 26),
             self.exerciseTitleLabel.leadingAnchor.constraint(equalTo: self.nameTitleLabel.leadingAnchor),
             
             self.dividerView.topAnchor.constraint(equalTo: self.exerciseTitleLabel.bottomAnchor, constant: 13),

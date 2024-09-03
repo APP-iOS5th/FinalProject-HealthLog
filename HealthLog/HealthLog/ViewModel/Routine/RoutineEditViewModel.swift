@@ -14,8 +14,34 @@ class RoutineEditViewModel {
     private var realm: Realm?
     private var realmManager = RealmManager.shared
     @Published var routine: Routine = Routine()
-
     
+    
+    @Published var editNameTextField = "" {
+        didSet {
+            print(editNameTextField)
+        }
+    }
+    
+    @Published var isValid: Bool = false
+    
+    lazy var isRoutineNameEmptyPulisher:
+    AnyPublisher<Bool, Never> = {
+        $editNameTextField
+            .map(\.isEmpty)
+            .print("비어있남")
+            .eraseToAnyPublisher()
+    }()
+    
+    lazy var isRoutineNameMatchingPulisher:
+    AnyPublisher<Bool, Never> = {
+        $editNameTextField
+            .map {
+                self.realmManager.hasRoutineName(name: $0)
+            }
+            .print("존재 하는 이름이남")
+            .eraseToAnyPublisher()
+    }()
+        
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         print(self.routine.exercises[section].sets.count)
         print(setCount)

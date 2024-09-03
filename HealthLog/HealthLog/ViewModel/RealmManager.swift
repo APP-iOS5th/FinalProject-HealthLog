@@ -484,10 +484,19 @@ extension RealmManager {
         }
     }
     
+    func hasRoutineName(name: String) -> Bool {
+        guard let realm = realm else {
+            return false
+        }
+        
+        let isRoutineName = realm.objects(Routine.self)
+            .map{ $0.name }
+            .contains{ $0 == name}
+        return isRoutineName
+    }
+    
     func deleteRoutine(id: ObjectId) {
         guard let realm = realm else { return }
-        
-        
         do{
             let routine = realm.objects(Routine.self)
                 .filter { $0.id == id }

@@ -39,11 +39,6 @@ class RoutineViewModel {
         
     }
     
-    lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
-        $rutineNameinput.map { $0.count >= 3 }
-//            .print("Legth")
-            .eraseToAnyPublisher()
-    }()
     lazy var isRoutineNameEmptyPulisher: AnyPublisher<Bool, Never> = {
         $rutineNameinput
             .map(\.isEmpty)
