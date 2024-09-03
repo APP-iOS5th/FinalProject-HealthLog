@@ -140,6 +140,9 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
                 self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
             }
             .store(in: &cancellables)
+        
+        
+        
     }
     
     func didSelectItem(_ item: Exercise) {
@@ -174,6 +177,9 @@ extension RoutineAddExerciseViewController: UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
         cell.configure(with: routineViewModel.routine.exercises[indexPath.section].sets[indexPath.item])
+        cell.change = {
+            self.routineViewModel.validateExercise()
+        }
         
         return cell
     }

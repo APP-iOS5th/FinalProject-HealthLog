@@ -36,7 +36,6 @@ class RoutineViewModel {
         observeRealmData()
         
         $routines.assign(to: &$filteredRoutines)
-
         
     }
     
@@ -62,10 +61,6 @@ class RoutineViewModel {
         
     }()
     
-    func getselectedRoutine(index: Int) -> Routine {
-        return routines[index]
-    }
-    
     
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
         .CombineLatest($rutineNameinput, $routines)
@@ -82,6 +77,10 @@ class RoutineViewModel {
         })
         .print()
         .eraseToAnyPublisher()
+    
+    func getselectedRoutine(index: Int) -> Routine {
+        return routines[index]
+    }
     
     func addRoutine(routine: Routine) {
         realmManger.addRoutine(routine: routine)
@@ -113,7 +112,7 @@ class RoutineViewModel {
         validateExercise()
     }
     
-    private func validateExercise() {
+    func validateExercise() {
         let isExercise = !routine.exercises.isEmpty
         let allFieldsFilled = routine.exercises.allSatisfy { exercise in
             exercise.sets.allSatisfy { set in
