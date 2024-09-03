@@ -251,10 +251,12 @@ class MuscleImageView: UIView {
         NSLayoutConstraint.activate([
             frontMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
             frontMuscleImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            
+            frontMuscleImage.trailingAnchor.constraint(equalTo: self.centerXAnchor),
+            frontMuscleImage.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
             backMuscleImage.leadingAnchor.constraint(equalTo: frontMuscleImage.trailingAnchor),
+            backMuscleImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
             frontMuscleChest.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleChest.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
@@ -313,6 +315,25 @@ class MuscleImageView: UIView {
     }
     
     func configureMuscleCell(data: [ReportBodyPartData]) {
+        // 초기화
+        frontMuscleChest.isHidden = true
+        backMuscleback.isHidden = true
+        frontMuscleShoulders.isHidden = true
+        backMuscleShoulders.isHidden = true
+        backMuscleTriceps.isHidden = true
+        frontMuscleBiceps.isHidden = true
+        frontMuscleAbs.isHidden = true
+        frontMuscleQuadriceps.isHidden = true
+        backMuscleHamstrings.isHidden = true
+        backMuscleGlutes.isHidden = true
+        frontMuscleAdductors.isHidden = true
+        backMuscleAdductors.isHidden = true
+        frontMuscleAbductors.isHidden = true
+        backMuscleAbductors.isHidden = true
+        backMuscleCalves.isHidden = true
+        frontMuscleTrap.isHidden = true
+        backMuscleTrap.isHidden = true
+        frontMuscleForearms.isHidden = true
         
         for bodyPartData in data {
             let bodyPart = BodyPart(rawValue: bodyPartData.bodyPart)

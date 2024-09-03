@@ -6,13 +6,32 @@
 //
 
 import UIKit
+import Combine
 
 class ReportsViewController: UIViewController {
     
+    private var reportsVM = ReportsViewModel()
+    
     let inbodyViewModel = InBodyChartViewModel()
     
-    private var currentYear: Int = Calendar.current.component(.year, from: Date())
-    private var currentMonth: Int = Calendar.current.component(.month, from: Date())
+    private lazy var exerciseRecordVC: ExerciseRecordViewController = {
+        let vc = ExerciseRecordViewController(reportsVM: self.reportsVM)
+        return vc
+    }()
+    
+    private let weightRecordVC = WeightRecordViewController()
+    
+    private var currentVC: UIViewController?
+    
+    private var currentYear: Int {
+        return reportsVM.currentYear
+    }
+    
+    private var currentMonth: Int {
+        return reportsVM.currentMonth
+    }
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private lazy var titleStackView: UIStackView = {
         let stackView = UIStackView()
@@ -75,14 +94,120 @@ class ReportsViewController: UIViewController {
         return control
     }()
     
-    private let exerciseRecordVC = ExerciseRecordViewController()
-    private let weightRecordVC = WeightRecordViewController()
-    
-    private var currentVC: UIViewController?
-    
+  
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupUI()
+        updateTitleMonthLabel()
+        
+        reportsVM.$bodyPartDataList
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.exerciseRecordVC.fetchDataAndUpdateUI()
+            }
+            .store(in: &cancellables)
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        reportsVM.fetchAndCalculateCurrentMonthData()
+    }
+    
+    
+
+    
+    private func updateTitleMonthLabel() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "yyyy년 M월 리포트"
+        
+        if let date = Calendar.current.date(from: DateComponents(year: currentYear, month: currentMonth)) {
+            titleMonthLabel.text = dateFormatter.string(from: date)
+        }
+    }
+    
+    
+    private func didTapPreviousMonth() {
+        if currentMonth == 1 {
+            reportsVM.updateYearAndMonth(year: currentYear - 1, month: 12)
+        } else {
+            reportsVM.updateYearAndMonth(year: currentYear, month: currentMonth - 1)
+        }
+        updateTitleMonthLabel()
+        exerciseRecordVC.fetchDataAndUpdateUI()
+    }
+    
+    private func didTapNextMonth() {
+        if currentMonth == 12 {
+            reportsVM.updateYearAndMonth(year: currentYear + 1, month: 1)
+        } else {
+            reportsVM.updateYearAndMonth(year: currentYear, month: currentMonth + 1)
+        }
+        updateTitleMonthLabel()
+        exerciseRecordVC.fetchDataAndUpdateUI()
+    }
+    
+    
+    
+//    private func updateDataForCurrentMonth() {
+//        if let exerciseVC = currentVC as? ExerciseRecordViewController {
+//            _ = exerciseVC.fetchMonthSchedules(year: currentYear, month: currentMonth)
+//        } else if let inBodyVC = currentVC as? WeightRecordViewController {
+//            inBodyVC.fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
+//        }
+//    }
+    
+    
+    
+    
+    // MARK: SegmentControl
+    @objc private func didChangeValue(_ sender: UISegmentedControl) {
+        let selectedIndex = sender.selectedSegmentIndex
+        
+        currentVC?.willMove(toParent: nil)
+        currentVC?.view.removeFromSuperview()
+        currentVC?.removeFromParent()
+        
+        let newVC: UIViewController
+        if selectedIndex == 0 {
+            newVC = exerciseRecordVC
+        } else {
+            newVC = weightRecordVC
+        }
+        
+        addChild(newVC)
+        newVC.didMove(toParent: self)
+        currentVC = newVC
+        
+//        updateDataForCurrentMonth()
+        
+    }
+    
+    private func createMonthButton(action: UIAction, imageName: String) -> UIButton {
+        let button = UIButton(type: .custom)
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .black)
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: imageName, withConfiguration: symbolConfig)
+        config.baseForegroundColor = .white
+        button.configuration = config
+        
+        button.addAction(action, for: .touchUpInside)
+        return button
+    }
+    
+    
+    
+
+}
+
+extension ReportsViewController {
+    
+    private func setupUI() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         self.view.backgroundColor = UIColor(named: "ColorPrimary")
         
@@ -107,102 +232,12 @@ class ReportsViewController: UIViewController {
             
         ])
         
-        updateTitleMonthLabel()
-        updateDataForCurrentMonth()
-        
-        
         let initialViewController = exerciseRecordVC
         addChild(initialViewController)
         initialViewController.didMove(toParent: self)
         currentVC = initialViewController
-        
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        updateDataForCurrentMonth()
-    }
-    
-    
-    private func createMonthButton(action: UIAction, imageName: String) -> UIButton {
-        let button = UIButton(type: .custom)
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .black)
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(systemName: imageName, withConfiguration: symbolConfig)
-        config.baseForegroundColor = .white
-        button.configuration = config
-        
-        button.addAction(action, for: .touchUpInside)
-        return button
-    }
-
-    
-    private func updateTitleMonthLabel() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateFormatter.dateFormat = "yyyy년 M월 리포트"
-        
-        if let date = Calendar.current.date(from: DateComponents(year: currentYear, month: currentMonth)) {
-            titleMonthLabel.text = dateFormatter.string(from: date)
-        }
-    }
-    
-    
-    private func didTapPreviousMonth() {
-        if currentMonth == 1 {
-            currentMonth = 12
-            currentYear -= 1
-        } else {
-            currentMonth -= 1
-        }
-        updateTitleMonthLabel()
-        updateDataForCurrentMonth()
-    }
-    
-    private func didTapNextMonth() {
-        if currentMonth == 12 {
-            currentMonth = 1
-            currentYear += 1
-        } else {
-            currentMonth += 1
-        }
-        updateTitleMonthLabel()
-        updateDataForCurrentMonth()
-        
-    }
-    
-    private func updateDataForCurrentMonth() {
-        if let exerciseVC = currentVC as? ExerciseRecordViewController {
-            _ = exerciseVC.fetchMonthSchedules(year: currentYear, month: currentMonth)
-        } else if let inBodyVC = currentVC as? WeightRecordViewController {
-            inBodyVC.fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
-        }
-    }
-    
-    
-    // MARK: SegmentControl
-    @objc private func didChangeValue(_ sender: UISegmentedControl) {
-        let selectedIndex = sender.selectedSegmentIndex
-        
-        currentVC?.willMove(toParent: nil)
-        currentVC?.view.removeFromSuperview()
-        currentVC?.removeFromParent()
-        
-        let newVC: UIViewController
-        if selectedIndex == 0 {
-            newVC = exerciseRecordVC
-        } else {
-            newVC = weightRecordVC
-        }
-        
-        addChild(newVC)
-        newVC.didMove(toParent: self)
-        currentVC = newVC
-        
-        updateDataForCurrentMonth()
-        
-    }
     
     override func addChild(_ viewController: UIViewController) {
         view.addSubview(viewController.view)
@@ -217,10 +252,7 @@ class ReportsViewController: UIViewController {
         ])
     }
     
-    
-
 }
-
 
 
 
