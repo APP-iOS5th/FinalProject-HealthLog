@@ -85,10 +85,10 @@ class ExercisesDetailViewController: UIViewController {
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             scrollView.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 8),
+                constant: 17),
             scrollView.trailingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -8),
+                constant: -17),
         ])
         
         // MARK: stackView
@@ -96,7 +96,6 @@ class ExercisesDetailViewController: UIViewController {
         stackView.distribution = .fill
         stackView.spacing = 15
         stackView.alignment = .fill
-        stackView.isLayoutMarginsRelativeArrangement = true
         scrollView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
