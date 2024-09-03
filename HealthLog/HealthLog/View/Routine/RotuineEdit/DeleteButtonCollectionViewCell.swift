@@ -9,7 +9,7 @@ import UIKit
 
 class DeleteButtonCollectionViewCell: UICollectionViewCell {
     static let identifier = "DeleteButtonCollectionViewCell"
-    
+    var delete: (() -> Void)?
     private lazy var deleteButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.title = "삭제"
@@ -42,7 +42,7 @@ class DeleteButtonCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func buttonTapped() {
-        
+        delete?()
     }
     
     required init?(coder: NSCoder) {

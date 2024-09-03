@@ -12,8 +12,12 @@ import RealmSwift
 class RoutineViewModel {
     
     private var realm: Realm?
+    private var realmManger = RealmManager.shared
+    
     
     private var routineNotificationToken: NotificationToken?
+    
+    // RoutineAddName
     @Published var rutineNameinput: String = ""
     @Published var rutineNameConfirmation: String = " "
     @Published var isValid: Bool = false
@@ -21,20 +25,20 @@ class RoutineViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
+    // Routine 배열
     @Published var routines: [Routine] = []
-    @Published var routine: Routine = Routine()
     
+    @Published var routine: Routine = Routine()
+    // 검색된 값 추가
     @Published var filteredRoutines: [Routine] = []
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
+        
+        $routines.assign(to: &$filteredRoutines)
+        
     }
     
-    lazy var isRoutineNameLegthValidPublisher: AnyPublisher<Bool, Never> = {
-        $rutineNameinput.map { $0.count >= 3 }
-//            .print("Legth")
-            .eraseToAnyPublisher()
-    }()
     lazy var isRoutineNameEmptyPulisher: AnyPublisher<Bool, Never> = {
         $rutineNameinput
             .map(\.isEmpty)
@@ -51,10 +55,6 @@ class RoutineViewModel {
             .eraseToAnyPublisher()
         
     }()
-    
-    func getselectedRoutine(index: Int) -> Routine {
-        return routines[index]
-    }
     
     
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
@@ -73,17 +73,18 @@ class RoutineViewModel {
         .print()
         .eraseToAnyPublisher()
     
-    func addRoutine(routine: Routine) {
-        guard let realm = realm else {return}
-        do {
-            try realm.write {
-                realm.add(routine)
-            }
-        } catch {
-            print("저장 실패")
-        }
-            
+    func getselectedRoutine(index: Int) -> Routine {
+        return routines[index]
     }
+    
+    func addRoutine(routine: Routine) {
+        realmManger.addRoutine(routine: routine)
+    }
+    //임시 사용 우선순위: 3
+    func syncRotuine() {
+        filteredRoutines = routines
+    }
+    
     
     func fillteRoutines(by searchText: String) {
         if searchText.isEmpty {
@@ -97,13 +98,10 @@ class RoutineViewModel {
     
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         if self.routine.exercises[section].sets.count < setCount {
-//            try! realm?.write {
                 self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
-//            }
         } else {
-//            try! realm?.write {
                 self.routine.exercises[section].sets.removeLast()
-//            }
+
         }
         validateExercise()
     }
@@ -113,7 +111,7 @@ class RoutineViewModel {
         validateExercise()
     }
     
-    private func validateExercise() {
+    func validateExercise() {
         let isExercise = !routine.exercises.isEmpty
         let allFieldsFilled = routine.exercises.allSatisfy { exercise in
             exercise.sets.allSatisfy { set in

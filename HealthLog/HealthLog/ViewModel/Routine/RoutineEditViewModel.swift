@@ -12,15 +12,36 @@ import RealmSwift
 class RoutineEditViewModel {
     
     private var realm: Realm?
-    
+    private var realmManager = RealmManager.shared
     @Published var routine: Routine = Routine()
-    private var routines: [Routine] = []
     
-    init() {
-        
+    
+    @Published var editNameTextField = "" {
+        didSet {
+            print(editNameTextField)
+        }
     }
     
+    @Published var isValid: Bool = false
     
+    lazy var isRoutineNameEmptyPulisher:
+    AnyPublisher<Bool, Never> = {
+        $editNameTextField
+            .map(\.isEmpty)
+            .print("비어있남")
+            .eraseToAnyPublisher()
+    }()
+    
+    lazy var isRoutineNameMatchingPulisher:
+    AnyPublisher<Bool, Never> = {
+        $editNameTextField
+            .map {
+                self.realmManager.hasRoutineName(name: $0)
+            }
+            .print("존재 하는 이름이남")
+            .eraseToAnyPublisher()
+    }()
+        
     func updateExerciseSetCount(for section: Int, setCount: Int) {
         print(self.routine.exercises[section].sets.count)
         print(setCount)
@@ -34,10 +55,28 @@ class RoutineEditViewModel {
         }
         
     }
-    
+ 
     func deleteExercise(for setcion: Int) {
         self.routine.exercises.remove(at: setcion)
     }
+    
+    func updateRoutine(routine: Routine, index: Int) {
+        var volume: Int = 0
+        for exercise in routine.exercises {
+            for sets in exercise.sets {
+                volume += sets.weight * sets.reps
+            }
+        }
+        routine.exerciseVolume = volume
+        self.realmManager.updetaRoutine(newRoutine: routine, index: index)
+    }
+    
+    func deleteRoutine(id: ObjectId){
+        self.realmManager.deleteRoutine(id: id)
+    }
+    
+    
+    
     
     func getRoutine(routine: Routine) {
         self.routine.name = routine.name

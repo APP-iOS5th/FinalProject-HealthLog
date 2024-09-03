@@ -60,17 +60,18 @@ class RoutinesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        viewModel.fillteRoutines(by: "")
         isRoutineData()
-        
         setupUI()
+        viewModel.syncRotuine() //임시 사용
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        self.tableView.reloadData()
         isRoutineData()
+        viewModel.syncRotuine() //임시 사용
+        self.tableView.reloadData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
     }
@@ -123,14 +124,7 @@ class RoutinesViewController: UIViewController {
 
 
 extension RoutinesViewController: UISearchResultsUpdating {
-    
-    var isFiltering: Bool {
-        let searchController = self.navigationItem.searchController
-        let isActive = searchController?.isActive ?? false
-        let isSearchBarHasText = searchController?.searchBar.text?.isEmpty == false
-        return isActive && isSearchBarHasText
-    }
-    
+
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else {
             return
@@ -150,7 +144,7 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.isFiltering ? self.viewModel.filteredRoutines.count : self.viewModel.routines.count
+        return self.viewModel.filteredRoutines.count
 //        self.viewModel.routines.count
     }
     
@@ -159,11 +153,10 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineCell.cellId, for: indexPath) as! RoutineCell
         cell.selectionStyle = .none
 //        cell.configure(with: viewModel.routines[indexPath.row])
-        if isFiltering {
+      
             cell.configure(with: viewModel.filteredRoutines[indexPath.row])
-        } else {
-            cell.configure(with: viewModel.routines[indexPath.row])
-        }
+       
+        
         return cell
     }
     

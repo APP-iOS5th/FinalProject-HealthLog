@@ -14,6 +14,8 @@ class SetCell: UICollectionViewCell {
     
     private var cancellables = Set<AnyCancellable>()
     
+    var change: (() -> Void)?
+    
     private lazy var setNumberLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -122,24 +124,27 @@ class SetCell: UICollectionViewCell {
         repsTextField.text = set.reps == 0 ? "" : "\(set.reps)"
         
         // MARK: Combine
-        
-        // 셀의 모든 구독을 해제 (이 셀에 걸려있는거 모두 해제이므로 주의)
-        cancellables.removeAll()
-        
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
-            .sink { text in
+            .sink { [weak self] text in
                 print("weightTextField combine change")
                 set.weight = Int(text) ?? 0
+                self?.change?()
             }
             .store(in: &cancellables)
         
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
             .compactMap { ($0.object as? UITextField)?.text }
-            .sink { text in
+            .sink { [weak self] text in
                 print("repsTextField combine change")
                 set.reps = Int(text) ?? 0
+                self?.change?()
             }
             .store(in: &cancellables)
     }
+    
+    override func prepareForReuse() {
+            super.prepareForReuse()
+            cancellables.removeAll() // 셀 재사용 시 구독 해제
+        }
 }

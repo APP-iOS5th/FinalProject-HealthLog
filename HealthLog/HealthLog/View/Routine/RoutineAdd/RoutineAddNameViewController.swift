@@ -12,7 +12,6 @@ class RoutineAddNameViewController: UIViewController {
     
     let viewModel = RoutineViewModel()
     private var cancellables = Set<AnyCancellable>()
-    private var isValid: Bool = false
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
