@@ -53,6 +53,7 @@ class ExercisesDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .color1E1E1E
+        setupPaddingView(stackView: stackView, height: 10)
         setupMain()
         setupProfileGroup()
         setupPaddingView(stackView: stackView, height: 10)
@@ -96,8 +97,6 @@ class ExercisesDetailViewController: UIViewController {
         stackView.spacing = 15
         stackView.alignment = .fill
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = UIEdgeInsets(
-                top: 20, left: 10, bottom: 20, right: 10)
         scrollView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -157,17 +156,11 @@ class ExercisesDetailViewController: UIViewController {
         profileStackView.backgroundColor = .color3E3E3E
         stackView.addArrangedSubview(profileStackView)
         
-        // MARK: imageViewPaddingContainer
-//        imageViewPaddingContainer.layer.borderWidth = 1
-//        profileStackView.addArrangedSubview(imageViewPaddingContainer)
-//        imageViewPaddingContainer.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            imageViewPaddingContainer.heightAnchor.constraint(equalToConstant: 360),
-//        ])
-        
         // MARK: imageView
         imageView.contentMode = .scaleAspectFit
-        imageView.layer.cornerRadius = 12
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 22
+        imageView.layer.masksToBounds = true
         profileStackView.addArrangedSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
