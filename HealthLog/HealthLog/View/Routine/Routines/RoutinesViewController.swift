@@ -6,13 +6,18 @@
 //
 
 import UIKit
+import Combine
 
 class RoutinesViewController: UIViewController {
     
     
     let viewModel = RoutineViewModel()
     
+    private var cancellables = Set<AnyCancellable>()
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var textLabel: UILabel = {
         let label = UILabel()
@@ -35,6 +40,7 @@ class RoutinesViewController: UIViewController {
     
     private lazy var addButton: UIBarButtonItem = {
         let buttonAction = UIAction { _ in
+            
             print("addButton 클릭")
             let routineAddNameViewController = RoutineAddNameViewController()
             self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
@@ -63,8 +69,9 @@ class RoutinesViewController: UIViewController {
         isRoutineData()
         setupUI()
         viewModel.syncRotuine() //임시 사용
-
+        setupObservers()
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -74,6 +81,15 @@ class RoutinesViewController: UIViewController {
         self.tableView.reloadData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         
+    }
+    
+    func setupObservers() {
+        viewModel.$filteredRoutines
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
     }
     
     func isRoutineData() {
@@ -115,11 +131,7 @@ class RoutinesViewController: UIViewController {
         ])
         
     }
-    
-    
-   
-    
-    
+        
 }
 
 

@@ -9,13 +9,10 @@ import Foundation
 import RealmSwift
 import Combine
 
-class RoutineAddNameViewModel: ObservableObject {
+class RoutineAddNameViewModel {
     
     private var realm: Realm?
     
     //TODO: - ViewModel 분리
     
-    
-    
 }
-

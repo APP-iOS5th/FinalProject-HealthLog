@@ -16,7 +16,7 @@ class RoutineEditViewModel {
     @Published var routine: Routine = Routine()
     
     
-    @Published var editNameTextField = "" {
+    @Published var editNameTextField = " " {
         didSet {
             print(editNameTextField)
         }
