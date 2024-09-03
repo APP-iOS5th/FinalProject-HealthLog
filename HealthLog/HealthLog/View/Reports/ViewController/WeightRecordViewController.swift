@@ -11,8 +11,17 @@ import SwiftUI
 
 class WeightRecordViewController: UIViewController {
     
-    private var viewModel = InBodyChartViewModel()
+    private var inBodyVM: InBodyChartViewModel
     private var hostingController: UIHostingController<InBodyChartView>?
+    
+    init(inBodyVM: InBodyChartViewModel) {
+        self.inBodyVM = inBodyVM
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - (youngwoo)
     // youngwoo - WeightRecordViewController 종료시, 구독 Bind 해제
@@ -47,7 +56,6 @@ class WeightRecordViewController: UIViewController {
         setupUI()
         setupBindings()   // youngwoo - 04. setupBindings을 viewDidLoad에서 실행, 자동으로 계속 감지함
         
-        fetchInBodyDataForMonth(year: viewModel.currentYear, month: viewModel.currentMonth)
         
     }
     
@@ -57,7 +65,7 @@ class WeightRecordViewController: UIViewController {
         view.backgroundColor = UIColor(named: "ColorPrimary")
         
         // MARK: chartView (SwiftUI) 삽입
-        let chartView = InBodyChartView(viewModel: viewModel)
+        let chartView = InBodyChartView(viewModel: inBodyVM)
         hostingController = UIHostingController(rootView: chartView)
         hostingController?.view.backgroundColor = .clear
         
@@ -149,7 +157,7 @@ class WeightRecordViewController: UIViewController {
     private func setupBindings() {
         
         // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
-        viewModel.$inbodyRecords
+        inBodyVM.$inbodyRecords
             .sink { inbodyRecords in
                 if let record = inbodyRecords.first {
                     self.weightBox.updateValue(
@@ -163,21 +171,21 @@ class WeightRecordViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    func fetchInBodyDataForMonth(year: Int, month: Int) {
-            let startDate = makeDate(year: year, month: month, day: 1)
-            let endDate = makeDate(year: year, month: month + 1, day: 1).addingTimeInterval(-1)
-            
-            viewModel.loadData(for: startDate, to: endDate)
-        }
-        
-        
-        private func makeDate(year: Int, month: Int, day: Int) -> Date {
-            var dateComponents = DateComponents()
-            dateComponents.year = year
-            dateComponents.month = month
-            dateComponents.day = day
-            return Calendar.current.date(from: dateComponents) ?? Date()
-        }
+//    func fetchInBodyDataForMonth(year: Int, month: Int) {
+//            let startDate = makeDate(year: year, month: month, day: 1)
+//            let endDate = makeDate(year: year, month: month + 1, day: 1).addingTimeInterval(-1)
+//            
+//            viewModel.loadData(for: startDate, to: endDate)
+//        }
+//        
+//        
+//        private func makeDate(year: Int, month: Int, day: Int) -> Date {
+//            var dateComponents = DateComponents()
+//            dateComponents.year = year
+//            dateComponents.month = month
+//            dateComponents.day = day
+//            return Calendar.current.date(from: dateComponents) ?? Date()
+//        }
     
     
 }

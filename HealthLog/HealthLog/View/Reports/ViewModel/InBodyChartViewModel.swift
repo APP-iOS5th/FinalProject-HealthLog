@@ -23,14 +23,19 @@ class InBodyChartViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    var currentYear: Int = Calendar.current.component(.year, from: Date())
-    var currentMonth: Int = Calendar.current.component(.month, from: Date())
-    
-    private var currentStartDate: Date?
-    private var currentEndDate: Date?
+    var currentYear: Int
+    var currentMonth: Int
     
     init() {
         self.realm = RealmManager.shared.getRealm()
+        
+        let currentDate = Date()
+        let calendar = Calendar.current
+        self.currentYear = calendar.component(.year, from: currentDate)
+        self.currentMonth = calendar.component(.month, from: currentDate)
+        
+        self.fetchAndLoadData()
+        
         observeInBodyDataChanges()
         observeRealmData()
     }
@@ -57,16 +62,17 @@ class InBodyChartViewModel: ObservableObject {
         }
     }
     
-    func loadData(for startDate: Date, to endDate: Date) {
+    func updateYearAndMonth(year: Int, month: Int) {
+        self.currentYear = year
+        self.currentMonth = month
         
-        // weightRecordVC에서 view did load할 때 현재 날짜 받아서 적용됨
-        self.currentStartDate = startDate
-        self.currentEndDate = endDate
+        fetchAndLoadData()
+    }
+    
+    
+    func fetchAndLoadData() {
         
-        print("---------------------------------")
-        print("\(startDate) ~ \(endDate)")
-        
-        fetchInBodyData(from: startDate, to: endDate)
+        fetchInBodyData(year: currentYear, month: currentMonth)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case let .failure(error) = completion {
@@ -80,18 +86,20 @@ class InBodyChartViewModel: ObservableObject {
                 print("-----------------------------------")
             })
             .store(in: &cancellables)
-        
-        
     }
     
-    private func fetchInBodyData(from startDate: Date, to endDate: Date) -> Future<[InBody], Error> {
+    private func fetchInBodyData(year: Int, month: Int) -> Future<[InBody], Error> {
         return Future { result in
             do {
-                // 옵셔널 바인딩을 통해 realm이 nil이 아닌지 확인
                 guard let realm = self.realm else {
-                    result(.failure(realmError.realmInstanceUnavailable)) // 여기서 SomeError는 적절한 에러 타입으로 대체
+                    result(.failure(realmError.realmInstanceUnavailable))
                     return
                 }
+                
+                let calendar = Calendar.current
+                let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
+                let range = calendar.range(of: .day, in: .month, for: startDate)!
+                let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range.count))!
 
                 let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
                 result(.success(Array(data)))
@@ -117,10 +125,7 @@ class InBodyChartViewModel: ObservableObject {
             case .initial:
                 break
             case .update:
-                if let startDate = self.currentStartDate, let endDate = self.currentEndDate {
-                    self.loadData(for: startDate, to: endDate)
-                    print("값 변화됨!")
-                }
+                self.fetchAndLoadData()
             case .error(let error):
                 print("Realm error: \(error)")
             }
