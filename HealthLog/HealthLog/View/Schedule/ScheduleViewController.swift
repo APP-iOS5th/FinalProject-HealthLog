@@ -431,11 +431,11 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //        return isLastDay
 //    }
 
-    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
-        let timeZone = TimeZone(identifier: "Asia/Seoul")!
-        let seconds = timeZone.secondsFromGMT(for: date)
-        return Date(timeInterval: TimeInterval(seconds), since: date)
-    }
+//    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
+//        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+//        let seconds = timeZone.secondsFromGMT(for: date)
+//        return Date(timeInterval: TimeInterval(seconds), since: date)
+//    }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
         let label = UILabel()
@@ -461,7 +461,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
         guard let realm = realm else { return nil }
-        return realm.objects(Schedule.self).filter("date == %@", date).first
+        return realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first
     }
     
     private func isScheduleCompleted(_ schedule: Schedule) -> Bool {
@@ -472,7 +472,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         guard let dateComponents = dateComponents, 
               let date = dateComponents.date else { return }
         selectedDate = date
-        loadSelectedDateSchedule(date)
+        loadSelectedDateSchedule(date.toKoreanTime())
         updateTableView()
         //customizeCalendarTextColor()
     }
@@ -534,24 +534,24 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //    }
 
     // get date from text of UILabel
-    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
-        guard let text = text,
-              let day = Int(text) else { return nil }
-        
-        // get current month and year from calendar
-        let displayedMonthDate = calendarView.visibleDateComponents
-        guard let month = displayedMonthDate.month,
-              let year = displayedMonthDate.year else { return nil }
-        
-        return DateComponents(year: year, month: month, day: day)
-    }
+//    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
+//        guard let text = text,
+//              let day = Int(text) else { return nil }
+//        
+//        // get current month and year from calendar
+//        let displayedMonthDate = calendarView.visibleDateComponents
+//        guard let month = displayedMonthDate.month,
+//              let year = displayedMonthDate.year else { return nil }
+//        
+//        return DateComponents(year: year, month: month, day: day)
+//    }
 }
 
 extension ScheduleViewController {
     private func highlightBodyPartsAtSelectedDate(_ date: Date) {
         guard let realm = realm else {return}
         
-        guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date).first else { return }
+        guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first else { return }
         
         var completedSetsCount = 0
         var bodyPartsWithCompletedSets: [String: Int] = [:]
