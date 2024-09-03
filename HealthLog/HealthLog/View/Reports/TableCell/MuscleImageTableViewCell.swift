@@ -63,7 +63,4 @@ class MuscleImageTableViewCell: UITableViewCell {
     func configureCell(data: [ReportBodyPartData]) {
         muscleImageView.configureMuscleCell(data: data)
     }
-    
-    
-    
 }
