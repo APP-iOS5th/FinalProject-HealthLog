@@ -13,6 +13,7 @@ class RoutineEditViewModel {
     
     private var realm: Realm?
     private var realmManager = RealmManager.shared
+    
     @Published var routine: Routine = Routine()
     
     

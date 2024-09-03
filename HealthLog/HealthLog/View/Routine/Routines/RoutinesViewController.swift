@@ -15,10 +15,7 @@ class RoutinesViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "추가된 루틴이 없습니다."
@@ -39,11 +36,10 @@ class RoutinesViewController: UIViewController {
     }()
     
     private lazy var addButton: UIBarButtonItem = {
-        let buttonAction = UIAction { _ in
-            
+        let buttonAction = UIAction { [weak self] _ in
             print("addButton 클릭")
             let routineAddNameViewController = RoutineAddNameViewController()
-            self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
+            self?.navigationController?.pushViewController(routineAddNameViewController, animated: true)
         }
         
         let barButton = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill")?.withTintColor(.white, renderingMode: .alwaysTemplate), primaryAction: buttonAction)
@@ -84,6 +80,7 @@ class RoutinesViewController: UIViewController {
     }
     
     func setupObservers() {
+        
         viewModel.$filteredRoutines
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -167,7 +164,9 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
 //        cell.configure(with: viewModel.routines[indexPath.row])
       
             cell.configure(with: viewModel.filteredRoutines[indexPath.row])
-       
+        cell.addbutton = {
+            self.viewModel.addScheduleExercise(index: indexPath.row)
+        }
         
         return cell
     }

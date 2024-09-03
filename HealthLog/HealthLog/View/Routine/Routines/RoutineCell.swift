@@ -11,6 +11,9 @@ class RoutineCell: UITableViewCell {
 
     static let cellId = "RoutineCell"
     
+    var addbutton: (()->Void)?
+    
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "루틴 이름"
@@ -166,7 +169,7 @@ class RoutineCell: UITableViewCell {
     }
     
     @objc func buttonTapped() {
-        
+        addbutton?()
     }
     
     
