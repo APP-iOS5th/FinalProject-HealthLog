@@ -50,8 +50,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
     private let imageViews = [UIImageView(), UIImageView()]
-    private let imageEntryButton = UIButton(type: .system)
-    
     
     private let deleteButton: UIButton?
     
@@ -194,7 +192,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
-        titleTextField.tag = TextFieldTag.titleTextField.rawValue
+        titleTextField.tag = ViewTag.titleTextField.rawValue
         titleTextField.delegate = self
         titleStackView.addArrangedSubview(titleTextField)
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -282,7 +280,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightStackView.addArrangedSubview(recentWeightTextFieldStackView)
         
         // MARK: recentWeightTextField
-        recentWeightTextField.tag = TextFieldTag.recentWeightTextField.rawValue
+        recentWeightTextField.tag = ViewTag.recentWeightTextField.rawValue
         recentWeightTextField.delegate = self
         recentWeightTextField.textColor = .white
         recentWeightTextField.keyboardType = .numberPad
@@ -322,7 +320,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightStackView.addArrangedSubview(maxWeightTextFieldStackView)
         
         // MARK: maxWeightTextField
-        maxWeightTextField.tag = TextFieldTag.maxWeightTextField.rawValue
+        maxWeightTextField.tag = ViewTag.maxWeightTextField.rawValue
         maxWeightTextField.delegate = self
         maxWeightTextField.textColor = .white
         maxWeightTextField.keyboardType = .numberPad
@@ -382,29 +380,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         imageLabel.text = "운동 이미지"
         imageStackView.addArrangedSubview(imageLabel)
         
-        // MARK: imageEntryButton
-        imageEntryButton.setTitle("이미지 선택하기", for: .normal)
-        imageEntryButton.backgroundColor = .color2F2F2F
-        imageEntryButton.layer.cornerRadius = 12
-        imageEntryButton.layer.masksToBounds = true
-        imageEntryButton.addTarget(
-            self, action: #selector(selectTapImageButton),
-            for: .touchUpInside)
-        imageStackView.addArrangedSubview(imageEntryButton)
-        imageEntryButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageEntryButton.leadingAnchor.constraint(
-                equalTo: stackView.leadingAnchor,
-                constant: 10),
-            imageEntryButton.trailingAnchor.constraint(
-                equalTo: stackView.trailingAnchor,
-                constant: -10),
-            imageEntryButton.heightAnchor.constraint(
-                equalToConstant: 30)
-        ])
-        
         // MARK: imageViews
-        imageViews.forEach { imageView in
+        imageViews.enumerated().forEach { index, imageView in
             // imageContainerView
             let imageContainerView = UIView()
             imageStackView.addArrangedSubview(imageContainerView)
@@ -426,6 +403,13 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             imageView.layer.borderColor = UIColor.lightGray.cgColor
             imageView.layer.cornerRadius = 10
             imageView.clipsToBounds = true
+            imageView.addGestureRecognizer(
+                UITapGestureRecognizer(
+                    target: self, 
+                    action: #selector(didTapImageViewShowPHPicker(_:)))
+            )
+            imageView.isUserInteractionEnabled = true
+            imageView.tag = 2001 + index // 이미지뷰를 식별할 태그
             imageContainerView.addSubview(imageView)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -648,8 +632,10 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 self?.entryViewModel.entryExercise.description = $0.descriptionText
                 self?.descriptionTextView.text = $0.descriptionText
                 
-                let images = Array($0.images.map { $0.image ?? Data() })
-                self?.entryViewModel.entryExercise.images = images
+                $0.images.enumerated().forEach { index, dbImage in
+                    self?.entryViewModel.entryExercise
+                        .images[index] = dbImage.image ?? Data()
+                }
             }
             .store(in: &cancellables)
     }
@@ -669,9 +655,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         let characterSet = CharacterSet(charactersIn: updatedText)
         
         switch textField.tag {
-            case TextFieldTag.titleTextField.rawValue:
+            case ViewTag.titleTextField.rawValue:
                 return newLength <= 30
-            case TextFieldTag.recentWeightTextField.rawValue, TextFieldTag.maxWeightTextField.rawValue:
+            case ViewTag.recentWeightTextField.rawValue, ViewTag.maxWeightTextField.rawValue:
                 return newLength <= 3 &&
                 allowedCharacters.isSuperset(of: characterSet)
             default:
@@ -681,34 +667,32 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
 
     // MARK: - PHPickerViewControllerDelegate
     
-    // 이미지를 선택한 후 호출되는 메서드
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true, completion: nil)
-        let entryImagesCount = entryViewModel.entryExercise.images.count
+        guard let result = results.first 
+        else { return }
         
-        results.enumerated().forEach { index, result in
-            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
-                result.itemProvider.loadObject(ofClass: UIImage.self) {
-                    [weak self] (image, error) in
-                    guard let uiImage = image as? UIImage
-                    else { return }
-                    let resizedImage = uiImage.resized(toMaxDimension: 480)
-                    guard let resizedImage = resizedImage,
-                          let imageData = resizedImage
-                        .jpegData(compressionQuality: 0.8)
-                    else { return }
-                    
-                    DispatchQueue.main.async {
-                        if entryImagesCount == 0 {
-                            self?.entryViewModel.entryExercise.images.append(imageData)
-                        } else if entryImagesCount == 1 {
-                            self?.entryViewModel.entryExercise.images[index] = imageData
-                            print("")
-                        } else if entryImagesCount == 2 {
-                            self?.entryViewModel.entryExercise.images[index] = imageData
-                            print("")
-                        }
-                    }
+        // UIImage로 변환
+        result.itemProvider.loadObject(ofClass: UIImage.self) { 
+            [weak self] image, error in
+            DispatchQueue.main.async {
+                guard let uiImage = image as? UIImage,
+                      let entryExercise = self?.entryViewModel.entryExercise
+                else { return }
+                
+                let resizedImage = uiImage.resized(toMaxDimension: 360)
+                guard let resizedImage = resizedImage,
+                      let imageData = resizedImage
+                    .jpegData(compressionQuality: 0.8)
+                else { return }
+                
+                // 선택된 이미지에 따라 imageView 업데이트
+                switch picker.view.tag {
+                    case ViewTag.imageView1.rawValue:
+                        entryExercise.images[0] = imageData
+                    case ViewTag.imageView2.rawValue:
+                        entryExercise.images[1] = imageData
+                    default: break
                 }
             }
         }
@@ -744,6 +728,17 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         configuration.filter = .images
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
+        present(picker, animated: true, completion: nil)
+    }
+    
+    @objc private func didTapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
+        guard let tappedImageView = sender.view as? UIImageView else { return }
+        
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        picker.view.tag = tappedImageView.tag
         present(picker, animated: true, completion: nil)
     }
     
@@ -823,10 +818,12 @@ private class PaddedTextField: UITextField {
 }
 
 
-private enum TextFieldTag: Int {
+private enum ViewTag: Int {
     case titleTextField = 1001
     case recentWeightTextField = 1002
     case maxWeightTextField = 1003
+    case imageView1 = 2001
+    case imageView2 = 2002
 }
 
 
