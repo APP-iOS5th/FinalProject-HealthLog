@@ -153,11 +153,11 @@ class WeightRecordViewController: UIViewController {
             .sink { inbodyRecords in
                 if let record = inbodyRecords.first {
                     self.weightBox.updateValue(
-                        String(format: "%.0f", record.weight))
+                        String(format: "%.1f", record.weight))
                     self.musclesBox.updateValue(
-                        String(format: "%.0f", record.muscleMass))
+                        String(format: "%.1f", record.muscleMass))
                     self.fatBox.updateValue(
-                        String(format: "%.0f", record.bodyFat))
+                        String(format: "%.1f", record.bodyFat))
                 }
             }
             .store(in: &cancellables)
