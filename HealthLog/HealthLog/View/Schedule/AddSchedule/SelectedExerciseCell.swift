@@ -103,7 +103,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         stepper.backgroundColor = .colorAccent
         stepper.translatesAutoresizingMaskIntoConstraints = false
         
-        // Stepper의 + 와 - 버튼의 색상 변경
         let config = UIImage.SymbolConfiguration(scale: .medium)
         let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
         let minusImage = UIImage(systemName: "minus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
@@ -126,7 +125,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         ])
     }
     
-    // 스테퍼 값 변경 시 setCount 뷰모델에 전달
     @objc func stepperValueChanged(sender: UIStepper) {
         let value = Int(sender.value)
         setCountDidChange?(value)
@@ -147,6 +145,16 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         if allowedCharacters.isSuperset(of: characterSet) == false {
             return false
         }
+        
+        if newText.hasPrefix("0") {
+            if currentText.isEmpty && string == "0" {
+                return true
+            } else if currentText == "0" && string == "0" {
+                return false
+            } else if newText == "00" {
+                return false
+            }
+        }
         return true
     }
     
@@ -162,7 +170,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         let setIndex = stackView.weightTextFields.firstIndex(of: textField) ?? stackView.repsTextFields.firstIndex(of: textField) ?? 0
-        let weight = Int(stackView.weightTextFields[setIndex].text ?? "") ?? 0
+        let weight = Int(stackView.weightTextFields[setIndex].text ?? "") ?? -1
         let reps = Int(stackView.repsTextFields[setIndex].text ?? "") ?? 0
         
         updateSet?(setIndex, weight, reps)
@@ -235,7 +243,7 @@ class SetInputRowView: UIView {
         setLabel.textColor = .white
         
         // MARK: weightTextField
-        weightTextField.text = set.weight == 0 ? "" : String(set.weight)
+        weightTextField.text = set.weight == -1 ? "" : String(set.weight)
         weightTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightTextField.textColor = .white
         weightTextField.textAlignment = .center
@@ -256,7 +264,7 @@ class SetInputRowView: UIView {
         weightLabel.textColor = .white
         
         // MARK: repsTextField
-        repsTextField.text = set.reps == 0 ? "" : String(set.reps)
+        repsTextField.text = set.reps == -1 ? "" : String(set.reps)
         repsTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsTextField.textColor = .white
         repsTextField.textAlignment = .center
