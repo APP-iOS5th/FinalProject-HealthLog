@@ -74,10 +74,6 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         let rightBarButton = UIBarButtonItem(customView: addButton)
         navigationItem.rightBarButtonItem = rightBarButton
         
-        // MARK: tempStepperButton
-        let tempStepperButton = UIBarButtonItem(title: "Stepper", style: .plain, target: self, action: #selector(tempStepperButtonTapped))
-        self.navigationItem.leftBarButtonItem = tempStepperButton
-        
         // MARK: handleTapOutsideSearchArea
         // 검색바 및 운동부위 옵션 영역의 바깥을 터치시, 운동부위옵션 및 키보드 접기
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchArea))
@@ -128,7 +124,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     }
     
     func setupDivider() {
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color525252
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dividerView)
         
@@ -137,10 +133,10 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
                 equalTo: searchOptionStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
-                constant: 13),
+                constant: 17),
             dividerView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
-                constant: -13),
+                constant: -17),
             dividerView.heightAnchor.constraint(
                 equalToConstant: 1)
         ])
@@ -157,7 +153,8 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor,
+                                          constant: 13),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)

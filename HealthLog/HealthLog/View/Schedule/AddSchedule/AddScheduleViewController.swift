@@ -110,7 +110,6 @@ class AddScheduleViewController: UIViewController {
             searchResultsController.viewModel = exerciseViewModel
             searchController.searchBar.delegate = searchResultsController
         }
-        //searchController.searchBar.delegate = self
         searchController.delegate = self
         searchController.searchBar.showsBookmarkButton = false
         searchController.obscuresBackgroundDuringPresentation = false

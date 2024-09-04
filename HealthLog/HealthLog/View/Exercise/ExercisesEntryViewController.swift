@@ -50,8 +50,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
     private let imageViews = [UIImageView(), UIImageView()]
-    private let imageEntryButton = UIButton(type: .system)
-    
     
     private let deleteButton: UIButton?
     
@@ -78,11 +76,17 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         view.backgroundColor = .color1E1E1E
         
         setupNavigationBar()
+        setupPaddingView(stackView: stackView, height: 5)
         setupTitleStackView()
+        setupCreateDivider(stackView: stackView, height: 1)
         setupBodypartStackView()
+        setupCreateDivider(stackView: stackView, height: 1)
         setupRecentWeightStackView()
+        setupCreateDivider(stackView: stackView, height: 1)
         setupMaxWeightStackView()
+        setupCreateDivider(stackView: stackView, height: 1)
         setupDescriptionStackView()
+        setupCreateDivider(stackView: stackView, height: 1)
         setupImageStackView()
         setupDeleteButton()
         
@@ -120,8 +124,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.isDirectionalLockEnabled = true
-//        scrollView.contentInset = UIEdgeInsets(
-//            top: 10, left: 10, bottom: 10, right: 10)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(
@@ -139,7 +141,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         // MARK: stackView
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
-        stackView.spacing = 10
+        stackView.spacing = 15
         stackView.alignment = .leading
         scrollView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -157,12 +159,26 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         ])
     }
     
+    func setupPaddingView(stackView: UIStackView, height: CGFloat) {
+        let paddingView = UIView()
+        paddingView.backgroundColor = .clear
+        stackView.addArrangedSubview(paddingView)
+        paddingView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            paddingView.widthAnchor.constraint(
+                equalTo: stackView.widthAnchor),
+            paddingView.heightAnchor.constraint(
+                equalToConstant: height)
+        ])
+    }
+    
     func setupTitleStackView() {
         // MARK: titleStackView
         titleStackView.axis = .vertical
         titleStackView.distribution = .equalSpacing
-        titleStackView.spacing = 13
+        titleStackView.spacing = 10
         titleStackView.alignment = .leading
+        titleStackView.isLayoutMarginsRelativeArrangement = true
         stackView.addArrangedSubview(titleStackView)
         
         // MARK: titleLabel
@@ -176,16 +192,16 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
-        titleTextField.tag = 1001
+        titleTextField.tag = ViewTag.titleTextField.rawValue
         titleTextField.delegate = self
         titleStackView.addArrangedSubview(titleTextField)
         titleTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             titleTextField.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                equalTo: stackView.leadingAnchor,
                 constant: 10),
             titleTextField.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                equalTo: stackView.trailingAnchor,
                 constant: -10),
         ])
 
@@ -202,21 +218,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         titleEmptyWarningLabel.textColor = .red
         titleEmptyWarningLabel.isHidden = true
         titleStackView.addArrangedSubview(titleEmptyWarningLabel)
-        
-        let dividerView = UIView()
-        dividerView.backgroundColor = .color2F2F2F
-        titleStackView.addArrangedSubview(dividerView)
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            dividerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 10),
-            dividerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -10),
-            dividerView.heightAnchor.constraint(
-                equalToConstant: 1),
-        ])
     }
     
     func setupBodypartStackView() {
@@ -226,6 +227,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         bodypartStackView.spacing = 10
         bodypartStackView.alignment = .leading
         bodypartStackView.backgroundColor = .color1E1E1E
+        bodypartStackView.isLayoutMarginsRelativeArrangement = true
+        bodypartStackView.layoutMargins = UIEdgeInsets(
+            top: 10, left: 0, bottom: 10, right: 0)
         stackView.addArrangedSubview(bodypartStackView)
         
         // MARK: bodypartLabel
@@ -246,21 +250,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         bodypartEmptyWarningLabel.textColor = .red
         bodypartEmptyWarningLabel.isHidden = true
         bodypartStackView.addArrangedSubview(bodypartEmptyWarningLabel)
-        
-        let dividerView = UIView()
-        dividerView.backgroundColor = .color2F2F2F
-        bodypartStackView.addArrangedSubview(dividerView)
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            dividerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 10),
-            dividerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -10),
-            dividerView.heightAnchor.constraint(
-                equalToConstant: 1),
-        ])
     }
     
     func setupRecentWeightStackView() {
@@ -277,10 +266,10 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightStackView.addArrangedSubview(recentWeightLabel)
         NSLayoutConstraint.activate([
             recentWeightLabel.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                equalTo: stackView.leadingAnchor,
                 constant: 10),
             recentWeightLabel.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                equalTo: stackView.trailingAnchor,
                 constant: -10),
         ])
         
@@ -291,7 +280,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightStackView.addArrangedSubview(recentWeightTextFieldStackView)
         
         // MARK: recentWeightTextField
-        recentWeightTextField.tag = 1002
+        recentWeightTextField.tag = ViewTag.recentWeightTextField.rawValue
         recentWeightTextField.delegate = self
         recentWeightTextField.textColor = .white
         recentWeightTextField.keyboardType = .numberPad
@@ -301,21 +290,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightKGLabel.text = "KG"
         recentWeightKGLabel.textColor = .white
         recentWeightTextFieldStackView.addArrangedSubview(recentWeightKGLabel)
-        
-        let dividerView = UIView()
-        dividerView.backgroundColor = .color2F2F2F
-        recentWeightStackView.addArrangedSubview(dividerView)
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            dividerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 10),
-            dividerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -10),
-            dividerView.heightAnchor.constraint(
-                equalToConstant: 1),
-        ])
     }
     
     func setupMaxWeightStackView() {
@@ -332,10 +306,10 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightStackView.addArrangedSubview(maxWeightLabel)
         NSLayoutConstraint.activate([
             maxWeightLabel.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                equalTo: stackView.leadingAnchor,
                 constant: 10),
             maxWeightLabel.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                equalTo: stackView.trailingAnchor,
                 constant: -10),
         ])
         
@@ -346,7 +320,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightStackView.addArrangedSubview(maxWeightTextFieldStackView)
         
         // MARK: maxWeightTextField
-        maxWeightTextField.tag = 1003
+        maxWeightTextField.tag = ViewTag.maxWeightTextField.rawValue
         maxWeightTextField.delegate = self
         maxWeightTextField.textColor = .white
         maxWeightTextField.keyboardType = .numberPad
@@ -356,21 +330,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightKGLabel.text = "KG"
         maxWeightKGLabel.textColor = .white
         maxWeightTextFieldStackView.addArrangedSubview(maxWeightKGLabel)
-        
-        let dividerView = UIView()
-        dividerView.backgroundColor = .color2F2F2F
-        maxWeightStackView.addArrangedSubview(dividerView)
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            dividerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 10),
-            dividerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -10),
-            dividerView.heightAnchor.constraint(
-                equalToConstant: 1),
-        ])
     }
     
     func setupDescriptionStackView() {
@@ -399,26 +358,11 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             descriptionTextView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                equalTo: stackView.leadingAnchor,
                 constant: 10),
             descriptionTextView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                equalTo: stackView.trailingAnchor,
                 constant: -10),
-        ])
-        
-        let dividerView = UIView()
-        dividerView.backgroundColor = .color2F2F2F
-        descriptionStackView.addArrangedSubview(dividerView)
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            dividerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 10),
-            dividerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -10),
-            dividerView.heightAnchor.constraint(
-                equalToConstant: 1),
         ])
     }
     
@@ -437,37 +381,84 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         imageStackView.addArrangedSubview(imageLabel)
         
         // MARK: imageViews
-        imageViews.forEach { imageView in
+        imageViews.enumerated().forEach { index, imageView in
+            // imageContainerView
+            let imageContainerView = UIView()
+            imageStackView.addArrangedSubview(imageContainerView)
+            imageContainerView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageContainerView.leadingAnchor.constraint(
+                    equalTo: stackView.leadingAnchor,
+                    constant: 10),
+                imageContainerView.trailingAnchor.constraint(
+                    equalTo: stackView.trailingAnchor,
+                    constant: -10),
+                imageContainerView.heightAnchor.constraint(
+                    equalToConstant: 200)
+            ])
+            
+            // ImageView
             imageView.contentMode = .scaleAspectFit
             imageView.layer.borderWidth = 1
             imageView.layer.borderColor = UIColor.lightGray.cgColor
-            imageView.layer.cornerRadius = 50
+            imageView.layer.cornerRadius = 10
             imageView.clipsToBounds = true
-            imageStackView.addArrangedSubview(imageView)
+            imageView.addGestureRecognizer(
+                UITapGestureRecognizer(
+                    target: self, 
+                    action: #selector(didTapImageViewShowPHPicker(_:)))
+            )
+            imageView.isUserInteractionEnabled = true
+            imageView.tag = 2001 + index // 이미지뷰를 식별할 태그
+            imageContainerView.addSubview(imageView)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                imageView.widthAnchor.constraint(
-                    equalTo: stackView.widthAnchor),
-                imageView.heightAnchor.constraint(
-                    equalToConstant: 380)
+                imageView.leadingAnchor.constraint(
+                    equalTo: imageContainerView.leadingAnchor),
+                imageView.trailingAnchor.constraint(
+                    equalTo: imageContainerView.trailingAnchor),
+                imageView.topAnchor.constraint(
+                    equalTo: imageContainerView.topAnchor),
+                imageView.bottomAnchor.constraint(
+                    equalTo: imageContainerView.bottomAnchor),
             ])
-        }
-        
-        // MARK: imageEntryButton
-        imageEntryButton.setTitle("이미지 선택", for: .normal)
-        imageEntryButton.backgroundColor = .color2F2F2F
-        imageEntryButton.addTarget(
-            self, action: #selector(selectTapImageButton), 
-            for: .touchUpInside)
-        imageStackView.addArrangedSubview(imageEntryButton)
-        imageEntryButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            imageEntryButton.widthAnchor.constraint(
-                equalTo: stackView.widthAnchor),
-            imageEntryButton.heightAnchor.constraint(
-                equalToConstant: 30)
-        ])
-        
+            
+            // ImageView Label
+            let imageOpenLabel = UILabel()
+            imageOpenLabel.text = "Open Gallery"
+            imageOpenLabel.textColor = .white
+            imageContainerView.addSubview(imageOpenLabel)
+            imageOpenLabel.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageOpenLabel.centerXAnchor.constraint(
+                    equalTo: imageView.centerXAnchor),
+                imageOpenLabel.centerYAnchor.constraint(
+                    equalTo: imageView.centerYAnchor,
+                    constant: -30),
+            ])
+            
+            // ImageView Icon
+            let symbolImageView = UIImageView(
+                image: UIImage(systemName: "photo.badge.plus"))
+            symbolImageView.tintColor = .white
+            symbolImageView.contentMode = .scaleAspectFit
+            imageContainerView.addSubview(symbolImageView)
+            symbolImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                symbolImageView.centerXAnchor.constraint(
+                    equalTo: imageView.centerXAnchor),
+                symbolImageView.centerYAnchor.constraint(
+                    equalTo: imageView.centerYAnchor,
+                    constant: 10),
+                symbolImageView.widthAnchor.constraint(
+                    equalToConstant: 50),
+                symbolImageView.heightAnchor.constraint(
+                    equalToConstant: 50),
+            ])
+            
+            imageContainerView.sendSubviewToBack(imageOpenLabel)
+            imageContainerView.sendSubviewToBack(symbolImageView)
+        } // end forEach
     }
     
     func setupDeleteButton() {
@@ -475,18 +466,41 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         guard let deleteButton = deleteButton else { return }
         
         deleteButton.backgroundColor = .color2F2F2F
-        deleteButton.tintColor = .red
-        deleteButton.setTitle("삭제하기", for: .normal)
+        deleteButton.setTitle("운동 삭제하기", for: .normal)
+        deleteButton.setTitleColor(.red, for: .normal)
+        deleteButton.layer.cornerRadius = 12
+        deleteButton.layer.masksToBounds = true
         deleteButton.addTarget(
             self, action: #selector(deleteButtonTapped),
             for: .touchUpInside)
         stackView.addArrangedSubview(deleteButton)
         deleteButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            deleteButton.widthAnchor.constraint(
-                equalTo: stackView.widthAnchor),
+            deleteButton.leadingAnchor.constraint(
+                equalTo: stackView.leadingAnchor,
+                constant: 10),
+            deleteButton.trailingAnchor.constraint(
+                equalTo: stackView.trailingAnchor,
+                constant: -10),
             deleteButton.heightAnchor.constraint(
                 equalToConstant: 50),
+        ])
+    }
+    
+    private func setupCreateDivider(stackView: UIStackView, height: CGFloat) {
+        let dividerView = UIView()
+        dividerView.backgroundColor = .color2F2F2F
+        stackView.addArrangedSubview(dividerView)
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerView.leadingAnchor.constraint(
+                equalTo: stackView.leadingAnchor,
+                constant: 9),
+            dividerView.trailingAnchor.constraint(
+                equalTo: stackView.trailingAnchor,
+                constant: -9),
+            dividerView.heightAnchor.constraint(
+                equalToConstant: 1),
         ])
     }
     
@@ -618,12 +632,10 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 self?.entryViewModel.entryExercise.description = $0.descriptionText
                 self?.descriptionTextView.text = $0.descriptionText
                 
-                let images = Array($0.images.map { $0.image ?? Data() })
-                self?.entryViewModel.entryExercise.images = images
-//                images.enumerated().forEach { index, image in
-//                    let uiImage = UIImage(data: image ?? Data())
-//                    self?.imageViews[index].image = uiImage
-//                }
+                $0.images.enumerated().forEach { index, dbImage in
+                    self?.entryViewModel.entryExercise
+                        .images[index] = dbImage.image ?? Data()
+                }
             }
             .store(in: &cancellables)
     }
@@ -643,10 +655,11 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         let characterSet = CharacterSet(charactersIn: updatedText)
         
         switch textField.tag {
-            case 1001:
+            case ViewTag.titleTextField.rawValue:
                 return newLength <= 30
-            case 1002, 1003:
-                return newLength <= 3 && allowedCharacters.isSuperset(of: characterSet)
+            case ViewTag.recentWeightTextField.rawValue, ViewTag.maxWeightTextField.rawValue:
+                return newLength <= 3 &&
+                allowedCharacters.isSuperset(of: characterSet)
             default:
                 return true
         }
@@ -654,30 +667,32 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
 
     // MARK: - PHPickerViewControllerDelegate
     
-    // 이미지를 선택한 후 호출되는 메서드
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true, completion: nil)
-        let entryImagesCount = entryViewModel.entryExercise.images.count
+        guard let result = results.first 
+        else { return }
         
-        results.enumerated().forEach { index, result in
-            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
-                result.itemProvider.loadObject(ofClass: UIImage.self) {
-                    [weak self] (image, error) in
-                    guard let uiImage = image as? UIImage
-                    else { return }
-                    let resizedImage = uiImage.resized(toMaxDimension: 480)
-                    guard let resizedImage = resizedImage,
-                          let imageData = resizedImage
-                        .jpegData(compressionQuality: 0.8)
-                    else { return }
-                    
-                    DispatchQueue.main.async {
-                        if entryImagesCount == 0 {
-                            self?.entryViewModel.entryExercise.images.append(imageData)
-                        } else {
-                            self?.entryViewModel.entryExercise.images[index] = imageData
-                        }
-                    }
+        // UIImage로 변환
+        result.itemProvider.loadObject(ofClass: UIImage.self) { 
+            [weak self] image, error in
+            DispatchQueue.main.async {
+                guard let uiImage = image as? UIImage,
+                      let entryExercise = self?.entryViewModel.entryExercise
+                else { return }
+                
+                let resizedImage = uiImage.resized(toMaxDimension: 360)
+                guard let resizedImage = resizedImage,
+                      let imageData = resizedImage
+                    .jpegData(compressionQuality: 0.8)
+                else { return }
+                
+                // 선택된 이미지에 따라 imageView 업데이트
+                switch picker.view.tag {
+                    case ViewTag.imageView1.rawValue:
+                        entryExercise.images[0] = imageData
+                    case ViewTag.imageView2.rawValue:
+                        entryExercise.images[1] = imageData
+                    default: break
                 }
             }
         }
@@ -713,6 +728,17 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         configuration.filter = .images
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
+        present(picker, animated: true, completion: nil)
+    }
+    
+    @objc private func didTapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
+        guard let tappedImageView = sender.view as? UIImageView else { return }
+        
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        picker.view.tag = tappedImageView.tag
         present(picker, animated: true, completion: nil)
     }
     
@@ -791,6 +817,14 @@ private class PaddedTextField: UITextField {
     }
 }
 
+
+private enum ViewTag: Int {
+    case titleTextField = 1001
+    case recentWeightTextField = 1002
+    case maxWeightTextField = 1003
+    case imageView1 = 2001
+    case imageView2 = 2002
+}
 
 
 

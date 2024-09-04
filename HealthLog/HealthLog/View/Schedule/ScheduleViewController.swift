@@ -29,7 +29,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     private var tableViewHeightConstraint: NSLayoutConstraint?
     
     // to execute customizeCalendarTextColor one time from decorationFor
-    private var isTextColorCustimzed = false
+    //private var isTextColorCustimzed = false
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -143,7 +143,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         setupUI()
         loadSelectedDateSchedule(today)
-        customizeCalendarTextColor()
+        //customizeCalendarTextColor()
     }
     
     private func setupUI() {
@@ -222,7 +222,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
-        customizeCalendarTextColor()
+        //customizeCalendarTextColor()
     }
     
     private func updateTableViewHeight() {
@@ -389,9 +389,9 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         // check if it's last day
-        if let date = dateComponents.date, isLastDayOfMonth(date: date) {
-            customizeCalendarTextColor()
-        }
+//        if let date = dateComponents.date, isLastDayOfMonth(date: date) {
+//            customizeCalendarTextColor()
+//        }
         
         guard let date = dateComponents.date else { return nil }
         
@@ -410,32 +410,32 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         return nil
     }
     
-    private func isLastDayOfMonth(date: Date) -> Bool {
-        // Set Korean timezone
-        var koreanCalendar = Calendar(identifier: .gregorian)
-        koreanCalendar.locale = Locale(identifier: "ko_KR")
-        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+//    private func isLastDayOfMonth(date: Date) -> Bool {
+//        // Set Korean timezone
+//        var koreanCalendar = Calendar(identifier: .gregorian)
+//        koreanCalendar.locale = Locale(identifier: "ko_KR")
+//        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
+//
+//        // Convert date to Korean timezone
+//        let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
+//        
+//        // Get the next day
+//        let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
+//        
+//        let currentMonth = koreanCalendar.component(.month, from: koreanDate)
+//        let nextDayMonth = koreanCalendar.component(.month, from: nextDay)
+//        // Check if the current day is the last day of the month
+//        let isLastDay = (currentMonth != nextDayMonth)
+//        
+////        print("Date: \(koreanDate), Next Day: \(nextDay), Current Month: \(currentMonth), Next day Month: \(nextDayMonth), Is last day: \(isLastDay)")
+//        return isLastDay
+//    }
 
-        // Convert date to Korean timezone
-        let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
-        
-        // Get the next day
-        let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
-        
-        let currentMonth = koreanCalendar.component(.month, from: koreanDate)
-        let nextDayMonth = koreanCalendar.component(.month, from: nextDay)
-        // Check if the current day is the last day of the month
-        let isLastDay = (currentMonth != nextDayMonth)
-        
-//        print("Date: \(koreanDate), Next Day: \(nextDay), Current Month: \(currentMonth), Next day Month: \(nextDayMonth), Is last day: \(isLastDay)")
-        return isLastDay
-    }
-
-    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
-        let timeZone = TimeZone(identifier: "Asia/Seoul")!
-        let seconds = timeZone.secondsFromGMT(for: date)
-        return Date(timeInterval: TimeInterval(seconds), since: date)
-    }
+//    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
+//        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+//        let seconds = timeZone.secondsFromGMT(for: date)
+//        return Date(timeInterval: TimeInterval(seconds), since: date)
+//    }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
         let label = UILabel()
@@ -461,7 +461,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     
     private func getScheduleForDate(_ date: Date) -> Schedule? {
         guard let realm = realm else { return nil }
-        return realm.objects(Schedule.self).filter("date == %@", date).first
+        return realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first
     }
     
     private func isScheduleCompleted(_ schedule: Schedule) -> Bool {
@@ -472,86 +472,86 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         guard let dateComponents = dateComponents, 
               let date = dateComponents.date else { return }
         selectedDate = date
-        loadSelectedDateSchedule(date)
+        loadSelectedDateSchedule(date.toKoreanTime())
         updateTableView()
-        customizeCalendarTextColor()
+        //customizeCalendarTextColor()
     }
     
     // MARK: - Customize Calendar Text Color
-    private func customizeCalendarTextColor() {
-        self.changeHeaderTextColor(self.calendarView)
-        self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
-    }
-    
-    private func changeHeaderTextColor(_ view: UIView) {
-        for subview in view.subviews {
-            if let label = subview as? UILabel {
-                label.textColor = .white
-            } else {
-                changeHeaderTextColor(subview)
-            }
-        }
-    }
-    
-    private func changeSubviewTextColor(_ view: UIView, today: Date, selectedDate: Date?) {
-        let calendar = Calendar.current
-        let currentDateComponents = calendar.dateComponents([.day, .month, .year], from: today)
-
-        for subview in view.subviews {
-            if let label = subview as? UILabel,
-               let labelDate = dateFromLabelText(label.text, calendar: calendar),
-               let labelDateActual = calendar.date(from: labelDate) {
-                
-                // set base color
-                label.textColor = .white
-                label.highlightedTextColor = .white
-                
-                // today
-                if calendar.isDateInToday(labelDateActual) {
-                    if today == selectedDate {
-                        label.textColor = .white
-                    } else {
-                        label.textColor = .colorAccent
-                    }
-                }
-                // selected date
-                else if let selectedDate = selectedDate,
-                        calendar.isDate(labelDateActual, inSameDayAs: selectedDate) {
-                    label.textColor = .white
-                }
-                // this month
-                else if labelDate.month == currentDateComponents.month && labelDate.year == currentDateComponents.year {
-                    label.textColor = .white
-                }
-                // different month
-                else {
-                    label.textColor = .color767676
-                }
-            } else {
-                changeSubviewTextColor(subview, today: today, selectedDate: selectedDate)
-            }
-        }
-    }
+//    private func customizeCalendarTextColor() {
+//        self.changeHeaderTextColor(self.calendarView)
+//        self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
+//    }
+//    
+//    private func changeHeaderTextColor(_ view: UIView) {
+//        for subview in view.subviews {
+//            if let label = subview as? UILabel {
+//                label.textColor = .white
+//            } else {
+//                changeHeaderTextColor(subview)
+//            }
+//        }
+//    }
+//    
+//    private func changeSubviewTextColor(_ view: UIView, today: Date, selectedDate: Date?) {
+//        let calendar = Calendar.current
+//        let currentDateComponents = calendar.dateComponents([.day, .month, .year], from: today)
+//
+//        for subview in view.subviews {
+//            if let label = subview as? UILabel,
+//               let labelDate = dateFromLabelText(label.text, calendar: calendar),
+//               let labelDateActual = calendar.date(from: labelDate) {
+//                
+//                // set base color
+//                label.textColor = .white
+//                label.highlightedTextColor = .white
+//                
+//                // today
+//                if calendar.isDateInToday(labelDateActual) {
+//                    if today == selectedDate {
+//                        label.textColor = .white
+//                    } else {
+//                        label.textColor = .colorAccent
+//                    }
+//                }
+//                // selected date
+//                else if let selectedDate = selectedDate,
+//                        calendar.isDate(labelDateActual, inSameDayAs: selectedDate) {
+//                    label.textColor = .white
+//                }
+//                // this month
+//                else if labelDate.month == currentDateComponents.month && labelDate.year == currentDateComponents.year {
+//                    label.textColor = .white
+//                }
+//                // different month
+//                else {
+//                    label.textColor = .color767676
+//                }
+//            } else {
+//                changeSubviewTextColor(subview, today: today, selectedDate: selectedDate)
+//            }
+//        }
+//    }
 
     // get date from text of UILabel
-    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
-        guard let text = text,
-              let day = Int(text) else { return nil }
-        
-        // get current month and year from calendar
-        let displayedMonthDate = calendarView.visibleDateComponents
-        guard let month = displayedMonthDate.month,
-              let year = displayedMonthDate.year else { return nil }
-        
-        return DateComponents(year: year, month: month, day: day)
-    }
+//    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
+//        guard let text = text,
+//              let day = Int(text) else { return nil }
+//        
+//        // get current month and year from calendar
+//        let displayedMonthDate = calendarView.visibleDateComponents
+//        guard let month = displayedMonthDate.month,
+//              let year = displayedMonthDate.year else { return nil }
+//        
+//        return DateComponents(year: year, month: month, day: day)
+//    }
 }
 
 extension ScheduleViewController {
     private func highlightBodyPartsAtSelectedDate(_ date: Date) {
         guard let realm = realm else {return}
         
-        guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date).first else { return }
+        guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first else { return }
         
         var completedSetsCount = 0
         var bodyPartsWithCompletedSets: [String: Int] = [:]

@@ -60,7 +60,7 @@ class RealmManager {
                     // 현재 시간을 한국 시간으로 변환
                     let koreanDate = Date().toKoreanTime()
                     // 날짜 범위 설정(같은 날짜의 데이터를 찾기 위함)
-                    let startOfDay = Calendar.current.startOfDay(for: koreanDate)
+                    let startOfDay = Calendar.current.startOfDay(for: Date()).toKoreanTime()
                     let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
                     // 현재 날짜만 선택하여 기존 데이터를 조회
                     let existingInbody = realm.objects(InBody.self).filter("date >= %@ AND date < %@", startOfDay, endOfDay)

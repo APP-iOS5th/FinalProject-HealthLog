@@ -9,22 +9,22 @@ import UIKit
 
 class ExerciseListCell: UITableViewCell {
     
-    // MARK: - UI Elements
+    // MARK: - Properties
     
+    let containerView = UIView()
     let stackView = UIStackView()
     
     // 상단 영역
     let topStackView = UIStackView()
     let titleLabel = UILabel()
-    let detailLabel = UILabel()
+    private let detailLabel = UILabel()
     
     // 구분선
     let dividerView = UIView()
     
     // 하단 영역
-    let bottomStackView = UIStackView()
+    let bottomContainerView = UIView()
     var exerciseImageView = UIImageView()
-    let bottomRightStackView = UIStackView()
     let bodypartScrollView = UIScrollView()
     let bodypartStackView = UIStackView()
     var bodypartLabels: [CustomBodyPartLabel] = []
@@ -37,7 +37,7 @@ class ExerciseListCell: UITableViewCell {
         setupCell()
         setupTopStackView()
         setupDivider()
-        setupBottomStackView()
+        setupBottomContainerView()
     }
     
     required init?(coder: NSCoder) {
@@ -46,43 +46,61 @@ class ExerciseListCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(
-            top: 13, left: 17, bottom: 0, right: 17))
     }
     
     // MARK: - Setup UI
     
     private func setupCell() {
         backgroundColor = .color1E1E1E
-        contentView.backgroundColor = .colorSecondary
-        contentView.layer.cornerRadius = 12
-        contentView.layer.masksToBounds = true
+        contentView.backgroundColor = .color1E1E1E
+
         
+        // MARK: containerView
+        containerView.backgroundColor = .colorSecondary
+        containerView.layer.cornerRadius = 12
+        containerView.layer.masksToBounds = true
+        contentView.addSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(
+                equalTo: contentView.topAnchor),
+            containerView.bottomAnchor.constraint(
+                equalTo: contentView.bottomAnchor,
+                constant: -20),
+            containerView.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor,
+                constant: 17),
+            containerView.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor,
+                constant: -17),
+        ])
+        
+        // MARK: stackView
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 10
+        stackView.distribution = .fill
+        stackView.spacing = 13
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = UIEdgeInsets(
             top: 16, left: 16, bottom: 16, right: 16)
+        containerView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(
-                equalTo: contentView.topAnchor),
+                equalTo: containerView.topAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor),
+                equalTo: containerView.bottomAnchor),
             stackView.leadingAnchor.constraint(
-                equalTo: contentView.leadingAnchor),
+                equalTo: containerView.leadingAnchor),
             stackView.trailingAnchor.constraint(
-                equalTo: contentView.trailingAnchor),
+                equalTo: containerView.trailingAnchor),
         ])
     }
     
     private func setupTopStackView() {
         // MARK: topStackView
         topStackView.axis = .horizontal
-        topStackView.distribution = .equalSpacing
+        topStackView.distribution = .equalCentering
+        topStackView.alignment = .center
         topStackView.spacing = 4
         stackView.addArrangedSubview(topStackView)
 
@@ -102,54 +120,68 @@ class ExerciseListCell: UITableViewCell {
     
     func setupDivider() {
         // MARK: dividerView
-        dividerView.backgroundColor = .color1E1E1E
+        dividerView.backgroundColor = .color252525
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(dividerView)
         NSLayoutConstraint.activate([
             dividerView.heightAnchor.constraint(
-                equalToConstant: 1)
+                equalToConstant: 3)
         ])
     }
     
-    private func setupBottomStackView() {
-        // MARK: bottomStackView
-        bottomStackView.axis = .horizontal
-        bottomStackView.distribution = .fill
-        bottomStackView.spacing = 10
-        stackView.addArrangedSubview(bottomStackView)
+    private func setupBottomContainerView() {
+        // MARK: bottomContainerView
+        stackView.addArrangedSubview(bottomContainerView)
+        bottomContainerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            bottomContainerView.heightAnchor.constraint(
+                equalToConstant: 90),
+        ])
         
         // MARK: exerciseImageView
-        exerciseImageView.contentMode = .scaleAspectFit
+        
         exerciseImageView.clipsToBounds = true
         exerciseImageView.backgroundColor = .color3E3E3E
-        exerciseImageView.layer.borderColor = UIColor.black.cgColor
-        exerciseImageView.layer.borderWidth = 1.0
+        exerciseImageView.layer.cornerRadius = 12
+        exerciseImageView.layer.masksToBounds = true
+        exerciseImageView.tintColor = .color525252
         exerciseImageView.translatesAutoresizingMaskIntoConstraints = false
-        bottomStackView.addArrangedSubview(exerciseImageView)
+        bottomContainerView.addSubview(exerciseImageView)
         NSLayoutConstraint.activate([
+            exerciseImageView.leadingAnchor.constraint(
+                equalTo: bottomContainerView.leadingAnchor),
+            exerciseImageView.topAnchor.constraint(
+                equalTo: bottomContainerView.topAnchor),
             exerciseImageView.widthAnchor.constraint(
                 equalToConstant: 90),
             exerciseImageView.heightAnchor.constraint(
-                equalToConstant: 120),
+                equalToConstant: 90),
         ])
-        
-        // MARK: bottomRightStackView
-        bottomRightStackView.axis = .vertical
-        bottomRightStackView.distribution = .fill
-        bottomRightStackView.spacing = 1
-        bottomStackView.addArrangedSubview(bottomRightStackView)
         
         // MARK: bodypartScrollView
         bodypartScrollView.showsHorizontalScrollIndicator = false
         bodypartScrollView.showsVerticalScrollIndicator = false
-        bottomRightStackView.addArrangedSubview(bodypartScrollView)
+        bottomContainerView.addSubview(bodypartScrollView)
+        bodypartScrollView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            bodypartScrollView.leadingAnchor.constraint(
+                equalTo: exerciseImageView.trailingAnchor,
+                constant: 10),
+            bodypartScrollView.topAnchor.constraint(
+                equalTo: bottomContainerView.topAnchor),
+            bodypartScrollView.trailingAnchor.constraint(
+                equalTo: bottomContainerView.trailingAnchor),
+            bodypartScrollView.heightAnchor.constraint(
+                equalToConstant: 40)
+        ])
         
         // MARK: bodypartStackView
         bodypartStackView.axis = .horizontal
         bodypartStackView.distribution = .equalSpacing
-        bodypartStackView.spacing = 8
-        bodypartStackView.translatesAutoresizingMaskIntoConstraints = false
+        bodypartStackView.alignment = .top
+        bodypartStackView.spacing = 10
         bodypartScrollView.addSubview(bodypartStackView)
+        bodypartStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             bodypartStackView.topAnchor.constraint(
                 equalTo: bodypartScrollView.topAnchor),
@@ -164,11 +196,23 @@ class ExerciseListCell: UITableViewCell {
         ])
         
         // MARK: descriptionLabel
-        descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 14)
+        descriptionTextView.font = UIFont(name: "Pretendard-Light", size: 14)
         descriptionTextView.backgroundColor = .clear
-        descriptionTextView.textColor = .color767676
+        descriptionTextView.textColor = .white
         descriptionTextView.numberOfLines = 0
-        bottomRightStackView.addArrangedSubview(descriptionTextView)
+        bottomContainerView.addSubview(descriptionTextView)
+        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            descriptionTextView.leadingAnchor.constraint(
+                equalTo: exerciseImageView.trailingAnchor,
+                constant: 15),
+            descriptionTextView.topAnchor.constraint(
+                equalTo: bodypartScrollView.bottomAnchor),
+            descriptionTextView.trailingAnchor.constraint(
+                equalTo: bottomContainerView.trailingAnchor),
+            descriptionTextView.bottomAnchor.constraint(
+                equalTo: bottomContainerView.bottomAnchor),
+        ])
     }
     
     // MARK: - Configure
@@ -176,18 +220,22 @@ class ExerciseListCell: UITableViewCell {
     func configure(with exercise: Exercise) {
         // exercise.name
         titleLabel.text = exercise.name
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.heightAnchor.constraint(equalToConstant: titleLabel.calculateHeight(for: titleLabel.frame.width)).isActive = true
 
         // exercise.Image
-        exerciseImageView.image = UIImage(
-            data: exercise.images.first?.image ?? Data())
+        if let imageData = exercise.images.first?.image {
+            exerciseImageView.image = UIImage(data: imageData)
+            exerciseImageView.contentMode = .scaleAspectFill
+        } else {
+            exerciseImageView.image = UIImage(systemName: "photo", withConfiguration: UIImage.SymbolConfiguration(pointSize: 5, weight: .regular))
+            exerciseImageView.contentMode = .scaleAspectFit
+        }
         
         // exercise.bodyParts
         bodypartStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         for part in exercise.bodyParts {
             let label = CustomBodyPartLabel()
             label.text = part.rawValue
+            label.setContentCompressionResistancePriority(.required, for: .vertical)
             bodypartStackView.addArrangedSubview(label)
         }
         
@@ -195,19 +243,4 @@ class ExerciseListCell: UITableViewCell {
         descriptionTextView.text = exercise.descriptionText
     }
     
-}
-
-// MARK: - Extension UILabel
-extension UILabel {
-    /// 주어진 너비와 폰트를 기준으로 UILabel의 높이를 계산하는 메서드
-    func calculateHeight(for width: CGFloat) -> CGFloat {
-        guard let text = self.text else { return 0 }
-        let boundingBox = text.boundingRect(
-            with: CGSize(width: width, height: .greatestFiniteMagnitude),
-            options: [],
-            attributes: [.font: self.font!],
-            context: nil
-        )
-        return ceil(boundingBox.height)
-    }
 }
