@@ -178,17 +178,6 @@ class ReportsViewController: UIViewController {
     
     
     
-//    private func updateDataForCurrentMonth() {
-//        if let exerciseVC = currentVC as? ExerciseRecordViewController {
-//            _ = exerciseVC.fetchMonthSchedules(year: currentYear, month: currentMonth)
-//        } else if let inBodyVC = currentVC as? WeightRecordViewController {
-//            inBodyVC.fetchInBodyDataForMonth(year: currentYear, month: currentMonth)
-//        }
-//    }
-    
-    
-    
-    
     // MARK: SegmentControl
     @objc private func didChangeValue(_ sender: UISegmentedControl) {
         let selectedIndex = sender.selectedSegmentIndex
@@ -266,13 +255,15 @@ extension ReportsViewController {
     override func addChild(_ viewController: UIViewController) {
         view.addSubview(viewController.view)
         
+        let safeArea = view.safeAreaLayoutGuide
+        
         // 레이아웃 설정
         viewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             viewController.view.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 20),
             viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            viewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            viewController.view.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }
     

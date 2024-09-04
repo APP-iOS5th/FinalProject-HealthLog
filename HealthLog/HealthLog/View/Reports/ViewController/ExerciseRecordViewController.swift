@@ -64,17 +64,13 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
         
         
+        
         NSLayoutConstraint.activate([
             exerciseRecordTableView.topAnchor.constraint(equalTo: view.topAnchor),
             exerciseRecordTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             exerciseRecordTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             exerciseRecordTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        
-//        let currentYear = Calendar.current.component(.year, from: Date())
-//        let currentMonth = Calendar.current.component(.month, from: Date())
-        
-//        _ = fetchMonthSchedules(year: currentYear, month: currentMonth)
         
         exerciseRecordTableView.reloadData()
 

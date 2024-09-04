@@ -81,9 +81,6 @@ class InBodyChartViewModel: ObservableObject {
             }, receiveValue: { [weak self] data in
                 self?.inBodyData = []
                 self?.inBodyData = data
-                print("Fetched data: \(data.count)") // 데이터를 확인합니다.
-                print("Assigned data: \(self?.inBodyData.count ?? 0)") // 할당 후 데이터를 확인합니다.
-                print("-----------------------------------")
             })
             .store(in: &cancellables)
     }
@@ -141,7 +138,6 @@ class InBodyChartViewModel: ObservableObject {
     
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-//        formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "d일"
         return formatter.string(from: date)
     }
