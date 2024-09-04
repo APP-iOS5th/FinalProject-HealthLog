@@ -13,7 +13,7 @@ class GetRoutineViewController: UIViewController {
     let viewModel = RoutineViewModel()
     var onRoutineSelected: ((Routine) -> Void)?
     private var cancellables = Set<AnyCancellable>()
-
+    
     private lazy var textLabel: UILabel = {
         let label = UILabel()
         label.text = "추가된 루틴이 없습니다."
@@ -31,7 +31,7 @@ class GetRoutineViewController: UIViewController {
         tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(GetRoutineCell.self, forCellReuseIdentifier: GetRoutineCell.cellId)
-        
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -77,14 +77,12 @@ class GetRoutineViewController: UIViewController {
         self.view.backgroundColor = .color1E1E1E
         self.view.tintColor = .white
         
-        //MARK: - addSubview
         self.view.addSubview(textLabel)
         self.view.addSubview(tableView)
         
         let safeArea = self.view.safeAreaLayoutGuide
-        //MARK: - NSLayoutconstraint
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 16),
             self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
@@ -95,7 +93,7 @@ class GetRoutineViewController: UIViewController {
     }
 }
 
-//tableView
+// MARK: TableViewDelegate, DataSource
 extension GetRoutineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 170

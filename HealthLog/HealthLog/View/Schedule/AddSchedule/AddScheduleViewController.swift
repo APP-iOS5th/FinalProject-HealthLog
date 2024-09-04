@@ -225,7 +225,6 @@ class AddScheduleViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    // 키보드가 나타날 때 테이블 뷰의 인셋 조정
     @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
@@ -236,14 +235,12 @@ class AddScheduleViewController: UIViewController {
         tableView.contentInset = contentInsets
         tableView.scrollIndicatorInsets = contentInsets
         
-        // 현재 선택된 텍스트 필드를 키보드 위로 이동
         if let activeField = view.currentFirstResponder() {
             let rect = tableView.convert(activeField.frame, from: activeField.superview)
             tableView.scrollRectToVisible(rect, animated: true)
         }
     }
     
-    // 키보드가 사라질 때 테이블 뷰의 인셋 초기화
     @objc func keyboardWillHide(notification: NSNotification) {
         let contentInsets = UIEdgeInsets.zero
         tableView.contentInset = contentInsets
@@ -330,7 +327,7 @@ extension AddScheduleViewController: UISearchResultsUpdating, UISearchController
             searchResultsController.prepareForDismissal(true)
         }
     }
-
+    
     func didDismissSearchController(_ searchController: UISearchController) {
         searchController.searchBar.showsBookmarkButton = false
     }
@@ -372,6 +369,7 @@ extension AddScheduleViewController: UITableViewDragDelegate, UITableViewDropDel
 }
 
 extension UIView {
+    // 첫번째 응답자 찾기, 포커스된 텍스트 필드 찾기 위함
     func currentFirstResponder() -> UIView? {
         if self.isFirstResponder {
             return self
@@ -385,6 +383,7 @@ extension UIView {
         return nil
     }
     
+    // 현재 뷰의 부모 뷰 컨트롤러를 반환
     var parentViewController: UIViewController? {
         var parentResponder: UIResponder? = self
         while parentResponder != nil {
