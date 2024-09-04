@@ -51,7 +51,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let imageLabel = UILabel()
     private let imageViews = [UIImageView(), UIImageView()]
     private let imageCancelButtons = [UIButton(), UIButton()]
-    private let inputOnlySecondImageWarningLabel = UILabel()
     
     private let deleteButton: UIButton?
     
@@ -738,7 +737,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     case ViewTag.imageView1.rawValue:
                         entryExercise.images[0] = imageData
                     case ViewTag.imageView2.rawValue:
-                        entryExercise.images[1] = imageData
+                        if(entryExercise.images[0].isEmpty &&
+                           entryExercise.images[1].isEmpty) {
+                            entryExercise.images[0] = imageData
+                        } else {
+                            entryExercise.images[1] = imageData
+                        }
                     default: break
                 }
             }
@@ -781,11 +785,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     @objc private func tapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
         guard let tappedImageView = sender.view as? UIImageView else { return }
         
-        if tappedImageView.tag == ViewTag.imageView2.rawValue {
-            guard entryViewModel.entryExercise.images[0].isEmpty == false
-            else { return print("imageView1 isEmpty") }
-        } // TODO: 경고창 또는 경고라벨
-        
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
         let picker = PHPickerViewController(configuration: configuration)
@@ -795,7 +794,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     }
     
     @objc private func tapImageCancelButton(_ sender: UIButton) {
-        print(sender.tag)
+        let entryExercise = self.entryViewModel.entryExercise
+        if(sender.tag - 10 == ViewTag.imageView1.rawValue) {
+            // 첫번째 삭제 실행시, 두번째를 첫번째로 이동
+            entryExercise.images[0] = entryExercise.images[1]
+        }
+        entryExercise.images[1] = Data()
     }
     
     @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
