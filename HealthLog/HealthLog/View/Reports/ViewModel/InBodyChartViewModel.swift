@@ -90,22 +90,21 @@ class InBodyChartViewModel: ObservableObject {
     
     private func fetchInBodyData(year: Int, month: Int) -> Future<[InBody], Error> {
         return Future { result in
-            do {
-                guard let realm = self.realm else {
-                    result(.failure(realmError.realmInstanceUnavailable))
-                    return
-                }
-                
-                let calendar = Calendar.current
-                let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
-                let range = calendar.range(of: .day, in: .month, for: startDate)!
-                let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range.count))!
-
-                let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
-                result(.success(Array(data)))
-            } catch {
-                result(.failure(realmError.dataFetchFailed))
+            
+            guard let realm = self.realm else {
+                result(.failure(realmError.realmInstanceUnavailable))
+                return
             }
+            
+            let calendar = Calendar.current
+            let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!.toKoreanTime()
+            let range = calendar.range(of: .day, in: .month, for: startDate)
+            let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range!.count))!.toKoreanTime()
+            
+            let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
+            result(.success(Array(data)))
+            
+            print("\(startDate) ~ \(endDate)")
         }
     }
     
@@ -142,7 +141,7 @@ class InBodyChartViewModel: ObservableObject {
     
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
+//        formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "d일"
         return formatter.string(from: date)
     }
