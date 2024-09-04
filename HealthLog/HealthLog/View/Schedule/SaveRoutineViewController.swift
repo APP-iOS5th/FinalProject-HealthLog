@@ -65,7 +65,7 @@ class SaveRoutineViewController: UIViewController {
         print(schedule)
         
         // set default routine name
-        let placeholderText = changeDateToString(schedule.date.toKoreanTime())
+        let placeholderText = changeDateToString(schedule.date)
         let placeholderAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.white]
         routineName.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: placeholderAttributes)
                 
