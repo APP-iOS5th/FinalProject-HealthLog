@@ -504,6 +504,7 @@ extension RealmManager {
             
             try realm.write {
                 realm.delete(routine)
+                print("삭제 완료")
             }
         } catch {
             print("삭제 실패")
@@ -520,10 +521,10 @@ extension RealmManager {
     }
     
     
-    func updateSchedule(date: Date ,index: Int) {
+    func updateSchedule(index: Int) {
         guard let realm = realm else { return }
-        
-        
+        let date = Calendar.current.startOfDay(for: Date()).toKoreanTime()
+        print("동작은해\(date)")
         if let schedule = realm.objects(Schedule.self).filter("date == %@", date).first
         {
             do {
@@ -537,6 +538,7 @@ extension RealmManager {
                         }
                         
                         schedule.exercises.append(ScheduleExercise(exercise: exercises.exercise!, order: schedule.exercises.count + 1, isCompleted: false, sets: schedulExeriseSets))
+                        print("여까지도 잘동작해")
                     }
                 }
             } catch {

@@ -38,6 +38,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         super.viewDidLoad()
         print("addExercise")
         setupUI()
+        self.hideKeyboard()
     }
     
    
@@ -66,6 +67,21 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         ])
         
     }
+    
+    private func hideKeyboard() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchBar(_:)))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
+        if let searchController = self.parent as? UISearchController {
+            if searchController.searchBar.isFirstResponder {
+                searchController.searchBar.resignFirstResponder()
+            }
+        }
+    }
+    
     
     func didTapButton(in cell: RoutineSearchResultCell) {
         if let indexPath = tableView.indexPath(for: cell) {

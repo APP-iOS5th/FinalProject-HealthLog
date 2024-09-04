@@ -75,8 +75,8 @@ class RoutineViewModel {
         .eraseToAnyPublisher()
     
     func addScheduleExercise(index: Int) {
-        let date = realmManger.makeDate(year: 2024, month: 8, day: 30)
-        realmManger.updateSchedule(date: date, index: index)
+       
+        realmManger.updateSchedule(index: index)
         
     }
     
