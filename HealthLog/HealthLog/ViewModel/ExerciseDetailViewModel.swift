@@ -40,9 +40,10 @@ class ExerciseDetailViewModel: ObservableObject {
     }
     
     private func startImageRotation(imagesCount: Int) {
-        guard imagesCount == 2 
-        else { return print("-- imagesCount \(imagesCount) --") }
-//        print("-- imagesCount \(imagesCount) --")
+        guard imagesCount == 2,
+              exercise.images[0].image?.isEmpty == false,
+              exercise.images[1].image?.isEmpty == false
+        else { return print("-- images count is not 2 --") }
         // 타이머를 설정하여 2초마다 이미지 인덱스를 변경
         timer = Timer.scheduledTimer(
             withTimeInterval: 1.0, repeats: true) { [weak self] _ in

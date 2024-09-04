@@ -406,7 +406,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             imageView.addGestureRecognizer(
                 UITapGestureRecognizer(
                     target: self, 
-                    action: #selector(didTapImageViewShowPHPicker(_:)))
+                    action: #selector(tapImageViewShowPHPicker(_:)))
             )
             imageView.isUserInteractionEnabled = true
             imageView.tag = 2001 + index // 이미지뷰를 식별할 태그
@@ -731,8 +731,13 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         present(picker, animated: true, completion: nil)
     }
     
-    @objc private func didTapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
+    @objc private func tapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
         guard let tappedImageView = sender.view as? UIImageView else { return }
+        
+        if tappedImageView.tag == ViewTag.imageView2.rawValue {
+            guard entryViewModel.entryExercise.images[0].isEmpty == false
+            else { return print("imageView1 isEmpty") }
+        } // TODO: 경고창 또는 경고라벨
         
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
