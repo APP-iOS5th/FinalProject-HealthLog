@@ -145,14 +145,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
                 }
             }
             .store(in: &cancellables)
-        viewModel.isRoutineNameMatchingPulisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValid in
-                if isValid {
-                    self?.nameVaildLabel.text = "중복된 이름이 있습니다."
-                }
-            }
-            .store(in: &cancellables)
+
         
     }
     
@@ -193,10 +186,10 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
             self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             self.nameTextField.heightAnchor.constraint(equalToConstant: 44),
             
-            self.nameVaildLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor),
+            self.nameVaildLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor, constant: 5),
             self.nameVaildLabel.leadingAnchor.constraint(equalTo: self.nameTextField.leadingAnchor),
             
-            self.exerciseTitleLabel.topAnchor.constraint(equalTo: self.nameVaildLabel.bottomAnchor, constant: 26),
+            self.exerciseTitleLabel.topAnchor.constraint(equalTo: self.nameVaildLabel.bottomAnchor, constant: 20),
             self.exerciseTitleLabel.leadingAnchor.constraint(equalTo: self.nameTitleLabel.leadingAnchor),
             
             self.dividerView.topAnchor.constraint(equalTo: self.exerciseTitleLabel.bottomAnchor, constant: 13),

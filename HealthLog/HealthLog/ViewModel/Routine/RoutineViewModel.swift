@@ -11,6 +11,7 @@ import RealmSwift
 
 class RoutineViewModel {
     
+    
     private var realm: Realm?
     private var realmManger = RealmManager.shared
     
@@ -73,8 +74,17 @@ class RoutineViewModel {
         .print()
         .eraseToAnyPublisher()
     
-    func getselectedRoutine(index: Int) -> Routine {
-        return routines[index]
+    func addScheduleExercise(index: Int) {
+        let date = realmManger.makeDate(year: 2024, month: 8, day: 30)
+        realmManger.updateSchedule(date: date, index: index)
+        
+    }
+    
+    
+    func getSelectedSchedule() -> Schedule {
+        let date = realmManger.makeDate(year: 2024, month: 6, day: 30)
+        return realmManger.hasSchedule(date: date)
+        
     }
     
     func addRoutine(routine: Routine) {
@@ -123,6 +133,7 @@ class RoutineViewModel {
         
     }
     
+    
     private func observeRealmData() {
         guard let realm = realm else {return} // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
         let results = realm.objects(Routine.self)
@@ -140,4 +151,6 @@ class RoutineViewModel {
             }
         }
     }
+    
+    
 }

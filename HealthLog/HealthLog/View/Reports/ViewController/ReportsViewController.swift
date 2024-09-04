@@ -12,14 +12,18 @@ class ReportsViewController: UIViewController {
     
     private var reportsVM = ReportsViewModel()
     
-    let inbodyViewModel = InBodyChartViewModel()
+    private var inBodyVM = InBodyChartViewModel()
     
     private lazy var exerciseRecordVC: ExerciseRecordViewController = {
         let vc = ExerciseRecordViewController(reportsVM: self.reportsVM)
         return vc
     }()
     
-    private let weightRecordVC = WeightRecordViewController()
+    private lazy var weightRecordVC: WeightRecordViewController = {
+        let vc = WeightRecordViewController(inBodyVM: inBodyVM)
+        return vc
+    }()
+    
     
     private var currentVC: UIViewController?
     
@@ -133,21 +137,41 @@ class ReportsViewController: UIViewController {
     
     
     private func didTapPreviousMonth() {
+        let newYear: Int
+        let newMonth: Int
+        
         if currentMonth == 1 {
-            reportsVM.updateYearAndMonth(year: currentYear - 1, month: 12)
+            newYear = currentYear - 1
+            newMonth = 12
         } else {
-            reportsVM.updateYearAndMonth(year: currentYear, month: currentMonth - 1)
+            newYear = currentYear
+            newMonth = currentMonth - 1
         }
+        
+        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
+        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
+        
+        
         updateTitleMonthLabel()
         exerciseRecordVC.fetchDataAndUpdateUI()
     }
     
     private func didTapNextMonth() {
+        let newYear: Int
+        let newMonth: Int
+        
         if currentMonth == 12 {
-            reportsVM.updateYearAndMonth(year: currentYear + 1, month: 1)
+            newYear = currentYear + 1
+            newMonth = 1
         } else {
-            reportsVM.updateYearAndMonth(year: currentYear, month: currentMonth + 1)
+            newYear = currentYear
+            newMonth = currentMonth + 1
         }
+        
+        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
+        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
+        
+        
         updateTitleMonthLabel()
         exerciseRecordVC.fetchDataAndUpdateUI()
     }
