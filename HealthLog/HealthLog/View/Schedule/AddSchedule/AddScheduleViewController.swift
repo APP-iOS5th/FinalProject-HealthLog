@@ -164,9 +164,10 @@ class AddScheduleViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             getRoutineButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
-            getRoutineButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 13),
-            getRoutineButton.widthAnchor.constraint(equalToConstant: 345),
             getRoutineButton.heightAnchor.constraint(equalToConstant: 44),
+            getRoutineButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 13),
+            getRoutineButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            getRoutineButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor)
         ])
         
         tableView.tableHeaderView = headerView

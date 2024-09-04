@@ -24,6 +24,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.delegate = self
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
@@ -31,7 +32,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 26
+        //stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -41,6 +44,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.translatesAutoresizingMaskIntoConstraints = false
         calendar.wantsDateDecorations = true
         calendar.backgroundColor = .colorSecondary
+        calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
         
@@ -57,7 +61,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var exerciseVolumeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "오늘의 볼륨량: 0"
+        label.text = "오늘의 볼륨량: \(viewModel.selectedDateExerciseVolume)"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -79,6 +83,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.text = "오늘 할 운동"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        label.translatesAutoresizingMaskIntoConstraints = false
         
         let button = UIButton(type: .system)
         var configuration = UIButton.Configuration.filled()
@@ -90,20 +95,22 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         button.configuration = configuration
         button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         
         let stackView = UIStackView(arrangedSubviews: [label, button])
         stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            button.widthAnchor.constraint(equalToConstant: 120),
+            button.heightAnchor.constraint(equalToConstant: 28),
+            
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             view.heightAnchor.constraint(equalToConstant: 60),
@@ -133,7 +140,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         viewModel.$selectedDateSchedule
             .receive(on: DispatchQueue.main)
             .sink { [weak self] schedule in
-                //self?.selectedDateSchedule = schedule
                 self?.updateTableView()
             }
             .store(in: &cancellables)
@@ -141,7 +147,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         viewModel.$selectedDateExerciseVolume
             .receive(on: DispatchQueue.main)
             .sink { [weak self] volume in
-                self?.exerciseVolumeLabel.text = "오늘의 볼륨량: \(volume)"
+                self?.exerciseVolumeLabel.text = "오늘의 볼륨량: \(volume) kg"
             }
             .store(in: &cancellables)
     }
@@ -185,7 +191,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationController?.setupBarAppearance()
         self.tabBarController?.setupBarAppearance()
         
-        view.backgroundColor = .colorPrimary
+        view.backgroundColor = .color1E1E1E
         
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -215,7 +221,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             calendarView.heightAnchor.constraint(equalToConstant: 500),
             
-            exerciseVolumeLabel.heightAnchor.constraint(equalToConstant:20),
+            calendarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            calendarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            
+            exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             exerciseVolumeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
@@ -225,12 +234,12 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            labelContainer.heightAnchor.constraint(equalToConstant: 50),
+            labelContainer.heightAnchor.constraint(equalToConstant: 30),
             
             separatorLine2.heightAnchor.constraint(equalToConstant: 2),
             
-            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
         ])
         
         tableViewHeightConstraint =
