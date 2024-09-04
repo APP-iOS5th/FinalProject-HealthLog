@@ -80,6 +80,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
         setupUI()
         setupCollectionView()
         setupObservers()
+        self.hideKeyBoardWenTappedAround()
         
     }
     
@@ -140,9 +141,11 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
                 self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
             }
             .store(in: &cancellables)
-        
-        
-        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+            self.view.endEditing(true)
     }
     
     func didSelectItem(_ item: Exercise) {
@@ -150,7 +153,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
             RoutineExerciseSet(order: index, weight: 0, reps: 0)
         }
         routineViewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
-       
+        routineViewModel.validateExercise()
         self.collectionView.reloadData()
 //        print("RoutinAddView: \(routineViewModel.routine.exercises)")
     }
@@ -235,5 +238,19 @@ extension RoutineAddExerciseViewController: UISearchResultsUpdating {
             resultcontroller.viewModel.filterExercises(by: text)
             resultcontroller.tableView.reloadData()
         }
+    }
+}
+
+
+extension RoutineAddExerciseViewController {
+    // 키보드 내리기
+    func hideKeyBoardWenTappedAround() {
+        let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dissmissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dissmissKeyboard() {
+        view.endEditing(true)
     }
 }
