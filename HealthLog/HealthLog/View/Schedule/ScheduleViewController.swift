@@ -29,6 +29,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private var tableViewHeightConstraint: NSLayoutConstraint?
     
+    private var highlightedBodyParts: [String: Int] = [:]
     // to execute customizeCalendarTextColor one time from decorationFor
     //private var isTextColorCustimzed = false
     
@@ -442,15 +443,15 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //
 //        // Convert date to Korean timezone
 //        let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
-//        
+//
 //        // Get the next day
 //        let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
-//        
+//
 //        let currentMonth = koreanCalendar.component(.month, from: koreanDate)
 //        let nextDayMonth = koreanCalendar.component(.month, from: nextDay)
 //        // Check if the current day is the last day of the month
 //        let isLastDay = (currentMonth != nextDayMonth)
-//        
+//
 ////        print("Date: \(koreanDate), Next Day: \(nextDay), Current Month: \(currentMonth), Next day Month: \(nextDayMonth), Is last day: \(isLastDay)")
 //        return isLastDay
 //    }
@@ -493,7 +494,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
-        guard let dateComponents = dateComponents, 
+        guard let dateComponents = dateComponents,
               let date = dateComponents.date else { return }
         selectedDate = date
         loadSelectedDateSchedule(date)
@@ -506,7 +507,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //        self.changeHeaderTextColor(self.calendarView)
 //        self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
 //    }
-//    
+//
 //    private func changeHeaderTextColor(_ view: UIView) {
 //        for subview in view.subviews {
 //            if let label = subview as? UILabel {
@@ -516,7 +517,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //            }
 //        }
 //    }
-//    
+//
 //    private func changeSubviewTextColor(_ view: UIView, today: Date, selectedDate: Date?) {
 //        let calendar = Calendar.current
 //        let currentDateComponents = calendar.dateComponents([.day, .month, .year], from: today)
@@ -525,11 +526,11 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //            if let label = subview as? UILabel,
 //               let labelDate = dateFromLabelText(label.text, calendar: calendar),
 //               let labelDateActual = calendar.date(from: labelDate) {
-//                
+//
 //                // set base color
 //                label.textColor = .white
 //                label.highlightedTextColor = .white
-//                
+//
 //                // today
 //                if calendar.isDateInToday(labelDateActual) {
 //                    if today == selectedDate {
@@ -561,12 +562,12 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
 //    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
 //        guard let text = text,
 //              let day = Int(text) else { return nil }
-//        
+//
 //        // get current month and year from calendar
 //        let displayedMonthDate = calendarView.visibleDateComponents
 //        guard let month = displayedMonthDate.month,
 //              let year = displayedMonthDate.year else { return nil }
-//        
+//
 //        return DateComponents(year: year, month: month, day: day)
 //    }
 }
@@ -611,12 +612,19 @@ extension ScheduleViewController {
                     }
                 }
             }
+            highlightedBodyParts = bodyPartsWithCompletedSets
             muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
         } else {
             // need to reset highlight of body parts
             print("No schedule for selected date")
             // get highlighted body parts
-            muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: ["":0])
+            var bodyPartsWithCompletedSets: [String: Int] = [:]
+            
+            // reset body part highlights
+            for bodyPart in highlightedBodyParts {
+                bodyPartsWithCompletedSets[bodyPart.key] = 0
+            }
+            muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
         }
     }
     
