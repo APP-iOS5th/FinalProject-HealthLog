@@ -508,6 +508,51 @@ extension RealmManager {
         } catch {
             print("삭제 실패")
         }
+    }
+    
+    func hasSchedule(date: Date) -> Schedule {
+        guard let realm = realm else { return Schedule() }
+        guard let schedule = realm.objects(Schedule.self).filter("date == %@", date).first else {
+            return Schedule()
+        }
         
+        return schedule
+    }
+    
+    
+    func updateSchedule(date: Date ,index: Int) {
+        guard let realm = realm else { return }
+        
+        
+        if let schedule = realm.objects(Schedule.self).filter("date == %@", date).first
+        {
+            do {
+                let routine = fetchRoutine()[index]
+                try realm.write {
+                    for exercises in routine.exercises {
+                        var schedulExeriseSets: [ScheduleExerciseSet] = []
+                        
+                        for sets in exercises.sets {
+                            schedulExeriseSets.append(ScheduleExerciseSet(order: sets.order, weight: sets.weight, reps: sets.reps, isCompleted: false))
+                        }
+                        
+                        schedule.exercises.append(ScheduleExercise(exercise: exercises.exercise!, order: schedule.exercises.count + 1, isCompleted: false, sets: schedulExeriseSets))
+                    }
+                }
+            } catch {
+                print("추가 실패")
+                
+            }
+        } else {
+            do {
+                try realm.write {
+                    
+                }
+            }
+            catch {
+                print("만들기 실패")
+            }
+        }
     }
 }
+
