@@ -111,12 +111,19 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         return view
     }()
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+            self.view.endEditing(true)
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupCollectionView()
         setupObservers()
+        self.hideKeyBoardWenTappedAround()
+        
     }
     
     func setupObservers() {
@@ -271,6 +278,7 @@ extension RoutineEditViewController: UICollectionViewDataSource, UICollectionVie
             cell.delete = {
                 self.viewModel.deleteRoutine(id: self.id)
                 self.navigationController?.popToRootViewController(animated: true)
+
             }
             return cell
         }
@@ -346,5 +354,19 @@ extension RoutineEditViewController: UISearchResultsUpdating {
             resultcontroller.viewModel.filterExercises(by: text)
             resultcontroller.tableView.reloadData()
         }
+    }
+}
+
+
+extension RoutineEditViewController {
+    // 키보드 내리기
+    func hideKeyBoardWenTappedAround() {
+        let tap : UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dissmissKeyboard))
+        tap.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dissmissKeyboard() {
+        view.endEditing(true)
     }
 }

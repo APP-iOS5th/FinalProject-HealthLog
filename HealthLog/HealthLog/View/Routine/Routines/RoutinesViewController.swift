@@ -73,9 +73,14 @@ class RoutinesViewController: UIViewController {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
         isRoutineData()
+        print("viewWillApper")
+        
         viewModel.syncRotuine() //임시 사용
+        setupObservers()
         self.tableView.reloadData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
+        print("루틴\(viewModel.routines)")
+        print("필터\(viewModel.filteredRoutines)")
         
     }
     

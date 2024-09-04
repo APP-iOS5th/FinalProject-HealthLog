@@ -65,7 +65,7 @@ class SaveRoutineViewController: UIViewController {
         print(schedule)
         
         // set default routine name
-        let placeholderText = changeDateToString(schedule.date)
+        let placeholderText = changeDateToString(schedule.date.toKoreanTime())
         let placeholderAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.white]
         routineName.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: placeholderAttributes)
                 
@@ -162,7 +162,7 @@ class SaveRoutineViewController: UIViewController {
     private func changeDateToString(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
-        return dateFormatter.string(from: date)
+        return dateFormatter.string(from: date.toKoreanTime())
     }
     
     private func checkExistRoutineName(_ name: String) -> Bool {

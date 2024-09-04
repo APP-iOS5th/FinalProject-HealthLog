@@ -504,6 +504,7 @@ extension RealmManager {
             
             try realm.write {
                 realm.delete(routine)
+                print("삭제 완료")
             }
         } catch {
             print("삭제 실패")
@@ -520,10 +521,10 @@ extension RealmManager {
     }
     
     
-    func updateSchedule(date: Date ,index: Int) {
+    func updateSchedule(index: Int) {
         guard let realm = realm else { return }
-        
-        
+        let date = Calendar.current.startOfDay(for: Date()).toKoreanTime()
+        print("동작은해\(date)")
         if let schedule = realm.objects(Schedule.self).filter("date == %@", date).first
         {
             do {
@@ -537,6 +538,7 @@ extension RealmManager {
                         }
                         
                         schedule.exercises.append(ScheduleExercise(exercise: exercises.exercise!, order: schedule.exercises.count + 1, isCompleted: false, sets: schedulExeriseSets))
+                        print("여까지도 잘동작해")
                     }
                 }
             } catch {
@@ -556,3 +558,36 @@ extension RealmManager {
     }
 }
 
+// MARK: AddSchedule
+extension RealmManager {
+    // 세트 무게, 횟수 저장
+    func updateSet(selectedExercises: [ScheduleExercise], at exerciseIndex: Int, setIndex: Int, weight: Int, reps: Int) {
+        guard exerciseIndex < selectedExercises.count,
+              setIndex < selectedExercises[exerciseIndex].sets.count else { return }
+        guard let realm = realm else { return }
+        try! realm.write {
+            selectedExercises[exerciseIndex].sets[setIndex].weight = weight
+            selectedExercises[exerciseIndex].sets[setIndex].reps = reps
+        }
+    }
+    
+    // 스케줄 해당 날짜에 저장
+    func saveSchedule(selectedExercises: [ScheduleExercise], for date: Date) {
+        guard let realm = realm else { return }
+        
+        if let existingSchedule = realm.objects(Schedule.self).filter("date == %@", date).first {
+            try! realm.write {
+                let maxOrder = existingSchedule.exercises.max(of: \.order) ?? 0
+                for (index, exercise) in selectedExercises.enumerated() {
+                    exercise.order = maxOrder + index + 1
+                }
+                existingSchedule.exercises.append(objectsIn: selectedExercises)
+            }
+        } else {
+            let newSchedule = Schedule(date: date, exercises: selectedExercises)
+            try! realm.write {
+                realm.add(newSchedule)
+            }
+        }
+    }
+}
