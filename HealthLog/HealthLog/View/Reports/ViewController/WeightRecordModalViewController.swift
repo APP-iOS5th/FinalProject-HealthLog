@@ -228,20 +228,38 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
             let isDecimal = newText.contains(decimalSeparator)
             
             // 소수점이 없는 경우, 최대 3자리 정수
-            if !isDecimal {
-                return newText.count <= 3
+           if !isDecimal {
+                if newText.count > 3 {
+                    return false
+                }
+            } else {
+                // 소수점이 있는 경우, 정수 3자리 + 소수점 1자리
+                let components = newText.components(separatedBy: decimalSeparator)
+                if components.count > 2 {
+                    return false
+                }
+                
+                let integerPart = components[0]
+                let decimalPart = components.count > 1 ? components[1] : ""
+                
+                // 정수는 최대 3자리, 소수는 최대 1자리
+                if integerPart.count > 3 || decimalPart.count > 1 {
+                    return false
+                }
             }
-            
-            // 소수점이 있는 경우, 정수 3자리 + 소수점 1자리
-            let components = newText.components(separatedBy: decimalSeparator)
-            if components.count > 2 {
-                return false
+
+            if let value = Double(newText) {
+                switch textField {
+                case weightTextField:
+                    return value <= 200
+                case musclesTextField:
+                    return value <= 100
+                case fatTextField:
+                    return value <= 100
+                default:
+                    return true
+                }
             }
-            
-            let integerPart = components[0]
-            let decimalPart = components.count > 1 ? components[1] : ""
-            
-            // 정수는 최대 3자리, 소수는 최대 1자리
-            return integerPart.count <= 3 && decimalPart.count <= 1
+            return true
         }
 }
