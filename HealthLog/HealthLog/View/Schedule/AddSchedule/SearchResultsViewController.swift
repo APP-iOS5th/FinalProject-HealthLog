@@ -58,7 +58,7 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         super.viewDidDisappear(animated)
         resetBodyPartsOption()
     }
-
+    
     @objc private func handleTapOutsideSearchBar(_ gesture: UITapGestureRecognizer) {
         if let searchController = self.parent as? UISearchController {
             if searchController.searchBar.isFirstResponder {
@@ -107,8 +107,8 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             searchOptionStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchOptionStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 13),
-            searchOptionStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -13),
+            searchOptionStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            searchOptionStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             dividerView.topAnchor.constraint(equalTo: searchOptionStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -156,14 +156,12 @@ class SearchResultsViewController: UIViewController, UITableViewDelegate, UITabl
         }
     }
     
-    // .all 버튼의 터치를 동작시켜서 옵션 초기화
     func resetBodyPartsOption() {
         searchOptionStackView.bodypartButtonList
             .first(where: { $0.bodypartOption == .all })?
             .sendActions(for: .touchUpInside)
     }
     
-    // Combine 용 운동부위옵션 접고 피는 함수
     func bodypartOptionShowUIChange(_ bodypartOptionShow: Bool) {
         let iconName: String
         guard let searchController = self.parent as? UISearchController else { return }
