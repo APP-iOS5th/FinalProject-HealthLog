@@ -62,9 +62,7 @@ class RoutinesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        isRoutineData()
         setupUI()
-      
         setupObservers()
     }
     
@@ -72,7 +70,6 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        isRoutineData()
         print("viewWillApper")
         setupObservers()
         self.navigationController?.navigationBar.prefersLargeTitles = false
@@ -87,14 +84,18 @@ class RoutinesViewController: UIViewController {
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
-    }
-    
-    func isRoutineData() {
-        if viewModel.routines.isEmpty {
-            self.tableView.isHidden = true
-        } else {
-            self.tableView.isHidden = false
-        }
+        
+        viewModel.$routines
+            .receive(on: DispatchQueue.main)
+            .sink{ [weak self] routines in
+                if routines.isEmpty {
+                    self?.tableView.isHidden = true
+                } else {
+                    self?.tableView.isHidden = false
+                }
+            }.store(in: &cancellables)
+        
+        
     }
     func setupUI() {
         
