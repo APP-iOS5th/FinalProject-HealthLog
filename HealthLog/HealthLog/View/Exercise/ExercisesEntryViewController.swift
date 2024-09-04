@@ -50,6 +50,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
     private let imageViews = [UIImageView(), UIImageView()]
+    private let imageCancelButtons = [UIButton(), UIButton()]
+    private let inputOnlySecondImageWarningLabel = UILabel()
     
     private let deleteButton: UIButton?
     
@@ -400,7 +402,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     equalTo: stackView.trailingAnchor,
                     constant: -10),
                 imageContainerView.heightAnchor.constraint(
-                    equalToConstant: 200)
+                    equalTo: imageContainerView.widthAnchor,
+                    multiplier: 9 / 16)
             ])
             
             // ImageView
@@ -415,7 +418,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     action: #selector(tapImageViewShowPHPicker(_:)))
             )
             imageView.isUserInteractionEnabled = true
-            imageView.tag = 2001 + index // 이미지뷰를 식별할 태그
+            imageView.tag = ViewTag.imageViews.setIndexTag(index)
             imageContainerView.addSubview(imageView)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -429,11 +432,36 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     equalTo: imageContainerView.bottomAnchor),
             ])
             
+            // imageView Cancel
+            let cancelButton = imageCancelButtons[index]
+            let symbolConfig = UIImage.SymbolConfiguration(
+                pointSize: 20, weight: .heavy, scale: .large)
+            let paletteConfig = UIImage.SymbolConfiguration(
+                paletteColors: [.white, .colorAccent])
+            let config = symbolConfig.applying(paletteConfig)
+            let image = UIImage(systemName: "xmark.app.fill",
+                                withConfiguration: config)
+            cancelButton.setImage(image, for: .normal)
+            cancelButton.tag = ViewTag.imageCancelButtons.setIndexTag(index)
+            cancelButton.addTarget(
+                self, action: #selector(tapImageCancelButton(_:)),
+                for: .touchUpInside)
+            imageView.addSubview(cancelButton)
+            cancelButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                cancelButton.topAnchor.constraint(
+                    equalTo: imageView.topAnchor,
+                    constant: 10),
+                cancelButton.trailingAnchor.constraint(
+                    equalTo: imageView.trailingAnchor,
+                    constant: -10),
+            ])
+            
             // ImageView Label
             let imageOpenLabel = UILabel()
             imageOpenLabel.text = "Open Gallery"
             imageOpenLabel.textColor = .white
-            imageContainerView.addSubview(imageOpenLabel)
+            imageView.addSubview(imageOpenLabel)
             imageOpenLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 imageOpenLabel.centerXAnchor.constraint(
@@ -448,7 +476,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 image: UIImage(systemName: "photo.badge.plus"))
             symbolImageView.tintColor = .white
             symbolImageView.contentMode = .scaleAspectFit
-            imageContainerView.addSubview(symbolImageView)
+            imageView.addSubview(symbolImageView)
             symbolImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 symbolImageView.centerXAnchor.constraint(
@@ -462,8 +490,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     equalToConstant: 50),
             ])
             
-            imageContainerView.sendSubviewToBack(imageOpenLabel)
-            imageContainerView.sendSubviewToBack(symbolImageView)
+//            imageView.sendSubviewToBack(imageOpenLabel)
+//            imageView.sendSubviewToBack(symbolImageView)
         } // end forEach
     }
     
@@ -577,6 +605,19 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 }
             }
             .store(in: &cancellables)
+        
+        // MARK: Image SubViews(label, icon) Show
+        self.entryViewModel.entryExercise.$images
+            .sink { [weak self] imagesData in
+                imagesData.enumerated().forEach { index, data in
+                    let subViewsShow = data.isEmpty ? true : false
+                    self?.imageViews[index].subviews
+                        .filter { !($0 is UIButton) }
+                        .forEach { $0.isHidden = !subViewsShow }
+                }
+            }
+            .store(in: &cancellables)
+        
         
         // MARK: UI Duplicate ExerciseName Warning
         self.entryViewModel.entryExercise.$hasDuplicateName
@@ -753,6 +794,10 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         present(picker, animated: true, completion: nil)
     }
     
+    @objc private func tapImageCancelButton(_ sender: UIButton) {
+        print(sender.tag)
+    }
+    
     @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
         let isTappedInsideTitleTextField = titleTextField.frame.contains(sender.location(in: view))
         let isTappedInsideMaxWeightTextField = maxWeightTextField.frame.contains(sender.location(in: view))
@@ -849,8 +894,16 @@ private enum ViewTag: Int {
     case titleTextField = 1001
     case recentWeightTextField = 1002
     case maxWeightTextField = 1003
+    case imageViews = 2000
     case imageView1 = 2001
     case imageView2 = 2002
+    case imageCancelButtons = 2010
+    case imageCancelButton1 = 2011
+    case imageCancelButton2 = 2012
+    
+    func setIndexTag(_ index: Int) -> Int {
+        return self.rawValue + index + 1
+    }
 }
 
 
