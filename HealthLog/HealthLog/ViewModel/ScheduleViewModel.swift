@@ -87,7 +87,6 @@ class ScheduleViewModel: ObservableObject {
                 }
             }
         }
-        
         return bodyPartsWithCompletedSets
     }
     
@@ -108,8 +107,6 @@ class ScheduleViewModel: ObservableObject {
                     let allSetsCompleted = scheduleExercise.sets.allSatisfy { $0.isCompleted }
                     scheduleExercise.isCompleted = allSetsCompleted
                 }
-                
-                // Update selectedDateExerciseVolume
                 updateSelectedDateExerciseVolume()
             }
         } catch {
@@ -126,8 +123,6 @@ class ScheduleViewModel: ObservableObject {
                     scheduleExercise.isCompleted = isCompleted
                     scheduleExercise.sets.forEach { $0.isCompleted = isCompleted }
                 }
-                
-                // Update selectedDateExerciseVolume
                 updateSelectedDateExerciseVolume()
             }
         } catch {
