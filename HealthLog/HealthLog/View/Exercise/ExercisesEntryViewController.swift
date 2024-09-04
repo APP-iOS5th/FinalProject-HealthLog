@@ -75,7 +75,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         super.viewDidLoad()
         view.backgroundColor = .color1E1E1E
         
-        setupNavigationBar()
+        setupMain()
         setupPaddingView(stackView: stackView, height: 5)
         setupTitleStackView()
         setupCreateDivider(stackView: stackView, height: 1)
@@ -97,7 +97,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     
     // MARK: - Setup UI
     
-    func setupNavigationBar() {
+    func setupMain() {
         switch entryViewModel.mode {
             case .add: title = "운동 추가"
             case .update: title = "운동 수정"
@@ -118,6 +118,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: tabBar
         self.tabBarController?.tabBar.isHidden = true
+        
+        // MARK: handleTapOutsideSearchArea
+        // 검색바 및 운동부위 옵션 영역의 바깥을 터치시, 운동부위옵션 및 키보드 접기
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchArea))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
         
         // MARK: scrollView
         view.addSubview(scrollView)
@@ -745,6 +751,22 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         picker.delegate = self
         picker.view.tag = tappedImageView.tag
         present(picker, animated: true, completion: nil)
+    }
+    
+    @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
+        let isTappedInsideTitleTextField = titleTextField.frame.contains(sender.location(in: view))
+        let isTappedInsideMaxWeightTextField = maxWeightTextField.frame.contains(sender.location(in: view))
+        let isTappedInsideRecentWeightTextField = recentWeightTextField.frame.contains(sender.location(in: view))
+        let isTappedInsideDescriptionTextView = descriptionTextView.frame.contains(sender.location(in: view))
+        
+        // 검색옵션스택뷰와 검색바 이외의 영역을 터치한 경우
+        if !(isTappedInsideTitleTextField ||
+             isTappedInsideMaxWeightTextField ||
+             isTappedInsideRecentWeightTextField ||
+             isTappedInsideDescriptionTextView)  {
+            print("Tap detected outside input area")
+            view.endEditing(true)
+        }
     }
     
     
