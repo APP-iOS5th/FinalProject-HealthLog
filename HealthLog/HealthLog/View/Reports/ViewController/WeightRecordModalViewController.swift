@@ -122,6 +122,15 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
     }
     
+    class PasteBiockableTextField: UITextField {
+        override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+            if action == #selector(UIResponderStandardEditActions.paste(_:)) {
+                return false
+            }
+            return super.canPerformAction(action, withSender: sender)
+        }
+    }
+    
     private func createInputView(title: String, unit: String) -> UIView {
         let containerView = UIView()
 
@@ -130,7 +139,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
         titleLabel.textColor = .white
         titleLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
 
-        let numberTextField = UITextField()
+        let numberTextField = PasteBiockableTextField()
         numberTextField.backgroundColor = .color2F2F2F
         numberTextField.layer.cornerRadius = 12
         numberTextField.keyboardType = .decimalPad
@@ -224,6 +233,10 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
             let decimalSeparator = Locale.current.decimalSeparator ?? "."
             
+        if string.isEmpty {
+            return true
+        }
+        
         if let value = Double(newText), value >= 0 {
             let isDecimal = newText.contains(decimalSeparator)
             
