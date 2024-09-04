@@ -41,6 +41,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
         stackView.spacing = 26
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -51,6 +53,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.translatesAutoresizingMaskIntoConstraints = false
         calendar.wantsDateDecorations = true
         calendar.backgroundColor = .colorSecondary
+        calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
         
@@ -194,7 +197,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            calendarView.heightAnchor.constraint(equalToConstant: 500),
+            calendarView.widthAnchor.constraint(equalToConstant: 250),
+            calendarView.heightAnchor.constraint(equalToConstant: 380),
             
             exerciseVolumeLabel.heightAnchor.constraint(equalToConstant:20),
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
