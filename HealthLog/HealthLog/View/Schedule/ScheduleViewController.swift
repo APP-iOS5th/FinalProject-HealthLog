@@ -289,7 +289,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             exerciseVolumeLabel.text = "오늘의 볼륨량: \(selectedDateExerciseVolume)"
             updateTableView()
         }
-        
+        print("loadSelectedDateSchedule date: \(date)")
         highlightBodyPartsAtSelectedDate(date)
     }
     
@@ -575,42 +575,49 @@ extension ScheduleViewController {
     private func highlightBodyPartsAtSelectedDate(_ date: Date) {
         guard let realm = realm else {return}
         
-        guard let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first else { return }
-        
-        var completedSetsCount = 0
-        var bodyPartsWithCompletedSets: [String: Int] = [:]
-        
-        for scheduleExercise in selectedDateSchedule.exercises {
-            var completedSetsForExercise = 0
+        if let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first {
             
-            for set in scheduleExercise.sets {
-                if set.isCompleted {
-                    completedSetsCount += 1
-                    completedSetsForExercise += 1
+            print("selectedDateSchedule: \(selectedDateSchedule)")
+            var completedSetsCount = 0
+            var bodyPartsWithCompletedSets: [String: Int] = [:]
+            
+            for scheduleExercise in selectedDateSchedule.exercises {
+                var completedSetsForExercise = 0
+                
+                for set in scheduleExercise.sets {
+                    if set.isCompleted {
+                        completedSetsCount += 1
+                        completedSetsForExercise += 1
+                    }
                 }
-            }
-            
-            if completedSetsForExercise > 0 {
-                // apply highlight saturation to body parts according to the number of sets
-                if let bodyParts = scheduleExercise.exercise?.bodyParts {
-                    for bodyPart in bodyParts {
-                        if let currentCount = bodyPartsWithCompletedSets[bodyPart.rawValue] {
-                            bodyPartsWithCompletedSets[bodyPart.rawValue] = currentCount + completedSetsForExercise
-                        } else {
-                            bodyPartsWithCompletedSets[bodyPart.rawValue] = completedSetsForExercise
+                
+                if completedSetsForExercise > 0 {
+                    // apply highlight saturation to body parts according to the number of sets
+                    if let bodyParts = scheduleExercise.exercise?.bodyParts {
+                        for bodyPart in bodyParts {
+                            if let currentCount = bodyPartsWithCompletedSets[bodyPart.rawValue] {
+                                bodyPartsWithCompletedSets[bodyPart.rawValue] = currentCount + completedSetsForExercise
+                            } else {
+                                bodyPartsWithCompletedSets[bodyPart.rawValue] = completedSetsForExercise
+                            }
+                        }
+                    }
+                } else {
+                    // reset body part highlights
+                    if let bodyParts = scheduleExercise.exercise?.bodyParts {
+                        for bodyPart in bodyParts {
+                            bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
                         }
                     }
                 }
-            } else {
-                // reset body part highlights
-                if let bodyParts = scheduleExercise.exercise?.bodyParts {
-                    for bodyPart in bodyParts {
-                        bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
-                    }
-                }
             }
+            muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
+        } else {
+            // need to reset highlight of body parts
+            print("No schedule for selected date")
+            // get highlighted body parts
+            muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: ["":0])
         }
-        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
     }
     
     private func deleteHighlightBodyParts(bodyParts: List<BodyPart>) {
