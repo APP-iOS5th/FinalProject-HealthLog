@@ -389,24 +389,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: imageViews
         imageViews.enumerated().forEach { index, imageView in
-            // imageContainerView
-            let imageContainerView = UIView()
-            imageStackView.addArrangedSubview(imageContainerView)
-            imageContainerView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                imageContainerView.leadingAnchor.constraint(
-                    equalTo: stackView.leadingAnchor,
-                    constant: 10),
-                imageContainerView.trailingAnchor.constraint(
-                    equalTo: stackView.trailingAnchor,
-                    constant: -10),
-                imageContainerView.heightAnchor.constraint(
-                    equalTo: imageContainerView.widthAnchor,
-                    multiplier: 9 / 16)
-            ])
             
-            // ImageView
-            imageView.contentMode = .scaleAspectFit
+            // MARK: imageViews - ImageView
+            imageView.contentMode = .scaleAspectFill
             imageView.layer.borderWidth = 1
             imageView.layer.borderColor = UIColor.lightGray.cgColor
             imageView.layer.cornerRadius = 10
@@ -418,20 +403,21 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             )
             imageView.isUserInteractionEnabled = true
             imageView.tag = ViewTag.imageViews.setIndexTag(index)
-            imageContainerView.addSubview(imageView)
+            stackView.addArrangedSubview(imageView)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 imageView.leadingAnchor.constraint(
-                    equalTo: imageContainerView.leadingAnchor),
+                    equalTo: stackView.leadingAnchor,
+                    constant: 10),
                 imageView.trailingAnchor.constraint(
-                    equalTo: imageContainerView.trailingAnchor),
-                imageView.topAnchor.constraint(
-                    equalTo: imageContainerView.topAnchor),
-                imageView.bottomAnchor.constraint(
-                    equalTo: imageContainerView.bottomAnchor),
+                    equalTo: stackView.trailingAnchor,
+                    constant: -10),
+                imageView.heightAnchor.constraint(
+                    equalTo: imageView.widthAnchor,
+                    multiplier: 9 / 16)
             ])
             
-            // imageView Cancel
+            // MARK: imageViews - CancelButton
             let cancelButton = imageCancelButtons[index]
             let symbolConfig = UIImage.SymbolConfiguration(
                 pointSize: 20, weight: .heavy, scale: .large)
@@ -456,7 +442,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     constant: -10),
             ])
             
-            // ImageView Label
+            // MARK: imageViews - Label
             let imageOpenLabel = UILabel()
             imageOpenLabel.text = "Open Gallery"
             imageOpenLabel.textColor = .white
@@ -470,7 +456,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     constant: -30),
             ])
             
-            // ImageView Icon
+            // MARK: imageViews - Icon
             let symbolImageView = UIImageView(
                 image: UIImage(systemName: "photo.badge.plus"))
             symbolImageView.tintColor = .white
@@ -488,10 +474,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 symbolImageView.heightAnchor.constraint(
                     equalToConstant: 50),
             ])
-            
-//            imageView.sendSubviewToBack(imageOpenLabel)
-//            imageView.sendSubviewToBack(symbolImageView)
-        } // end forEach
+        } // end forEach imageViews
     }
     
     func setupDeleteButton() {
