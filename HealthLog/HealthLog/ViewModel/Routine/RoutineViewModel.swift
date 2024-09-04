@@ -29,6 +29,8 @@ class RoutineViewModel {
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
+        $routines.assign(to: &$filteredRoutines)
+        
         
         
     }
@@ -36,14 +38,6 @@ class RoutineViewModel {
     func addScheduleExercise(index: Int) {
         realmManger.updateSchedule(index: index)
     }
-    
-    
-   
-    //임시 사용 우선순위: 3
-    func syncRotuine() {
-        filteredRoutines = routines
-    }
-    
     
     func fillteRoutines(by searchText: String) {
         if searchText.isEmpty {

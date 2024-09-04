@@ -21,8 +21,6 @@ class RoutineAddNameViewModel {
     @Published var isValid: Bool = false
     @Published var isAddRoutineValid: Bool = false
     
-    //TODO: - ViewModel 분리
-    
     @Published var routine: Routine = Routine()
     @Published var routines: [Routine] = []
     
