@@ -61,6 +61,11 @@ class ExercisesDetailViewController: UIViewController {
         setupBindings()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        detailViewModel.timer?.invalidate()
+        detailViewModel.startImageRotation()
+    }
+    
     // MARK: - Setup
     
     func setupMain() {
