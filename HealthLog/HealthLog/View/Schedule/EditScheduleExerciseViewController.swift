@@ -10,7 +10,6 @@ import RealmSwift
 
 protocol EditScheduleExerciseViewControllerDelegate: AnyObject {
     func didUpdateScheduleExercise()
-    func didDeleteScheduleExercise(bodyParts: List<BodyPart>)
 }
 
 class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate {
@@ -432,32 +431,22 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let confirmAction = UIAlertAction(title: "확인", style: .destructive) { [weak self] _ in
             guard let self = self , let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
             let exerciseName = self.scheduleExercise.exercise?.name ?? "운동"
-            let selectedDate = self.selectedDate.toKoreanTime()
+            let selectedDate = self.selectedDate
 
             do {
-                let schedule = realm.objects(Schedule.self).filter("date == %@", selectedDate).first // realm 에러처리를 위해 self를 뺐습니다.
-                
-                guard let exercises = schedule?.exercises else { return }
-                
-                let exerciseToDelete = self.scheduleExercise
-                let deletedBodyParts = exerciseToDelete.exercise?.bodyParts
-                
+                let schedule = realm.objects(Schedule.self).filter("date == %@", selectedDate.toKoreanTime()).first // realm 에러처리를 위해 self를 뺐습니다.
+
                 try realm.write {
+                    guard let exercises = schedule?.exercises else { return }
                     if exercises.count > 1 {
                         realm.delete(self.scheduleExercise)
                     } else {
                         realm.delete(schedule!)
                     }
                 }
-                print("exerciseToDelete: \(String(describing: deletedBodyParts))")
                 
                 // notify the delegate of the update
-                if let bodyParts = deletedBodyParts {
-                    self.delegate?.didDeleteScheduleExercise(bodyParts: bodyParts)
-                } else {
-                    print("No body parts to delete")
-                }
-                
+                self.delegate?.didUpdateScheduleExercise()
             } catch {
                 print("Error deleting ScheduleExercise")
             }

@@ -11,27 +11,15 @@ import Combine
 
 class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate, EditScheduleExerciseViewControllerDelegate, UIScrollViewDelegate {
     
-    
     // MARK: - declare
-//    let realm = try! Realm()
-    let realm = RealmManager.shared.realm
-    
-    private var muscleImageView = MuscleImageView()
-    
-    private var selectedDateSchedule: Schedule?
-    
     private var viewModel = ScheduleViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     private let today = Calendar.current.startOfDay(for: Date())
     private var selectedDate: Date?
     private var selectedDateExerciseVolume: Int = 0
-    
     private var tableViewHeightConstraint: NSLayoutConstraint?
-    
-    private var highlightedBodyParts: [String: Int] = [:]
-    // to execute customizeCalendarTextColor one time from decorationFor
-    //private var isTextColorCustimzed = false
+    private var muscleImageView = MuscleImageView()
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -43,8 +31,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
         stackView.spacing = 26
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -55,7 +41,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.translatesAutoresizingMaskIntoConstraints = false
         calendar.wantsDateDecorations = true
         calendar.backgroundColor = .colorSecondary
-        calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
         
@@ -67,6 +52,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         return calendar
     }()
+    
     
     lazy var exerciseVolumeLabel: UILabel = {
         let label = UILabel()
@@ -143,18 +129,39 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         return table
     }()
     
+    private func bindViewModel() {
+        viewModel.$selectedDateSchedule
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] schedule in
+                //self?.selectedDateSchedule = schedule
+                self?.updateTableView()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$selectedDateExerciseVolume
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] volume in
+                self?.exerciseVolumeLabel.text = "오늘의 볼륨량: \(volume)"
+            }
+            .store(in: &cancellables)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
-        loadSelectedDateSchedule(today)
-        //customizeCalendarTextColor()
+        bindViewModel()
+        // 앱 첫 실행 시 오늘 날짜 선택된 상태
+        let todayComponents = Calendar.current.dateComponents([.year, .month, .day], from: today)
+            
+        if let selection = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
+            selection.setSelected(todayComponents, animated: false)
+        }
+        viewModel.loadSelectedDateSchedule(today)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-//        let date = selectedDate ?? today
+        tableView.reloadData()
         didUpdateScheduleExercise()
     }
     
@@ -206,8 +213,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            calendarView.widthAnchor.constraint(equalToConstant: 250),
-            calendarView.heightAnchor.constraint(equalToConstant: 380),
+            calendarView.heightAnchor.constraint(equalToConstant: 500),
             
             exerciseVolumeLabel.heightAnchor.constraint(equalToConstant:20),
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -235,63 +241,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewHeight()
-        //customizeCalendarTextColor()
     }
     
     private func updateTableViewHeight() {
-        tableView.layoutIfNeeded()
-        let height = self.tableView.contentSize.height
-        tableViewHeightConstraint?.constant = height
-        view.layoutIfNeeded()
-    }
-    
-    fileprivate func createTodaysDummySchedule() -> Schedule? {
-        guard let realm = realm else { return nil }
-
-        let exercises = realm.objects(Exercise.self)
-        let scheduleExerciseSet1 = ScheduleExerciseSet(order: 1, weight: 10, reps: 10, isCompleted: true)
-        let scheduleExerciseSet2 = ScheduleExerciseSet(order: 2, weight: 11, reps: 10, isCompleted: true)
-        let scheduleExerciseSet3 = ScheduleExerciseSet(order: 3, weight: 12, reps: 10, isCompleted: false)
-        let scheduleExerciseSet4 = ScheduleExerciseSet(order: 1, weight: 10, reps: 12, isCompleted: true)
-        let scheduleExerciseSet5 = ScheduleExerciseSet(order: 2, weight: 12, reps: 12, isCompleted: false)
-        let scheduleExerciseSet6 = ScheduleExerciseSet(order: 3, weight: 14, reps: 12, isCompleted: false)
-        
-        let scheduleExercise1 = ScheduleExercise(exercise: exercises[0], order: 1, isCompleted: false, sets: [scheduleExerciseSet1,scheduleExerciseSet2,scheduleExerciseSet3])
-        let scheduleExercise2 = ScheduleExercise(exercise: exercises[2], order: 2, isCompleted: false, sets: [scheduleExerciseSet4,scheduleExerciseSet5,scheduleExerciseSet6])
-        
-        let newSchedule = Schedule(date: today.toKoreanTime(), exercises: [scheduleExercise1,scheduleExercise2])
-        
-        // add today schedule to realm
-        try! realm.write {
-            realm.add(newSchedule)
-        }
-        
-        return realm.objects(Schedule.self).filter("date == %@", today.toKoreanTime()).first
-    }
-    
-    func loadSelectedDateSchedule(_ date: Date) {
-        guard let realm = realm else { return }
-        
-//        if date == today && selectedDateSchedule == nil {
-//            selectedDateSchedule = createTodaysDummySchedule()
-//        }
-
-        selectedDateExerciseVolume = 0
-        if let selectedSchedule = selectedDateSchedule {
-            // calculate exercise volume
-            for scheduleExercise in selectedSchedule.exercises {
-                for set in scheduleExercise.sets {
-                    selectedDateExerciseVolume += set.weight * set.reps
-                }
-            }
-            exerciseVolumeLabel.text = "오늘의 볼륨량: \(selectedDateExerciseVolume)"
-            updateTableView()
-        } else {
-            exerciseVolumeLabel.text = "오늘의 볼륨량: \(selectedDateExerciseVolume)"
-            updateTableView()
-        }
-        print("loadSelectedDateSchedule date: \(date)")
-        highlightBodyPartsAtSelectedDate(date)
+            tableView.layoutIfNeeded()
+            let height = self.tableView.contentSize.height
+            tableViewHeightConstraint?.constant = height
+            view.layoutIfNeeded()
     }
     
     @objc func addSchedule() {
@@ -302,8 +258,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func didTapSaveRoutine() {
-        if selectedDateSchedule != nil {
-            let saveRoutineVC = SaveRoutineViewController(schedule: selectedDateSchedule!)
+        if viewModel.selectedDateSchedule != nil {
+            let saveRoutineVC = SaveRoutineViewController(schedule: viewModel.selectedDateSchedule!)
             let navigationController = UINavigationController(rootViewController: saveRoutineVC)
             
             // transparent black background
@@ -335,13 +291,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return selectedDateSchedule?.exercises.count ?? 0
+        return viewModel.selectedDateSchedule?.exercises.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ExerciseCheckCell.identifier, for: indexPath) as! ExerciseCheckCell
         
-        if let scheduleExercise = selectedDateSchedule?.exercises[indexPath.row] {
+        if let scheduleExercise = viewModel.selectedDateSchedule?.exercises[indexPath.row] {
             cell.configure(with: scheduleExercise)
             cell.delegate = self
         }
@@ -382,18 +338,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func didUpdateScheduleExercise() {
-        loadSelectedDateSchedule(selectedDate ?? today)
-        highlightBodyPartsAtSelectedDate(selectedDate ?? today)
-        let calendar = Calendar.current
-        let selectedComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate ?? today)
-        calendarView.reloadDecorations(forDateComponents: [selectedComponents], animated: true)
-        
-        updateTableView()
-    }
-    
-    func didDeleteScheduleExercise(bodyParts: List<BodyPart>) {
-        loadSelectedDateSchedule(selectedDate ?? today)
-        deleteHighlightBodyParts(bodyParts: bodyParts)
+        viewModel.loadSelectedDateSchedule(selectedDate ?? today)
         let calendar = Calendar.current
         let selectedComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate ?? today)
         calendarView.reloadDecorations(forDateComponents: [selectedComponents], animated: true)
@@ -413,15 +358,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
     
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-        // check if it's last day
-//        if let date = dateComponents.date, isLastDayOfMonth(date: date) {
-//            customizeCalendarTextColor()
-//        }
-        
         guard let date = dateComponents.date else { return nil }
         
         // selected date color
-        if let schedule = getScheduleForDate(date), !schedule.exercises.isEmpty {
+        if let schedule = viewModel.getScheduleForDate(date), !schedule.exercises.isEmpty {
             let numberOfExercises = "\(schedule.exercises.count)"
             let bgColor: UIColor = isScheduleCompleted(schedule) ? .colorAccent : .color525252
             
@@ -434,33 +374,12 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         
         return nil
     }
-    
-//    private func isLastDayOfMonth(date: Date) -> Bool {
-//        // Set Korean timezone
-//        var koreanCalendar = Calendar(identifier: .gregorian)
-//        koreanCalendar.locale = Locale(identifier: "ko_KR")
-//        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
-//
-//        // Convert date to Korean timezone
-//        let koreanDate = convertToKoreanTimeZone(date: date, calendar: koreanCalendar)
-//
-//        // Get the next day
-//        let nextDay = koreanCalendar.date(byAdding: .day, value: 1, to: koreanDate)!
-//
-//        let currentMonth = koreanCalendar.component(.month, from: koreanDate)
-//        let nextDayMonth = koreanCalendar.component(.month, from: nextDay)
-//        // Check if the current day is the last day of the month
-//        let isLastDay = (currentMonth != nextDayMonth)
-//
-////        print("Date: \(koreanDate), Next Day: \(nextDay), Current Month: \(currentMonth), Next day Month: \(nextDayMonth), Is last day: \(isLastDay)")
-//        return isLastDay
-//    }
 
-//    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
-//        let timeZone = TimeZone(identifier: "Asia/Seoul")!
-//        let seconds = timeZone.secondsFromGMT(for: date)
-//        return Date(timeInterval: TimeInterval(seconds), since: date)
-//    }
+    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
+        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+        let seconds = timeZone.secondsFromGMT(for: date)
+        return Date(timeInterval: TimeInterval(seconds), since: date)
+    }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
         let label = UILabel()
@@ -484,9 +403,9 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         return containerView
     }
     
-    private func getScheduleForDate(_ date: Date) -> Schedule? {
-        guard let realm = realm else { return nil }
-        return realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first
+    func highlightBodyPartsAtSelectedDate(_ date: Date) {
+        let bodyPartsWithCompletedSets = viewModel.getBodyPartsWithCompletedSets(for: date)
+        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
     }
     
     private func isScheduleCompleted(_ schedule: Schedule) -> Bool {
@@ -497,147 +416,8 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         guard let dateComponents = dateComponents,
               let date = dateComponents.date else { return }
         selectedDate = date
-        loadSelectedDateSchedule(date)
+        viewModel.loadSelectedDateSchedule(date.toKoreanTime())
         updateTableView()
-        //customizeCalendarTextColor()
-    }
-    
-    // MARK: - Customize Calendar Text Color
-//    private func customizeCalendarTextColor() {
-//        self.changeHeaderTextColor(self.calendarView)
-//        self.changeSubviewTextColor(self.calendarView, today: self.today, selectedDate: self.selectedDate)
-//    }
-//
-//    private func changeHeaderTextColor(_ view: UIView) {
-//        for subview in view.subviews {
-//            if let label = subview as? UILabel {
-//                label.textColor = .white
-//            } else {
-//                changeHeaderTextColor(subview)
-//            }
-//        }
-//    }
-//
-//    private func changeSubviewTextColor(_ view: UIView, today: Date, selectedDate: Date?) {
-//        let calendar = Calendar.current
-//        let currentDateComponents = calendar.dateComponents([.day, .month, .year], from: today)
-//
-//        for subview in view.subviews {
-//            if let label = subview as? UILabel,
-//               let labelDate = dateFromLabelText(label.text, calendar: calendar),
-//               let labelDateActual = calendar.date(from: labelDate) {
-//
-//                // set base color
-//                label.textColor = .white
-//                label.highlightedTextColor = .white
-//
-//                // today
-//                if calendar.isDateInToday(labelDateActual) {
-//                    if today == selectedDate {
-//                        label.textColor = .white
-//                    } else {
-//                        label.textColor = .colorAccent
-//                    }
-//                }
-//                // selected date
-//                else if let selectedDate = selectedDate,
-//                        calendar.isDate(labelDateActual, inSameDayAs: selectedDate) {
-//                    label.textColor = .white
-//                }
-//                // this month
-//                else if labelDate.month == currentDateComponents.month && labelDate.year == currentDateComponents.year {
-//                    label.textColor = .white
-//                }
-//                // different month
-//                else {
-//                    label.textColor = .color767676
-//                }
-//            } else {
-//                changeSubviewTextColor(subview, today: today, selectedDate: selectedDate)
-//            }
-//        }
-//    }
-
-    // get date from text of UILabel
-//    private func dateFromLabelText(_ text: String?, calendar: Calendar) -> DateComponents? {
-//        guard let text = text,
-//              let day = Int(text) else { return nil }
-//
-//        // get current month and year from calendar
-//        let displayedMonthDate = calendarView.visibleDateComponents
-//        guard let month = displayedMonthDate.month,
-//              let year = displayedMonthDate.year else { return nil }
-//
-//        return DateComponents(year: year, month: month, day: day)
-//    }
-}
-
-extension ScheduleViewController {
-    private func highlightBodyPartsAtSelectedDate(_ date: Date) {
-        guard let realm = realm else {return}
-        
-        if let selectedDateSchedule = realm.objects(Schedule.self).filter("date == %@", date.toKoreanTime()).first {
-            
-            print("selectedDateSchedule: \(selectedDateSchedule)")
-            var completedSetsCount = 0
-            var bodyPartsWithCompletedSets: [String: Int] = [:]
-            
-            for scheduleExercise in selectedDateSchedule.exercises {
-                var completedSetsForExercise = 0
-                
-                for set in scheduleExercise.sets {
-                    if set.isCompleted {
-                        completedSetsCount += 1
-                        completedSetsForExercise += 1
-                    }
-                }
-                
-                if completedSetsForExercise > 0 {
-                    // apply highlight saturation to body parts according to the number of sets
-                    if let bodyParts = scheduleExercise.exercise?.bodyParts {
-                        for bodyPart in bodyParts {
-                            if let currentCount = bodyPartsWithCompletedSets[bodyPart.rawValue] {
-                                bodyPartsWithCompletedSets[bodyPart.rawValue] = currentCount + completedSetsForExercise
-                            } else {
-                                bodyPartsWithCompletedSets[bodyPart.rawValue] = completedSetsForExercise
-                            }
-                        }
-                    }
-                } else {
-                    // reset body part highlights
-                    if let bodyParts = scheduleExercise.exercise?.bodyParts {
-                        for bodyPart in bodyParts {
-                            bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
-                        }
-                    }
-                }
-            }
-            highlightedBodyParts = bodyPartsWithCompletedSets
-            muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
-        } else {
-            // need to reset highlight of body parts
-            print("No schedule for selected date")
-            // get highlighted body parts
-            var bodyPartsWithCompletedSets: [String: Int] = [:]
-            
-            // reset body part highlights
-            for bodyPart in highlightedBodyParts {
-                bodyPartsWithCompletedSets[bodyPart.key] = 0
-            }
-            muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
-        }
-    }
-    
-    private func deleteHighlightBodyParts(bodyParts: List<BodyPart>) {
-        let date = selectedDate ?? today
-        
-        var bodyPartsWithCompletedSets: [String: Int] = [:]
-        
-        // reset body part highlights
-        for bodyPart in bodyParts {
-            bodyPartsWithCompletedSets[bodyPart.rawValue] = 0
-        }
-
-        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
+        highlightBodyPartsAtSelectedDate(date.toKoreanTime())
     }
 }
