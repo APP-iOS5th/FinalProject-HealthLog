@@ -224,7 +224,7 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
             let decimalSeparator = Locale.current.decimalSeparator ?? "."
             
-            // 소수점이 있는지 확인
+        if let value = Double(newText), value >= 0 {
             let isDecimal = newText.contains(decimalSeparator)
             
             // 소수점이 없는 경우, 최대 3자리 정수
@@ -247,8 +247,6 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
                     return false
                 }
             }
-
-            if let value = Double(newText) {
                 switch textField {
                 case weightTextField:
                     return value <= 200
@@ -260,6 +258,6 @@ class WeightRecordModalViewController: UIViewController, UITextFieldDelegate {
                     return true
                 }
             }
-            return true
+            return false
         }
 }
