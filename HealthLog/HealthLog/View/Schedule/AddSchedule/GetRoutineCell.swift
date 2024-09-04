@@ -21,11 +21,9 @@ class GetRoutineCell: UITableViewCell {
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
-
     
     private lazy var addExerciseButton: UIButton = {
         let button = UIButton(type: .system)
-        
         var configuration = UIButton.Configuration.plain()
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8)
         configuration.title = "오늘 할 운동 추가"
@@ -36,7 +34,6 @@ class GetRoutineCell: UITableViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        
         return button
     }()
     
@@ -62,7 +59,6 @@ class GetRoutineCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = UIColor.color1E1E1E
         view.translatesAutoresizingMaskIntoConstraints = false
-        
         return view
     }()
     
@@ -72,10 +68,7 @@ class GetRoutineCell: UITableViewCell {
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-       return scrollView
-        
+        return scrollView
     }()
     
     // 운동 부위 스텍뷰
@@ -86,9 +79,7 @@ class GetRoutineCell: UITableViewCell {
         stackView.spacing = 8
         stackView.clipsToBounds = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
         return stackView
-        
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -109,7 +100,6 @@ class GetRoutineCell: UITableViewCell {
         self.bodypartScrollView.addSubview(bodypartStackView)
         
         let padding: CGFloat = 22
-        
         let safeArea = self.contentView.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
@@ -131,7 +121,6 @@ class GetRoutineCell: UITableViewCell {
             self.exercisesLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
             self.exercisesLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             
-            
             self.exercisesVolumLabel.topAnchor.constraint(equalTo: self.exercisesLabel.bottomAnchor, constant: 3),
             self.exercisesVolumLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
             self.exercisesVolumLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
@@ -148,7 +137,6 @@ class GetRoutineCell: UITableViewCell {
         ])
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -164,7 +152,6 @@ class GetRoutineCell: UITableViewCell {
     }
     
     func configure(with routine: Routine) {
-     
         titleLabel.text = routine.name
         var exercisesName: [String] = []
         routine.exercises.forEach { exercise in
@@ -192,5 +179,5 @@ class GetRoutineCell: UITableViewCell {
             bodypartStackView.addArrangedSubview(label)
         }
     }
-
+    
 }
