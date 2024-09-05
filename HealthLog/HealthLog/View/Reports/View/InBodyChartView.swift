@@ -49,7 +49,7 @@ struct InBodyChartView: View {
                                         ZStack {
                                             VStack(spacing: 0){
                                                 Text("\(viewModel.formatDate(weightChartSelection))")
-//                                                Text("\(viewModel. weightChartSelection)")
+//                                                Text("\(weightChartSelection)")
                                                     .font(.custom("Pretendard-Regular", size: 12))
                                                     .foregroundStyle(Color.white)
                                                 Text("\(viewModel.getWeight(for: weightChartSelection)) KG")

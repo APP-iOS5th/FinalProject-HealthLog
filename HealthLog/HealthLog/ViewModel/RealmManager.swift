@@ -58,9 +58,9 @@ class RealmManager {
             do {
                 try realm.write {
                     // 현재 시간을 한국 시간으로 변환
-                    let koreanDate = Date().toKoreanTime()
+                    let koreanDate = Calendar.current.startOfDay(for: Date())
                     // 날짜 범위 설정(같은 날짜의 데이터를 찾기 위함)
-                    let startOfDay = Calendar.current.startOfDay(for: Date()).toKoreanTime()
+                    let startOfDay = koreanDate
                     let endOfDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
                     // 현재 날짜만 선택하여 기존 데이터를 조회
                     let existingInbody = realm.objects(InBody.self).filter("date >= %@ AND date < %@", startOfDay, endOfDay)
@@ -102,6 +102,12 @@ extension Date {
     func toKoreanTime() -> Date {
         let timeZone = TimeZone(identifier: "Asia/Seoul")!
         let seconds = TimeInterval(timeZone.secondsFromGMT(for: self))
+        return addingTimeInterval(seconds)
+    }
+    
+    func toUTC() -> Date {
+        let timeZone = TimeZone(identifier: "Asia/Seoul")!
+        let seconds = -TimeInterval(timeZone.secondsFromGMT(for: self))
         return addingTimeInterval(seconds)
     }
 }
@@ -399,7 +405,7 @@ extension RealmManager {
             let bodyFat = Float.random(in: 10...25)
             let muscleMass = Float.random(in: 20...40)
             
-            let inBody = InBody(date: date, weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+            let inBody = InBody(date: date.toKoreanTime(), weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
             sampleData.append(inBody)
         }
         
@@ -410,7 +416,17 @@ extension RealmManager {
             let bodyFat = Float.random(in: 10...25)
             let muscleMass = Float.random(in: 20...40)
             
-            let inBody = InBody(date: date, weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+            let inBody = InBody(date: date.toKoreanTime(), weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
+            sampleData.append(inBody)
+        }
+        
+        for day in 1...2 {
+            let date = makeDate(year: 2024, month: 9, day: day)
+            let weight = Float.random(in: 60...90)
+            let bodyFat = Float.random(in: 10...25)
+            let muscleMass = Float.random(in: 20...40)
+            
+            let inBody = InBody(date: date.toKoreanTime(), weight: weight, bodyFat: bodyFat, muscleMass: muscleMass)
             sampleData.append(inBody)
         }
         
@@ -523,7 +539,7 @@ extension RealmManager {
     
     func updateSchedule(index: Int) {
         guard let realm = realm else { return }
-        let date = Calendar.current.startOfDay(for: Date()).toKoreanTime()
+        let date = Calendar.current.startOfDay(for: Date())
         print("동작은해\(date)")
         if let schedule = realm.objects(Schedule.self).filter("date == %@", date).first
         {

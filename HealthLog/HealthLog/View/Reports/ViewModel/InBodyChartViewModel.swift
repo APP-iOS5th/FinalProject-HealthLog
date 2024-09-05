@@ -97,9 +97,9 @@ class InBodyChartViewModel: ObservableObject {
             }
             
             let calendar = Calendar.current
-            let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!.toKoreanTime()
+            let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
             let range = calendar.range(of: .day, in: .month, for: startDate)
-            let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range!.count))!.toKoreanTime()
+            let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range!.count))!
             
             let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
             result(.success(Array(data)))
