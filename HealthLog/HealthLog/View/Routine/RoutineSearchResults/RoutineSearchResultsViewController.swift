@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class RoutineSearchResultsViewController: UIViewController, SearchResultCellDelegate {
     
@@ -13,6 +14,9 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
     
     let viewModel = ExerciseViewModel()
    
+    let searchOptionStackView = SearchBodyPartStackView()
+    
+    private var cancellables = Set<AnyCancellable>()
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -25,6 +29,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         return tableView
         
     }()
+
     
     private lazy var dividerView: UIView = {
         let view = UIView()
@@ -34,28 +39,73 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         return view
     }()
     
+    
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let searchController = self.parent as? UISearchController {
+            searchController.searchBar.showsBookmarkButton = false
+        }
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        resetBodyPartsOption()
+    }
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addExercise")
+     
         setupUI()
+        setupBinding()
         self.hideKeyboard()
     }
     
-   
     
+    
+    private func setupBinding() {
+        viewModel.$filteredExercises
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in self?.tableView.reloadData() }
+            .store(in: &cancellables)
+        
+        // MARK: SearchBodyPartOption Select
+        searchOptionStackView
+            .bodyPartOptionPublisher
+            .sink { self.viewModel.selectedOption = $0 }
+            .store(in: &cancellables)
+        
+        // MARK: bodypartOptionShowUIChange
+        viewModel.$bodypartOptionShow
+            .sink { self.bodypartOptionShowUIChange($0) }
+            .store(in: &cancellables)
+    }
+
+   
+ 
     
     func setupUI() {
+        viewModel.bodypartOptionShow = true
+
         self.view.backgroundColor = UIColor.color1E1E1E
         navigationController?.setupBarAppearance()
         //MARK: - addSubview
         
         self.view.addSubview(dividerView)
         self.view.addSubview(tableView)
+        searchOptionStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(searchOptionStackView)
         
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            self.dividerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 13),
+            
+            searchOptionStackView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            searchOptionStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            searchOptionStackView.trailingAnchor.constraint(equalTo:safeArea.trailingAnchor, constant: -16),
+            
+            self.dividerView.topAnchor.constraint(equalTo: searchOptionStackView.bottomAnchor, constant: 13),
             self.dividerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
             self.dividerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
             self.dividerView.heightAnchor.constraint(equalToConstant: 1),
@@ -92,6 +142,44 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
         }
     }
     
+    private func animateBodyPartsHidden(isHidden: Bool) {
+        UIView.animate(withDuration: 0.5) {
+            self.searchOptionStackView.stackContentHidden(isHidden: isHidden)
+        }
+    }
+    
+    func resetBodyPartsOption() {
+        searchOptionStackView.bodypartButtonList
+            .first(where: { $0.bodypartOption == .all })?
+            .sendActions(for: .touchUpInside)
+    }
+    
+    func bodypartOptionShowUIChange(_ bodypartOptionShow: Bool) {
+        let iconName: String
+        guard let searchController = self.parent as? UISearchController else { return }
+        let searchBar = searchController.searchBar
+        
+        if bodypartOptionShow {
+            iconName = "menubar.arrow.down.rectangle"
+            self.animateBodyPartsHidden(isHidden: false)
+            searchBar.becomeFirstResponder()
+        } else {
+            iconName = "menubar.arrow.up.rectangle"
+            self.animateBodyPartsHidden(isHidden: true)
+            searchBar.resignFirstResponder()
+        }
+        
+        let icon = UIImage(systemName: iconName)?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+        
+        UIView.animate(withDuration: 0.3) {
+            searchBar.setImage(icon, for: .bookmark, state: .normal)
+        }
+    }
+    
+    func prepareForDismissal(_ close: Bool) {
+        tableView.isHidden = close
+    }
     
 }
 
@@ -113,3 +201,23 @@ extension RoutineSearchResultsViewController: UITableViewDelegate, UITableViewDa
         return cell
     }
 }
+
+// MARK: UISearchBarDelegate
+extension RoutineSearchResultsViewController: UISearchBarDelegate {
+    func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
+        viewModel.bodypartOptionShow.toggle()
+    }
+    
+}
+
+// MARK: UIScrollViewDelegate
+extension RoutineSearchResultsViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if let searchController = self.parent as? UISearchController {
+            UIView.animate(withDuration: 0.3) {
+                searchController.searchBar.resignFirstResponder()
+            }
+        }
+    }
+}
+

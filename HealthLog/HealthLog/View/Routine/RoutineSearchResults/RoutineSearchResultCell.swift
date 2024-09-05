@@ -28,6 +28,8 @@ class RoutineSearchResultCell: UITableViewCell {
         return label
     }()
     
+    
+    
     // 버튼
     private lazy var plusButton: UIButton = {
         let button = UIButton(type: .system)
