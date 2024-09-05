@@ -24,6 +24,7 @@ struct InBodyChartView: View {
                     .font(.custom("Pretendard-Bold", size: 16))
                     .foregroundStyle(Color.white)
                     .padding(.leading, 12)
+                    .padding(.top, 12)
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 15)

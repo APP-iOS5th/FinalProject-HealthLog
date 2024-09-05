@@ -83,6 +83,7 @@ class ExerciseRankingInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
         return label
     }()
     
@@ -92,6 +93,7 @@ class ExerciseRankingInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
@@ -154,18 +156,25 @@ class ExerciseRankingInfoView: UIView {
             
             exerciseIndexLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             exerciseIndexLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exerciseIndexLabel.widthAnchor.constraint(equalToConstant: 20),
             
             exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 8),
             exerciseNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exerciseNameLabel.widthAnchor.constraint(equalToConstant: 140),
             
             previousWeightlabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
             previousWeightlabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            previousWeightlabel.widthAnchor.constraint(equalToConstant: 40),
             
             rightArrow.leadingAnchor.constraint(equalTo: previousWeightlabel.trailingAnchor, constant: 8),
             rightArrow.centerYAnchor.constraint(equalTo: centerYAnchor),
+            rightArrow.widthAnchor.constraint(equalToConstant: 20),
             
-            heaviestWeightlabel.leadingAnchor.constraint(equalTo: rightArrow.trailingAnchor, constant: 22),
+            
+            
+            heaviestWeightlabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             heaviestWeightlabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            heaviestWeightlabel.widthAnchor.constraint(equalToConstant: 50),
             
             squareView.centerYAnchor.constraint(equalTo: heaviestWeightlabel.centerYAnchor),
             squareView.centerXAnchor.constraint(equalTo: heaviestWeightlabel.centerXAnchor),

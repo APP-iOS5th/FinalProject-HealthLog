@@ -152,8 +152,8 @@ class WeightRecordViewController: UIViewController {
         // ScrollView 제약 조건 설정 (UI 요소들이 모두 contentView에 추가된 후 설정)
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
@@ -218,21 +218,6 @@ class WeightRecordViewController: UIViewController {
         }
     }
     
-//    func fetchInBodyDataForMonth(year: Int, month: Int) {
-//            let startDate = makeDate(year: year, month: month, day: 1)
-//            let endDate = makeDate(year: year, month: month + 1, day: 1).addingTimeInterval(-1)
-//            
-//            viewModel.loadData(for: startDate, to: endDate)
-//        }
-//        
-//        
-//        private func makeDate(year: Int, month: Int, day: Int) -> Date {
-//            var dateComponents = DateComponents()
-//            dateComponents.year = year
-//            dateComponents.month = month
-//            dateComponents.day = day
-//            return Calendar.current.date(from: dateComponents) ?? Date()
-//        }
-    
+
     
 }

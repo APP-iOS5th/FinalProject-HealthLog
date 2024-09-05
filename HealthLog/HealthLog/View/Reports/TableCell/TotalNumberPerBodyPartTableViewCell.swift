@@ -20,7 +20,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
                     NSLayoutConstraint.activate([
                         exerciseStackView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
                         exerciseStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 26),
+                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
                         exerciseStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -26)
                     ])
                 }
@@ -44,6 +44,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         label.text = "삼두"
         label.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
         label.textColor = .white
+        label.textAlignment = .left
         return label
     }()
     
@@ -67,7 +68,8 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = "27세트"
         label.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
-        label.textColor = .white
+        label.textColor = .colorBBBDBD
+        label.textAlignment = .center
         return label
     }()
     
@@ -114,21 +116,23 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 13),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            bodyPartLabel.widthAnchor.constraint(equalToConstant: 68),
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            progressView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 85),
-            progressView.widthAnchor.constraint(equalToConstant: 158),
+            progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 12),
+            progressView.widthAnchor.constraint(equalToConstant: 130),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
             totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
+            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 50),
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -13),
+            foldingImage.leadingAnchor.constraint(equalTo: totalNumberPerBodyPartLabel.trailingAnchor, constant: 14),
+            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
             
         ])
-        
     }
     
     required init?(coder: NSCoder) {
@@ -136,7 +140,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     }
     
     private func updateFoldingImage() {
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .black)
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
         let symbolName = isStackViewVisibility ? "chevron.up" : "chevron.down"
         let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
         foldingImage.image = symbol
@@ -152,7 +156,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         bodyPartLabel.text = data.bodyPart
         totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
         // 추후 최대 값에 맞출 예정
-        progressView.progress = Float(data.totalSets) / 100.0
+        progressView.progress = Float(data.totalSets) / 60.0
         
         exerciseStackView.arrangedSubviews.forEach {$0.removeFromSuperview() }
         
@@ -197,6 +201,7 @@ class HorizontalDetailStackView: UIView {
         
         setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
         setsLabel.textColor = .white
+        setsLabel.textAlignment = .right
     }
     
     
@@ -218,7 +223,8 @@ class HorizontalDetailStackView: UIView {
         stackView.addArrangedSubview(setsLabel)
         
         stackView.axis = .horizontal
-        stackView.distribution = .fill
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
         stackView.spacing = 10
         
         
@@ -231,6 +237,14 @@ class HorizontalDetailStackView: UIView {
             stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            indexLabel.widthAnchor.constraint(equalToConstant: 30), // indexLabel 고정 넓이
+            nameLabel.widthAnchor.constraint(equalToConstant: 100),
+            setsLabel.widthAnchor.constraint(equalToConstant: 60), // setsLabel 고정 넓이
+            setsLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+            // nameLabel은 비율에 따라 자동으로 늘어남
         ])
         
     }

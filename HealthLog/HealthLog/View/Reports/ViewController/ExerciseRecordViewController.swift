@@ -58,7 +58,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         exerciseRecordTableView.translatesAutoresizingMaskIntoConstraints = false
         
-        exerciseRecordTableView.layoutMargins = .zero
+        exerciseRecordTableView.layoutMargins = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
         exerciseRecordTableView.separatorInset = .zero
         // ipad와 같은 넓은 화면에서 테이블 뷰 셀이 전체 화면 너비를 사용하게 됨.
         exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
