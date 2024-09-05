@@ -18,8 +18,7 @@ class RoutineEditViewModel {
     
     @Published var isAddRoutineValid: Bool = false
     @Published var isValid:Bool = false
-    @Published var editNameTextField = " "
-    
+    @Published var editNameTextField = ""
 
     
     lazy var isRoutineNameEmptyPulisher:
@@ -34,7 +33,6 @@ class RoutineEditViewModel {
         $editNameTextField
             .map {
                 self.realmManager.hasRoutineName(name: $0)
-                
             }
             .eraseToAnyPublisher()
         
@@ -49,8 +47,6 @@ class RoutineEditViewModel {
             self.routine.exercises[section].sets.removeLast()
         }
         validateExercise()
-        
-        
     }
  
     func deleteExercise(for setcion: Int) {
@@ -76,12 +72,24 @@ class RoutineEditViewModel {
     
     func validateExercise() {
         let isExercise = !routine.exercises.isEmpty
+
         let allFieldsFilled = routine.exercises.allSatisfy { exercise in
             exercise.sets.allSatisfy { set in
                 set.weight >= 0 && set.reps > 0
             }
         }
-        isAddRoutineValid = isExercise && allFieldsFilled
+        let isName = !self.editNameTextField.isEmpty
+        var isMatcing = self.realmManager.hasRoutineName(name: self.editNameTextField)
+        let isNowNameMatching = routine.name == self.editNameTextField
+        print("routineName\(routine.name)")
+        print("editNameTextField\(self.editNameTextField)")
+        if isNowNameMatching {
+           isMatcing = false
+        }
+        
+        
+        isAddRoutineValid = isExercise && allFieldsFilled && !isMatcing && isName
+        print(isAddRoutineValid)
 
     }
     

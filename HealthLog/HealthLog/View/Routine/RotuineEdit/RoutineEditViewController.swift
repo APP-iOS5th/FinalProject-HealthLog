@@ -20,6 +20,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         self.viewModel.getRoutine(routine: routineViewModel.routines[index])
         self.index = index
         self.id = routineViewModel.routines[index].id
+        self.viewModel.editNameTextField = viewModel.routine.name
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -138,10 +139,11 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
             .map { !$0 && !$1 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
-    
+                
                 self?.nameVaildLabel.isHidden = isValid
-                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+                self?.viewModel.validateExercise()
             }
+        
             .store(in: &cancellables)
         
         // 루틴이 이름 존재 할 때
@@ -149,10 +151,13 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
                 if let text = self?.nameTextField.text {
-                    if isValid && text != self?.viewModel.routine.name {
+                    if isValid && (text != self?.viewModel.routine.name) {
                         self?.nameVaildLabel.text = "이름이 존재 합니다"
+                    } else if text.isEmpty && (text != self?.viewModel.routine.name){
+                        self?.nameVaildLabel.text = "이름이 비어 있습니다"
+                    } else {
+                        self?.nameVaildLabel.text = ""
                     }
-                    
                 }
             }
             .store(in: &cancellables)
