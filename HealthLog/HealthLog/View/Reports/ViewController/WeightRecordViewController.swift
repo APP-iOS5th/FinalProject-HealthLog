@@ -45,6 +45,23 @@ class WeightRecordViewController: UIViewController {
         return button
     }()
     
+    private lazy var inbodyinfoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "최근 인바디 정보"
+        label.textColor = .white
+        label.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
+        label.textAlignment = .left
+        return label
+    }()
+    
+    private lazy var dateinbodyLable: UILabel = {
+        let label = UILabel()
+        label.textColor = .color969696
+        label.font = UIFont.font(.pretendardSemiBold, ofSize: 12)
+        label.textAlignment = .left
+        return label
+    }()
+    
     private lazy var weightBox = InfoBoxView(title: "몸무게", value: "84", unit: "kg")
     private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "84", unit: "kg")
     private lazy var fatBox = InfoBoxView(title: "체지방률", value: "84", unit: "%")
@@ -55,7 +72,7 @@ class WeightRecordViewController: UIViewController {
         
         setupUI()
         setupBindings()   // youngwoo - 04. setupBindings을 viewDidLoad에서 실행, 자동으로 계속 감지함
-        
+        updateRecentInbodyDate()
         
     }
     
@@ -81,12 +98,16 @@ class WeightRecordViewController: UIViewController {
         scrollView.addSubview(contentView)
         
         contentView.addSubview(inbodyinfoButton)
+        contentView.addSubview(inbodyinfoLabel)
+        contentView.addSubview(dateinbodyLable)
         contentView.addSubview(weightBox)
         contentView.addSubview(musclesBox)
         contentView.addSubview(fatBox)
         contentView.addSubview(hostingController!.view)
         
         inbodyinfoButton.translatesAutoresizingMaskIntoConstraints = false
+        inbodyinfoLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateinbodyLable.translatesAutoresizingMaskIntoConstraints = false
         weightBox.translatesAutoresizingMaskIntoConstraints = false
         musclesBox.translatesAutoresizingMaskIntoConstraints = false
         fatBox.translatesAutoresizingMaskIntoConstraints = false
@@ -101,17 +122,23 @@ class WeightRecordViewController: UIViewController {
             inbodyinfoButton.widthAnchor.constraint(equalToConstant: 345),
             inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
             
-            weightBox.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 13),
+            inbodyinfoLabel.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 20),
+            inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            
+            dateinbodyLable.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 23),
+            dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 8),
+            
+            weightBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
             weightBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             weightBox.widthAnchor.constraint(equalToConstant: 94),
             weightBox.heightAnchor.constraint(equalToConstant: 88),
             
-            musclesBox.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 13),
+            musclesBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
             musclesBox.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             musclesBox.widthAnchor.constraint(equalToConstant: 94),
             musclesBox.heightAnchor.constraint(equalToConstant: 88),
             
-            fatBox.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 13),
+            fatBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
             fatBox.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             fatBox.widthAnchor.constraint(equalToConstant: 94),
             fatBox.heightAnchor.constraint(equalToConstant: 88),
@@ -158,7 +185,9 @@ class WeightRecordViewController: UIViewController {
         
         // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
         inBodyVM.$inbodyRecords
-            .sink { inbodyRecords in
+            .sink { [weak self] inbodyRecords in
+                guard let self = self else { return }
+                
                 if let record = inbodyRecords.first {
                     self.weightBox.updateValue(
                         String(format: "%.1f", record.weight))
@@ -167,8 +196,26 @@ class WeightRecordViewController: UIViewController {
                     self.fatBox.updateValue(
                         String(format: "%.1f", record.bodyFat))
                 }
+                self.updateRecentInbodyDate()
             }
             .store(in: &cancellables)
+    }
+    
+    private func updateRecentInbodyDate() {
+        guard let realm = realm else {
+            dateinbodyLable.text = ""
+            return
+        }
+        
+        if let recentRecord = realm.objects(InBody.self)
+            .sorted(byKeyPath: "date", ascending: false)
+            .first {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "(yyyy년 MM월 dd일)"
+            dateinbodyLable.text = formatter.string(from: recentRecord.date)
+        } else {
+            dateinbodyLable.text = ""
+        }
     }
     
 //    func fetchInBodyDataForMonth(year: Int, month: Int) {
