@@ -346,6 +346,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func didToggleExerciseCompletion(_ exercise: ScheduleExercise) {
         didUpdateScheduleExercise()
+        
+        let bodyPartsWithCompletedSets = viewModel.getBodyPartsWithCompletedSets(for: (selectedDate ?? today).toKoreanTime())
+        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
     }
     
     func didUpdateScheduleExercise() {
