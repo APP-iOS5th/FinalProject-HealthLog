@@ -541,10 +541,10 @@ extension RealmManager {
         guard let realm = realm else { return }
         let date = Calendar.current.startOfDay(for: Date())
         print("동작은해\(date)")
+        let routine = fetchRoutine()[index]
         if let schedule = realm.objects(Schedule.self).filter("date == %@", date).first
         {
             do {
-                let routine = fetchRoutine()[index]
                 try realm.write {
                     for exercises in routine.exercises {
                         var schedulExeriseSets: [ScheduleExerciseSet] = []
@@ -554,7 +554,7 @@ extension RealmManager {
                         }
                         
                         schedule.exercises.append(ScheduleExercise(exercise: exercises.exercise!, order: schedule.exercises.count + 1, isCompleted: false, sets: schedulExeriseSets))
-                        print("여까지도 잘동작해")
+                        print("여까지도 잘동 잘해")
                     }
                 }
             } catch {
@@ -563,8 +563,21 @@ extension RealmManager {
             }
         } else {
             do {
-                try realm.write {
+                var order:Int = 0
+                var scheduleExercise:[ScheduleExercise] = []
+                for exercises in routine.exercises {
+                    var schedulExeriseSets: [ScheduleExerciseSet] = []
                     
+                    for sets in exercises.sets {
+                        schedulExeriseSets.append(ScheduleExerciseSet(order: sets.order, weight: sets.weight, reps: sets.reps, isCompleted: false))
+                    }
+                    scheduleExercise.append(ScheduleExercise(exercise: exercises.exercise!, order: order, isCompleted: false, sets: schedulExeriseSets))
+                    order += 1
+                }
+                
+                let schedule = Schedule(date: date, exercises: scheduleExercise)
+                try realm.write {
+                    realm.add(schedule)
                 }
             }
             catch {
