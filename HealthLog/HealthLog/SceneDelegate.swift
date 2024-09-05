@@ -34,14 +34,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         firstNC.tabBarItem = UITabBarItem(title: "스케줄", image: UIImage(systemName: "calendar"), tag: 0)
         secondNC.tabBarItem = UITabBarItem(title: "루틴", image: UIImage(systemName: "repeat"), tag: 1)
-        thirdNC.tabBarItem = UITabBarItem(title: "운동리스트", image: UIImage(systemName: "repeat"), tag: 2)
+        thirdNC.tabBarItem = UITabBarItem(title: "운동리스트", image: UIImage(systemName: "dumbbell"), tag: 2)
         fourthNC.tabBarItem = UITabBarItem(title: "리포트", image: UIImage(systemName: "chart.xyaxis.line"), tag: 3)
         
         self.window?.rootViewController = tabBarController
         self.window?.makeKeyAndVisible()
         window?.overrideUserInterfaceStyle = .dark
+        
+        setupTabBarAppearance(tabBarController: tabBarController)
     }
 
+    func setupTabBarAppearance(tabBarController: UITabBarController) {
+        let tabBar = tabBarController.tabBar
+        tabBar.layer.shadowColor = UIColor.black.cgColor
+        tabBar.layer.shadowOffset = CGSize(width: 0, height: -10)
+        tabBar.layer.shadowOpacity = 0.4
+        tabBar.layer.shadowRadius = 15
+        
+        let topBorder = CALayer()
+        topBorder.frame = CGRect(x: 0, y: -5, width: tabBar.frame.width, height: 5)
+        topBorder.backgroundColor = UIColor.colorSecondary.cgColor
+        tabBar.layer.addSublayer(topBorder)
+    }
+    
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
