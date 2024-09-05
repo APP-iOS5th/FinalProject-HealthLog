@@ -7,6 +7,7 @@
 
 import UIKit
 import RealmSwift
+import Combine
 
 protocol EditScheduleExerciseViewControllerDelegate: AnyObject {
     func didUpdateScheduleExercise()
@@ -15,13 +16,12 @@ protocol EditScheduleExerciseViewControllerDelegate: AnyObject {
 class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate {
     weak var delegate: EditScheduleExerciseViewControllerDelegate?
     
-//    let realm = try! Realm()
-    let realm = RealmManager.shared.realm
-    
+    private let viewModel = ScheduleViewModel()
     private let scheduleExercise: ScheduleExercise
     private let selectedDate: Date
     private var stepperValue = 0
     private var setValues: [(order: Int, weight: String, reps: String)] = []
+    private var cancellables = Set<AnyCancellable>()
     
     init(scheduleExercise: ScheduleExercise, selectedDate: Date) {
         self.scheduleExercise = scheduleExercise
@@ -118,7 +118,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.addTarget(self, action: #selector(didTapDeleteExercise), for: .touchUpInside)
-
+        
         return button
     }()
     
@@ -136,6 +136,16 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         
         setupUI()
         updateSets()
+        bindViewModel()
+    }
+    
+    private func bindViewModel() {
+        viewModel.$isInputValid
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+            }
+            .store(in: &cancellables)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -144,6 +154,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // delete observer of keyboard notification
@@ -329,6 +340,11 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         setNumber.text = "\(setsContainer.arrangedSubviews.count + 1) 세트"
         weightTextField.text = set?.weight
         repsTextField.text = set?.reps
+        weightTextField.delegate = self
+        repsTextField.delegate = self
+        
+        weightTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        repsTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
         view.addSubview(setNumber)
         view.addSubview(weightTextField)
@@ -359,46 +375,31 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             repsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             repsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-
+        
         return view
     }
+    
+    @objc private func textFieldDidChange(_ textField: UITextField) {
+        updateViewModelSetValues()
+    }
+    
+    private func updateViewModelSetValues() {
+        let updatedSetValues = setsContainer.arrangedSubviews.enumerated().map { (index, view) -> (order: Int, weight: String, reps: String) in
+            let weightTextField = view.viewWithTag(1000) as? UITextField
+            let repsTextField = view.viewWithTag(1001) as? UITextField
+            return (order: index + 1, weight: weightTextField?.text ?? "", reps: repsTextField?.text ?? "")
+        }
+        viewModel.updateSetValues(updatedSetValues)
+    }
+    
     @objc private func cancelEdit() {
         dismiss(animated: true)
     }
     
     @objc private func saveEdit() {
         saveInputs()
-        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
-        do {
-            try realm.write {
-                for i in 0..<setValues.count {
-                    if i < scheduleExercise.sets.count {
-                        scheduleExercise.sets[i].order = setValues[i].order
-                        scheduleExercise.sets[i].weight = Int(setValues[i].weight) ?? 0
-                        scheduleExercise.sets[i].reps = Int(setValues[i].reps) ?? 0
-                    } else {
-                        let set = ScheduleExerciseSet(
-                            order: setValues[i].order,
-                            weight: Int(setValues[i].weight) ?? 0,
-                            reps: Int(setValues[i].reps) ?? 0,
-                            isCompleted: false
-                        )
-                        scheduleExercise.sets.append(set)
-                    }
-                }
-                
-                if setValues.count < scheduleExercise.sets.count {
-                    let scheduleExerciseSetsCount = scheduleExercise.sets.count
-                    for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
-                        realm.delete(scheduleExercise.sets[j])
-                    }
-                }
-            }
-            // notify the delegate of the update
-            delegate?.didUpdateScheduleExercise()
-        } catch {
-            print("Error updating ScheduleExercise")
-        }
+        viewModel.saveEditedExercise(scheduleExercise: scheduleExercise, setValues: setValues)
+        delegate?.didUpdateScheduleExercise()
         
         let alertController = UIAlertController(title: "운동 수정 완료", message: "\(String(describing: scheduleExercise.exercise!.name))이(가) 성공적으로 수정되었습니다.", preferredStyle: .alert)
         present(alertController, animated: true, completion: nil)
@@ -412,12 +413,14 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     @objc func stepperValueChanged() {
         stepperValue = Int(stepper.value)
         updateSets()
+        updateViewModelSetValues()
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-        return newText.count <= 3
+        
+        return newText.isEmpty || (newText.count <= 3 && Int(newText) != nil)
     }
     
     @objc func didTapDeleteExercise() {
@@ -427,29 +430,15 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             message: "\(String(describing: scheduleExercise.exercise!.name))이(가) 삭제됩니다.",
             preferredStyle: .alert
         )
+        
         // add confirm action
         let confirmAction = UIAlertAction(title: "확인", style: .destructive) { [weak self] _ in
-            guard let self = self , let realm = realm else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
+            guard let self = self else { return } // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
             let exerciseName = self.scheduleExercise.exercise?.name ?? "운동"
-            let selectedDate = self.selectedDate
-
-            do {
-                let schedule = realm.objects(Schedule.self).filter("date == %@", selectedDate.toKoreanTime()).first // realm 에러처리를 위해 self를 뺐습니다.
-
-                try realm.write {
-                    guard let exercises = schedule?.exercises else { return }
-                    if exercises.count > 1 {
-                        realm.delete(self.scheduleExercise)
-                    } else {
-                        realm.delete(schedule!)
-                    }
-                }
-                
-                // notify the delegate of the update
-                self.delegate?.didUpdateScheduleExercise()
-            } catch {
-                print("Error deleting ScheduleExercise")
-            }
+            
+            self.viewModel.deleteExercise(scheduleExercise: self.scheduleExercise, selectedDate: self.selectedDate)
+            self.delegate?.didUpdateScheduleExercise()
+            
             
             let alertCompletion = UIAlertController(title: "운동 수정 완료", message: "\(String(describing: exerciseName))이(가) 성공적으로 수정되었습니다.", preferredStyle: .alert)
             self.present(alertCompletion, animated: true, completion: nil)

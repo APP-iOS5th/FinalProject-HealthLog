@@ -9,10 +9,9 @@ import UIKit
 import RealmSwift
 
 class SaveRoutineViewController: UIViewController {
+    private let viewModel = ScheduleViewModel()
     private let schedule: Schedule
     private var existName: Bool = false
-    
-    let realm = RealmManager.shared.realm
     
     init(schedule: Schedule) {
         self.schedule = schedule
@@ -68,7 +67,7 @@ class SaveRoutineViewController: UIViewController {
         let placeholderText = changeDateToString(schedule.date)
         let placeholderAttributes: [NSAttributedString.Key: Any] = [.foregroundColor: UIColor.white]
         routineName.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: placeholderAttributes)
-                
+        
         setupUI()
     }
     
@@ -147,15 +146,33 @@ class SaveRoutineViewController: UIViewController {
     @objc private func saveRoutine() {
         let routineText = routineName.text?.isEmpty ?? true ? routineName.placeholder : routineName.text
         
-        existName = checkExistRoutineName(routineText!)
+        guard let routineName = routineText else {
+            return
+        }
+        
+        existName = viewModel.checkExistRoutineName(routineName)
         
         if existName {
             container.addArrangedSubview(notification)
-            let notificationHeightConstraint =
-            notification.heightAnchor.constraint(equalToConstant: 14)
+            let notificationHeightConstraint = notification.heightAnchor.constraint(equalToConstant: 14)
             notificationHeightConstraint.isActive = true
         } else {
-            saveRoutineToDatabase(routineText!)
+            if viewModel.saveRoutineToDatabase(name: routineName, schedule: schedule) {
+                existName = false
+                
+                let alertController = UIAlertController(title: "루틴 저장 완료", message: "루틴 (\(routineName))이 성공적으로 저장되었습니다.", preferredStyle: .alert)
+                present(alertController, animated: true, completion: nil)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    alertController.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true)
+                }
+            } else {
+                // Handle save error
+                let alertController = UIAlertController(title: "저장 실패", message: "루틴을 저장하는 중 오류가 발생했습니다.", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
+                present(alertController, animated: true, completion: nil)
+            }
         }
     }
     
@@ -163,47 +180,5 @@ class SaveRoutineViewController: UIViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         return dateFormatter.string(from: date.toKoreanTime())
-    }
-    
-    private func checkExistRoutineName(_ name: String) -> Bool {
-        guard let realm = realm else {return false} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열 // 이거 false가 default 값일 까요..?
-        let routine = realm.objects(Routine.self).filter("name == %@", name).first
-        return routine != nil
-    }
-    
-    private func saveRoutineToDatabase(_ name: String) {
-        guard let realm = realm else {return} // realm 에러처리를 위해 코드를 삽입했습니다 _ 허원열
-        print(schedule)
-        let exercises = realm.objects(Exercise.self)
-        
-        var routineExercises = [RoutineExercise]()
-        var exerciseVolume: Int = 0
-        
-        for scheduleExercise in schedule.exercises {
-            var routineExerciseSets = [RoutineExerciseSet]()
-            for set in scheduleExercise.sets {
-                let routineExerciseSet = RoutineExerciseSet(order: set.order, weight: set.weight, reps: set.reps)
-                routineExerciseSets.append(routineExerciseSet)
-                exerciseVolume += set.weight * set.reps
-            }
-            let routineExercise = RoutineExercise(exercise: exercises.first(where: { $0.name == scheduleExercise.exercise?.name })!, sets: routineExerciseSets)
-            routineExercises.append(routineExercise)
-        }
-        
-        let routine = Routine(name: name, exercises: routineExercises, exerciseVolume: exerciseVolume)
-        
-        try! realm.write {
-            realm.add(routine)
-        }
-        
-        existName = false
-        
-        let alertController = UIAlertController(title: "루틴 저장 완료", message: "루틴 (\(name))이 성공적으로 저장되었습니다.", preferredStyle: .alert)
-        present(alertController, animated: true, completion: nil)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            alertController.dismiss(animated: true, completion: nil)
-            self.dismiss(animated: true)
-        }
     }
 }
