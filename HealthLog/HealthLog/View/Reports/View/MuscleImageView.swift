@@ -418,6 +418,7 @@ class MuscleImageView: UIView {
     
     // for scheduleView
     func highlightBodyParts(bodyPartsWithCompletedSets bodyParts: [String: Int]) {
+        clearHighlights()
         
         for (bodyPartRawValue, sets) in bodyParts {
             let bodyPart = BodyPart(rawValue: bodyPartRawValue)
@@ -491,5 +492,26 @@ class MuscleImageView: UIView {
                 }
             }
         }
+    }
+    
+    func clearHighlights() {
+        frontMuscleChest.isHidden = true
+        backMuscleback.isHidden = true
+        frontMuscleShoulders.isHidden = true
+        backMuscleShoulders.isHidden = true
+        backMuscleTriceps.isHidden = true
+        frontMuscleBiceps.isHidden = true
+        frontMuscleAbs.isHidden = true
+        frontMuscleQuadriceps.isHidden = true
+        backMuscleHamstrings.isHidden = true
+        backMuscleGlutes.isHidden = true
+        frontMuscleAdductors.isHidden = true
+        backMuscleAdductors.isHidden = true
+        frontMuscleAbductors.isHidden = true
+        backMuscleAbductors.isHidden = true
+        backMuscleCalves.isHidden = true
+        frontMuscleTrap.isHidden = true
+        backMuscleTrap.isHidden = true
+        frontMuscleForearms.isHidden = true
     }
 }

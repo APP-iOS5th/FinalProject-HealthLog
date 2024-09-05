@@ -264,6 +264,7 @@ extension ReportsViewController {
             viewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             viewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             viewController.view.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+
         ])
     }
     
