@@ -18,11 +18,16 @@ class RoutineAddNameViewModel {
     
     @Published var rutineNameinput: String = ""
     @Published var rutineNameConfirmation: String = " "
-    @Published var isValid: Bool = false
     @Published var isAddRoutineValid: Bool = false
+    @Published var isValid:Bool = false
     
     @Published var routine: Routine = Routine()
     @Published var routines: [Routine] = []
+    
+    init() {
+        realm = RealmManager.shared.realm
+        observeRealmData()
+    }
     
     lazy var isRoutineNameEmptyPulisher: AnyPublisher<Bool, Never> = {
         $rutineNameinput
@@ -75,7 +80,7 @@ class RoutineAddNameViewModel {
         let isExercise = !routine.exercises.isEmpty
         let allFieldsFilled = routine.exercises.allSatisfy { exercise in
             exercise.sets.allSatisfy { set in
-                set.weight > 0 && set.reps > 0
+                set.weight >= 0 && set.reps > 0
             }
         }
         

@@ -33,6 +33,7 @@ class SetCell: UICollectionViewCell {
         textField.borderStyle = .none
         textField.backgroundColor = .color2F2F2F
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.delegate = self
         return textField
     }()
     private lazy var weightTextLabel: UILabel = {
@@ -66,6 +67,7 @@ class SetCell: UICollectionViewCell {
         textField.backgroundColor = .color2F2F2F
         textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.delegate = self
         return textField
     }()
     
@@ -147,4 +149,37 @@ class SetCell: UICollectionViewCell {
             super.prepareForReuse()
             cancellables.removeAll() // 셀 재사용 시 구독 해제
         }
+}
+
+
+extension SetCell: UITextFieldDelegate{
+    // MARK: UITextFieldDelegate 3글자 제한
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        
+        // 3글자 제한
+        if newText.count > 3 {
+            return false
+        }
+        
+        // 숫자 입력제한
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: string)
+        if allowedCharacters.isSuperset(of: characterSet) == false {
+            return false
+        }
+        
+        // 0 연속 입력 안되게
+        if newText.hasPrefix("0") {
+            if currentText.isEmpty && string == "0" {
+                return true
+            } else if currentText == "0" && string == "0" {
+                return false
+            } else if newText == "00" {
+                return false
+            }
+        }
+        return true
+    }
 }

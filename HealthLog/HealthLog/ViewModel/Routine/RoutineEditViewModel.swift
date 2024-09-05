@@ -16,20 +16,16 @@ class RoutineEditViewModel {
     
     @Published var routine: Routine = Routine()
     
+    @Published var isAddRoutineValid: Bool = false
+    @Published var isValid:Bool = false
+    @Published var editNameTextField = " "
     
-    @Published var editNameTextField = " " {
-        didSet {
-            print(editNameTextField)
-        }
-    }
-    
-    @Published var isValid: Bool = false
+
     
     lazy var isRoutineNameEmptyPulisher:
     AnyPublisher<Bool, Never> = {
         $editNameTextField
             .map(\.isEmpty)
-            .print("비어있남")
             .eraseToAnyPublisher()
     }()
     
@@ -38,27 +34,28 @@ class RoutineEditViewModel {
         $editNameTextField
             .map {
                 self.realmManager.hasRoutineName(name: $0)
+                
             }
-            .print("존재 하는 이름이남")
             .eraseToAnyPublisher()
+        
     }()
         
     func updateExerciseSetCount(for section: Int, setCount: Int) {
-        print(self.routine.exercises[section].sets.count)
-        print(setCount)
         if self.routine.exercises[section].sets.count < setCount {
             
             self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
             
         } else {
             self.routine.exercises[section].sets.removeLast()
-            
         }
+        validateExercise()
+        
         
     }
  
     func deleteExercise(for setcion: Int) {
         self.routine.exercises.remove(at: setcion)
+        validateExercise()
     }
     
     func updateRoutine(routine: Routine, index: Int) {
@@ -74,9 +71,19 @@ class RoutineEditViewModel {
     
     func deleteRoutine(id: ObjectId){
         self.realmManager.deleteRoutine(id: id)
+        
     }
     
-    
+    func validateExercise() {
+        let isExercise = !routine.exercises.isEmpty
+        let allFieldsFilled = routine.exercises.allSatisfy { exercise in
+            exercise.sets.allSatisfy { set in
+                set.weight >= 0 && set.reps > 0
+            }
+        }
+        isAddRoutineValid = isExercise && allFieldsFilled
+
+    }
     
     
     func getRoutine(routine: Routine) {
