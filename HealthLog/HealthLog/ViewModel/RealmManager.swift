@@ -351,8 +351,9 @@ extension RealmManager {
             let allExercises = realm.objects(Exercise.self)
             var schedules: [Schedule] = []
             
-            var date = DateComponents(calendar: Calendar.current, year: 2024, month: 5, day: 1).date!
-            let endDate = DateComponents(calendar: Calendar.current, year: 2024, month: 6, day: 30).date!
+            // MARK: 영우 - toKoreanTime 추가
+            var date = DateComponents(calendar: Calendar.current, year: 2024, month: 5, day: 1).date!.toKoreanTime()
+            let endDate = DateComponents(calendar: Calendar.current, year: 2024, month: 6, day: 30).date!.toKoreanTime()
             
             while date <= endDate {
                 var scheduleExercises: [ScheduleExercise] = []
