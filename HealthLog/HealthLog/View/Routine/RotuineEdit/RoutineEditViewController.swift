@@ -86,9 +86,17 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     private lazy var searchController: UISearchController = {
         resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController.delegate = self
         searchController.searchBar.placeholder = "운동명 검색"
         searchController.searchResultsUpdater = self
         searchController.showsSearchResultsController = true
+        searchController.searchBar.showsBookmarkButton = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.barStyle = .black
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.delegate = resultsViewController
+        
         return searchController
     }()
     
@@ -176,6 +184,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         self.navigationItem.title = "수정하기"
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
         self.navigationItem.hidesSearchBarWhenScrolling = false
+
         self.view.backgroundColor = .color1E1E1E
         tabBarController?.tabBar.isHidden = true
         
@@ -358,7 +367,26 @@ extension RoutineEditViewController: UICollectionViewDataSource, UICollectionVie
     
 }
 
-extension RoutineEditViewController: UISearchResultsUpdating {
+extension RoutineEditViewController: UISearchResultsUpdating, UISearchControllerDelegate {
+    
+    func willPresentSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.showsBookmarkButton = true
+        if let searchResultsController = searchController.searchResultsController as? RoutineSearchResultsViewController {
+            searchResultsController.bodypartOptionShowUIChange(true)
+            searchResultsController.prepareForDismissal(false)
+        }
+    }
+    
+    func willDismissSearchController(_ searchController: UISearchController) {
+        if let searchResultsController = searchController.searchResultsController as? RoutineSearchResultsViewController {
+            searchResultsController.prepareForDismissal(true)
+        }
+    }
+    
+    func didDismissSearchController(_ searchController: UISearchController) {
+        searchController.searchBar.showsBookmarkButton = false
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else {
             return
@@ -366,7 +394,7 @@ extension RoutineEditViewController: UISearchResultsUpdating {
         
         
         if let resultcontroller = searchController.searchResultsController as? RoutineSearchResultsViewController {
-            resultcontroller.viewModel.filterExercises(by: text)
+            resultcontroller.viewModel.setSearchText(to: text)
             resultcontroller.tableView.reloadData()
         }
     }
