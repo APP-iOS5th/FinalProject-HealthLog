@@ -18,6 +18,8 @@ class ScheduleViewModel: ObservableObject {
     @Published var schedules: [Schedule] = []
     @Published var selectedDateSchedule: Schedule?
     @Published var selectedDateExerciseVolume: Int = 0
+    @Published var isInputValid: Bool = false
+    private var setValues: [(order: Int, weight: String, reps: String)] = []
     
     init() {
         realm = RealmManager.shared.realm
@@ -129,7 +131,7 @@ class ScheduleViewModel: ObservableObject {
             print("Error updating ScheduleExercise: \(error)")
         }
     }
-        
+    
     private func updateSelectedDateExerciseVolume() {
         selectedDateExerciseVolume = 0
         if let selectedSchedule = selectedDateSchedule {
@@ -141,4 +143,116 @@ class ScheduleViewModel: ObservableObject {
         }
     }
     
+    func updateSetValues(_ newValues: [(order: Int, weight: String, reps: String)]) {
+        setValues = newValues
+        validateInput()
+    }
+    
+    func validateInput() {
+        isInputValid = setValues.allSatisfy { set in
+            !set.weight.isEmpty &&
+            !set.reps.isEmpty &&
+            set.reps != "0" &&
+            (Int(set.weight) ?? 0) >= 0 &&
+            (Int(set.reps) ?? 0) > 0
+        }
+    }
+    
+    func saveEditedExercise(scheduleExercise: ScheduleExercise, setValues: [(order: Int, weight: String, reps: String)]) {
+        guard let realm = realm else { return }
+        
+        do {
+            try realm.write {
+                for (index, setValue) in setValues.enumerated() {
+                    if index < scheduleExercise.sets.count {
+                        scheduleExercise.sets[index].order = setValue.order
+                        scheduleExercise.sets[index].weight = Int(setValue.weight) ?? 0
+                        scheduleExercise.sets[index].reps = Int(setValue.reps) ?? 0
+                    } else {
+                        let set = ScheduleExerciseSet(
+                            order: setValue.order,
+                            weight: Int(setValue.weight) ?? 0,
+                            reps: Int(setValue.reps) ?? 0,
+                            isCompleted: false
+                        )
+                        scheduleExercise.sets.append(set)
+                    }
+                }
+                
+                if setValues.count < scheduleExercise.sets.count {
+                    let scheduleExerciseSetsCount = scheduleExercise.sets.count
+                    for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
+                        realm.delete(scheduleExercise.sets[j])
+                    }
+                }
+            }
+        } catch {
+            print("Error updating ScheduleExercise: \(error)")
+        }
+    }
+    
+    func deleteExercise(scheduleExercise: ScheduleExercise, selectedDate: Date) {
+        guard let realm = realm else { return }
+        
+        do {
+            let schedule = realm.objects(Schedule.self).filter("date == %@", selectedDate.toKoreanTime()).first
+            
+            try realm.write {
+                guard let exercises = schedule?.exercises else { return }
+                if exercises.count > 1 {
+                    realm.delete(scheduleExercise)
+                    
+                    for (index, exercise) in exercises.enumerated() {
+                        exercise.order = index + 1
+                    }
+                } else {
+                    if let schedule = schedule {
+                        realm.delete(schedule)
+                    }
+                }
+            }
+            
+        } catch {
+            print("Error deleting and reordering ScheduleExercise: \(error)")
+        }
+    }
+    
+    func checkExistRoutineName(_ name: String) -> Bool {
+        guard let realm = realm else { return false }
+        let routine = realm.objects(Routine.self).filter("name == %@", name).first
+        return routine != nil
+    }
+    
+    func saveRoutineToDatabase(name: String, schedule: Schedule) -> Bool {
+        guard let realm = realm else { return false }
+        let exercises = realm.objects(Exercise.self)
+        
+        var routineExercises = [RoutineExercise]()
+        var exerciseVolume: Int = 0
+        
+        for scheduleExercise in schedule.exercises {
+            var routineExerciseSets = [RoutineExerciseSet]()
+            for set in scheduleExercise.sets {
+                let routineExerciseSet = RoutineExerciseSet(order: set.order, weight: set.weight, reps: set.reps)
+                routineExerciseSets.append(routineExerciseSet)
+                exerciseVolume += set.weight * set.reps
+            }
+            if let exercise = exercises.first(where: { $0.name == scheduleExercise.exercise?.name }) {
+                let routineExercise = RoutineExercise(exercise: exercise, sets: routineExerciseSets)
+                routineExercises.append(routineExercise)
+            }
+        }
+        
+        let routine = Routine(name: name, exercises: routineExercises, exerciseVolume: exerciseVolume)
+        
+        do {
+            try realm.write {
+                realm.add(routine)
+            }
+            return true
+        } catch {
+            print("Error saving routine: \(error)")
+            return false
+        }
+    }
 }
