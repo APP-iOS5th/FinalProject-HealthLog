@@ -22,7 +22,7 @@ class ExerciseDetailViewModel: ObservableObject {
     @Published var exercise: Exercise
     @Published var currentImageIndex: Int = 0
     
-    private var timer: Timer?
+    var timer: Timer?
     
     // MARK: - Init
     
@@ -31,7 +31,6 @@ class ExerciseDetailViewModel: ObservableObject {
         self.viewModel = viewModel
         
         observeRealmData(specificId: exercise.id)
-        startImageRotation(imagesCount: exercise.images.count)
     }
     
     deinit {
@@ -39,19 +38,19 @@ class ExerciseDetailViewModel: ObservableObject {
         timer?.invalidate()
     }
     
-    private func startImageRotation(imagesCount: Int) {
-        guard imagesCount == 2,
+    func startImageRotation() {
+        guard exercise.images.count == 2,
               exercise.images[0].image?.isEmpty == false,
               exercise.images[1].image?.isEmpty == false
         else { return print("-- images count is not 2 --") }
         // 타이머를 설정하여 2초마다 이미지 인덱스를 변경
         timer = Timer.scheduledTimer(
-            withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            withTimeInterval: 1.5, repeats: true) { [weak self] _ in
                 let index = (self?.currentImageIndex ?? 0) + 1
                 self?.currentImageIndex = index % 2
-//                print("currentImageIndex - \(self?.currentImageIndex ?? 0)")
         }
     }
+    
     // MARK: 1
     // Realm 데이터 -> Combine Published 변수
     private func observeRealmData(specificId: ObjectId) {

@@ -50,6 +50,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
     private let imageViews = [UIImageView(), UIImageView()]
+    private let imageCancelButtons = [UIButton(), UIButton()]
     
     private let deleteButton: UIButton?
     
@@ -75,7 +76,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         super.viewDidLoad()
         view.backgroundColor = .color1E1E1E
         
-        setupNavigationBar()
+        setupMain()
         setupPaddingView(stackView: stackView, height: 5)
         setupTitleStackView()
         setupCreateDivider(stackView: stackView, height: 1)
@@ -97,7 +98,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     
     // MARK: - Setup UI
     
-    func setupNavigationBar() {
+    func setupMain() {
         switch entryViewModel.mode {
             case .add: title = "운동 추가"
             case .update: title = "운동 수정"
@@ -118,6 +119,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: tabBar
         self.tabBarController?.tabBar.isHidden = true
+        
+        // MARK: handleTapOutsideSearchArea
+        // 검색바 및 운동부위 옵션 영역의 바깥을 터치시, 운동부위옵션 및 키보드 접기
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchArea))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
         
         // MARK: scrollView
         view.addSubview(scrollView)
@@ -192,6 +199,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
+        titleTextField.borderStyle = .none
         titleTextField.tag = ViewTag.titleTextField.rawValue
         titleTextField.delegate = self
         titleStackView.addArrangedSubview(titleTextField)
@@ -280,6 +288,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightStackView.addArrangedSubview(recentWeightTextFieldStackView)
         
         // MARK: recentWeightTextField
+        recentWeightTextField.borderStyle = .none
         recentWeightTextField.tag = ViewTag.recentWeightTextField.rawValue
         recentWeightTextField.delegate = self
         recentWeightTextField.textColor = .white
@@ -320,6 +329,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightStackView.addArrangedSubview(maxWeightTextFieldStackView)
         
         // MARK: maxWeightTextField
+        maxWeightTextField.borderStyle = .none
         maxWeightTextField.tag = ViewTag.maxWeightTextField.rawValue
         maxWeightTextField.delegate = self
         maxWeightTextField.textColor = .white
@@ -382,23 +392,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: imageViews
         imageViews.enumerated().forEach { index, imageView in
-            // imageContainerView
-            let imageContainerView = UIView()
-            imageStackView.addArrangedSubview(imageContainerView)
-            imageContainerView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                imageContainerView.leadingAnchor.constraint(
-                    equalTo: stackView.leadingAnchor,
-                    constant: 10),
-                imageContainerView.trailingAnchor.constraint(
-                    equalTo: stackView.trailingAnchor,
-                    constant: -10),
-                imageContainerView.heightAnchor.constraint(
-                    equalToConstant: 200)
-            ])
             
-            // ImageView
-            imageView.contentMode = .scaleAspectFit
+            // MARK: imageViews - ImageView
+            imageView.contentMode = .scaleAspectFill
             imageView.layer.borderWidth = 1
             imageView.layer.borderColor = UIColor.lightGray.cgColor
             imageView.layer.cornerRadius = 10
@@ -409,25 +405,51 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     action: #selector(tapImageViewShowPHPicker(_:)))
             )
             imageView.isUserInteractionEnabled = true
-            imageView.tag = 2001 + index // 이미지뷰를 식별할 태그
-            imageContainerView.addSubview(imageView)
+            imageView.tag = ViewTag.imageViews.setIndexTag(index)
+            stackView.addArrangedSubview(imageView)
             imageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 imageView.leadingAnchor.constraint(
-                    equalTo: imageContainerView.leadingAnchor),
+                    equalTo: stackView.leadingAnchor,
+                    constant: 10),
                 imageView.trailingAnchor.constraint(
-                    equalTo: imageContainerView.trailingAnchor),
-                imageView.topAnchor.constraint(
-                    equalTo: imageContainerView.topAnchor),
-                imageView.bottomAnchor.constraint(
-                    equalTo: imageContainerView.bottomAnchor),
+                    equalTo: stackView.trailingAnchor,
+                    constant: -10),
+                imageView.heightAnchor.constraint(
+                    equalTo: imageView.widthAnchor,
+                    multiplier: 9 / 16)
             ])
             
-            // ImageView Label
+            // MARK: imageViews - CancelButton
+            let cancelButton = imageCancelButtons[index]
+            let symbolConfig = UIImage.SymbolConfiguration(
+                pointSize: 20, weight: .heavy, scale: .large)
+            let paletteConfig = UIImage.SymbolConfiguration(
+                paletteColors: [.white, .colorAccent])
+            let config = symbolConfig.applying(paletteConfig)
+            let image = UIImage(systemName: "xmark.app.fill",
+                                withConfiguration: config)
+            cancelButton.setImage(image, for: .normal)
+            cancelButton.tag = ViewTag.imageCancelButtons.setIndexTag(index)
+            cancelButton.addTarget(
+                self, action: #selector(tapImageCancelButton(_:)),
+                for: .touchUpInside)
+            imageView.addSubview(cancelButton)
+            cancelButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                cancelButton.topAnchor.constraint(
+                    equalTo: imageView.topAnchor,
+                    constant: 10),
+                cancelButton.trailingAnchor.constraint(
+                    equalTo: imageView.trailingAnchor,
+                    constant: -10),
+            ])
+            
+            // MARK: imageViews - Label
             let imageOpenLabel = UILabel()
             imageOpenLabel.text = "Open Gallery"
             imageOpenLabel.textColor = .white
-            imageContainerView.addSubview(imageOpenLabel)
+            imageView.addSubview(imageOpenLabel)
             imageOpenLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 imageOpenLabel.centerXAnchor.constraint(
@@ -437,12 +459,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     constant: -30),
             ])
             
-            // ImageView Icon
+            // MARK: imageViews - Icon
             let symbolImageView = UIImageView(
                 image: UIImage(systemName: "photo.badge.plus"))
             symbolImageView.tintColor = .white
             symbolImageView.contentMode = .scaleAspectFit
-            imageContainerView.addSubview(symbolImageView)
+            imageView.addSubview(symbolImageView)
             symbolImageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 symbolImageView.centerXAnchor.constraint(
@@ -455,10 +477,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 symbolImageView.heightAnchor.constraint(
                     equalToConstant: 50),
             ])
-            
-            imageContainerView.sendSubviewToBack(imageOpenLabel)
-            imageContainerView.sendSubviewToBack(symbolImageView)
-        } // end forEach
+        } // end forEach imageViews
     }
     
     func setupDeleteButton() {
@@ -571,6 +590,19 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 }
             }
             .store(in: &cancellables)
+        
+        // MARK: Image SubViews(label, icon) Show
+        self.entryViewModel.entryExercise.$images
+            .sink { [weak self] imagesData in
+                imagesData.enumerated().forEach { index, data in
+                    let subViewsShow = data.isEmpty ? true : false
+                    self?.imageViews[index].subviews
+                        .filter { !($0 is UIButton) }
+                        .forEach { $0.isHidden = !subViewsShow }
+                }
+            }
+            .store(in: &cancellables)
+        
         
         // MARK: UI Duplicate ExerciseName Warning
         self.entryViewModel.entryExercise.$hasDuplicateName
@@ -691,7 +723,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     case ViewTag.imageView1.rawValue:
                         entryExercise.images[0] = imageData
                     case ViewTag.imageView2.rawValue:
-                        entryExercise.images[1] = imageData
+                        if(entryExercise.images[0].isEmpty &&
+                           entryExercise.images[1].isEmpty) {
+                            entryExercise.images[0] = imageData
+                        } else {
+                            entryExercise.images[1] = imageData
+                        }
                     default: break
                 }
             }
@@ -734,17 +771,37 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     @objc private func tapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
         guard let tappedImageView = sender.view as? UIImageView else { return }
         
-        if tappedImageView.tag == ViewTag.imageView2.rawValue {
-            guard entryViewModel.entryExercise.images[0].isEmpty == false
-            else { return print("imageView1 isEmpty") }
-        } // TODO: 경고창 또는 경고라벨
-        
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
         let picker = PHPickerViewController(configuration: configuration)
         picker.delegate = self
         picker.view.tag = tappedImageView.tag
         present(picker, animated: true, completion: nil)
+    }
+    
+    @objc private func tapImageCancelButton(_ sender: UIButton) {
+        let entryExercise = self.entryViewModel.entryExercise
+        if(sender.tag - 10 == ViewTag.imageView1.rawValue) {
+            // 첫번째 삭제 실행시, 두번째를 첫번째로 이동
+            entryExercise.images[0] = entryExercise.images[1]
+        }
+        entryExercise.images[1] = Data()
+    }
+    
+    @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
+        let isTappedInsideTitleTextField = titleTextField.frame.contains(sender.location(in: view))
+        let isTappedInsideMaxWeightTextField = maxWeightTextField.frame.contains(sender.location(in: view))
+        let isTappedInsideRecentWeightTextField = recentWeightTextField.frame.contains(sender.location(in: view))
+        let isTappedInsideDescriptionTextView = descriptionTextView.frame.contains(sender.location(in: view))
+        
+        // 검색옵션스택뷰와 검색바 이외의 영역을 터치한 경우
+        if !(isTappedInsideTitleTextField ||
+             isTappedInsideMaxWeightTextField ||
+             isTappedInsideRecentWeightTextField ||
+             isTappedInsideDescriptionTextView)  {
+            print("Tap detected outside input area")
+            view.endEditing(true)
+        }
     }
     
     
@@ -827,8 +884,16 @@ private enum ViewTag: Int {
     case titleTextField = 1001
     case recentWeightTextField = 1002
     case maxWeightTextField = 1003
+    case imageViews = 2000
     case imageView1 = 2001
     case imageView2 = 2002
+    case imageCancelButtons = 2010
+    case imageCancelButton1 = 2011
+    case imageCancelButton2 = 2012
+    
+    func setIndexTag(_ index: Int) -> Int {
+        return self.rawValue + index + 1
+    }
 }
 
 

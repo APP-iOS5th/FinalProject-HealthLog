@@ -61,6 +61,25 @@ class ExercisesDetailViewController: UIViewController {
         setupBindings()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        detailViewModel.timer?.invalidate()
+        detailViewModel.startImageRotation()
+        
+        let images = detailViewModel.exercise.images
+        if images.isEmpty {
+            imageView.isHidden = true // 이미지 없음
+        } else {
+            if(images.first?.image?.isEmpty == true) {
+                imageView.isHidden = true // 이미지 없음
+            } else {
+                imageView.isHidden = false // 이미지 있음
+            }
+        }
+    }
+    
+    // MARK: - Setup
+    
     func setupMain() {
         title = detailViewModel.exercise.name
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
@@ -137,15 +156,14 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupProfileGroup() {
         // MARK: profileLabel
-        profileLabel.text = "정보"
-        profileLabel.textColor = .color767676
+        profileLabel.text = "운동 정보"
+        profileLabel.textColor = .white
         profileLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         stackView.addArrangedSubview(profileLabel)
         
         // MARK: profileStackView
         profileStackView.axis = .vertical
         profileStackView.alignment = .center
-//        profileStackView.distribution = .equalCentering
         profileStackView.spacing = 15
         profileStackView.layer.cornerRadius = 10
         profileStackView.clipsToBounds = true
@@ -156,7 +174,7 @@ class ExercisesDetailViewController: UIViewController {
         stackView.addArrangedSubview(profileStackView)
         
         // MARK: imageView
-        imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 22
         imageView.layer.masksToBounds = true
@@ -166,6 +184,9 @@ class ExercisesDetailViewController: UIViewController {
             imageView.widthAnchor.constraint(
                 equalTo: stackView.widthAnchor,
                 constant: -50),
+            imageView.heightAnchor.constraint(
+                equalTo: imageView.widthAnchor,
+                multiplier: 9 / 16)
         ])
         
         // MARK: bodypartStackView
@@ -180,8 +201,8 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupLogGroup() {
         // MARK: logLabel
-        logLabel.text = "기록"
-        logLabel.textColor = .color767676
+        logLabel.text = "운동 기록"
+        logLabel.textColor = .white
         logLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         stackView.addArrangedSubview(logLabel)
         
@@ -230,7 +251,7 @@ class ExercisesDetailViewController: UIViewController {
                 self?.maxWeightLogContentStackView.reloadValueLabel(unit: "KG", value: "\(exercise.maxWeight)")
                 self?.imageView.image = UIImage(
                     data: exercise.images.first?.image ?? Data())
-                self?.updateImageViewWithImage()
+//                self?.updateImageViewWithImage()
                 
             }
             .store(in: &cancellables)
@@ -247,30 +268,6 @@ class ExercisesDetailViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    // MARK: - Methods
-    
-    private func updateImageViewWithImage() {
-        guard imageView.image != nil else { return }
-        
-        if let heightConstraint = imageView.constraints.first(where: { $0.firstAttribute == .height }) {
-            heightConstraint.isActive = false
-            imageView.removeConstraint(heightConstraint)
-        }
-        
-        let newImageWidth = (imageView.image?.size.width ?? 0)
-        let newImageHeight = (imageView.image?.size.height ?? 0)
-        
-        let aspectRatio = newImageHeight / newImageWidth
-        
-        imageView.heightAnchor.constraint(
-            equalTo: stackView.widthAnchor, 
-            multiplier: aspectRatio,
-            constant: -50)
-        .isActive = true
-        
-        imageView.layoutIfNeeded()
-    }
-    
     // MARK: - Selector Methods
     
     @objc func editPushButtonTapped() {
@@ -280,6 +277,8 @@ class ExercisesDetailViewController: UIViewController {
         let vc = ExercisesEntryViewController(entryViewModel: entryViewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    // MARK: - Methods
     
 }
 
@@ -338,7 +337,7 @@ private class LogContentStackView: UIStackView {
         
         // MARK: titleLabel
         titleLabel.font = UIFont(name: "Pretendard-Bold", size: 15)
-        titleLabel.textColor = .color767676
+        titleLabel.textColor = .white
         titleLabel.textAlignment = .center
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
@@ -356,7 +355,7 @@ private class LogContentStackView: UIStackView {
         ])
 
         // MARK: valueLabel
-        valueLabel.textColor = .color767676
+        valueLabel.textColor = .white
         valueLabel.textAlignment = .center
         valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.minimumScaleFactor = 0.7
@@ -483,6 +482,7 @@ private class DetailBodyPartStackView: UIStackView {
             currentLabel = CustomBodyPartLabel()
             currentLabel.text = bodypart.rawValue
             currentLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
+            currentLabel.backgroundColor = .colorAccent
             
             let width = calculatorLabelAddAfterWidth()
             checkCreateAfterRow(labelAddAfterWidth: width)
