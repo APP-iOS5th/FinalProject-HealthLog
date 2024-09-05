@@ -56,7 +56,8 @@ class ScheduleViewModel: ObservableObject {
         selectedDateExerciseVolume = 0
         if let selectedSchedule = selectedDateSchedule {
             for scheduleExercise in selectedSchedule.exercises {
-                for set in scheduleExercise.sets {
+                let completedSets = scheduleExercise.sets.filter { $0.isCompleted }
+                for set in completedSets {
                     selectedDateExerciseVolume += set.weight * set.reps
                 }
             }
