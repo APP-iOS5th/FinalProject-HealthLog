@@ -47,8 +47,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func setupTabBarAppearance(tabBarController: UITabBarController) {
         let tabBar = tabBarController.tabBar
         tabBar.layer.shadowColor = UIColor.black.cgColor
-        tabBar.layer.shadowOffset = CGSize(width: 0, height: -10)
-        tabBar.layer.shadowOpacity = 0.4
+        tabBar.layer.shadowOffset = CGSize(width: 0, height: -20)
+        tabBar.layer.shadowOpacity = 0.2
         tabBar.layer.shadowRadius = 15
         
         let topBorder = CALayer()
