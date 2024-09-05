@@ -93,7 +93,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         switch section {
         case 0:
-            return 1
+            return 2
         case 1:
             return reportsVM.bodyPartDataList.count
         case 2:
@@ -118,12 +118,20 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
-            cell.backgroundColor = UIColor.clear
-            cell.selectionStyle = .none
-            cell.configureCell(data: reportsVM.bodyPartDataList)
-            
-            return cell
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                cell.configureMuscleCell()
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.configureCell(data: reportsVM.bodyPartDataList)
+                return cell
+            }
         case 1:
             let data = reportsVM.bodyPartDataList[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
@@ -175,7 +183,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 372
+            if indexPath.row == 0 {
+                return 42
+            } else {
+                return 329
+            }
         case 1:
             let data = reportsVM.bodyPartDataList[indexPath.row]
             let defaultCellHeight: CGFloat = 40

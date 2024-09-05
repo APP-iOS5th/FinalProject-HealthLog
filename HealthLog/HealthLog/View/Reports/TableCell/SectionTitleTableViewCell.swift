@@ -100,6 +100,19 @@ class SectionTitleTableViewCell: UITableViewCell {
         titleImage.image = symbol
         titleLabel.text = "가장 많이 한 운동"
     }
+
+    func configureMuscleCell() {
+        let bgSymbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .black)
+        let bgSymbolName = "flame.fill"
+        let bgSymbol = UIImage(systemName: bgSymbolName, withConfiguration: bgSymbolConfig)
+        titleBackgroundImage.image = bgSymbol
+        
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16)
+        let symbolName = "flame.fill"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        titleImage.image = symbol
+        titleLabel.text = "부위별 운동 강도"
+    }
     
     
 }

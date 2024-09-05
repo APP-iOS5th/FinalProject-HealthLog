@@ -37,10 +37,21 @@ class ReportsViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
+    private lazy var navigationBarLabel: UILabel = {
+        let label = UILabel()
+        label.text = "월간 리포트"
+        label.font = UIFont(name: "Pretendard-SemiBold", size: 20)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var titleStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
+//        stackView.distribution = .equalSpacing
+        stackView.spacing = 18
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -57,10 +68,13 @@ class ReportsViewController: UIViewController {
     
     private lazy var titleMonthLabel: UILabel = {
         let label = UILabel()
-        label.text = "2024년 7월 리포트"
+        label.text = "2024년 7월"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 20)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTitleMonthLabel))
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(tapGesture)
         return label
     }()
     
@@ -128,7 +142,7 @@ class ReportsViewController: UIViewController {
     private func updateTitleMonthLabel() {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
-        dateFormatter.dateFormat = "yyyy년 M월 리포트"
+        dateFormatter.dateFormat = "yyyy년 M월"
         
         if let date = Calendar.current.date(from: DateComponents(year: currentYear, month: currentMonth)) {
             titleMonthLabel.text = dateFormatter.string(from: date)
@@ -201,6 +215,34 @@ class ReportsViewController: UIViewController {
         
     }
     
+    @objc private func didTapTitleMonthLabel() {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        let currentMonth = Calendar.current.component(.month, from: Date())
+        let yearMonthPickerVC = MonthPickerViewController(defaultYear: currentYear, defaultMonth: currentMonth)
+        
+        // YearMonthPickerViewController에서 선택한 날짜를 받아 처리하는 핸들러 설정
+        yearMonthPickerVC.yearMonthSelectionHandler = { [weak self] year, month in
+            guard let self = self else { return }
+            
+            // ViewModel에 연도와 월 업데이트
+            self.reportsVM.updateYearAndMonth(year: year, month: month)
+            self.inBodyVM.updateYearAndMonth(year: year, month: month)
+            
+            // 타이틀 레이블 업데이트
+            updateTitleMonthLabel()
+            
+            // 운동 기록 화면 업데이트
+            self.exerciseRecordVC.fetchDataAndUpdateUI()
+        }
+        
+        // YearMonthPickerViewController 표시
+        yearMonthPickerVC.modalPresentationStyle = .pageSheet
+        yearMonthPickerVC.modalPresentationCapturesStatusBarAppearance = true
+        self.present(yearMonthPickerVC, animated: true, completion: nil)
+    }
+    
+    
+    
     private func createMonthButton(action: UIAction, imageName: String) -> UIButton {
         let button = UIButton(type: .custom)
         let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .black)
@@ -228,6 +270,7 @@ extension ReportsViewController {
         titleStackView.addArrangedSubview(titleMonthLabel)
         titleStackView.addArrangedSubview(moveToNextMonthButton)
     
+        self.view.addSubview(navigationBarLabel)
         self.view.addSubview(titleStackView)
         self.view.addSubview(segmentedControl)
         
@@ -235,9 +278,11 @@ extension ReportsViewController {
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            titleStackView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            titleStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            titleStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
+            navigationBarLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
+            navigationBarLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            
+            titleStackView.topAnchor.constraint(equalTo: navigationBarLabel.bottomAnchor, constant: 8),
+            titleStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
             segmentedControl.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 13),
             segmentedControl.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
