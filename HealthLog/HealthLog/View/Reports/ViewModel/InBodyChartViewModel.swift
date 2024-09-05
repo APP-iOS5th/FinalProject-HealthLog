@@ -81,9 +81,6 @@ class InBodyChartViewModel: ObservableObject {
             }, receiveValue: { [weak self] data in
                 self?.inBodyData = []
                 self?.inBodyData = data
-                print("Fetched data: \(data.count)") // 데이터를 확인합니다.
-                print("Assigned data: \(self?.inBodyData.count ?? 0)") // 할당 후 데이터를 확인합니다.
-                print("-----------------------------------")
             })
             .store(in: &cancellables)
     }
@@ -97,9 +94,9 @@ class InBodyChartViewModel: ObservableObject {
             }
             
             let calendar = Calendar.current
-            let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!.toKoreanTime()
+            let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
             let range = calendar.range(of: .day, in: .month, for: startDate)
-            let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range!.count))!.toKoreanTime()
+            let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range!.count))!
             
             let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
             result(.success(Array(data)))
@@ -141,7 +138,6 @@ class InBodyChartViewModel: ObservableObject {
     
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-//        formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "d일"
         return formatter.string(from: date)
     }
