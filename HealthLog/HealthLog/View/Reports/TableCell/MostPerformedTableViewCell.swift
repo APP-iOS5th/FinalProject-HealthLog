@@ -73,6 +73,7 @@ class PerformedExerciseInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
         return label
     }()
     
@@ -84,6 +85,7 @@ class PerformedExerciseInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .left
         return label
     }()
     
@@ -93,6 +95,7 @@ class PerformedExerciseInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
         return label
     }()
     
@@ -103,6 +106,7 @@ class PerformedExerciseInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .right
         return label
     }()
     
@@ -127,10 +131,12 @@ class PerformedExerciseInfoView: UIView {
             
             exerciseIndexLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             exerciseIndexLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exerciseIndexLabel.widthAnchor.constraint(equalToConstant: 30),
             
     
             exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 8),
             exerciseNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exerciseNameLabel.widthAnchor.constraint(equalToConstant: 140),
             
             
             setsLabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
@@ -138,6 +144,7 @@ class PerformedExerciseInfoView: UIView {
             
             
             dayLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            dayLabel.leadingAnchor.constraint(equalTo: setsLabel.trailingAnchor, constant: 8),
             dayLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
             exerciseIndexLabel.heightAnchor.constraint(equalToConstant: 20),

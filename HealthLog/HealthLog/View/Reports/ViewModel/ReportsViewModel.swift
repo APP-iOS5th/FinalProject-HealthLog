@@ -71,6 +71,8 @@ class ReportsViewModel {
             for scheduleExercise in schedule.exercises {
                 let completedSets = scheduleExercise.sets.filter { $0.isCompleted } // 완료된 Set 만 계산
                 let setsCount = completedSets.count
+                guard setsCount > 0 else { continue }
+                
                 let minWeight = completedSets.map { $0.weight }.min() ?? 0
                 let maxWeight = completedSets.map { $0.weight }.max() ?? 0
                 let exerciseName = scheduleExercise.exercise!.name

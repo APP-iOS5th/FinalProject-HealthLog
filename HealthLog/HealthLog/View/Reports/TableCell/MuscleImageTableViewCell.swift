@@ -40,7 +40,7 @@ class MuscleImageTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             monthLabel.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 8),
-            monthLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            monthLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
             
             divider.topAnchor.constraint(equalTo: monthLabel.bottomAnchor, constant: 8),
             divider.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

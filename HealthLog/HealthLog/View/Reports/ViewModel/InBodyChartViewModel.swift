@@ -213,9 +213,10 @@ class InBodyChartViewModel: ObservableObject {
         }
 
         let calendar = Calendar.current
+        let adjustedFirstDate = calendar.date(byAdding: .day, value: -1, to: firstDate) ?? firstDate
         let adjustedLastDate = calendar.date(byAdding: .day, value: 1, to: lastDate) ?? lastDate
         
-        return firstDate...adjustedLastDate
+        return adjustedFirstDate...adjustedLastDate
     }
     
     enum realmError: Error {
