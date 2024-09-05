@@ -151,12 +151,16 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         isStackViewVisibility.toggle()
     }
     
-    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath) {
+    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath, maxTotalSets: Int) {
         
         bodyPartLabel.text = data.bodyPart
         totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
         // 추후 최대 값에 맞출 예정
-        progressView.progress = Float(data.totalSets) / 60.0
+        if maxTotalSets > 0 {
+            progressView.progress = Float(data.totalSets) / Float(maxTotalSets)
+        } else {
+            progressView.progress = 0
+        }
         
         exerciseStackView.arrangedSubviews.forEach {$0.removeFromSuperview() }
         

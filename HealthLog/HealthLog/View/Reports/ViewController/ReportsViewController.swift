@@ -50,8 +50,8 @@ class ReportsViewController: UIViewController {
     private lazy var titleStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-//        stackView.distribution = .equalSpacing
-        stackView.spacing = 18
+        stackView.distribution = .equalSpacing
+//        stackView.spacing = 18
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -117,6 +117,7 @@ class ReportsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigationBar()
         setupUI()
         updateTitleMonthLabel()
         
@@ -211,7 +212,7 @@ class ReportsViewController: UIViewController {
         newVC.didMove(toParent: self)
         currentVC = newVC
         
-//        updateDataForCurrentMonth()
+
         
     }
     
@@ -263,14 +264,13 @@ class ReportsViewController: UIViewController {
 extension ReportsViewController {
     
     private func setupUI() {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        self.view.backgroundColor = UIColor(named: "ColorPrimary")
+        self.view.backgroundColor = .color1E1E1E
         
         titleStackView.addArrangedSubview(moveToPreviousMonthButton)
         titleStackView.addArrangedSubview(titleMonthLabel)
         titleStackView.addArrangedSubview(moveToNextMonthButton)
     
-        self.view.addSubview(navigationBarLabel)
+//        self.view.addSubview(navigationBarLabel)
         self.view.addSubview(titleStackView)
         self.view.addSubview(segmentedControl)
         
@@ -278,11 +278,12 @@ extension ReportsViewController {
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            navigationBarLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
-            navigationBarLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+//            navigationBarLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
+//            navigationBarLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
-            titleStackView.topAnchor.constraint(equalTo: navigationBarLabel.bottomAnchor, constant: 8),
-            titleStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            titleStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
+            titleStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
+            titleStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
             
             segmentedControl.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 13),
             segmentedControl.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
@@ -295,6 +296,22 @@ extension ReportsViewController {
         initialViewController.didMove(toParent: self)
         currentVC = initialViewController
     }
+    
+    private func setupNavigationBar() {
+        self.title = "월간 리포트"
+        if let navigationBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = .color1E1E1E
+            appearance.titleTextAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
+            ]
+            appearance.shadowColor = nil
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
+    }
+    
     
     
     override func addChild(_ viewController: UIViewController) {

@@ -15,7 +15,8 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         picker.delegate = self
         picker.dataSource = self
         picker.translatesAutoresizingMaskIntoConstraints = false
-        picker.backgroundColor = .color2F2F2F
+//        picker.backgroundColor = .color2F2F2F
+        picker.backgroundColor = .clear
         picker.tintColor = .white
         picker.layer.cornerRadius = 12 // 원하는 반경으로 설정
         picker.layer.masksToBounds = true // 경계 안쪽의 자식 뷰들도 모서리에 맞게 잘림
@@ -38,9 +39,31 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         button.titleLabel?.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
         button.addTarget(self, action: #selector(didTapSelectButton), for: .touchUpInside)
         button.setTitleColor(.white, for: .normal)
+        
+        // 배경색 설정
+        button.titleLabel?.textColor = .white
+        button.backgroundColor = .colorAccent
+        
+        // 코너 반경을 버튼 높이의 절반으로 설정하여 캡슐 모양 만들기
+        button.layer.cornerRadius = 25
+        
+        // 버튼 크기 설정 (넓고 긴 모양으로)
+        button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+//    private lazy var selectButton: UIButton = {
+//        let button = UIButton(type: .system)
+//        button.setTitle("선택", for: .normal)
+//        button.titleLabel?.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
+//        button.addTarget(self, action: #selector(didTapSelectButton), for: .touchUpInside)
+//        button.setTitleColor(.white, for: .normal)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        return button
+//    }()
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
@@ -51,6 +74,8 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
+    
     
     
     
@@ -78,14 +103,16 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         
         view.addSubview(pickerView)
         view.addSubview(selectButton)
-        view.addSubview(cancelButton)
-        view.addSubview(datePickerLabel)
+//        view.addSubview(cancelButton)
+//        view.addSubview(datePickerLabel)
         
         
         setupConstraints()
         
         if let sheet = self.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
+            sheet.detents = [.custom(resolver: { context in
+                return 285
+            })]
             sheet.prefersGrabberVisible = false
         }
         
@@ -105,20 +132,18 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
-            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            
-            selectButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
-            selectButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             
             
             pickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pickerView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 13),
             pickerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48), // 좌우 패딩을 고려하여 넓이 설정
-            pickerView.heightAnchor.constraint(equalToConstant: 300),
+            pickerView.heightAnchor.constraint(equalToConstant: 200),
             
-            datePickerLabel.bottomAnchor.constraint(equalTo: pickerView.topAnchor, constant: -12),
-            datePickerLabel.leadingAnchor.constraint(equalTo: pickerView.leadingAnchor, constant: 8),
+            selectButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -13),
+            selectButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            selectButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48),
+            
+            
         ])
     }
     
