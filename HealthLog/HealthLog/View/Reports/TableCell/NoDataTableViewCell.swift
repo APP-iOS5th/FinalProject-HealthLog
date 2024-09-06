@@ -36,7 +36,7 @@ class NoDataTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             messageLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            messageLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            messageLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 48)
         ])
         
         

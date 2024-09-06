@@ -35,7 +35,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         return tableView
     }()
     
-   
     
     
     override func viewDidLoad() {
@@ -93,7 +92,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         switch section {
         case 0:
-            return 1
+            return 2
         case 1:
             return reportsVM.bodyPartDataList.count
         case 2:
@@ -118,22 +117,40 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
-            cell.backgroundColor = UIColor.clear
-            cell.selectionStyle = .none
-            cell.configureCell(data: reportsVM.bodyPartDataList)
-            
-            return cell
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                cell.configureMuscleCell()
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.configureCell(data: reportsVM.bodyPartDataList)
+                return cell
+            }
         case 1:
-            let data = reportsVM.bodyPartDataList[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
-            cell.backgroundColor = UIColor(named: "ColorSecondary")
-            cell.selectionStyle = .none
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-            
-            cell.configureCell(with: data, at: indexPath)
-            
-            return cell
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                cell.configureTotalCell()
+                return cell
+            } else {
+                let data = reportsVM.bodyPartDataList[indexPath.row - 1]
+                let maxTotalSets = reportsVM.maxTotalSets
+                let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                
+                cell.configureCell(with: data, at: indexPath, maxTotalSets: maxTotalSets)
+                
+                return cell
+            }
             
         case 2:
             if indexPath.row == 0 {
@@ -155,7 +172,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
-                cell.configureMonstChangedCell()
+                cell.configureMostChangedCell()
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 return cell
@@ -173,20 +190,41 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        if reportsVM.bodyPartDataList.isEmpty {
+            return 100
+        }
+        
+        
         switch indexPath.section {
         case 0:
-            return 372
-        case 1:
-            let data = reportsVM.bodyPartDataList[indexPath.row]
-            let defaultCellHeight: CGFloat = 40
-            let exerciseViewHeight: CGFloat = 25
-            
-            if data.isStackViewVisible {
-                let exercisesCount = data.exercises.count
-                return defaultCellHeight + (exerciseViewHeight * CGFloat(exercisesCount))
+            if indexPath.row == 0 {
+                return 42
             } else {
-                return defaultCellHeight
+                return 329
             }
+        case 1:
+            if indexPath.row == 0 {
+                return 42
+            } else {
+                let dataIndex = indexPath.row - 1
+                // 데이터가 없을 경우의 기본 높이
+                guard dataIndex < reportsVM.bodyPartDataList.count else {
+                    return 40
+                }
+                let data = reportsVM.bodyPartDataList[dataIndex]
+                let defaultCellHeight: CGFloat = 40
+                let exerciseViewHeight: CGFloat = 25
+                
+                if data.isStackViewVisible {
+                    let exercisesCount = data.exercises.count
+                    return defaultCellHeight + (exerciseViewHeight * CGFloat(exercisesCount))
+                } else {
+                    return defaultCellHeight
+                }
+                
+            }
+            
         case 2:
             if indexPath.row == 0 {
                 return 42
@@ -207,113 +245,12 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == 1 else {return}
+        guard indexPath.row != 0 else {return}
         
-        reportsVM.bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
+        reportsVM.bodyPartDataList[indexPath.row - 1].isStackViewVisible.toggle()
         
         tableView.reloadRows(at: [indexPath], with: .fade)
     }
-    
-    
-    
-    // MARK: 부위별 세트수 계산 (1달간)
-//    func fetchMonthSchedules(year: Int, month: Int) -> [Schedule] {
-//        guard let realm = realm else { return []}
-//        let calendar = Calendar.current
-//        let startDate = calendar.date(from: DateComponents(year: year, month: month, day: 1))!
-//        let range = calendar.range(of: .day, in: .month, for: startDate)!
-//        let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range.count))!
-//        
-//        let result = Array(realm.objects(Schedule.self).filter { $0.date >= startDate && $0.date <= endDate } )
-//        print("\(year)년 \(month)월 데이터 fetch 성공")
-//        
-//        (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: result)
-//        
-//        exerciseRecordTableView.reloadData()
-//        
-//        return result
-//    }
-    
-    
-    
-//    func calculateSetsByBodyPartAndExercise(schedules: [Schedule]) -> ([ReportBodyPartData], top5Exercises: [ExerciseSets], top3WeightChangeExercises: [ExerciseSets]) {
-//        var bodyPartDataList: [ReportBodyPartData] = []
-//        var exerciseSetsCounter: [String: ExerciseSets] = [:]
-//        var exerciseDaysTracker: [String: Set<Date>] = [:]
-//        
-//        for schedule in schedules {
-//            let date = schedule.date
-//            
-//            for scheduleExercise in schedule.exercises {
-//                let completedSets = scheduleExercise.sets.filter { $0.isCompleted } // 완료된 Set 만 계산
-//                let setsCount = completedSets.count
-//                let minWeight = completedSets.map { $0.weight }.min() ?? 0
-//                let maxWeight = completedSets.map { $0.weight }.max() ?? 0
-//                let exerciseName = scheduleExercise.exercise!.name
-//                
-//                if exerciseDaysTracker[exerciseName] == nil {
-//                    exerciseDaysTracker[exerciseName] = Set<Date>()
-//                }
-//                exerciseDaysTracker[exerciseName]?.insert(date)
-//                
-//                for bodyPart in scheduleExercise.exercise!.bodyParts { // 에러처리 요망
-//                    let bodyPartName = bodyPart.rawValue
-//                    
-//                    if let index = bodyPartDataList.firstIndex(where: {$0.bodyPart == bodyPartName}) {
-//                        bodyPartDataList[index].totalSets += setsCount
-//                        
-//                        if let exerciseIndex = bodyPartDataList[index].exercises.firstIndex(where: {$0.name == exerciseName}) {
-//                            bodyPartDataList[index].exercises[exerciseIndex].setsCount += setsCount
-//                            bodyPartDataList[index].exercises[exerciseIndex].minWeight = min(bodyPartDataList[index].exercises[exerciseIndex].minWeight, minWeight)
-//                            bodyPartDataList[index].exercises[exerciseIndex].maxWeight = max(bodyPartDataList[index].exercises[exerciseIndex].maxWeight, maxWeight)
-//                            
-//                        } else {
-//                            let newExercise = ExerciseSets(name: exerciseName, setsCount: setsCount, daysCount: 1, minWeight: minWeight, maxWeight: maxWeight)
-//                            bodyPartDataList[index].exercises.append(newExercise)
-//                        }
-//                    } else {
-//                        let newData = ReportBodyPartData(bodyPart: bodyPartName,
-//                                                         totalSets: setsCount,
-//                                                         exercises: [ExerciseSets(name: exerciseName, setsCount: setsCount, daysCount: 1, minWeight: minWeight, maxWeight: maxWeight)])
-//                        bodyPartDataList.append(newData)
-//                    }
-//                }
-//                
-//                if exerciseSetsCounter[exerciseName] != nil {
-//                    exerciseSetsCounter[exerciseName]!.setsCount += setsCount
-//                    exerciseSetsCounter[exerciseName]!.minWeight = min(exerciseSetsCounter[exerciseName]!.minWeight, minWeight)
-//                    exerciseSetsCounter[exerciseName]!.maxWeight = max(exerciseSetsCounter[exerciseName]!.maxWeight, maxWeight)
-//                } else {
-//                    exerciseSetsCounter[exerciseName] = ExerciseSets(name: exerciseName, setsCount: setsCount, daysCount: 1, minWeight: minWeight, maxWeight: maxWeight)
-//                }
-//            }
-//        }
-//        
-//        for (exerciseName, daySet) in exerciseDaysTracker {
-//            if var exerciseData = exerciseSetsCounter[exerciseName] {
-//                exerciseData.daysCount = daySet.count
-//                exerciseSetsCounter[exerciseName] = exerciseData
-//            }
-//            
-//            for i in 0..<bodyPartDataList.count {
-//                if let exerciseIndex = bodyPartDataList[i].exercises.firstIndex(where: { $0.name == exerciseName}) {
-//                    bodyPartDataList[i].exercises[exerciseIndex].daysCount = daySet.count
-//                }
-//            }
-//        }
-//        
-//        
-//        // 데이터 정렬
-//        bodyPartDataList.sort { $0.totalSets > $1.totalSets}
-//        for i in 0..<bodyPartDataList.count {
-//            bodyPartDataList[i].exercises.sort { $0.setsCount > $1.setsCount}
-//        }
-//        
-//        let top5Exercises = exerciseSetsCounter.values.sorted { $0.setsCount > $1.setsCount}.prefix(5)
-//        let top3WeightChangeExercises = exerciseSetsCounter.values.sorted { ($0.maxWeight - $0.minWeight) > ($1.maxWeight - $1.minWeight) }.prefix(3)
-//        
-//        
-//        return (bodyPartDataList, Array(top5Exercises), Array(top3WeightChangeExercises))
-//    }
     
 }
 
