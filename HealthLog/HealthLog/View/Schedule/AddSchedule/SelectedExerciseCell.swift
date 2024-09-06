@@ -64,7 +64,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         setupStepperComponents()
         
         NSLayoutConstraint.activate([
-            exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             exerciseTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             exerciseTitleLabel.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),
             
@@ -81,7 +81,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13)
         ])
     }
     
@@ -200,7 +200,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
                 weightTextField: setView.weightTextField,
                 repsTextField: setView.repsTextField)
         }
-        
     }
 }
 
@@ -299,8 +298,6 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            //self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
-            
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
