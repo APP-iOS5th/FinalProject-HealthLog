@@ -564,7 +564,7 @@ extension RealmManager {
             }
         } else {
             do {
-                var order:Int = 0
+                var order: Int = 1
                 var scheduleExercise:[ScheduleExercise] = []
                 for exercises in routine.exercises {
                     var schedulExeriseSets: [ScheduleExerciseSet] = []
