@@ -62,7 +62,7 @@ class RoutineCell: UITableViewCell {
     
     private lazy var dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.color1E1E1E
+        view.backgroundColor = .color525252
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -162,11 +162,6 @@ class RoutineCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(
-            by: UIEdgeInsets(top: 10, left: 17, bottom: 0, right: 17))
-    }
     
     @objc func buttonTapped() {
         addbutton?()
