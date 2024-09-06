@@ -56,7 +56,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         
         // 스택뷰 설정
         stackView.axis = .vertical
-        stackView.spacing = 15
+        stackView.spacing = 18
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
@@ -64,7 +64,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         setupStepperComponents()
         
         NSLayoutConstraint.activate([
-            exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18),
             exerciseTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             exerciseTitleLabel.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),
             
@@ -73,7 +73,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             deleteButton.widthAnchor.constraint(equalToConstant: 14),
             deleteButton.heightAnchor.constraint(equalToConstant: 14),
             
-            containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 20),
+            containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 18),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
@@ -81,7 +81,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
     }
     
@@ -324,8 +324,121 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            //self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
+            setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
+            weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
+            weightTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            weightTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            weightTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            weightTextField.widthAnchor.constraint(equalToConstant: 58),
+            
+            weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
+            weightLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
+            repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
+            repsTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            repsTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            repsTextField.widthAnchor.constraint(equalToConstant: 58),
+            
+            repsLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
+        ])
+    }
+    
+    func inputDelegate(delegate: SelectedExerciseCell) {
+        weightTextField.delegate = delegate
+        repsTextField.delegate = delegate
+    }
+}
+
+
+
+class RoutineSetInputRowView: UIView {
+    let setLabel = UILabel()
+    let weightTextField = UITextField()
+    let weightLabel = UILabel()
+    let repsTextField = UITextField()
+    let repsLabel = UILabel()
+    
+    init(setNumber: Int, set: RoutineExerciseSet, delegate: SelectedExerciseCell) {
+        super.init(frame: .zero)
+        createSetInputView(setNumber: setNumber, set: set)
+        inputDelegate(delegate: delegate)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: 35)
+    }
+    
+    func createSetInputView(setNumber: Int, set: RoutineExerciseSet) {
+        // MARK: setLabel
+        setLabel.text = "\(setNumber) 세트"
+        setLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        setLabel.textColor = .white
+        
+        // MARK: weightTextField
+        weightTextField.text = set.weight == -1 ? "" : String(set.weight)
+        weightTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightTextField.textColor = .white
+        weightTextField.textAlignment = .center
+        weightTextField.keyboardType = .numberPad
+        weightTextField.backgroundColor = .colorSecondary
+        weightTextField.layer.cornerRadius = 10
+        weightTextField.attributedPlaceholder = NSAttributedString(
+            string: "무게",
+            attributes: [
+                .foregroundColor: UIColor.systemGray,
+                .font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // MARK: weightLabel
+        weightLabel.text = "kg"
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightLabel.textColor = .white
+        
+        // MARK: repsTextField
+        repsTextField.text = set.reps == -1 ? "" : String(set.reps)
+        repsTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsTextField.textColor = .white
+        repsTextField.textAlignment = .center
+        repsTextField.keyboardType = .numberPad
+        repsTextField.backgroundColor = .colorSecondary
+        repsTextField.layer.cornerRadius = 10
+        repsTextField.attributedPlaceholder = NSAttributedString(
+            string: "횟수",
+            attributes: [
+                .foregroundColor: UIColor.systemGray,
+                .font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // MARK: repsLabel
+        repsLabel.text = "회"
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsLabel.textColor = .white
+        
+        
+        // MARK: addSubview
+        self.addSubview(setLabel)
+        self.addSubview(weightTextField)
+        self.addSubview(weightLabel)
+        self.addSubview(repsTextField)
+        self.addSubview(repsLabel)
+        
+        setLabel.translatesAutoresizingMaskIntoConstraints = false
+        weightTextField.translatesAutoresizingMaskIntoConstraints = false
+        weightLabel.translatesAutoresizingMaskIntoConstraints = false
+        repsTextField.translatesAutoresizingMaskIntoConstraints = false
+        repsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             

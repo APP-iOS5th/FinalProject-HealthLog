@@ -5,6 +5,7 @@
 //  Created by user on 8/12/24.
 //
 
+import Network
 import RealmSwift
 import Foundation
 
@@ -26,7 +27,7 @@ class RealmManager {
         
         addInBodySampleData()
         
-        Task{ await initializeRealmExerciseImages() }
+        Task{ await self.initializeRealmExerciseImages() }
     }
     
     
@@ -127,58 +128,41 @@ extension RealmManager {
     func initializeRealmExercise() {
         guard let realm = realm else {return}
         
+        
+        
         if realm.objects(Exercise.self).isEmpty {
-            let sampleExercises = [
-                Exercise(
-                    name: "스쿼트", bodyParts: [.quadriceps, .glutes],
-                    descriptionText: "다리 운동", images: [],
-                    totalReps: 75, recentWeight: 80, maxWeight: 120,
-                    isCustom: true
-                ),
-                Exercise(name: "Shoulder Press", bodyParts: [.shoulders], descriptionText: "Shoulder exercise TestTe stTestTestTestT estTest TestTestTestTestT estTestT TestTestTestTestTestTe stTestTe stTestTestTes tTestTestTestTest ", images: [], totalReps: 60, recentWeight: 40, maxWeight: 60, isCustom: false),
-                Exercise(name: "Bicep Curl", bodyParts: [.biceps], descriptionText: "Arm exercise", images: [], totalReps: 90, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Tricep Dip", bodyParts: [.triceps], descriptionText: "Arm exercise", images: [
-                    ExerciseImage(
-                        image: nil, url: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Squats-1.png",
-                        urlAccessCount: 0),
-                    ExerciseImage(
-                        image: nil, url: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Squats-2.png",
-                        urlAccessCount: 0)
-                ], totalReps: 80, recentWeight: 25, maxWeight: 40, isCustom: false),
-                Exercise(name: "Lateral Raise", bodyParts: [.shoulders], descriptionText: "Shoulder isolation exercise", images: [], totalReps: 70, recentWeight: 10, maxWeight: 15, isCustom: false),
-                Exercise(name: "레그 프레스", bodyParts: [.quadriceps, .glutes], descriptionText: "다리 운동2", images: [], totalReps: 50, recentWeight: 180, maxWeight: 200, isCustom: true),
-                Exercise(name: "Plank", bodyParts: [.abs], descriptionText: "Core exercise", images: [
-                    ExerciseImage(
-                        image: nil, url: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Squats-2.png",
-                        urlAccessCount: 0)
-                ], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Leg Curl", bodyParts: [.hamstrings], descriptionText: "Hamstring exercise", images: [], totalReps: 60, recentWeight: 50, maxWeight: 60, isCustom: false),
-                Exercise(name: "Calf Raise", bodyParts: [.calves, .biceps, .forearms, .abductors, .quadriceps, .triceps], descriptionText: "Calf exercise", images: [], totalReps: 100, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Pull-up", bodyParts: [.back, .biceps], descriptionText: "Back and biceps exercise", images: [], totalReps: 40, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Chest Fly", bodyParts: [.chest], descriptionText: "Chest isolation exercise", images: [], totalReps: 70, recentWeight: 25, maxWeight: 40, isCustom: false),
-                Exercise(name: "Russian Twist", bodyParts: [.abs], descriptionText: "Core rotational exercise", images: [], totalReps: 50, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Glute Bridge", bodyParts: [.glutes], descriptionText: "Glute exercise", images: [], totalReps: 30, recentWeight: 40, maxWeight: 60, isCustom: false),
-                Exercise(name: "Lunges", bodyParts: [.quadriceps, .glutes], descriptionText: "Leg exercise", images: [], totalReps: 60, recentWeight: 20, maxWeight: 30, isCustom: false),
-                Exercise(name: "Hammer Curl", bodyParts: [.biceps], descriptionText: "Bicep exercise", images: [], totalReps: 80, recentWeight: 15, maxWeight: 25, isCustom: false),
-                Exercise(name: "Tricep Kickback", bodyParts: [.triceps], descriptionText: "Tricep isolation exercise", images: [], totalReps: 75, recentWeight: 10, maxWeight: 15, isCustom: false),
-                Exercise(name: "Side Plank", bodyParts: [.abs], descriptionText: "Core stabilization exercise", images: [], totalReps: 5, recentWeight: 0, maxWeight: 0, isCustom: false),
-                Exercise(name: "Hip Thrust", bodyParts: [.glutes], descriptionText: "Glute exercise", images: [], totalReps: 50, recentWeight: 60, maxWeight: 80, isCustom: false)
-            ]
+            
+            // 운동리스트 데이터 CSV 파일 Read
+            var sampleExercises: [Exercise] = []
+            if let csvPath = Bundle.main.path(forResource: "ExerciseData", ofType: "csv") {
+                do {
+                    let csvString = try String(contentsOfFile: csvPath, encoding: .utf8)
+                    let exercisesJson = csvToJson(csvString: csvString)
+                    let exercises = jsonToRealmObject(exercisesJson: exercisesJson)
+                    sampleExercises = exercises
+                } catch {
+                    print("CSV 파일을 불러오는 데 실패했습니다: \(error)")
+                }
+            } else {
+                print("CSV 파일 경로를 찾을 수 없습니다.")
+            }
             
             try! realm.write {
                 realm.add(sampleExercises)
             }
             
-            print("기본 Exercise 더미데이터 넣기")
+            print("Exercise 초기 데이터 넣기")
         } else {
-            print("기본 Exercise 데이터가 이미 존재합니다.")
+            print("초기 Exercise 데이터가 이미 존재합니다.")
         }
     }
     
     @MainActor
     func initializeRealmExerciseImages() async {
-        print("initializeRealmExerciseImages")
+//        print("initializeRealmExerciseImages")
         guard let realm = realm else { return }
+        
+        print("initializeRealmExerciseImages - 이미지 확인 처리")
         
         let exercises = realm.objects(Exercise.self)
         
@@ -203,7 +187,7 @@ extension RealmManager {
             for index in 0..<imagesCount {
                 //                print("-- start exerciseImage \(index) --")
                 let exerciseImage = exercise.images[index]
-                print(exerciseImage)
+//                print(exerciseImage)
                 
                 let accessCount = exerciseImage.urlAccessCount ?? -1
                 
@@ -216,10 +200,10 @@ extension RealmManager {
                 }
                 
                 do {
-                    print("image \(index) url - \(url)")
+//                    print("image \(index) url - \(url)")
                     let (imageData, _) = try await URLSession.shared.data(from: url)
-                    print(imageData)
-                    print("image \(index) write realm")
+//                    print(imageData)
+//                    print("image \(index) write realm")
                     realm.writeAsync {
                         exerciseImage.image = imageData
                         exerciseImage.urlAccessCount = -1
@@ -564,7 +548,7 @@ extension RealmManager {
             }
         } else {
             do {
-                var order:Int = 1
+                var order: Int = 1
                 var scheduleExercise:[ScheduleExercise] = []
                 for exercises in routine.exercises {
                     var schedulExeriseSets: [ScheduleExerciseSet] = []
@@ -619,5 +603,81 @@ extension RealmManager {
                 realm.add(newSchedule)
             }
         }
+    }
+}
+
+extension RealmManager {
+    
+    func csvToJson(csvString: String) -> [[String: String]] {
+        var jsonArray: [[String: String]] = []
+        
+        let normalizedString = csvString
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+        
+        let rows = normalizedString.split(separator: "\n")
+        
+        guard let headerRow = rows.first else { return jsonArray }
+        let headers = headerRow.split(separator: ",").map { String($0) }
+        
+        for row in rows.dropFirst() {
+            let columns = row.split(separator: ",").map { String($0) }
+            if columns.count == headers.count {
+                var jsonDict: [String: String] = [:]
+                for (index, header) in headers.enumerated() {
+                    jsonDict[header] = columns[index]
+                }
+                jsonArray.append(jsonDict)
+            }
+        }
+        
+        return jsonArray
+    }
+    
+    func jsonToRealmObject(exercisesJson: [[String: String]])  -> [Exercise] {
+        var exercises: [Exercise] = []
+        
+        
+        for json in exercisesJson {
+            if let name = json["이름"],
+               let bodyPart = json["부위"],
+               let description = json["설명"],
+               let firstURL = json["URL_1번 이미지"],
+               let secondURL = json["URL_2번 이미지"] {
+                
+                let bodyPartsKey = bodyPart.split(separator: "/")
+                var bodyParts = bodyPartsKey.map { key in
+                    if let bodyPart = BodyPart(rawValue: String(key)) {
+                        return bodyPart
+                    } else {
+                        return BodyPart.other
+                    }
+                }
+
+                let overOtherCaseCount = bodyParts.filter ({
+                    bodypart in bodypart == .other
+                }).count
+                
+                if (overOtherCaseCount > 1) ||
+                    (bodyParts.isEmpty == true) {
+                    bodyParts = [BodyPart.other]
+                }
+                
+                let exercise = Exercise(
+                    name: name,
+                    bodyParts: bodyParts,
+                    descriptionText: description,
+                    images: [
+                        ExerciseImage(image: nil, url: firstURL,urlAccessCount: 0),
+                        ExerciseImage(image: nil, url: secondURL, urlAccessCount: 0)
+                    ],
+                    totalReps: 0, recentWeight: 0, maxWeight: 0,
+                    isCustom: false)
+                print(exercise)
+                exercises.append(exercise)
+            }
+        }
+        print()
+        return exercises
     }
 }

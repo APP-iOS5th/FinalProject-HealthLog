@@ -19,6 +19,7 @@ class ScheduleViewModel: ObservableObject {
     @Published var selectedDateSchedule: Schedule?
     @Published var selectedDateExerciseVolume: Int = 0
     @Published var isInputValid: Bool = false
+    @Published var noSchedule: Bool = false
     private var setValues: [(order: Int, weight: String, reps: String)] = []
     
     init() {
@@ -56,11 +57,28 @@ class ScheduleViewModel: ObservableObject {
         selectedDateExerciseVolume = 0
         if let selectedSchedule = selectedDateSchedule {
             for scheduleExercise in selectedSchedule.exercises {
+                // calculate schedule exercise volume
                 let completedSets = scheduleExercise.sets.filter { $0.isCompleted }
                 for set in completedSets {
                     selectedDateExerciseVolume += set.weight * set.reps
                 }
+                
+                do {
+                    try realm.write {
+                        // update completion of schedule exercise
+                        if completedSets.count < scheduleExercise.sets.count {
+                            scheduleExercise.isCompleted = false
+                        } else {
+                            scheduleExercise.isCompleted = true
+                        }
+                    }
+                } catch {
+                    print("Error updating completion of ScheduleExercise: \(error)")
+                }
             }
+            noSchedule = false
+        } else {
+            noSchedule = true
         }
     }
     
@@ -164,6 +182,7 @@ class ScheduleViewModel: ObservableObject {
         
         do {
             try realm.write {
+                // add or edit schedule exercise sets
                 for (index, setValue) in setValues.enumerated() {
                     if index < scheduleExercise.sets.count {
                         scheduleExercise.sets[index].order = setValue.order
@@ -179,7 +198,7 @@ class ScheduleViewModel: ObservableObject {
                         scheduleExercise.sets.append(set)
                     }
                 }
-                
+                // remove schedule exercise sets
                 if setValues.count < scheduleExercise.sets.count {
                     let scheduleExerciseSetsCount = scheduleExercise.sets.count
                     for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
