@@ -48,7 +48,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
-        
         calendar.delegate = self
         
         // selected date handler
@@ -99,19 +98,17 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.translatesAutoresizingMaskIntoConstraints = false
         
         let button = UIButton(type: .system)
-        var configuration = UIButton.Configuration.filled()
-        configuration.title = "루틴으로 저장"
-        configuration.baseBackgroundColor = .colorAccent
-        configuration.baseForegroundColor = .white
-        configuration.cornerStyle = .medium
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
-        button.configuration = configuration
+        button.setTitle("루틴으로 저장", for: .normal)
+        button.backgroundColor = .colorAccent
+        button.tintColor = .white
+        button.layer.cornerRadius = 7
         button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         let stackView = UIStackView(arrangedSubviews: [label, button])
         stackView.axis = .horizontal
+        stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
@@ -123,7 +120,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             view.heightAnchor.constraint(equalToConstant: 60),
@@ -249,15 +245,17 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             exerciseVolumeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
+            separatorLine1.heightAnchor.constraint(equalToConstant: 1),
+            
             muscleImageView.heightAnchor.constraint(equalToConstant: 300),
             muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            separatorLine1.heightAnchor.constraint(equalToConstant: 2),
-            
             labelContainer.heightAnchor.constraint(equalToConstant: 30),
+            labelContainer.widthAnchor.constraint(equalToConstant: 207),
+            labelContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             
-            separatorLine2.heightAnchor.constraint(equalToConstant: 2),
+            separatorLine2.heightAnchor.constraint(equalToConstant: 1),
             
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
@@ -416,7 +414,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 }
 
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
-    
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         guard let date = dateComponents.date else { return nil }
         
@@ -433,12 +430,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         }
         
         return nil
-    }
-
-    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
-        let timeZone = TimeZone(identifier: "Asia/Seoul")!
-        let seconds = timeZone.secondsFromGMT(for: date)
-        return Date(timeInterval: TimeInterval(seconds), since: date)
     }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
