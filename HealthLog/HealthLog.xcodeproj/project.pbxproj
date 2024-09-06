@@ -44,7 +44,9 @@
 		4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */; };
 		4B2A2A322C800FC3007F5F55 /* RoutineDetailFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */; };
 		4B2A2A342C804E31007F5F55 /* RoutineEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */; };
-		4B7D55292C857D320079B170 /* DeleteButtonCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7D55282C857D320079B170 /* DeleteButtonCollectionViewCell.swift */; };
+		4B403D072C8B3450004961B9 /* RoutineEditNameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B403D062C8B3450004961B9 /* RoutineEditNameTableViewCell.swift */; };
+		4B403D092C8B3B99004961B9 /* RoutineEditHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B403D082C8B3B99004961B9 /* RoutineEditHeader.swift */; };
+		4B7D55292C857D320079B170 /* DeleteButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7D55282C857D320079B170 /* DeleteButtonCell.swift */; };
 		4B89D35C2C6AEBC30094C852 /* Extension+UINavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */; };
 		4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */; };
 		4B89D3622C6B35AE0094C852 /* RoutineAddExerciseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */; };
@@ -149,7 +151,9 @@
 		4B2A2A2F2C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailHeaderView.swift; sourceTree = "<group>"; };
 		4B2A2A312C800FC3007F5F55 /* RoutineDetailFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDetailFooterView.swift; sourceTree = "<group>"; };
 		4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditViewController.swift; sourceTree = "<group>"; };
-		4B7D55282C857D320079B170 /* DeleteButtonCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonCollectionViewCell.swift; sourceTree = "<group>"; };
+		4B403D062C8B3450004961B9 /* RoutineEditNameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditNameTableViewCell.swift; sourceTree = "<group>"; };
+		4B403D082C8B3B99004961B9 /* RoutineEditHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineEditHeader.swift; sourceTree = "<group>"; };
+		4B7D55282C857D320079B170 /* DeleteButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonCell.swift; sourceTree = "<group>"; };
 		4B89D35B2C6AEBC30094C852 /* Extension+UINavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Extension+UINavigationController.swift"; path = "HealthLog/View/Extension/Extension+UINavigationController.swift"; sourceTree = SOURCE_ROOT; };
 		4B89D35F2C6B27110094C852 /* Extension+UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+UIFont.swift"; sourceTree = "<group>"; };
 		4B89D3612C6B35AE0094C852 /* RoutineAddExerciseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineAddExerciseViewController.swift; sourceTree = "<group>"; };
@@ -330,7 +334,9 @@
 			isa = PBXGroup;
 			children = (
 				4B2A2A332C804E31007F5F55 /* RoutineEditViewController.swift */,
-				4B7D55282C857D320079B170 /* DeleteButtonCollectionViewCell.swift */,
+				4B403D062C8B3450004961B9 /* RoutineEditNameTableViewCell.swift */,
+				4B7D55282C857D320079B170 /* DeleteButtonCell.swift */,
+				4B403D082C8B3B99004961B9 /* RoutineEditHeader.swift */,
 			);
 			path = RotuineEdit;
 			sourceTree = "<group>";
@@ -606,9 +612,10 @@
 				18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */,
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
 				7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */,
-				4B7D55292C857D320079B170 /* DeleteButtonCollectionViewCell.swift in Sources */,
+				4B7D55292C857D320079B170 /* DeleteButtonCell.swift in Sources */,
 				4B911CFC2C746DBB0032F438 /* RoutineViewModel.swift in Sources */,
 				184A58B52C6A3CEA009F2848 /* ExerciseCheckCell.swift in Sources */,
+				4B403D092C8B3B99004961B9 /* RoutineEditHeader.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
 				CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
@@ -647,6 +654,7 @@
 				184A58C12C6C8521009F2848 /* SectionTitleTableViewCell.swift in Sources */,
 				18F4F30B2C7EFBBB00F2006C /* InBodyChartView.swift in Sources */,
 				189401362C528B2000533E0A /* SceneDelegate.swift in Sources */,
+				4B403D072C8B3450004961B9 /* RoutineEditNameTableViewCell.swift in Sources */,
 				CEE8BC6A2C65B45100E1D94F /* InBody.swift in Sources */,
 				CEE8BC662C65B3EB00E1D94F /* Schedule.swift in Sources */,
 				186301E22C73313900CA32AA /* MuscleImageTableViewCell.swift in Sources */,

@@ -64,7 +64,7 @@ class RoutineAddViewModel {
     // 세트 수 업데이트
     func updateExerciseSetCount(for index: Int, setCount: Int) {
         if self.routineExecrises[index].sets.count < setCount {
-                self.routineExecrises[index].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
+                self.routineExecrises[index].sets.append(RoutineExerciseSet(order: setCount, weight: -1, reps: -1))
         } else {
                 self.routineExecrises[index].sets.removeLast()
 
