@@ -58,6 +58,7 @@ class ExercisesDetailViewController: UIViewController {
         setupProfileGroup()
         setupPaddingView(stackView: stackView, height: 10)
         setupLogGroup()
+        setupPaddingView(stackView: stackView, height: 10)
         setupBindings()
     }
     
@@ -84,6 +85,7 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupMain() {
         title = detailViewModel.exercise.name
+        self.navigationController?.setupBarAppearance()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
@@ -158,7 +160,7 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupProfileGroup() {
         // MARK: profileLabel
-        profileLabel.text = "운동 정보"
+        profileLabel.text = "  운동 정보"
         profileLabel.textColor = .white
         profileLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         stackView.addArrangedSubview(profileLabel)
@@ -171,7 +173,7 @@ class ExercisesDetailViewController: UIViewController {
         profileStackView.clipsToBounds = true
         profileStackView.isLayoutMarginsRelativeArrangement = true
         profileStackView.layoutMargins = UIEdgeInsets(
-            top: 15, left: 15, bottom: 15, right: 15)
+            top: 25, left: 30, bottom: 25, right: 30)
         profileStackView.backgroundColor = .color3E3E3E
         stackView.addArrangedSubview(profileStackView)
         
@@ -197,13 +199,13 @@ class ExercisesDetailViewController: UIViewController {
         // MARK: descriptionLabel
         descriptionLabel.textColor = .white
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
+        descriptionLabel.font = UIFont(name: "Pretendard-Medium", size: 19)
         profileStackView.addArrangedSubview(descriptionLabel)
     }
     
     func setupLogGroup() {
         // MARK: logLabel
-        logLabel.text = "운동 기록"
+        logLabel.text = "  운동 기록"
         logLabel.textColor = .white
         logLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         stackView.addArrangedSubview(logLabel)
@@ -318,7 +320,7 @@ private class LogContentStackView: UIStackView {
         clipsToBounds = true
         isLayoutMarginsRelativeArrangement = true
         layoutMargins = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
-        backgroundColor = .color1E1E1E
+        backgroundColor = .color2B2B2B
         
         // MARK: symbolImageView
         symbolImageContentView.contentMode = .scaleAspectFit
