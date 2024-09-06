@@ -48,6 +48,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
+        calendar.locale = Locale(identifier: "ko_KR")
         calendar.delegate = self
         
         // selected date handler
