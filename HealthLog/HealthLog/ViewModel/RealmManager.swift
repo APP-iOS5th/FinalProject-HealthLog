@@ -159,7 +159,7 @@ extension RealmManager {
     
     @MainActor
     func initializeRealmExerciseImages() async {
-//        print("initializeRealmExerciseImages")
+        //        print("initializeRealmExerciseImages")
         guard let realm = realm else { return }
         
         print("initializeRealmExerciseImages - 이미지 확인 처리")
@@ -187,7 +187,7 @@ extension RealmManager {
             for index in 0..<imagesCount {
                 //                print("-- start exerciseImage \(index) --")
                 let exerciseImage = exercise.images[index]
-//                print(exerciseImage)
+                //                print(exerciseImage)
                 
                 let accessCount = exerciseImage.urlAccessCount ?? -1
                 
@@ -200,10 +200,10 @@ extension RealmManager {
                 }
                 
                 do {
-//                    print("image \(index) url - \(url)")
+                    //                    print("image \(index) url - \(url)")
                     let (imageData, _) = try await URLSession.shared.data(from: url)
-//                    print(imageData)
-//                    print("image \(index) write realm")
+                    //                    print(imageData)
+                    //                    print("image \(index) write realm")
                     realm.writeAsync {
                         exerciseImage.image = imageData
                         exerciseImage.urlAccessCount = -1
@@ -579,9 +579,13 @@ extension RealmManager {
         guard exerciseIndex < selectedExercises.count,
               setIndex < selectedExercises[exerciseIndex].sets.count else { return }
         guard let realm = realm else { return }
-        try! realm.write {
-            selectedExercises[exerciseIndex].sets[setIndex].weight = weight
-            selectedExercises[exerciseIndex].sets[setIndex].reps = reps
+        do {
+            try realm.write {
+                selectedExercises[exerciseIndex].sets[setIndex].weight = weight
+                selectedExercises[exerciseIndex].sets[setIndex].reps = reps
+            }
+        } catch {
+            print("Error updating set: \(error.localizedDescription)")
         }
     }
     
@@ -589,19 +593,23 @@ extension RealmManager {
     func saveSchedule(selectedExercises: [ScheduleExercise], for date: Date) {
         guard let realm = realm else { return }
         
-        if let existingSchedule = realm.objects(Schedule.self).filter("date == %@", date).first {
-            try! realm.write {
-                let maxOrder = existingSchedule.exercises.max(of: \.order) ?? 0
-                for (index, exercise) in selectedExercises.enumerated() {
-                    exercise.order = maxOrder + index + 1
+        do {
+            if let existingSchedule = realm.objects(Schedule.self).filter("date == %@", date).first {
+                try realm.write {
+                    let maxOrder = existingSchedule.exercises.max(of: \.order) ?? 0
+                    for (index, exercise) in selectedExercises.enumerated() {
+                        exercise.order = maxOrder + index + 1
+                    }
+                    existingSchedule.exercises.append(objectsIn: selectedExercises)
                 }
-                existingSchedule.exercises.append(objectsIn: selectedExercises)
+            } else {
+                let newSchedule = Schedule(date: date, exercises: selectedExercises)
+                try realm.write {
+                    realm.add(newSchedule)
+                }
             }
-        } else {
-            let newSchedule = Schedule(date: date, exercises: selectedExercises)
-            try! realm.write {
-                realm.add(newSchedule)
-            }
+        } catch {
+            print("Error saving schedule: \(error.localizedDescription)")
         }
     }
 }
@@ -653,7 +661,7 @@ extension RealmManager {
                         return BodyPart.other
                     }
                 }
-
+                
                 let overOtherCaseCount = bodyParts.filter ({
                     bodypart in bodypart == .other
                 }).count
