@@ -33,6 +33,29 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        return button
+    }()
+    
+    private let completeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("완료", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.isEnabled = false
+        button.alpha = 0.4
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     lazy var nameLabel: UILabel  = {
         let label = UILabel()
         label.textColor = .white
@@ -137,70 +160,66 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         setupUI()
         updateSets()
         bindViewModel()
+        setupKeyboard()
+        hideKeyBoardWhenTappedScreen()
     }
     
     private func bindViewModel() {
         viewModel.$isInputValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
-                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+                self?.completeButton.isEnabled = isValid
+                self?.completeButton.alpha = isValid ? 1.0 : 0.5
             }
             .store(in: &cancellables)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // add observer of keyboard notification
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // delete observer of keyboard notification
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    private func setupKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        scrollContainer.keyboardDismissMode = .interactive
     }
     
     // MARK: - Methods
     @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
-        let keyboardHeight = keyboardFrame.cgRectValue.height
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+        scrollContainer.contentInset = contentInsets
+        scrollContainer.scrollIndicatorInsets = contentInsets
         
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
+        if let activeField = view.currentFirstResponder() as? UITextField {
+            let activeRect = activeField.convert(activeField.bounds, to: scrollContainer)
+            scrollContainer.scrollRectToVisible(activeRect, animated: true)
         }
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
-        
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = .identity
-            }
-        }
+        let contentInsets = UIEdgeInsets.zero
+        scrollContainer.contentInset = contentInsets
+        scrollContainer.scrollIndicatorInsets = contentInsets
     }
+    
+    func hideKeyBoardWhenTappedScreen() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func tapHandler() {
+        self.view.endEditing(true)
+    }
+    
     private func setupUI() {
         view.backgroundColor = .colorPrimary
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
-        
-        navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationItem.rightBarButtonItem?.tintColor = .white
         
         stepperContainer.addSubview(stepperLabel)
         stepperContainer.addSubview(stepperCountLabel)
         stepperContainer.addSubview(stepper)
         scrollContainer.addSubview(setsContainer)
         
+        view.addSubview(cancelButton)
+        view.addSubview(completeButton)
         view.addSubview(nameLabel)
         view.addSubview(stepperContainer)
         view.addSubview(scrollContainer)
@@ -209,7 +228,13 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            
+            completeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            completeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
+            nameLabel.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 13),
             nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             
             stepperContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
@@ -243,6 +268,8 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             deleteButton.heightAnchor.constraint(equalToConstant: 50),
             
         ])
+        cancelButton.addTarget(self, action: #selector(cancelEdit), for: .touchUpInside)
+        completeButton.addTarget(self, action: #selector(saveEdit), for: .touchUpInside)
     }
     
     private func updateSets() {
@@ -393,7 +420,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     }
     
     @objc private func cancelEdit() {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func saveEdit() {

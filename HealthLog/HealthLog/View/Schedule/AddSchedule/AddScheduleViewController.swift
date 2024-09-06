@@ -322,12 +322,14 @@ extension AddScheduleViewController: UISearchResultsUpdating, UISearchController
             searchResultsController.bodypartOptionShowUIChange(true)
             searchResultsController.prepareForDismissal(false)
         }
+        navigationItem.leftBarButtonItem?.isHidden = true
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.prepareForDismissal(true)
         }
+        navigationItem.leftBarButtonItem?.isHidden = false
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {

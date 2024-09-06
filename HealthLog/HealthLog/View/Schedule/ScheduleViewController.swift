@@ -33,8 +33,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        //stackView.alignment = .center
-        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -48,6 +46,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
+        calendar.locale = Locale(identifier: "ko_KR")
         calendar.delegate = self
         
         // selected date handler
@@ -98,7 +97,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.translatesAutoresizingMaskIntoConstraints = false
         
         let button = UIButton(type: .system)
-        button.setTitle("루틴으로 저장", for: .normal)
+        button.setTitle("루틴으로 추가", for: .normal)
         button.backgroundColor = .colorAccent
         button.tintColor = .white
         button.layer.cornerRadius = 7
@@ -138,6 +137,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.separatorStyle = .singleLine
         table.dataSource = self
         table.delegate = self
         table.register(ExerciseCheckCell.self, forCellReuseIdentifier: ExerciseCheckCell.identifier)
@@ -230,7 +230,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             calendarView.heightAnchor.constraint(equalToConstant: 500),
@@ -257,8 +257,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             separatorLine2.heightAnchor.constraint(equalToConstant: 1),
             
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            tableView.topAnchor.constraint(equalTo: separatorLine2.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
         ])
         
         tableViewHeightConstraint =
@@ -352,36 +353,22 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             cell.configure(with: scheduleExercise)
             cell.delegate = self
         }
-        
-        cell.addSeparator()
-        
         return cell
     }
     
     func didTapEditExercise(_ exercise: ScheduleExercise) {
         let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise, selectedDate: selectedDate ?? today)
         editExerciseVC.delegate = self
-        let navigationController = UINavigationController(rootViewController: editExerciseVC)
+        editExerciseVC.modalPresentationStyle = .formSheet
+        editExerciseVC.isModalInPresentation = true
         
-        // transparent black background
-        let partialScreenVC = UIViewController()
-        partialScreenVC.modalPresentationStyle = .overFullScreen
-        partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        if let sheet = editExerciseVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 32
+        }
         
-        partialScreenVC.addChild(navigationController)
-        partialScreenVC.view.addSubview(navigationController.view)
-        
-        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
-            navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
-            navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
-            navigationController.view.heightAnchor.constraint(equalToConstant: 500),
-        ])
-        
-        navigationController.didMove(toParent: partialScreenVC)
-        
-        present(partialScreenVC, animated: true, completion: nil)
+        present(editExerciseVC, animated: true, completion: nil)
     }
     
     func didToggleExerciseCompletion(_ exercise: ScheduleExercise) {
