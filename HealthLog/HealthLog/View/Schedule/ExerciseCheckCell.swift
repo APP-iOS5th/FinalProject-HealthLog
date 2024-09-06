@@ -80,7 +80,7 @@ class ExerciseCheckCell: UITableViewCell {
         contentView.addSubview(setsContainer)
         
         NSLayoutConstraint.activate([
-            exerciseNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            exerciseNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
             exerciseNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             exerciseNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
@@ -257,21 +257,5 @@ class ExerciseCheckCell: UITableViewCell {
     @objc private func editExercise() {
         guard let exercise = currentExercise else { return }
         delegate?.didTapEditExercise(exercise)
-    }
-}
-
-extension ExerciseCheckCell {
-    func addSeparator() {
-        let separator = UIView()
-        separator.backgroundColor = .colorSecondary
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(separator)
-        
-        NSLayoutConstraint.activate([
-            separator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            separator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            separator.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 1),
-        ])
     }
 }
