@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 import Combine
 
-class RoutineAddNameViewModel {
+class RoutineAddViewModel {
     
     private var realm: Realm?
     private var realmManger = RealmManager.shared
@@ -23,7 +23,7 @@ class RoutineAddNameViewModel {
     
     @Published var routine: Routine = Routine()
     @Published var routines: [Routine] = []
-    
+    @Published var routineExecrises: [RoutineExercise] = []
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
@@ -61,24 +61,42 @@ class RoutineAddNameViewModel {
         .print()
         .eraseToAnyPublisher()
     
-    func updateExerciseSetCount(for section: Int, setCount: Int) {
-        if self.routine.exercises[section].sets.count < setCount {
-                self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
+    // 세트 수 업데이트
+    func updateExerciseSetCount(for index: Int, setCount: Int) {
+        if self.routineExecrises[index].sets.count < setCount {
+                self.routineExecrises[index].sets.append(RoutineExerciseSet(order: setCount, weight: -1, reps: -1))
         } else {
-                self.routine.exercises[section].sets.removeLast()
+                self.routineExecrises[index].sets.removeLast()
 
         }
         validateExercise()
     }
     
-    func deleteExercise(for setcion: Int) {
-        self.routine.exercises.remove(at: setcion)
+    // 운동 순서 이동
+    func moveExercise(from sourceIndex: Int, to destinationIndex: Int) {
+        guard sourceIndex != destinationIndex else { return }
+        
+        let exercise =  routineExecrises.remove(at: sourceIndex)
+        routineExecrises.insert(exercise, at: destinationIndex)
+        
+        for (index, exercise) in routineExecrises.enumerated() {
+            exercise.order = index
+        }
         validateExercise()
     }
     
+    // 운동 삭제
+    func deleteExercise(at index: Int) {
+        guard index < routineExecrises.count else { return }
+        
+        self.routineExecrises.remove(at: index)
+        validateExercise()
+    }
+    
+    // 완료 버튼 유호성 확인
     func validateExercise() {
-        let isExercise = !routine.exercises.isEmpty
-        let allFieldsFilled = routine.exercises.allSatisfy { exercise in
+        let isExercise = !routineExecrises.isEmpty
+        let allFieldsFilled = routineExecrises.allSatisfy { exercise in
             exercise.sets.allSatisfy { set in
                 set.weight >= 0 && set.reps > 0
             }
@@ -87,7 +105,8 @@ class RoutineAddNameViewModel {
         isAddRoutineValid = isExercise && allFieldsFilled
         
     }
-    
+
+    // 루틴 추가
     func addRoutine(routine: Routine) {
         realmManger.addRoutine(routine: routine)
     }

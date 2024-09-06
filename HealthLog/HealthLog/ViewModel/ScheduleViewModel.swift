@@ -258,7 +258,7 @@ class ScheduleViewModel: ObservableObject {
                 exerciseVolume += set.weight * set.reps
             }
             if let exercise = exercises.first(where: { $0.name == scheduleExercise.exercise?.name }) {
-                let routineExercise = RoutineExercise(exercise: exercise, sets: routineExerciseSets)
+                let routineExercise = RoutineExercise(exercise: exercise, order: scheduleExercise.order, sets: routineExerciseSets)
                 routineExercises.append(routineExercise)
             }
         }

@@ -201,6 +201,32 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
                 repsTextField: setView.repsTextField)
         }
     }
+    
+    func configureRoutine(_ routineExercise: RoutineExercise) {
+        currentSetCount = routineExercise.sets.count
+        
+        exerciseTitleLabel.text = routineExercise.exercise?.name
+        stepperCountLabel.text = "\(currentSetCount)"
+        stepper.value = Double(currentSetCount)
+        
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        stackView.weightTextFields.removeAll()
+        stackView.repsTextFields.removeAll()
+        
+        // 데이터에 맞춰서 stackView 그리기
+        (1...currentSetCount).forEach { setNumber in
+            let setView = RoutineSetInputRowView(
+                setNumber: setNumber,
+                set: routineExercise.sets[setNumber - 1],
+                delegate: self
+            )
+            stackView.addArrangedSubview(setView)
+            stackView.appendTextFields(
+                weightTextField: setView.weightTextField,
+                repsTextField: setView.repsTextField)
+            
+        }
+    }
 }
 
 class SetInputStackView: UIStackView {
@@ -298,6 +324,238 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
+            weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
+            weightTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            weightTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            weightTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            weightTextField.widthAnchor.constraint(equalToConstant: 58),
+            
+            weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
+            weightLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
+            repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
+            repsTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            repsTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            repsTextField.widthAnchor.constraint(equalToConstant: 58),
+            
+            repsLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
+        ])
+    }
+    
+    func inputDelegate(delegate: SelectedExerciseCell) {
+        weightTextField.delegate = delegate
+        repsTextField.delegate = delegate
+    }
+}
+
+
+
+class RoutineSetInputRowView: UIView {
+    let setLabel = UILabel()
+    let weightTextField = UITextField()
+    let weightLabel = UILabel()
+    let repsTextField = UITextField()
+    let repsLabel = UILabel()
+    
+    init(setNumber: Int, set: RoutineExerciseSet, delegate: SelectedExerciseCell) {
+        super.init(frame: .zero)
+        createSetInputView(setNumber: setNumber, set: set)
+        inputDelegate(delegate: delegate)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: 35)
+    }
+    
+    func createSetInputView(setNumber: Int, set: RoutineExerciseSet) {
+        // MARK: setLabel
+        setLabel.text = "\(setNumber) 세트"
+        setLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        setLabel.textColor = .white
+        
+        // MARK: weightTextField
+        weightTextField.text = set.weight == -1 ? "" : String(set.weight)
+        weightTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightTextField.textColor = .white
+        weightTextField.textAlignment = .center
+        weightTextField.keyboardType = .numberPad
+        weightTextField.backgroundColor = .colorSecondary
+        weightTextField.layer.cornerRadius = 10
+        weightTextField.attributedPlaceholder = NSAttributedString(
+            string: "무게",
+            attributes: [
+                .foregroundColor: UIColor.systemGray,
+                .font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // MARK: weightLabel
+        weightLabel.text = "kg"
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightLabel.textColor = .white
+        
+        // MARK: repsTextField
+        repsTextField.text = set.reps == -1 ? "" : String(set.reps)
+        repsTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsTextField.textColor = .white
+        repsTextField.textAlignment = .center
+        repsTextField.keyboardType = .numberPad
+        repsTextField.backgroundColor = .colorSecondary
+        repsTextField.layer.cornerRadius = 10
+        repsTextField.attributedPlaceholder = NSAttributedString(
+            string: "횟수",
+            attributes: [
+                .foregroundColor: UIColor.systemGray,
+                .font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // MARK: repsLabel
+        repsLabel.text = "회"
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsLabel.textColor = .white
+        
+        
+        // MARK: addSubview
+        self.addSubview(setLabel)
+        self.addSubview(weightTextField)
+        self.addSubview(weightLabel)
+        self.addSubview(repsTextField)
+        self.addSubview(repsLabel)
+        
+        setLabel.translatesAutoresizingMaskIntoConstraints = false
+        weightTextField.translatesAutoresizingMaskIntoConstraints = false
+        weightLabel.translatesAutoresizingMaskIntoConstraints = false
+        repsTextField.translatesAutoresizingMaskIntoConstraints = false
+        repsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
+            setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
+            weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
+            weightTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            weightTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            weightTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            weightTextField.widthAnchor.constraint(equalToConstant: 58),
+            
+            weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
+            weightLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            
+            repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
+            repsTextField.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsTextField.topAnchor.constraint(equalTo: self.topAnchor),
+            repsTextField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            repsTextField.widthAnchor.constraint(equalToConstant: 58),
+            
+            repsLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            repsLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -8)
+        ])
+    }
+    
+    func inputDelegate(delegate: SelectedExerciseCell) {
+        weightTextField.delegate = delegate
+        repsTextField.delegate = delegate
+    }
+}
+
+
+
+class RoutineSetInputRowView: UIView {
+    let setLabel = UILabel()
+    let weightTextField = UITextField()
+    let weightLabel = UILabel()
+    let repsTextField = UITextField()
+    let repsLabel = UILabel()
+    
+    init(setNumber: Int, set: RoutineExerciseSet, delegate: SelectedExerciseCell) {
+        super.init(frame: .zero)
+        createSetInputView(setNumber: setNumber, set: set)
+        inputDelegate(delegate: delegate)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: 35)
+    }
+    
+    func createSetInputView(setNumber: Int, set: RoutineExerciseSet) {
+        // MARK: setLabel
+        setLabel.text = "\(setNumber) 세트"
+        setLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        setLabel.textColor = .white
+        
+        // MARK: weightTextField
+        weightTextField.text = set.weight == -1 ? "" : String(set.weight)
+        weightTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightTextField.textColor = .white
+        weightTextField.textAlignment = .center
+        weightTextField.keyboardType = .numberPad
+        weightTextField.backgroundColor = .colorSecondary
+        weightTextField.layer.cornerRadius = 10
+        weightTextField.attributedPlaceholder = NSAttributedString(
+            string: "무게",
+            attributes: [
+                .foregroundColor: UIColor.systemGray,
+                .font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // MARK: weightLabel
+        weightLabel.text = "kg"
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightLabel.textColor = .white
+        
+        // MARK: repsTextField
+        repsTextField.text = set.reps == -1 ? "" : String(set.reps)
+        repsTextField.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsTextField.textColor = .white
+        repsTextField.textAlignment = .center
+        repsTextField.keyboardType = .numberPad
+        repsTextField.backgroundColor = .colorSecondary
+        repsTextField.layer.cornerRadius = 10
+        repsTextField.attributedPlaceholder = NSAttributedString(
+            string: "횟수",
+            attributes: [
+                .foregroundColor: UIColor.systemGray,
+                .font: UIFont.font(.pretendardMedium, ofSize: 14)
+            ]
+        )
+        
+        // MARK: repsLabel
+        repsLabel.text = "회"
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsLabel.textColor = .white
+        
+        
+        // MARK: addSubview
+        self.addSubview(setLabel)
+        self.addSubview(weightTextField)
+        self.addSubview(weightLabel)
+        self.addSubview(repsTextField)
+        self.addSubview(repsLabel)
+        
+        setLabel.translatesAutoresizingMaskIntoConstraints = false
+        weightTextField.translatesAutoresizingMaskIntoConstraints = false
+        weightLabel.translatesAutoresizingMaskIntoConstraints = false
+        repsTextField.translatesAutoresizingMaskIntoConstraints = false
+        repsLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            //self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
+            
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             

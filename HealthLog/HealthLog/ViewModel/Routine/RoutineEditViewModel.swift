@@ -19,7 +19,7 @@ class RoutineEditViewModel {
     @Published var isAddRoutineValid: Bool = false
     @Published var isValid:Bool = false
     @Published var editNameTextField = ""
-
+    @Published var routineExecrises: [RoutineExercise] = []
     
     lazy var isRoutineNameEmptyPulisher:
     AnyPublisher<Bool, Never> = {
@@ -38,19 +38,35 @@ class RoutineEditViewModel {
         
     }()
         
-    func updateExerciseSetCount(for section: Int, setCount: Int) {
-        if self.routine.exercises[section].sets.count < setCount {
-            
-            self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
-            
+    // 세트 수 업데이트
+    func updateExerciseSetCount(for index: Int, setCount: Int) {
+        if self.routineExecrises[index].sets.count < setCount {
+                self.routineExecrises[index].sets.append(RoutineExerciseSet(order: setCount, weight: -1, reps: -1))
         } else {
-            self.routine.exercises[section].sets.removeLast()
+                self.routineExecrises[index].sets.removeLast()
+
         }
         validateExercise()
     }
- 
-    func deleteExercise(for setcion: Int) {
-        self.routine.exercises.remove(at: setcion)
+    
+    // 운동 순서 이동
+    func moveExercise(from sourceIndex: Int, to destinationIndex: Int) {
+        guard sourceIndex != destinationIndex else { return }
+        
+        let exercise =  routineExecrises.remove(at: sourceIndex)
+        routineExecrises.insert(exercise, at: destinationIndex)
+        
+        for (index, exercise) in routineExecrises.enumerated() {
+            exercise.order = index
+        }
+        validateExercise()
+    }
+    
+    // 운동 삭제
+    func deleteExercise(at index: Int) {
+        guard index < routineExecrises.count else { return }
+        
+        self.routineExecrises.remove(at: index)
         validateExercise()
     }
     
@@ -81,8 +97,6 @@ class RoutineEditViewModel {
         let isName = !self.editNameTextField.isEmpty
         var isMatcing = self.realmManager.hasRoutineName(name: self.editNameTextField)
         let isNowNameMatching = routine.name == self.editNameTextField
-        print("routineName\(routine.name)")
-        print("editNameTextField\(self.editNameTextField)")
         if isNowNameMatching {
            isMatcing = false
         }
@@ -102,7 +116,7 @@ class RoutineEditViewModel {
                 routineSets.append(RoutineExerciseSet(order: sets.order, weight: sets.weight, reps: sets.reps))
             }
             if let exercise = routineExercise.exercise {
-                self.routine.exercises.append(RoutineExercise(exercise: exercise, sets: routineSets))
+                self.routine.exercises.append(RoutineExercise(exercise: exercise, order: routineExercise.order, sets: routineSets))
             } else {
                 print("error: 운동이 없음")
             }

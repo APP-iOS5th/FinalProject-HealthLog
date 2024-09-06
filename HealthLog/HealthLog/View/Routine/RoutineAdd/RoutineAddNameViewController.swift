@@ -10,7 +10,7 @@ import Combine
 
 class RoutineAddNameViewController: UIViewController {
     
-    let viewModel = RoutineAddNameViewModel()
+    let viewModel = RoutineAddViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     private lazy var nameTextField: UITextField = {
