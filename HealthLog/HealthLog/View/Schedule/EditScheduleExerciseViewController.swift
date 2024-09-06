@@ -33,6 +33,29 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        return button
+    }()
+    
+    private let completeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("완료", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.isEnabled = false
+        button.alpha = 0.4
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     lazy var nameLabel: UILabel  = {
         let label = UILabel()
         label.textColor = .white
@@ -143,7 +166,8 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         viewModel.$isInputValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
-                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+                self?.completeButton.isEnabled = isValid
+                self?.completeButton.alpha = isValid ? 1.0 : 0.5
             }
             .store(in: &cancellables)
     }
@@ -190,17 +214,19 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     private func setupUI() {
         view.backgroundColor = .colorPrimary
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
+        //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
+        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
         
-        navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationItem.rightBarButtonItem?.tintColor = .white
+        //navigationItem.leftBarButtonItem?.tintColor = .white
+        //navigationItem.rightBarButtonItem?.tintColor = .white
         
         stepperContainer.addSubview(stepperLabel)
         stepperContainer.addSubview(stepperCountLabel)
         stepperContainer.addSubview(stepper)
         scrollContainer.addSubview(setsContainer)
         
+        view.addSubview(cancelButton)
+        view.addSubview(completeButton)
         view.addSubview(nameLabel)
         view.addSubview(stepperContainer)
         view.addSubview(scrollContainer)
@@ -209,7 +235,13 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            
+            completeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            completeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
+            nameLabel.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 13),
             nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             
             stepperContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
@@ -243,6 +275,8 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             deleteButton.heightAnchor.constraint(equalToConstant: 50),
             
         ])
+        cancelButton.addTarget(self, action: #selector(cancelEdit), for: .touchUpInside)
+        completeButton.addTarget(self, action: #selector(saveEdit), for: .touchUpInside)
     }
     
     private func updateSets() {
@@ -393,7 +427,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     }
     
     @objc private func cancelEdit() {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func saveEdit() {
