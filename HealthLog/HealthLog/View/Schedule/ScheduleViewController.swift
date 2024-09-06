@@ -363,6 +363,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise, selectedDate: selectedDate ?? today)
         editExerciseVC.delegate = self
         editExerciseVC.modalPresentationStyle = .formSheet
+        editExerciseVC.isModalInPresentation = true
         
         if let sheet = editExerciseVC.sheetPresentationController {
             sheet.detents = [.medium()]

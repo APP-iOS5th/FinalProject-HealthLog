@@ -160,6 +160,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         setupUI()
         updateSets()
         bindViewModel()
+        setupKeyboard()
     }
     
     private func bindViewModel() {
@@ -172,53 +173,34 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             .store(in: &cancellables)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // add observer of keyboard notification
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // delete observer of keyboard notification
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    private func setupKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        scrollContainer.keyboardDismissMode = .interactive
     }
     
     // MARK: - Methods
     @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
-        let keyboardHeight = keyboardFrame.cgRectValue.height
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+        scrollContainer.contentInset = contentInsets
+        scrollContainer.scrollIndicatorInsets = contentInsets
         
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
+        if let activeField = view.currentFirstResponder() as? UITextField {
+            let activeRect = activeField.convert(activeField.bounds, to: scrollContainer)
+            scrollContainer.scrollRectToVisible(activeRect, animated: true)
         }
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
-        
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = .identity
-            }
-        }
+        let contentInsets = UIEdgeInsets.zero
+        scrollContainer.contentInset = contentInsets
+        scrollContainer.scrollIndicatorInsets = contentInsets
     }
+    
     private func setupUI() {
         view.backgroundColor = .colorPrimary
-        
-        //navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
-        //navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
-        
-        //navigationItem.leftBarButtonItem?.tintColor = .white
-        //navigationItem.rightBarButtonItem?.tintColor = .white
         
         stepperContainer.addSubview(stepperLabel)
         stepperContainer.addSubview(stepperCountLabel)
