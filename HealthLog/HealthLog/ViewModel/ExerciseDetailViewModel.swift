@@ -69,9 +69,9 @@ class ExerciseDetailViewModel: ObservableObject {
                     print("exercise detail results.observe - update")
                     self?.exercise = data as! Exercise
                 case .deleted:
-                    print("results.observe - deleted")
+                    print("exercise detail results.observe - deleted")
                 case .error(let error):
-                    print("results.observe - error: \(error)")
+                    print("exercise detail results.observe - error: \(error)")
             }
         }
     }
