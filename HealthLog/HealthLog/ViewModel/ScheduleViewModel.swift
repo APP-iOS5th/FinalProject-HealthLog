@@ -163,7 +163,9 @@ class ScheduleViewModel: ObservableObject {
         guard let realm = realm else { return }
         
         do {
+            let initialCountSets = scheduleExercise.sets.count
             try realm.write {
+                // add or edit schedule exercise sets
                 for (index, setValue) in setValues.enumerated() {
                     if index < scheduleExercise.sets.count {
                         scheduleExercise.sets[index].order = setValue.order
@@ -179,12 +181,16 @@ class ScheduleViewModel: ObservableObject {
                         scheduleExercise.sets.append(set)
                     }
                 }
-                
+                // remove schedule exercise sets
                 if setValues.count < scheduleExercise.sets.count {
                     let scheduleExerciseSetsCount = scheduleExercise.sets.count
                     for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
                         realm.delete(scheduleExercise.sets[j])
                     }
+                }
+                // uncheck the completion of schedule exercise
+                if initialCountSets < scheduleExercise.sets.count {
+                    scheduleExercise.isCompleted = false
                 }
             }
         } catch {
