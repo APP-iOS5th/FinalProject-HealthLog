@@ -104,6 +104,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             case .update: title = "운동 수정"
         }
         
+        self.navigationController?.setupBarAppearance()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
@@ -190,8 +191,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: titleLabel
         titleLabel.textColor = .white
-        titleLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
-        let titleLabelText = "운동 이름 *"
+        titleLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
+        let titleLabelText = "  운동 이름 *"
         let attributedString = NSMutableAttributedString(string: titleLabelText)
         let range = (titleLabelText as NSString).range(of: "*")
         attributedString.addAttribute(.foregroundColor, value: UIColor.red, range: range)
@@ -200,6 +201,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: titleTextField
         titleTextField.borderStyle = .none
+        titleTextField.font = UIFont(name: "Pretendard-Medium", size: 16)
         titleTextField.tag = ViewTag.titleTextField.rawValue
         titleTextField.delegate = self
         titleStackView.addArrangedSubview(titleTextField)
@@ -214,14 +216,16 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         ])
 
         // MARK: titleDuplicateWarningLabel
-        titleDuplicateWarningLabel.text = "이미 존재하는 운동 이름입니다."
+        titleDuplicateWarningLabel.text = "  이미 존재하는 운동 이름입니다."
+        titleDuplicateWarningLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
         titleDuplicateWarningLabel.numberOfLines = 1
         titleDuplicateWarningLabel.textColor = .red
         titleDuplicateWarningLabel.isHidden = true
         titleStackView.addArrangedSubview(titleDuplicateWarningLabel)
         
         // MARK: titleEmptyWarningLabel
-        titleEmptyWarningLabel.text = "운동 이름이 비어있습니다."
+        titleEmptyWarningLabel.text = "  운동 이름이 비어있습니다."
+        titleEmptyWarningLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
         titleEmptyWarningLabel.numberOfLines = 1
         titleEmptyWarningLabel.textColor = .red
         titleEmptyWarningLabel.isHidden = true
@@ -236,13 +240,12 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         bodypartStackView.alignment = .leading
         bodypartStackView.backgroundColor = .color1E1E1E
         bodypartStackView.isLayoutMarginsRelativeArrangement = true
-        bodypartStackView.layoutMargins = UIEdgeInsets(
-            top: 10, left: 0, bottom: 10, right: 0)
         stackView.addArrangedSubview(bodypartStackView)
         
         // MARK: bodypartLabel
         bodypartLabel.textColor = .white
-        let bodypartLabelText = "운동 부위 *"
+        bodypartLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
+        let bodypartLabelText = "  운동 부위 *"
         let attributedString = NSMutableAttributedString(string: bodypartLabelText)
         let range = (bodypartLabelText as NSString).range(of: "*")
         attributedString.addAttribute(.foregroundColor, value: UIColor.red, range: range)
@@ -253,7 +256,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         bodypartStackView.addArrangedSubview(bodypartButtonStackView)
         
         // MARK: bodypartEmptyWarningLabel
-        bodypartEmptyWarningLabel.text = "운동 부위가 비어있습니다."
+        bodypartEmptyWarningLabel.text = "  운동 부위가 비어있습니다."
+        bodypartEmptyWarningLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
         bodypartEmptyWarningLabel.numberOfLines = 1
         bodypartEmptyWarningLabel.textColor = .red
         bodypartEmptyWarningLabel.isHidden = true
@@ -270,7 +274,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: recentWeightLabel
         recentWeightLabel.textColor = .white
-        recentWeightLabel.text = "최근 무게"
+        recentWeightLabel.text = "  최근 무게"
+        recentWeightLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         recentWeightStackView.addArrangedSubview(recentWeightLabel)
         NSLayoutConstraint.activate([
             recentWeightLabel.leadingAnchor.constraint(
@@ -289,6 +294,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: recentWeightTextField
         recentWeightTextField.borderStyle = .none
+        recentWeightTextField.font = UIFont(name: "Pretendard-Medium", size: 16)
         recentWeightTextField.tag = ViewTag.recentWeightTextField.rawValue
         recentWeightTextField.delegate = self
         recentWeightTextField.textColor = .white
@@ -297,6 +303,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: recentWeightKGLabel
         recentWeightKGLabel.text = "KG"
+        recentWeightKGLabel.font = UIFont(name: "Pretendard-Bold", size: 16)
         recentWeightKGLabel.textColor = .white
         recentWeightTextFieldStackView.addArrangedSubview(recentWeightKGLabel)
     }
@@ -311,7 +318,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: maxWeightLabel
         maxWeightLabel.textColor = .white
-        maxWeightLabel.text = "최대 무게"
+        maxWeightLabel.text = "  최대 무게"
+        maxWeightLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         maxWeightStackView.addArrangedSubview(maxWeightLabel)
         NSLayoutConstraint.activate([
             maxWeightLabel.leadingAnchor.constraint(
@@ -334,11 +342,13 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightTextField.delegate = self
         maxWeightTextField.textColor = .white
         maxWeightTextField.keyboardType = .numberPad
+        maxWeightTextField.font = UIFont(name: "Pretendard-Medium", size: 16)
         maxWeightTextFieldStackView.addArrangedSubview(maxWeightTextField)
         
         // MARK: maxWeightKGLabel
         maxWeightKGLabel.text = "KG"
         maxWeightKGLabel.textColor = .white
+        maxWeightKGLabel.font = UIFont(name: "Pretendard-Bold", size: 16)
         maxWeightTextFieldStackView.addArrangedSubview(maxWeightKGLabel)
     }
     
@@ -352,7 +362,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: descriptionLabel
         descriptionLabel.textColor = .white
-        descriptionLabel.text = "운동 설명"
+        descriptionLabel.text = "  운동 설명"
+        descriptionLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         descriptionStackView.addArrangedSubview(descriptionLabel)
         
         // MARK: descriptionTextView
@@ -387,7 +398,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: imageLabel
         imageLabel.textColor = .white
-        imageLabel.text = "운동 이미지"
+        imageLabel.text = "  운동 이미지"
+        imageLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         imageStackView.addArrangedSubview(imageLabel)
         
         // MARK: imageViews
@@ -449,6 +461,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             let imageOpenLabel = UILabel()
             imageOpenLabel.text = "Open Gallery"
             imageOpenLabel.textColor = .white
+            imageOpenLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
             imageView.addSubview(imageOpenLabel)
             imageOpenLabel.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -487,6 +500,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         deleteButton.backgroundColor = .color2F2F2F
         deleteButton.setTitle("운동 삭제하기", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
+        deleteButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 20)
         deleteButton.layer.cornerRadius = 12
         deleteButton.layer.masksToBounds = true
         deleteButton.addTarget(
@@ -507,17 +521,27 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     }
     
     private func setupCreateDivider(stackView: UIStackView, height: CGFloat) {
+        let dividerStackView = UIStackView()
+        dividerStackView.axis = .horizontal
+        dividerStackView.alignment = .center
+        stackView.addArrangedSubview(dividerStackView)
+        dividerStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerStackView.heightAnchor.constraint(
+                equalToConstant: 15),
+        ])
+        
         let dividerView = UIView()
         dividerView.backgroundColor = .color2F2F2F
-        stackView.addArrangedSubview(dividerView)
+        dividerStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             dividerView.leadingAnchor.constraint(
                 equalTo: stackView.leadingAnchor,
-                constant: 9),
+                constant: 11),
             dividerView.trailingAnchor.constraint(
                 equalTo: stackView.trailingAnchor,
-                constant: -9),
+                constant: -11),
             dividerView.heightAnchor.constraint(
                 equalToConstant: 1),
         ])

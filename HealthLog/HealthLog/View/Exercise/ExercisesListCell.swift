@@ -78,10 +78,10 @@ class ExerciseListCell: UITableViewCell {
         // MARK: stackView
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.spacing = 13
+        stackView.spacing = 10
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.layoutMargins = UIEdgeInsets(
-            top: 16, left: 16, bottom: 16, right: 16)
+            top: 10, left: 16, bottom: 13, right: 16)
         containerView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -119,13 +119,24 @@ class ExerciseListCell: UITableViewCell {
     }
     
     func setupDivider() {
+        // MARK: dividerStackView
+        let dividerStackView = UIStackView()
+        dividerStackView.axis = .horizontal
+        dividerStackView.alignment = .top
+        stackView.addArrangedSubview(dividerStackView)
+        dividerStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            dividerStackView.heightAnchor.constraint(
+                equalToConstant: 5)
+        ])
+        
         // MARK: dividerView
-        dividerView.backgroundColor = .color252525
+        dividerView.backgroundColor = .color767676
+        dividerStackView.addArrangedSubview(dividerView)
         dividerView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(dividerView)
         NSLayoutConstraint.activate([
             dividerView.heightAnchor.constraint(
-                equalToConstant: 3)
+                equalToConstant: 1)
         ])
     }
     
@@ -141,7 +152,6 @@ class ExerciseListCell: UITableViewCell {
         // MARK: exerciseImageView
         
         exerciseImageView.clipsToBounds = true
-        exerciseImageView.backgroundColor = .white
         exerciseImageView.layer.cornerRadius = 12
         exerciseImageView.layer.masksToBounds = true
         exerciseImageView.tintColor = .color525252
@@ -220,13 +230,15 @@ class ExerciseListCell: UITableViewCell {
     func configure(with exercise: Exercise) {
         // exercise.name
         titleLabel.text = exercise.name
-
+        
         // exercise.Image
-        if let imageData = exercise.images.first?.image {
+        if let imageData = exercise.images.first?.image,
+           imageData.isEmpty == false {
             exerciseImageView.image = UIImage(data: imageData)
             exerciseImageView.contentMode = .scaleAspectFit
             exerciseImageView.backgroundColor = .white
         } else {
+            print("photo!!")
             exerciseImageView.image = UIImage(systemName: "photo", withConfiguration: UIImage.SymbolConfiguration(pointSize: 5, weight: .regular))
             exerciseImageView.contentMode = .scaleAspectFit
             exerciseImageView.backgroundColor = .color3E3E3E
