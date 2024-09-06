@@ -160,16 +160,19 @@ class ExerciseCheckCell: UITableViewCell {
         setNumber.text = "\(set.order) 세트"
         setNumber.font = UIFont.font(.pretendardMedium, ofSize: 14)
         setNumber.textColor = .white
+        setNumber.translatesAutoresizingMaskIntoConstraints = false
         
         let weightLabel = UILabel()
         weightLabel.text = "\(set.weight) kg"
         weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightLabel.textColor = .white
+        weightLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let repsLabel = UILabel()
         repsLabel.text = "\(set.reps) 회"
         repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.textColor = .white
+        repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let checkboxBtn = UIButton(type: .custom)
         checkboxBtn.setImage(UIImage(systemName: "square"), for: .normal)
@@ -180,28 +183,36 @@ class ExerciseCheckCell: UITableViewCell {
         checkboxBtn.addTarget(self, action: #selector(didToggleCheckboxSet(_:)), for: .touchUpInside)
         checkboxBtn.translatesAutoresizingMaskIntoConstraints = false
         
-        [setNumber, weightLabel, repsLabel, checkboxBtn].forEach {
-            $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        }
-        let stackView = UIStackView(arrangedSubviews: [
-            setNumber, weightLabel, repsLabel, checkboxBtn
-        ])
+        let stackView = UIStackView()
+        stackView.addSubview(setNumber)
+        stackView.addSubview(weightLabel)
+        stackView.addSubview(repsLabel)
+        stackView.addSubview(checkboxBtn)
         stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 15
+        //stackView.alignment = .center
+        //stackView.distribution = .equalSpacing
+        //stackView.spacing = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12),
             stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
             
+            setNumber.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 46),
+            
+            weightLabel.trailingAnchor.constraint(equalTo: repsLabel.trailingAnchor, constant: -80),
+            weightLabel.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
+            
+            repsLabel.trailingAnchor.constraint(equalTo: checkboxBtn.leadingAnchor, constant: -50),
+            repsLabel.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
+            
+            checkboxBtn.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
+            checkboxBtn.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
             checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
             
