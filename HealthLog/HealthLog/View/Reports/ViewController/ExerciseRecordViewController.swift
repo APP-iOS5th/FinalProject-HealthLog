@@ -213,7 +213,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                     return 40
                 }
                 let data = reportsVM.bodyPartDataList[dataIndex]
-                let defaultCellHeight: CGFloat = 40
+                let defaultCellHeight: CGFloat = 45
                 let exerciseViewHeight: CGFloat = 25
                 
                 if data.isStackViewVisible {

@@ -58,7 +58,7 @@ class ReportsViewModel {
         let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range.count))!
         
         let result = Array(realm.objects(Schedule.self).filter { $0.date >= startDate && $0.date <= endDate } )
-        print("\(year)년 \(month)월 데이터 fetch 성공")
+//        print("\(year)년 \(month)월 데이터 fetch 성공")
         
         (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: result)
         

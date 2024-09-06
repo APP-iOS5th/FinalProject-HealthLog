@@ -117,19 +117,17 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-            bodyPartLabel.widthAnchor.constraint(equalToConstant: 68),
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 12),
+            progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 13),
             progressView.widthAnchor.constraint(equalToConstant: 130),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
             totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
-            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 50),
+            totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.leadingAnchor.constraint(equalTo: totalNumberPerBodyPartLabel.trailingAnchor, constant: 14),
             foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
             
         ])
