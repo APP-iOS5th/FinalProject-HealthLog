@@ -56,7 +56,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         
         // 스택뷰 설정
         stackView.axis = .vertical
-        stackView.spacing = 15
+        stackView.spacing = 18
         stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
@@ -64,7 +64,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
         setupStepperComponents()
         
         NSLayoutConstraint.activate([
-            exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            exerciseTitleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18),
             exerciseTitleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             exerciseTitleLabel.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),
             
@@ -73,7 +73,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             deleteButton.widthAnchor.constraint(equalToConstant: 14),
             deleteButton.heightAnchor.constraint(equalToConstant: 14),
             
-            containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 20),
+            containerView.topAnchor.constraint(equalTo: exerciseTitleLabel.bottomAnchor, constant: 18),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 50),
@@ -81,7 +81,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
             stackView.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
         ])
     }
     
@@ -200,7 +200,6 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
                 weightTextField: setView.weightTextField,
                 repsTextField: setView.repsTextField)
         }
-        
     }
 }
 
@@ -299,8 +298,6 @@ class SetInputRowView: UIView {
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            //self.heightAnchor.constraint(greaterThanOrEqualToConstant: 35),
-            
             setLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8),
             setLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             
