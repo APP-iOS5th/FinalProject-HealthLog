@@ -51,7 +51,7 @@ class ExerciseViewModel: ObservableObject {
         exercisesNotificationToken = results.observe { [weak self] changes in
             switch changes {
                 case .initial(let collection):
-                    print("results.observe exericse - initial")
+//                    print("results.observe exericse - initial")
                     self?.exercises = Array(collection)
                 case .update(let collection, _, _, _):
 //                    print("results.observe exericse - update")

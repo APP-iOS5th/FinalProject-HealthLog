@@ -27,7 +27,7 @@ class RealmManager {
         
         addInBodySampleData()
         
-        networkCheckStartImageDownload()
+        Task{ await self.initializeRealmExerciseImages() }
     }
     
     
@@ -161,9 +161,6 @@ extension RealmManager {
     func initializeRealmExerciseImages() async {
 //        print("initializeRealmExerciseImages")
         guard let realm = realm else { return }
-        
-        
-        
         
         print("initializeRealmExerciseImages - 이미지 확인 처리")
         
@@ -610,26 +607,6 @@ extension RealmManager {
 }
 
 extension RealmManager {
-    
-    func networkCheckStartImageDownload() {
-        let monitor = NWPathMonitor()
-        let queue = DispatchQueue(label: "Monitor")
-        
-        monitor.start(queue: queue)
-        
-        monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                //네트워크 상태가 정상일 경우
-                monitor.cancel()
-                print("네트워크 정상")
-                Task{ await self.initializeRealmExerciseImages() }
-            } else {
-                //네트워크 상태가 비정상일 경우
-                monitor.cancel()
-                return print("네트워크 비정상")
-            }
-        }
-    }
     
     func csvToJson(csvString: String) -> [[String: String]] {
         var jsonArray: [[String: String]] = []
