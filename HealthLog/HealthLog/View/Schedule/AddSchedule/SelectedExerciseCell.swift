@@ -171,7 +171,7 @@ class SelectedExerciseCell: UITableViewCell, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         let setIndex = stackView.weightTextFields.firstIndex(of: textField) ?? stackView.repsTextFields.firstIndex(of: textField) ?? 0
         let weight = Int(stackView.weightTextFields[setIndex].text ?? "") ?? -1
-        let reps = Int(stackView.repsTextFields[setIndex].text ?? "") ?? 0
+        let reps = Int(stackView.repsTextFields[setIndex].text ?? "") ?? -1
         
         updateSet?(setIndex, weight, reps)
     }

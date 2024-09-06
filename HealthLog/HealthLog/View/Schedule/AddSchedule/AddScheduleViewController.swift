@@ -282,7 +282,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
                 .sink { text in
-                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].reps = Int(text) ?? 0
+                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].reps = Int(text) ?? -1
                 }
                 .store(in: &cancellables)
         }
@@ -291,7 +291,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
                 .sink { text in
-                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].weight = Int(text) ?? 0
+                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].weight = Int(text) ?? -1
                 }
                 .store(in: &cancellables)
         }

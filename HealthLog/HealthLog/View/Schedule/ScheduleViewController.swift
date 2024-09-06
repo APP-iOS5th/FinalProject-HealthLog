@@ -48,7 +48,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
-        
         calendar.delegate = self
         
         // selected date handler
@@ -60,14 +59,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     lazy var addExerciseButton: UIButton = {
         let button = UIButton(type: .system)
-        var configuration = UIButton.Configuration.filled()
-        configuration.title = "오늘 운동 추가"
-        configuration.baseBackgroundColor = .colorAccent
-        configuration.baseForegroundColor = .white
-        configuration.cornerStyle = .medium
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
-        button.configuration = configuration
-        button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+        button.setTitle("운동 추가하기", for: .normal)
+        button.backgroundColor = .colorAccent
+        button.layer.cornerRadius = 12
+        button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+        button.tintColor = .white
         button.addTarget(self, action: #selector(addSchedule), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -77,7 +73,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var exerciseVolumeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "오늘의 볼륨량: \(viewModel.selectedDateExerciseVolume)"
+        label.text = "오늘의 볼륨량: \(viewModel.selectedDateExerciseVolume) kg"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -102,19 +98,17 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.translatesAutoresizingMaskIntoConstraints = false
         
         let button = UIButton(type: .system)
-        var configuration = UIButton.Configuration.filled()
-        configuration.title = "루틴으로 저장"
-        configuration.baseBackgroundColor = .colorAccent
-        configuration.baseForegroundColor = .white
-        configuration.cornerStyle = .medium
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
-        button.configuration = configuration
+        button.setTitle("루틴으로 저장", for: .normal)
+        button.backgroundColor = .colorAccent
+        button.tintColor = .white
+        button.layer.cornerRadius = 7
         button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         let stackView = UIStackView(arrangedSubviews: [label, button])
         stackView.axis = .horizontal
+        stackView.spacing = 12
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
@@ -126,7 +120,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             view.heightAnchor.constraint(equalToConstant: 60),
@@ -234,32 +227,35 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             calendarView.heightAnchor.constraint(equalToConstant: 500),
-            calendarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            calendarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            calendarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            calendarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
-            addExerciseButton.widthAnchor.constraint(equalToConstant: 120),
-            addExerciseButton.heightAnchor.constraint(equalToConstant: 28),
+            addExerciseButton.leadingAnchor.constraint(equalTo: calendarView.leadingAnchor),
+            addExerciseButton.trailingAnchor.constraint(equalTo: calendarView.trailingAnchor),
+            addExerciseButton.heightAnchor.constraint(equalToConstant: 44),
             
             exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             exerciseVolumeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
+            separatorLine1.heightAnchor.constraint(equalToConstant: 1),
+            
             muscleImageView.heightAnchor.constraint(equalToConstant: 300),
             muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            separatorLine1.heightAnchor.constraint(equalToConstant: 2),
-            
             labelContainer.heightAnchor.constraint(equalToConstant: 30),
+            labelContainer.widthAnchor.constraint(equalToConstant: 207),
+            labelContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             
-            separatorLine2.heightAnchor.constraint(equalToConstant: 2),
+            separatorLine2.heightAnchor.constraint(equalToConstant: 1),
             
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
@@ -275,7 +271,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private func updateUIBaseOnSchedule() {
         if viewModel.noSchedule {
-            print("no schedule")
             exerciseVolumeLabel.isHidden = true
             muscleImageView.isHidden = true
             separatorLine1.isHidden = true
@@ -284,7 +279,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             tableView.isHidden = true
             addExerciseButton.isHidden = false
         } else {
-            print("schedule")
             exerciseVolumeLabel.isHidden = false
             muscleImageView.isHidden = false
             separatorLine1.isHidden = false
@@ -420,7 +414,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 }
 
 extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
-    
     func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
         guard let date = dateComponents.date else { return nil }
         
@@ -437,12 +430,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         }
         
         return nil
-    }
-
-    private func convertToKoreanTimeZone(date: Date, calendar: Calendar) -> Date {
-        let timeZone = TimeZone(identifier: "Asia/Seoul")!
-        let seconds = timeZone.secondsFromGMT(for: date)
-        return Date(timeInterval: TimeInterval(seconds), since: date)
     }
     
     private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {

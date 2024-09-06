@@ -69,7 +69,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         label.text = "27세트"
         label.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
         label.textColor = .colorBBBDBD
-        label.textAlignment = .center
+        label.textAlignment = .right
         return label
     }()
     
@@ -120,15 +120,17 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 13),
-            progressView.widthAnchor.constraint(equalToConstant: 130),
+            progressView.widthAnchor.constraint(equalToConstant: 120),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
             totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
             totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
+            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 45),
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
+            foldingImage.widthAnchor.constraint(equalToConstant: 20)
             
         ])
     }
