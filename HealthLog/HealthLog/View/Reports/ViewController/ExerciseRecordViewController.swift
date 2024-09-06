@@ -94,7 +94,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return 2
         case 1:
-            return reportsVM.bodyPartDataList.count
+            return reportsVM.bodyPartDataList.count + 1
         case 2:
             return 2
         case 3:
