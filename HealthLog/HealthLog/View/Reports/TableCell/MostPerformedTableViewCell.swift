@@ -8,64 +8,6 @@
 import UIKit
 
 class MostPerformedTableViewCell: UITableViewCell {
-
-    private lazy var mostPerformStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.spacing = 10
-        stackView.alignment = .fill
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    // test sample
-//    let testView1 = PerformedExerciseInfoView()
-//    let testView2 = PerformedExerciseInfoView()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-//        stackView.addArrangedSubview(testView1)
-//        stackView.addArrangedSubview(testView2)
-        
-        
-        self.contentView.addSubview(mostPerformStackView)
-        
-        NSLayoutConstraint.activate([
-            mostPerformStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            mostPerformStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-            mostPerformStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-            mostPerformStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
-        ])
-        
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    func configureCell(with data: [ExerciseSets]) {
-        
-        mostPerformStackView.arrangedSubviews.forEach {$0.removeFromSuperview()}
-        
-        
-        
-        for i in 0..<data.count {
-            let infoView = PerformedExerciseInfoView()
-            infoView.configure(index: i+1, name: data[i].name , sets: data[i].setsCount, days: data[i].daysCount)
-            mostPerformStackView.addArrangedSubview(infoView)
-        }
-        
-    }
-
-}
-
-class PerformedExerciseInfoView: UIView {
-    
     
     private let exerciseIndexLabel: UILabel = {
         let label = UILabel()
@@ -95,7 +37,7 @@ class PerformedExerciseInfoView: UIView {
         label.font = UIFont.font(.pretendardMedium, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
+        label.textAlignment = .right
         return label
     }()
     
@@ -110,57 +52,55 @@ class PerformedExerciseInfoView: UIView {
         return label
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
     
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
-    }
     
-    private func setupView() {
-        addSubview(exerciseIndexLabel)
-        addSubview(exerciseNameLabel)
-        addSubview(setsLabel)
-        addSubview(dayLabel)
+
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+                
+        contentView.addSubview(exerciseIndexLabel)
+        contentView.addSubview(exerciseNameLabel)
+        contentView.addSubview(setsLabel)
+        contentView.addSubview(dayLabel)
         
         NSLayoutConstraint.activate([
             
-            
-            exerciseIndexLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            exerciseIndexLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            exerciseIndexLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            exerciseIndexLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            exerciseIndexLabel.trailingAnchor.constraint(equalTo: exerciseNameLabel.leadingAnchor, constant: -13),
             exerciseIndexLabel.widthAnchor.constraint(equalToConstant: 30),
             
-    
-            exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 8),
-            exerciseNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            exerciseNameLabel.widthAnchor.constraint(equalToConstant: 140),
+            exerciseNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 13),
+            exerciseNameLabel.trailingAnchor.constraint(equalTo: setsLabel.leadingAnchor, constant: -13),
+            
+            setsLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            setsLabel.trailingAnchor.constraint(equalTo: dayLabel.leadingAnchor, constant: -18),
             
             
-            setsLabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
-            setsLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            dayLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            dayLabel.widthAnchor.constraint(equalToConstant: 35)
             
-            
-            dayLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            dayLabel.leadingAnchor.constraint(equalTo: setsLabel.trailingAnchor, constant: 8),
-            dayLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            
-            exerciseIndexLabel.heightAnchor.constraint(equalToConstant: 20),
-            exerciseNameLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
-            setsLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor),
-            dayLabel.heightAnchor.constraint(equalTo: exerciseIndexLabel.heightAnchor)
         ])
-    }
-    
-    func configure(index: Int, name: String, sets: Int, days: Int) {
         
-        exerciseIndexLabel.text = "\(index)."
-        exerciseNameLabel.text = name
-        setsLabel.text = "\(sets)세트"
-        dayLabel.text = "\(days)일"
         
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func configureCell(data: ExerciseSets, index: Int) {
+        exerciseIndexLabel.text = "\(index)등"
+        exerciseNameLabel.text = data.name
+        setsLabel.text = "\(data.setsCount)세트"
+        dayLabel.text = "\(data.daysCount)일"
+        
+    }
+
 }
+
+

@@ -67,6 +67,7 @@ class WeightRecordViewController: UIViewController {
     private lazy var fatBox = InfoBoxView(title: "체지방률", value: "84", unit: "%")
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -75,11 +76,10 @@ class WeightRecordViewController: UIViewController {
         updateRecentInbodyDate()
         
     }
-    
-    
+
     
     func setupUI() {
-        view.backgroundColor = UIColor(named: "ColorPrimary")
+        view.backgroundColor = .color1E1E1E
         
         // MARK: chartView (SwiftUI) 삽입
         let chartView = InBodyChartView(viewModel: inBodyVM)
@@ -92,6 +92,7 @@ class WeightRecordViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
+        
         
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false

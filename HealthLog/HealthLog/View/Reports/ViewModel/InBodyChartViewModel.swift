@@ -101,7 +101,7 @@ class InBodyChartViewModel: ObservableObject {
             let data = realm.objects(InBody.self).filter("date >= %@ AND date <= %@", startDate, endDate)
             result(.success(Array(data)))
             
-            print("\(startDate) ~ \(endDate)")
+            
         }
     }
     

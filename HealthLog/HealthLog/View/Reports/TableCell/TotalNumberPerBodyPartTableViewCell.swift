@@ -42,7 +42,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
-        label.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
+        label.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -117,19 +117,17 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-            bodyPartLabel.widthAnchor.constraint(equalToConstant: 68),
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 12),
+            progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 13),
             progressView.widthAnchor.constraint(equalToConstant: 130),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
             totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
-            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 50),
+            totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.leadingAnchor.constraint(equalTo: totalNumberPerBodyPartLabel.trailingAnchor, constant: 14),
             foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
             
         ])
@@ -197,13 +195,13 @@ class HorizontalDetailStackView: UIView {
     }
     
     private func changeLabelFontAndColor() {
-        indexLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        indexLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         indexLabel.textColor = .white
         
-        nameLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        nameLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         nameLabel.textColor = .white
         
-        setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        setsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         setsLabel.textColor = .white
         setsLabel.textAlignment = .right
     }
