@@ -96,9 +96,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 1:
             return reportsVM.bodyPartDataList.count + 1
         case 2:
-            return 2
+            return reportsVM.top5Exercises.count + 1
         case 3:
-            return 2
+            return reportsVM.top3WeightChangeExercises.count + 1
         default:
             return 0
         }
@@ -165,7 +165,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-                cell.configureCell(with: reportsVM.top5Exercises)
+                cell.configureCell(data: reportsVM.top5Exercises[indexPath.row-1], index: indexPath.row)
                 return cell
             }
         case 3:
@@ -181,7 +181,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-                cell.configureCell(with: reportsVM.top3WeightChangeExercises)
+                cell.configureCell(with: reportsVM.top3WeightChangeExercises[indexPath.row-1], index: indexPath.row)
                 return cell
             }
         default:
@@ -229,13 +229,13 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 return 42
             } else {
-                return 150
+                return 40
             }
         case 3:
             if indexPath.row == 0 {
                 return 42
             } else {
-                return 142
+                return 45
             }
             
         default:

@@ -42,7 +42,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
-        label.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
+        label.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -197,13 +197,13 @@ class HorizontalDetailStackView: UIView {
     }
     
     private func changeLabelFontAndColor() {
-        indexLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        indexLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         indexLabel.textColor = .white
         
-        nameLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        nameLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         nameLabel.textColor = .white
         
-        setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
+        setsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         setsLabel.textColor = .white
         setsLabel.textAlignment = .right
     }
