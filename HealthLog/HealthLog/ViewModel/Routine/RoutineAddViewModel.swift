@@ -9,7 +9,7 @@ import Foundation
 import RealmSwift
 import Combine
 
-class RoutineAddNameViewModel {
+class RoutineAddViewModel {
     
     private var realm: Realm?
     private var realmManger = RealmManager.shared

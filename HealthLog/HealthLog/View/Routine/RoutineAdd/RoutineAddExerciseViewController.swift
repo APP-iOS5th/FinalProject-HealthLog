@@ -16,7 +16,7 @@ class RoutineAddExerciseViewController: UIViewController, SerchResultDelegate {
     
     
     
-    let routineViewModel = RoutineAddNameViewModel()
+    let routineViewModel = RoutineAddViewModel()
     
     
     let routineName: String
