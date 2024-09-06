@@ -66,7 +66,7 @@ class InputBodyPartButtonStackView: UIStackView {
     }
     
     private func checkCreateAfterRow(buttonAddAfterWidth: CGFloat) {
-        if buttonAddAfterWidth > UIScreen.main.bounds.width - 26 {
+        if buttonAddAfterWidth > UIScreen.main.bounds.width - 34 {
             currentRow = RowStackView()
             addArrangedSubview(currentRow)
         }

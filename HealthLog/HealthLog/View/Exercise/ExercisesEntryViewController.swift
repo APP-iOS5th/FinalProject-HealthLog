@@ -578,7 +578,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: recentWeightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-                print("recentWeightTextField change")
+//                print("recentWeightTextField change")
                 self.entryViewModel.entryExercise.recentWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
@@ -587,7 +587,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: maxWeightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-                print("maxWeightTextField change")
+//                print("maxWeightTextField change")
                 self.entryViewModel.entryExercise.maxWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
@@ -596,7 +596,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         NotificationCenter.default.publisher(for: UITextView.textDidChangeNotification, object: descriptionTextView)
             .compactMap { ($0.object as? UITextView)?.text }
             .sink { text in
-                print("descriptionTextView change")
+//                print("descriptionTextView change")
                 self.entryViewModel.entryExercise.description = text
             }
             .store(in: &cancellables)
@@ -763,7 +763,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     // MARK: - Selector Methods
     
     @objc func doneButtonTapped() {
-        print("doneButtonTapped!")
+//        print("doneButtonTapped!")
         switch entryViewModel.mode {
             case .add: entryViewModel.realmAddExercise()
             case .update(let detailViewModel):
@@ -777,13 +777,13 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     }
     
     @objc func deleteButtonTapped() {
-        print("deleteButtonTapped!")
+//        print("deleteButtonTapped!")
         deleteAlertAction()
     }
     
     // 이미지 선택 버튼 눌렀을 때 호출되는 함수
     @objc private func selectTapImageButton() {
-        print("selectTapImageButton")
+//        print("selectTapImageButton")
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 2
         configuration.filter = .images
@@ -823,7 +823,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
              isTappedInsideMaxWeightTextField ||
              isTappedInsideRecentWeightTextField ||
              isTappedInsideDescriptionTextView)  {
-            print("Tap detected outside input area")
+//            print("Tap detected outside input area")
             view.endEditing(true)
         }
     }
