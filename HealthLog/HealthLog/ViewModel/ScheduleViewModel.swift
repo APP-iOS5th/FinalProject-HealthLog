@@ -56,9 +56,23 @@ class ScheduleViewModel: ObservableObject {
         selectedDateExerciseVolume = 0
         if let selectedSchedule = selectedDateSchedule {
             for scheduleExercise in selectedSchedule.exercises {
+                // calculate schedule exercise volume
                 let completedSets = scheduleExercise.sets.filter { $0.isCompleted }
                 for set in completedSets {
                     selectedDateExerciseVolume += set.weight * set.reps
+                }
+                
+                do {
+                    try realm.write {
+                        // update completion of schedule exercise
+                        if completedSets.count < scheduleExercise.sets.count {
+                            scheduleExercise.isCompleted = false
+                        } else {
+                            scheduleExercise.isCompleted = true
+                        }
+                    }
+                } catch {
+                    print("Error updating completion of ScheduleExercise: \(error)")
                 }
             }
         }
@@ -163,7 +177,6 @@ class ScheduleViewModel: ObservableObject {
         guard let realm = realm else { return }
         
         do {
-            let initialCountSets = scheduleExercise.sets.count
             try realm.write {
                 // add or edit schedule exercise sets
                 for (index, setValue) in setValues.enumerated() {
@@ -187,10 +200,6 @@ class ScheduleViewModel: ObservableObject {
                     for j in (setValues.count..<scheduleExerciseSetsCount).reversed() {
                         realm.delete(scheduleExercise.sets[j])
                     }
-                }
-                // uncheck the completion of schedule exercise
-                if initialCountSets < scheduleExercise.sets.count {
-                    scheduleExercise.isCompleted = false
                 }
             }
         } catch {
