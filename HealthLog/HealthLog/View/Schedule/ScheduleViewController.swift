@@ -60,7 +60,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     lazy var addExerciseButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("오늘 할 운동 추가", for: .normal)
+        button.setTitle("운동 추가하기", for: .normal)
         button.backgroundColor = .colorAccent
         button.layer.cornerRadius = 12
         button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
