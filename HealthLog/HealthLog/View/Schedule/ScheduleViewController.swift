@@ -58,6 +58,21 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         return calendar
     }()
     
+    lazy var addExerciseButton: UIButton = {
+        let button = UIButton(type: .system)
+        var configuration = UIButton.Configuration.filled()
+        configuration.title = "오늘 운동 추가"
+        configuration.baseBackgroundColor = .colorAccent
+        configuration.baseForegroundColor = .white
+        configuration.cornerStyle = .medium
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
+        button.configuration = configuration
+        button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
+        button.addTarget(self, action: #selector(addSchedule), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
     
     lazy var exerciseVolumeLabel: UILabel = {
         let label = UILabel()
@@ -203,9 +218,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addArrangedSubview(calendarView)
+        contentView.addArrangedSubview(addExerciseButton)
         contentView.addArrangedSubview(exerciseVolumeLabel)
-        contentView.addArrangedSubview(muscleImageView)
         contentView.addArrangedSubview(separatorLine1)
+        contentView.addArrangedSubview(muscleImageView)
         contentView.addArrangedSubview(labelContainer)
         contentView.addArrangedSubview(separatorLine2)
         contentView.addArrangedSubview(tableView)
@@ -225,19 +241,21 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             calendarView.heightAnchor.constraint(equalToConstant: 500),
+            calendarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            calendarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
-            calendarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            calendarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            addExerciseButton.widthAnchor.constraint(equalToConstant: 120),
+            addExerciseButton.heightAnchor.constraint(equalToConstant: 28),
             
             exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
             exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             exerciseVolumeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            separatorLine1.heightAnchor.constraint(equalToConstant: 2),
-            
             muscleImageView.heightAnchor.constraint(equalToConstant: 300),
             muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            
+            separatorLine1.heightAnchor.constraint(equalToConstant: 2),
             
             labelContainer.heightAnchor.constraint(equalToConstant: 30),
             
@@ -250,6 +268,31 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         tableViewHeightConstraint =
         tableView.heightAnchor.constraint(equalToConstant: 100)
         tableViewHeightConstraint?.isActive = true
+        
+        // check if no schedule
+        updateUIBaseOnSchedule()
+    }
+    
+    private func updateUIBaseOnSchedule() {
+        if viewModel.noSchedule {
+            print("no schedule")
+            exerciseVolumeLabel.isHidden = true
+            muscleImageView.isHidden = true
+            separatorLine1.isHidden = true
+            labelContainer.isHidden = true
+            separatorLine2.isHidden = true
+            tableView.isHidden = true
+            addExerciseButton.isHidden = false
+        } else {
+            print("schedule")
+            exerciseVolumeLabel.isHidden = false
+            muscleImageView.isHidden = false
+            separatorLine1.isHidden = false
+            labelContainer.isHidden = false
+            separatorLine2.isHidden = false
+            tableView.isHidden = false
+            addExerciseButton.isHidden = true
+        }
     }
     // MARK: - Methods
     override func viewDidLayoutSubviews() {
@@ -364,6 +407,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         updateTableView()
         highlightBodyPartsAtSelectedDate(selectedDate ?? today)
+        updateUIBaseOnSchedule()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -439,5 +483,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         viewModel.loadSelectedDateSchedule(date.toKoreanTime())
         updateTableView()
         highlightBodyPartsAtSelectedDate(date)
+        updateUIBaseOnSchedule()
     }
 }

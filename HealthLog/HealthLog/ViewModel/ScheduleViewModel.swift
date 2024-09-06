@@ -19,6 +19,7 @@ class ScheduleViewModel: ObservableObject {
     @Published var selectedDateSchedule: Schedule?
     @Published var selectedDateExerciseVolume: Int = 0
     @Published var isInputValid: Bool = false
+    @Published var noSchedule: Bool = false
     private var setValues: [(order: Int, weight: String, reps: String)] = []
     
     init() {
@@ -75,6 +76,9 @@ class ScheduleViewModel: ObservableObject {
                     print("Error updating completion of ScheduleExercise: \(error)")
                 }
             }
+            noSchedule = false
+        } else {
+            noSchedule = true
         }
     }
     
