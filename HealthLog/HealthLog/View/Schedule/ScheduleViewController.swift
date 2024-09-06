@@ -230,7 +230,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             calendarView.heightAnchor.constraint(equalToConstant: 500),
