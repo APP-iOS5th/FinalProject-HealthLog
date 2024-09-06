@@ -16,6 +16,8 @@ class ReportsViewModel {
     @Published var top5Exercises: [ExerciseSets] = []
     @Published var top3WeightChangeExercises: [ExerciseSets] = []
     
+    var maxTotalSets: Int = 0
+    
     var currentYear: Int
     var currentMonth: Int
     
@@ -42,6 +44,9 @@ class ReportsViewModel {
     func fetchAndCalculateCurrentMonthData() {
         let schedules = fetchMonthSchedules(year: currentYear, month: currentMonth)
         (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: schedules)
+        
+        maxTotalSets = bodyPartDataList.map { $0.totalSets }.max() ?? 0
+        
     }
     
     func fetchMonthSchedules(year: Int, month: Int) -> [Schedule] {
@@ -53,9 +58,11 @@ class ReportsViewModel {
         let endDate = calendar.date(from: DateComponents(year: year, month: month, day: range.count))!
         
         let result = Array(realm.objects(Schedule.self).filter { $0.date >= startDate && $0.date <= endDate } )
-        print("\(year)년 \(month)월 데이터 fetch 성공")
+//        print("\(year)년 \(month)월 데이터 fetch 성공")
         
         (bodyPartDataList, top5Exercises, top3WeightChangeExercises) = calculateSetsByBodyPartAndExercise(schedules: result)
+        
+        maxTotalSets = bodyPartDataList.map { $0.totalSets }.max() ?? 0
         
         return result
     }

@@ -9,65 +9,6 @@ import UIKit
 
 class MostChangedTableViewCell: UITableViewCell {
 
-    private lazy var mostChangedStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        
-        stackView.alignment = .fill
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-//    let testView1 = ExerciseRankingInfoView()
-//    let testView2 = ExerciseRankingInfoView()
-//    let testView3 = ExerciseRankingInfoView()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-//        mostChangedStackView.addArrangedSubview(testView1)
-//        mostChangedStackView.addArrangedSubview(testView2)
-//        mostChangedStackView.addArrangedSubview(testView3)
-        
-        
-        self.contentView.addSubview(mostChangedStackView)
-        
-        NSLayoutConstraint.activate([
-            mostChangedStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            mostChangedStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-            mostChangedStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-            mostChangedStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22)
-        ])
-        
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configureCell(with data: [ExerciseSets]) {
-        
-        mostChangedStackView.arrangedSubviews.forEach {$0.removeFromSuperview()}
-        
-        
-        for i in 0..<data.count {
-            let infoView = ExerciseRankingInfoView()
-            infoView.configure(index: i+1, name: data[i].name, preWeight: data[i].minWeight, heavyWeight: data[i].maxWeight)
-            mostChangedStackView.addArrangedSubview(infoView)
-            
-        }
-        
-        
-    }
-    
-
-}
-
-
-class ExerciseRankingInfoView: UIView {
     private let exerciseIndexLabel: UILabel = {
         let label = UILabel()
         label.text = "1."
@@ -131,48 +72,39 @@ class ExerciseRankingInfoView: UIView {
     }()
     
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
-    }
-    
-    private func setupView() {
-        addSubview(exerciseIndexLabel)
-        addSubview(exerciseNameLabel)
-        addSubview(previousWeightlabel)
-        addSubview(rightArrow)
-        addSubview(squareView)
-        addSubview(heaviestWeightlabel)
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+
+        contentView.addSubview(exerciseIndexLabel)
+        contentView.addSubview(exerciseNameLabel)
+        contentView.addSubview(squareView)
+        contentView.addSubview(previousWeightlabel)
+        contentView.addSubview(heaviestWeightlabel)
+        contentView.addSubview(rightArrow)
         
         
         
         NSLayoutConstraint.activate([
-            
-            exerciseIndexLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            exerciseIndexLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 24),
+            exerciseIndexLabel.widthAnchor.constraint(equalToConstant: 30),
             exerciseIndexLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            exerciseIndexLabel.widthAnchor.constraint(equalToConstant: 20),
             
             exerciseNameLabel.leadingAnchor.constraint(equalTo: exerciseIndexLabel.trailingAnchor, constant: 8),
+            exerciseNameLabel.trailingAnchor.constraint(equalTo: previousWeightlabel.leadingAnchor, constant: -8),
             exerciseNameLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            exerciseNameLabel.widthAnchor.constraint(equalToConstant: 140),
             
             previousWeightlabel.leadingAnchor.constraint(equalTo: exerciseNameLabel.trailingAnchor, constant: 8),
+            previousWeightlabel.trailingAnchor.constraint(equalTo: rightArrow.leadingAnchor, constant: -8),
             previousWeightlabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            previousWeightlabel.widthAnchor.constraint(equalToConstant: 40),
             
-            rightArrow.leadingAnchor.constraint(equalTo: previousWeightlabel.trailingAnchor, constant: 8),
+            rightArrow.trailingAnchor.constraint(equalTo: squareView.leadingAnchor, constant:  -8),
             rightArrow.centerYAnchor.constraint(equalTo: centerYAnchor),
             rightArrow.widthAnchor.constraint(equalToConstant: 20),
             
             
-            
-            heaviestWeightlabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            heaviestWeightlabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
             heaviestWeightlabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             heaviestWeightlabel.widthAnchor.constraint(equalToConstant: 50),
             
@@ -181,17 +113,66 @@ class ExerciseRankingInfoView: UIView {
             
             squareView.heightAnchor.constraint(equalToConstant: 30),
             squareView.widthAnchor.constraint(equalToConstant: 50),
-           
+
         ])
-    }
-    
-    func configure(index: Int, name: String, preWeight: Int, heavyWeight: Int) {
         
-        exerciseIndexLabel.text = "\(index)."
-        exerciseNameLabel.text = name
-        previousWeightlabel.text = "\(preWeight)KG"
-        heaviestWeightlabel.text = "\(heavyWeight)KG"
         
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureCell(with data: ExerciseSets, index: Int) {
+        exerciseIndexLabel.text = "\(index)등"
+        exerciseNameLabel.text = data.name
+        previousWeightlabel.text = "\(data.minWeight)KG"
+        heaviestWeightlabel.text = "\(data.maxWeight)KG"
+        
+    }
+    
+
 }
+
+
+//class ExerciseRankingInfoView: UIView {
+//    
+//    
+//    
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//        setupView()
+//    }
+//    
+//    required init?(coder: NSCoder) {
+//        super.init(coder: coder)
+//        setupView()
+//    }
+//    
+//    private func setupView() {
+//        addSubview(exerciseIndexLabel)
+//        addSubview(exerciseNameLabel)
+//        addSubview(previousWeightlabel)
+//        addSubview(rightArrow)
+//        addSubview(squareView)
+//        addSubview(heaviestWeightlabel)
+//        
+//        
+//        
+//        
+//        NSLayoutConstraint.activate([
+//            
+//                       
+//        ])
+//    }
+//    
+//    func configure(index: Int, name: String, preWeight: Int, heavyWeight: Int) {
+//        
+//        exerciseIndexLabel.text = "\(index)."
+//        exerciseNameLabel.text = name
+//        previousWeightlabel.text = "\(preWeight)KG"
+//        heaviestWeightlabel.text = "\(heavyWeight)KG"
+//        
+//    }
+//    
+//}

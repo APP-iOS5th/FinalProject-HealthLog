@@ -74,7 +74,7 @@ class SectionTitleTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureMonstChangedCell() {
+    func configureMostChangedCell() {
         let bgSymbolConfig = UIImage.SymbolConfiguration(pointSize: 15, weight: .black)
         let bgSymbolName = "dumbbell"
         let bgSymbol = UIImage(systemName: bgSymbolName, withConfiguration: bgSymbolConfig)
@@ -100,6 +100,30 @@ class SectionTitleTableViewCell: UITableViewCell {
         titleImage.image = symbol
         titleLabel.text = "가장 많이 한 운동"
     }
+
+    func configureMuscleCell() {
+        let bgSymbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .black)
+        let bgSymbolName = "flame"
+        let bgSymbol = UIImage(systemName: bgSymbolName, withConfiguration: bgSymbolConfig)
+        titleBackgroundImage.image = bgSymbol
+        
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16)
+        let symbolName = "flame.fill"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        titleImage.image = symbol
+        titleLabel.text = "부위별 운동 강도"
+    }
     
-    
+    func configureTotalCell() {
+        let bgSymbolConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .black)
+        let bgSymbolName = "list.bullet.clipboard"
+        let bgSymbol = UIImage(systemName: bgSymbolName, withConfiguration: bgSymbolConfig)
+        titleBackgroundImage.image = bgSymbol
+        
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16)
+        let symbolName = "list.bullet.clipboard.fill"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        titleImage.image = symbol
+        titleLabel.text = "부위별 운동 내역"
+    }
 }
