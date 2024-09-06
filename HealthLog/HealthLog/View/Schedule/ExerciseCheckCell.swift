@@ -206,10 +206,10 @@ class ExerciseCheckCell: UITableViewCell {
             setNumber.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 46),
             
             weightLabel.trailingAnchor.constraint(equalTo: repsLabel.trailingAnchor, constant: -80),
-            weightLabel.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
+            weightLabel.topAnchor.constraint(equalTo: setNumber.topAnchor),
             
             repsLabel.trailingAnchor.constraint(equalTo: checkboxBtn.leadingAnchor, constant: -50),
-            repsLabel.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
+            repsLabel.topAnchor.constraint(equalTo: setNumber.topAnchor),
             
             checkboxBtn.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
             checkboxBtn.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),

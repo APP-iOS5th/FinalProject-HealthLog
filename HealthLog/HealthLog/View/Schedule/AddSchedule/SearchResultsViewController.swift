@@ -195,7 +195,6 @@ extension SearchResultsViewController: UISearchBarDelegate {
     func searchBarBookmarkButtonClicked(_ searchBar: UISearchBar) {
         viewModel.bodypartOptionShow.toggle()
     }
-    
 }
 
 // MARK: UIScrollViewDelegate
