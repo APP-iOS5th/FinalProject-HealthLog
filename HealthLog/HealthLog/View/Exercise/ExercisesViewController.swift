@@ -142,6 +142,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     }
     
     func setupTableView() {
+        tableView.separatorStyle = .none
         tableView.backgroundColor = .color1E1E1E
         tableView.dataSource = self
         tableView.delegate = self
