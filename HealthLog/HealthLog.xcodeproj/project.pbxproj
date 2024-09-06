@@ -71,6 +71,7 @@
 		75F636212C6C89AB00A9B2E4 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 75187B4B2C6C887400B9F84A /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		8D0B39912C7F6B7A004C4863 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1894013E2C528B2100533E0A /* LaunchScreen.storyboard */; };
 		8D0CA37F2C781B9700727F18 /* WeightRecordModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */; };
+		CE1609E52C8AF5B900017D18 /* ExerciseData.csv in Resources */ = {isa = PBXBuildFile; fileRef = CE1609E42C8AF5B900017D18 /* ExerciseData.csv */; };
 		CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */; };
 		CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */; };
 		CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */; };
@@ -173,6 +174,7 @@
 		7590C0002C69FE05004CB285 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedExerciseCell.swift; sourceTree = "<group>"; };
 		8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightRecordModalViewController.swift; sourceTree = "<group>"; };
+		CE1609E42C8AF5B900017D18 /* ExerciseData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ExerciseData.csv; sourceTree = "<group>"; };
 		CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesDetailViewController.swift; sourceTree = "<group>"; };
 		CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailViewModel.swift; sourceTree = "<group>"; };
 		CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartStackView.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 		189401322C528B2000533E0A /* HealthLog */ = {
 			isa = PBXGroup;
 			children = (
+				CE1609E02C8AF38300017D18 /* Resources */,
 				7566B31F2C69AC8300BDF142 /* View */,
 				CEE8BC6B2C65F2D500E1D94F /* ViewModel */,
 				CEE8BC342C65AB2900E1D94F /* Model */,
@@ -391,6 +394,22 @@
 				7573384C2C7EE35900AB05B2 /* GetRoutineCell.swift */,
 			);
 			path = AddSchedule;
+			sourceTree = "<group>";
+		};
+		CE1609E02C8AF38300017D18 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CE1609E12C8AF3F000017D18 /* Data */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CE1609E12C8AF3F000017D18 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				CE1609E42C8AF5B900017D18 /* ExerciseData.csv */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		CEA171B92C7EA210000EB11A /* CustomViews */ = {
@@ -583,6 +602,7 @@
 				184A58AA2C69ED3D009F2848 /* Pretendard-Bold.otf in Resources */,
 				184A58B12C69ED3D009F2848 /* Pretendard-ExtraBold.otf in Resources */,
 				184A58AE2C69ED3D009F2848 /* Pretendard-Black.otf in Resources */,
+				CE1609E52C8AF5B900017D18 /* ExerciseData.csv in Resources */,
 				8D0B39912C7F6B7A004C4863 /* LaunchScreen.storyboard in Resources */,
 				184A58A92C69ED3D009F2848 /* Pretendard-Medium.otf in Resources */,
 				184A58AF2C69ED3D009F2848 /* Pretendard-Light.otf in Resources */,
