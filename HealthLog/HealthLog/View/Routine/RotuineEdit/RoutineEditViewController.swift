@@ -256,7 +256,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
             RoutineExerciseSet(order: index, weight: 0, reps: 0)
         }
-        viewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
+//        viewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
         self.collectionView.reloadData()
         self.viewModel.validateExercise()
 

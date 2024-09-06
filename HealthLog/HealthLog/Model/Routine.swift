@@ -23,12 +23,14 @@ class Routine: Object {
 
 class RoutineExercise: Object {
     @Persisted(primaryKey: true) var id: ObjectId // 고유 ID
+    @Persisted var order: Int // 운동 순서
     @Persisted var exercise: Exercise? // 운동 리스트 1:1
     @Persisted var sets: List<RoutineExerciseSet> // 세트 1:M
     
-    convenience init(exercise: Exercise, sets: [RoutineExerciseSet]) {
+    convenience init(exercise: Exercise, order: Int, sets: [RoutineExerciseSet]) {
         self.init()
         self.exercise = exercise
+        self.order = order
         self.sets.append(objectsIn: sets)
     }
 }

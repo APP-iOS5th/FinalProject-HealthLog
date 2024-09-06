@@ -102,7 +102,7 @@ class RoutineEditViewModel {
                 routineSets.append(RoutineExerciseSet(order: sets.order, weight: sets.weight, reps: sets.reps))
             }
             if let exercise = routineExercise.exercise {
-                self.routine.exercises.append(RoutineExercise(exercise: exercise, sets: routineSets))
+                self.routine.exercises.append(RoutineExercise(exercise: exercise, order: routineExercise.order, sets: routineSets))
             } else {
                 print("error: 운동이 없음")
             }

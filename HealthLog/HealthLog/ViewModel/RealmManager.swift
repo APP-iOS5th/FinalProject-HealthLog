@@ -540,7 +540,7 @@ extension RealmManager {
     
     func updateSchedule(index: Int) {
         guard let realm = realm else { return }
-        let date = Calendar.current.startOfDay(for: Date())
+        let date = Calendar.current.startOfDay(for: Date()).toKoreanTime()
         print("동작은해\(date)")
         let routine = fetchRoutine()[index]
         if let schedule = realm.objects(Schedule.self).filter("date == %@", date).first
@@ -564,7 +564,7 @@ extension RealmManager {
             }
         } else {
             do {
-                var order:Int = 0
+                var order:Int = 1
                 var scheduleExercise:[ScheduleExercise] = []
                 for exercises in routine.exercises {
                     var schedulExeriseSets: [ScheduleExerciseSet] = []

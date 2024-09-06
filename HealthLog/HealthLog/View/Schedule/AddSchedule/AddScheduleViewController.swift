@@ -177,12 +177,12 @@ class AddScheduleViewController: UIViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
             
             tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
