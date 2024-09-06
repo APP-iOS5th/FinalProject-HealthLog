@@ -20,6 +20,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     let viewModel = RoutineEditViewModel()
     let index: Int
     let id: ObjectId
+    let name: String
     private var cancellables = Set<AnyCancellable>()
     
     init(routineViewModel: RoutineViewModel, index: Int) {
@@ -27,6 +28,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         self.index = index
         self.id = routineViewModel.routines[index].id
         self.viewModel.editNameTextField = viewModel.routine.name
+        self.name = viewModel.routine.name
         self.viewModel.routineExecrises = self.viewModel.routine.exercises.map { $0 }
         super.init(nibName: nil, bundle: nil)
         
@@ -121,7 +123,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         viewModel.$routineExecrises
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.tableView.reloadData()
+                self?.tableView.reloadSections(IndexSet(integer: 1), with: .none)
             }
             .store(in: &cancellables)
     }
@@ -173,9 +175,8 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
-        //        if let text = RoutineEdcell.text {
-        //            viewModel.routine.name = text
-        //        }
+
+        
         viewModel.updateRoutine(routine: viewModel.routine, index: index)
         self.navigationController?.popToRootViewController(animated: true)
         
@@ -247,12 +248,23 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
         switch editSection {
         case .name:
             let cell = tableView.dequeueReusableCell(withIdentifier: RoutineEditNameTableViewCell.identifier, for: indexPath) as! RoutineEditNameTableViewCell
-            
+            cell.nameTextField.text = self.viewModel.routine.name
             cell.nameTextField
                 .textPublisher
                 .receive(on: DispatchQueue.main)
                 .assign(to: \.editNameTextField, on: viewModel)
                 .store(in: &cancellables)
+            
+            cell.nameTextField
+                .textPublisher
+                .receive(on:DispatchQueue.main)
+                .sink { [weak self] text in
+                    guard let self = self else { return }
+                    self.viewModel.routine.name = text
+                }
+                .store(in: &cancellables)
+            
+            
             Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
                 .map { !$0 && !$1 }
                 .receive(on: DispatchQueue.main)
@@ -267,24 +279,23 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isValid in
                     if let text = cell.nameTextField.text {
-                        if isValid && (text != self?.viewModel.routine.name) {
-                            print("이름이 존재 합니다")
+                        if isValid && (text != self?.name) {
                             cell.isValidText(text: "이름이 존재 합니다.",color: .red)
-                        } else if text.isEmpty && (text != self?.viewModel.routine.name){
+                        } else if text.isEmpty && (text != self?.name){
                             cell.isValidText(text: "이름이 비어 있습니다.", color: .red)
-                            print("이름이 비어 있습니다")
-                        } else if text == self?.viewModel.routine.name {
-                            print("여기가 호출될려나")
-//                            cell.isValidText(text: "", color: .green)
-                        } else {
+                            
+                        } else if text == self?.name {
+                            cell.isValidText(text: "", color: .clear)
+                            
+                        }
+                        else {
                             cell.isValidText(text: "사용 가능한 이름 입니다.", color: .green)
                         }
                         
                     }
                 }
                 .store(in: &cancellables)
-//            
-            cell.nameTextField.text = viewModel.routine.name
+            
             cell.selectionStyle = .none
             
             return cell
@@ -306,6 +317,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                     }
                     .store(in: &cancellables)
             }
+            
             
             cell.stackView.weightTextFields.enumerated().forEach { i, weightTextField in
                 NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
