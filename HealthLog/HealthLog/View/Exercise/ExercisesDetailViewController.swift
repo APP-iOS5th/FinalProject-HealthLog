@@ -275,7 +275,7 @@ class ExercisesDetailViewController: UIViewController {
     // MARK: - Selector Methods
     
     @objc func editPushButtonTapped() {
-        print("editPushButtonTapped!")
+//        print("editPushButtonTapped!")
         let entryViewModel = ExerciseEntryViewModel(
             mode: .update(detailViewModel), viewModel: detailViewModel.viewModel)
         let vc = ExercisesEntryViewController(entryViewModel: entryViewModel)

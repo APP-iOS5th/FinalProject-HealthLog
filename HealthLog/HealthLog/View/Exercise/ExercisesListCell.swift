@@ -238,7 +238,6 @@ class ExerciseListCell: UITableViewCell {
             exerciseImageView.contentMode = .scaleAspectFit
             exerciseImageView.backgroundColor = .white
         } else {
-            print("photo!!")
             exerciseImageView.image = UIImage(systemName: "photo", withConfiguration: UIImage.SymbolConfiguration(pointSize: 5, weight: .regular))
             exerciseImageView.contentMode = .scaleAspectFit
             exerciseImageView.backgroundColor = .color3E3E3E

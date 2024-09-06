@@ -92,7 +92,7 @@ class SearchBodyPartStackView: UIStackView {
         
         currentBodyPartOption = targetButton.bodypartOption
         bodyPartOptionSubject.send(currentBodyPartOption)
-        print(currentBodyPartOption)
+//        print(currentBodyPartOption)
     }
     
     // MARK: - Sub Private Methods

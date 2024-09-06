@@ -101,7 +101,7 @@ class ExerciseViewModel: ObservableObject {
     
     // (사용 중) 검색 키워드 + 운동 부위로 필터링
     func filterExercises() {
-        print("filterExercises - \(String(describing: selectedOption))")
+//        print("filterExercises - \(String(describing: selectedOption))")
         
         // 검색어와 부위를 기반으로 운동리스트를 필터링
         filteredExercises = exercises.filter { exercise in
@@ -131,7 +131,7 @@ class ExerciseViewModel: ObservableObject {
     
     func setOption(to option: BodyPartOption) {
         selectedOption = option
-        print("setOption - \(selectedOption)")
+//        print("setOption - \(selectedOption)")
     }
     
     func setSearchText(to text: String) {

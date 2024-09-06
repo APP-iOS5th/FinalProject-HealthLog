@@ -121,7 +121,7 @@ class RoutineAddViewModel {
 //                print("results.observe - initial")
                 self?.routines = Array(collection)
             case .update(let collection, _, _, _):
-//                print("results.observe - update")
+                // print("results.observe - update")
                 self?.routines = Array(collection)
             case .error(let error):
                 print("results.observe - error: \(error)")
