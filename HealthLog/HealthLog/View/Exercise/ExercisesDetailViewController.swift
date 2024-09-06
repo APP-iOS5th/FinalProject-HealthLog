@@ -72,8 +72,10 @@ class ExercisesDetailViewController: UIViewController {
         } else {
             if(images.first?.image?.isEmpty == true) {
                 imageView.isHidden = true // 이미지 없음
+                imageView.backgroundColor = .clear
             } else {
                 imageView.isHidden = false // 이미지 있음
+                imageView.backgroundColor = .white
             }
         }
     }
@@ -174,7 +176,7 @@ class ExercisesDetailViewController: UIViewController {
         stackView.addArrangedSubview(profileStackView)
         
         // MARK: imageView
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 22
         imageView.layer.masksToBounds = true
@@ -186,7 +188,7 @@ class ExercisesDetailViewController: UIViewController {
                 constant: -50),
             imageView.heightAnchor.constraint(
                 equalTo: imageView.widthAnchor,
-                multiplier: 9 / 16)
+                multiplier: 1)
         ])
         
         // MARK: bodypartStackView

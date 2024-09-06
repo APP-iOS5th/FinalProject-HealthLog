@@ -141,7 +141,7 @@ class ExerciseListCell: UITableViewCell {
         // MARK: exerciseImageView
         
         exerciseImageView.clipsToBounds = true
-        exerciseImageView.backgroundColor = .color3E3E3E
+        exerciseImageView.backgroundColor = .white
         exerciseImageView.layer.cornerRadius = 12
         exerciseImageView.layer.masksToBounds = true
         exerciseImageView.tintColor = .color525252
@@ -224,10 +224,12 @@ class ExerciseListCell: UITableViewCell {
         // exercise.Image
         if let imageData = exercise.images.first?.image {
             exerciseImageView.image = UIImage(data: imageData)
-            exerciseImageView.contentMode = .scaleAspectFill
+            exerciseImageView.contentMode = .scaleAspectFit
+            exerciseImageView.backgroundColor = .white
         } else {
             exerciseImageView.image = UIImage(systemName: "photo", withConfiguration: UIImage.SymbolConfiguration(pointSize: 5, weight: .regular))
             exerciseImageView.contentMode = .scaleAspectFit
+            exerciseImageView.backgroundColor = .color3E3E3E
         }
         
         // exercise.bodyParts
