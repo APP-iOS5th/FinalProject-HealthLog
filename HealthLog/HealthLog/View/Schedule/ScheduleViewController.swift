@@ -19,6 +19,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     private var selectedDate: Date?
     private var selectedDateExerciseVolume: Int = 0
     private var tableViewHeightConstraint: NSLayoutConstraint?
+    
     private var muscleImageView = MuscleImageView()
     
     lazy var scrollView: UIScrollView = {
@@ -165,6 +166,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // MARK: 영우 - loadSelectedDateSchedule의 today를 한국시간으로
         viewModel.loadSelectedDateSchedule(today.toKoreanTime())
+        
+        highlightBodyPartsAtSelectedDate(selectedDate ?? today)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -360,6 +363,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendarView.reloadDecorations(forDateComponents: [selectedComponents], animated: true)
         
         updateTableView()
+        highlightBodyPartsAtSelectedDate(selectedDate ?? today)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -420,7 +424,7 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
     }
     
     func highlightBodyPartsAtSelectedDate(_ date: Date) {
-        let bodyPartsWithCompletedSets = viewModel.getBodyPartsWithCompletedSets(for: date)
+        let bodyPartsWithCompletedSets = viewModel.getBodyPartsWithCompletedSets(for: date.toKoreanTime())
         muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
     }
     
@@ -434,6 +438,6 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         selectedDate = date
         viewModel.loadSelectedDateSchedule(date.toKoreanTime())
         updateTableView()
-        highlightBodyPartsAtSelectedDate(date.toKoreanTime())
+        highlightBodyPartsAtSelectedDate(date)
     }
 }
