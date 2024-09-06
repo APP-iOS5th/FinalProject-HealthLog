@@ -161,6 +161,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         updateSets()
         bindViewModel()
         setupKeyboard()
+        hideKeyBoardWhenTappedScreen()
     }
     
     private func bindViewModel() {
@@ -197,6 +198,16 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let contentInsets = UIEdgeInsets.zero
         scrollContainer.contentInset = contentInsets
         scrollContainer.scrollIndicatorInsets = contentInsets
+    }
+    
+    func hideKeyBoardWhenTappedScreen() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func tapHandler() {
+        self.view.endEditing(true)
     }
     
     private func setupUI() {
