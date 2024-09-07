@@ -158,19 +158,19 @@ class ExerciseCheckCell: UITableViewCell {
         
         let setNumber = UILabel()
         setNumber.text = "\(set.order) 세트"
-        setNumber.font = UIFont.font(.pretendardMedium, ofSize: 16)
+        setNumber.font = UIFont.font(.pretendardMedium, ofSize: 14)
         setNumber.textColor = .white
         setNumber.translatesAutoresizingMaskIntoConstraints = false
         
         let weightLabel = UILabel()
         weightLabel.text = "\(set.weight) kg"
-        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 16)
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         weightLabel.textColor = .white
         weightLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let repsLabel = UILabel()
         repsLabel.text = "\(set.reps) 회"
-        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 16)
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.textColor = .white
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
