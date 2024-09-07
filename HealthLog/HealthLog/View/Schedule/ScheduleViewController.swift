@@ -97,7 +97,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.translatesAutoresizingMaskIntoConstraints = false
         
         let button = UIButton(type: .system)
-        button.setTitle("루틴으로 추가", for: .normal)
+        button.setTitle("루틴으로 저장", for: .normal)
         button.backgroundColor = .colorAccent
         button.tintColor = .white
         button.layer.cornerRadius = 7
@@ -118,7 +118,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             button.heightAnchor.constraint(equalToConstant: 28),
             
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             view.heightAnchor.constraint(equalToConstant: 60),
@@ -310,30 +310,19 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func didTapSaveRoutine() {
-        if viewModel.selectedDateSchedule != nil {
-            let saveRoutineVC = SaveRoutineViewController(schedule: viewModel.selectedDateSchedule!)
-            let navigationController = UINavigationController(rootViewController: saveRoutineVC)
-            
-            // transparent black background
-            let partialScreenVC = UIViewController()
-            partialScreenVC.modalPresentationStyle = .overFullScreen
-            partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-            
-            partialScreenVC.addChild(navigationController)
-            partialScreenVC.view.addSubview(navigationController.view)
-            
-            navigationController.view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
-                navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
-                navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
-                navigationController.view.heightAnchor.constraint(equalToConstant: 200),
-            ])
-            
-            navigationController.didMove(toParent: partialScreenVC)
-            
-            present(partialScreenVC, animated: true, completion: nil)
+        guard let schedule = viewModel.selectedDateSchedule else { return }
+        let saveRoutineVC = SaveRoutineViewController(schedule: schedule)
+        saveRoutineVC.modalPresentationStyle = .pageSheet
+        
+        if let sheet = saveRoutineVC.sheetPresentationController {
+            let smallDetent = UISheetPresentationController.Detent.custom { context in
+                return 200
+            }
+            sheet.detents = [smallDetent]
+            sheet.preferredCornerRadius = 32
         }
+        
+        present(saveRoutineVC, animated: true, completion: nil)
     }
     
     private func updateTableView() {
