@@ -264,7 +264,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             
             deleteButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             deleteButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            deleteButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            deleteButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -20),
             deleteButton.heightAnchor.constraint(equalToConstant: 50),
             
         ])
