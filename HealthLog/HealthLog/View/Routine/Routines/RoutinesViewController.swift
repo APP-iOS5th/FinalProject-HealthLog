@@ -175,7 +175,7 @@ extension RoutinesViewController: UISearchResultsUpdating {
 extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 170
+        return 155
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

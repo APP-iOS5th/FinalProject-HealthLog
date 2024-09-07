@@ -99,9 +99,9 @@ class RoutineAddNameViewController: UIViewController {
                 if isRoutineNameEmptyPulisher {
                     return ""
                 } else if !isRoutineNameMatchingPulisher {
-                    return "이미 사용준인 루틴 이름입니다."
+                    return "이미 사용 중인 이름입니다."
                 }
-                return "사용 가능한 루틴입니다."
+                return "사용 가능한 이름입니다."
             }
             .receive(on: DispatchQueue.main)
             .assign(to:\.validMessage ,on:subTextLabel)
