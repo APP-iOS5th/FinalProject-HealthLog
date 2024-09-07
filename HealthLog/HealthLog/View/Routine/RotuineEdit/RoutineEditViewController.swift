@@ -348,7 +348,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: DeleteButtonCell.identifier, for: indexPath) as! DeleteButtonCell
             
             cell.delete = {
-                //                self.viewModel.deleteRoutine(id: self.id)
+                self.viewModel.deleteRoutine(id: self.id)
                 self.navigationController?.popToRootViewController(animated: true)
             }
             cell.selectionStyle = .none
