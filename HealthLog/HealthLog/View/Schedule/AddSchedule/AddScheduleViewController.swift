@@ -184,7 +184,7 @@ class AddScheduleViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
     }
     
