@@ -116,9 +116,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             label.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             button.widthAnchor.constraint(equalToConstant: 120),
             button.heightAnchor.constraint(equalToConstant: 28),
+            button.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             view.heightAnchor.constraint(equalToConstant: 60),

@@ -147,8 +147,8 @@ class ExerciseCheckCell: UITableViewCell {
             stackView.heightAnchor.constraint(equalToConstant: 24),
             
             exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
-            checkboxButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
-            checkboxButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            checkboxButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
+            checkboxButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
         ])
     }
     
@@ -158,19 +158,19 @@ class ExerciseCheckCell: UITableViewCell {
         
         let setNumber = UILabel()
         setNumber.text = "\(set.order) 세트"
-        setNumber.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        setNumber.font = UIFont.font(.pretendardMedium, ofSize: 16)
         setNumber.textColor = .white
         setNumber.translatesAutoresizingMaskIntoConstraints = false
         
         let weightLabel = UILabel()
         weightLabel.text = "\(set.weight) kg"
-        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        weightLabel.font = UIFont.font(.pretendardMedium, ofSize: 16)
         weightLabel.textColor = .white
         weightLabel.translatesAutoresizingMaskIntoConstraints = false
         
         let repsLabel = UILabel()
         repsLabel.text = "\(set.reps) 회"
-        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 16)
         repsLabel.textColor = .white
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -213,8 +213,8 @@ class ExerciseCheckCell: UITableViewCell {
             
             checkboxBtn.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
             checkboxBtn.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
-            checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
+            checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
             
             view.heightAnchor.constraint(equalToConstant: 37),
         ])
