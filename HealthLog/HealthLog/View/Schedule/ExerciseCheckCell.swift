@@ -147,8 +147,8 @@ class ExerciseCheckCell: UITableViewCell {
             stackView.heightAnchor.constraint(equalToConstant: 24),
             
             exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
-            checkboxButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
-            checkboxButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            checkboxButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
+            checkboxButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
         ])
     }
     
@@ -213,8 +213,8 @@ class ExerciseCheckCell: UITableViewCell {
             
             checkboxBtn.centerYAnchor.constraint(equalTo: setNumber.centerYAnchor),
             checkboxBtn.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
-            checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
+            checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
             
             view.heightAnchor.constraint(equalToConstant: 37),
         ])
