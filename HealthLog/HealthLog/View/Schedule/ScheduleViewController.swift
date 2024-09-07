@@ -138,6 +138,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 
     lazy var tableView: UITableView = {
         let table = UITableView()
+        table.backgroundColor = .color1E1E1E
         table.translatesAutoresizingMaskIntoConstraints = false
         table.separatorStyle = .singleLine
         table.dataSource = self
@@ -167,6 +168,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         setupUI()
         bindViewModel()
+        setupDragAndDrop()
         // 앱 첫 실행 시 오늘 날짜 선택된 상태
         let todayComponents = Calendar.current.dateComponents([.year, .month, .day], from: today)
             
@@ -182,8 +184,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
         didUpdateScheduleExercise()
+    }
+    
+    private func setupDragAndDrop() {
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
+        tableView.dragInteractionEnabled = true
     }
     
     private func setupUI() {
@@ -448,5 +455,35 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         updateTableView()
         highlightBodyPartsAtSelectedDate(date)
         updateUIBaseOnSchedule()
+    }
+}
+
+extension ScheduleViewController: UITableViewDropDelegate, UITableViewDragDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dragItem = UIDragItem(itemProvider: NSItemProvider())
+        dragItem.localObject = viewModel.selectedDateSchedule?.exercises[indexPath.row]
+        return [dragItem]
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if let item = coordinator.items.first,
+           let sourceIndexPath = item.sourceIndexPath,
+           let _ = item.dragItem.localObject as? ScheduleExercise {
+            
+            viewModel.moveExercise(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+            
+            coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if session.localDragSession != nil {
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
     }
 }
