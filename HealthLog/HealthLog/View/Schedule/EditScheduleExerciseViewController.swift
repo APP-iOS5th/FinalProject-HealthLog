@@ -235,12 +235,12 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             completeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             
             nameLabel.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 13),
-            nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             
             stepperContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
             stepperContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             stepperContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            stepperContainer.heightAnchor.constraint(equalToConstant: 44),
+            stepperContainer.heightAnchor.constraint(equalToConstant: 50),
             
             stepperLabel.leadingAnchor.constraint(equalTo: stepperContainer.leadingAnchor, constant: 16),
             stepperLabel.centerYAnchor.constraint(equalTo: stepperContainer.centerYAnchor),
@@ -252,14 +252,14 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             stepper.centerYAnchor.constraint(equalTo: stepperContainer.centerYAnchor),
             
             scrollContainer.topAnchor.constraint(equalTo: stepperContainer.bottomAnchor, constant: 10),
-            scrollContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            scrollContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            scrollContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollContainer.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -10),
             
             setsContainer.topAnchor.constraint(equalTo: scrollContainer.topAnchor),
             setsContainer.leadingAnchor.constraint(equalTo: scrollContainer.leadingAnchor),
             setsContainer.trailingAnchor.constraint(equalTo: scrollContainer.trailingAnchor),
-            setsContainer.bottomAnchor.constraint(equalTo: scrollContainer.bottomAnchor),
+            setsContainer.bottomAnchor.constraint(equalTo: scrollContainer.bottomAnchor, constant: -10),
             setsContainer.widthAnchor.constraint(equalTo: scrollContainer.widthAnchor),
             
             deleteButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
@@ -289,6 +289,11 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             let set = i < setValues.count ? setValues[i] : nil
             let setView = createSetView(set)
             setsContainer.addArrangedSubview(setView)
+            
+            NSLayoutConstraint.activate([
+                setView.leadingAnchor.constraint(equalTo: setsContainer.leadingAnchor, constant: 26),
+                setView.trailingAnchor.constraint(equalTo: setsContainer.trailingAnchor, constant: -26)
+            ])
         }
         
         stepperCountLabel.text = "\(stepperValue)"
@@ -308,6 +313,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             }
         }
     }
+    
     private func createSetView(_ set: (order: Int, weight: String, reps: String)?) -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -362,6 +368,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let repsLabel = UILabel()
         repsLabel.text = "회"
         repsLabel.textColor = .white
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         setNumber.text = "\(setsContainer.arrangedSubviews.count + 1) 세트"
@@ -382,25 +389,25 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         NSLayoutConstraint.activate([
             view.heightAnchor.constraint(equalToConstant: 35),
             
-            setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             setNumber.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            weightTextField.leadingAnchor.constraint(equalTo: setNumber.trailingAnchor, constant: 45),
+            weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
             weightTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             weightTextField.widthAnchor.constraint(equalToConstant: 58),
             weightTextField.heightAnchor.constraint(equalToConstant: 35),
             
-            weightLabel.leadingAnchor.constraint(equalTo: weightTextField.trailingAnchor, constant: 8),
+            weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
             weightLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            repsTextField.leadingAnchor.constraint(equalTo: weightLabel.trailingAnchor, constant: 38),
+            repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
             repsTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             repsTextField.widthAnchor.constraint(equalToConstant: 58),
             repsTextField.heightAnchor.constraint(equalToConstant: 35),
             
-            repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
+            //repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
             repsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            repsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            repsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
         ])
         
         return view

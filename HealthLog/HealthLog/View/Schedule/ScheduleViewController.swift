@@ -364,7 +364,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         if let sheet = editExerciseVC.sheetPresentationController {
             sheet.detents = [.medium()]
-            sheet.prefersGrabberVisible = true
             sheet.preferredCornerRadius = 32
         }
         
