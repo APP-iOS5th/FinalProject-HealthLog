@@ -106,6 +106,7 @@ class AddScheduleViewController: UIViewController {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exercise in
                 self?.addSelectedExercise(exercise)
+                self?.navigationItem.leftBarButtonItem?.isHidden = false
             }
             searchResultsController.viewModel = exerciseViewModel
             searchController.searchBar.delegate = searchResultsController
