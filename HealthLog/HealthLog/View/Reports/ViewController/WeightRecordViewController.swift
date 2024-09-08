@@ -121,7 +121,7 @@ class WeightRecordViewController: UIViewController {
             inbodyinfoLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             
-            dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+            dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 3),
             dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 8),
             
             weightBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
