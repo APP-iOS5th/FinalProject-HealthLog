@@ -22,6 +22,28 @@ class SaveRoutineViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        return button
+    }()
+    
+    private let completeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("완료", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.isEnabled = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     lazy var pageTitle: UILabel = {
         let label = UILabel()
         label.text = "루틴 이름"
@@ -61,7 +83,6 @@ class SaveRoutineViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(schedule)
         
         // set default routine name
         let placeholderText = changeDateToString(schedule.date)
@@ -71,76 +92,42 @@ class SaveRoutineViewController: UIViewController {
         setupUI()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // add observer of keyboard notification
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // delete observer of keyboard notification
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
     private func setupUI() {
         view.backgroundColor = .colorPrimary
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelSave))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveRoutine))
-        
-        navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationItem.rightBarButtonItem?.tintColor = .white
         
         container.addArrangedSubview(pageTitle)
         container.addArrangedSubview(routineName)
         
         view.addSubview(container)
-        
+        view.addSubview(cancelButton)
+        view.addSubview(completeButton)
+        routineName.becomeFirstResponder()
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
+            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            
+            completeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            completeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
             pageTitle.heightAnchor.constraint(equalToConstant: 20),
             
             routineName.heightAnchor.constraint(equalToConstant: 44),
             routineName.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20),
             routineName.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20),
             
-            container.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            container.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 13),
             container.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             container.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
         ])
+        cancelButton.addTarget(self, action: #selector(cancelSave), for: .touchUpInside)
+        completeButton.addTarget(self, action: #selector(saveRoutine), for: .touchUpInside)
     }
     
     // MARK: - Methods
-    @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
-        
-        let keyboardHeight = keyboardFrame.cgRectValue.height
-        
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
-        }
-    }
-    
-    @objc private func keyboardWillHide(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
-        
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = .identity
-            }
-        }
-    }
-    
     @objc private func cancelSave() {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func saveRoutine() {
@@ -159,7 +146,6 @@ class SaveRoutineViewController: UIViewController {
         } else {
             if viewModel.saveRoutineToDatabase(name: routineName, schedule: schedule) {
                 existName = false
-                
                 let alertController = UIAlertController(title: "루틴 저장 완료", message: "루틴 (\(routineName))이 성공적으로 저장되었습니다.", preferredStyle: .alert)
                 present(alertController, animated: true, completion: nil)
                 

@@ -106,6 +106,7 @@ class AddScheduleViewController: UIViewController {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exercise in
                 self?.addSelectedExercise(exercise)
+                self?.navigationItem.leftBarButtonItem?.isHidden = false
             }
             searchResultsController.viewModel = exerciseViewModel
             searchController.searchBar.delegate = searchResultsController
@@ -184,7 +185,7 @@ class AddScheduleViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
     }
     
@@ -322,12 +323,14 @@ extension AddScheduleViewController: UISearchResultsUpdating, UISearchController
             searchResultsController.bodypartOptionShowUIChange(true)
             searchResultsController.prepareForDismissal(false)
         }
+        navigationItem.leftBarButtonItem?.isHidden = true
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.prepareForDismissal(true)
         }
+        navigationItem.leftBarButtonItem?.isHidden = false
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {
