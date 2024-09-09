@@ -42,7 +42,7 @@ class ExerciseDetailViewModel: ObservableObject {
         guard exercise.images.count == 2,
               exercise.images[0].image?.isEmpty == false,
               exercise.images[1].image?.isEmpty == false
-        else { return print("-- images count is not 2 --") }
+        else { return }
         // 타이머를 설정하여 2초마다 이미지 인덱스를 변경
         timer = Timer.scheduledTimer(
             withTimeInterval: 1.5, repeats: true) { [weak self] _ in
@@ -66,12 +66,12 @@ class ExerciseDetailViewModel: ObservableObject {
         exerciseNotificationToken = results.observe { [weak self] changes in
             switch changes {
                 case .change(let data, _):
-                    print("exercise detail results.observe - update")
+//                    print("exercise detail results.observe - update")
                     self?.exercise = data as! Exercise
                 case .deleted:
-                    print("results.observe - deleted")
+                    print("exercise detail results.observe - deleted")
                 case .error(let error):
-                    print("results.observe - error: \(error)")
+                    print("exercise detail results.observe - error: \(error)")
             }
         }
     }

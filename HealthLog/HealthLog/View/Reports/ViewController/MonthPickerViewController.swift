@@ -15,7 +15,6 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         picker.delegate = self
         picker.dataSource = self
         picker.translatesAutoresizingMaskIntoConstraints = false
-//        picker.backgroundColor = .color2F2F2F
         picker.backgroundColor = .clear
         picker.tintColor = .white
         picker.layer.cornerRadius = 12 // 원하는 반경으로 설정
@@ -23,15 +22,6 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         return picker
     }()
     
-    private lazy var datePickerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "날짜를 선택해 주세요."
-        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     private lazy var selectButton: UIButton = {
         let button = UIButton(type: .system)
@@ -40,43 +30,16 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         button.addTarget(self, action: #selector(didTapSelectButton), for: .touchUpInside)
         button.setTitleColor(.white, for: .normal)
         
-        // 배경색 설정
+
         button.titleLabel?.textColor = .white
         button.backgroundColor = .colorAccent
         
-        // 코너 반경을 버튼 높이의 절반으로 설정하여 캡슐 모양 만들기
         button.layer.cornerRadius = 25
-        
-        // 버튼 크기 설정 (넓고 긴 모양으로)
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-//    private lazy var selectButton: UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("선택", for: .normal)
-//        button.titleLabel?.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
-//        button.addTarget(self, action: #selector(didTapSelectButton), for: .touchUpInside)
-//        button.setTitleColor(.white, for: .normal)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        return button
-//    }()
-    
-    private lazy var cancelButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("취소", for: .normal)
-        button.titleLabel?.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
-        button.addTarget(self, action: #selector(didTapCancelButton), for: .touchUpInside)
-        button.setTitleColor(.white, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    
-    
     
     
     private var years: [Int] = []
@@ -103,8 +66,6 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         
         view.addSubview(pickerView)
         view.addSubview(selectButton)
-//        view.addSubview(cancelButton)
-//        view.addSubview(datePickerLabel)
         
         
         setupConstraints()
@@ -136,7 +97,7 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
             
             pickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 13),
-            pickerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48), // 좌우 패딩을 고려하여 넓이 설정
+            pickerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48),
             pickerView.heightAnchor.constraint(equalToConstant: 200),
             
             selectButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -13),

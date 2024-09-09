@@ -16,7 +16,6 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     private let viewModel = ExerciseViewModel()
     private let calculateViewModel = ExerciseCalculateViewModel()
     
-    private let addButton = UIButton(type: .custom)
     private let searchController = UISearchController(searchResultsController: nil)
     private let searchOptionStackView = SearchBodyPartStackView()
     private let dividerView = UIView()
@@ -55,6 +54,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     
     func setupMain() {
         title = "운동리스트"
+        self.navigationController?.setupBarAppearance()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.tintColor = UIColor.white
         
@@ -62,14 +62,13 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         self.navigationItem.backBarButtonItem = backbarButtonItem
         
         // MARK: addButton
-        var buttonConfig = UIButton.Configuration.filled()
-        buttonConfig.title = "+"
-        buttonConfig.baseBackgroundColor = .colorAccent
-        buttonConfig.baseForegroundColor = .white
-        buttonConfig.cornerStyle = .fixed
-        buttonConfig.contentInsets = NSDirectionalEdgeInsets(
-            top: 2, leading: 8, bottom: 2, trailing: 8)
-        addButton.configuration = buttonConfig
+        let addButton = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .small)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        addButton.setImage(plusImage, for: .normal)
+        addButton.backgroundColor = .colorAccent
+        addButton.frame = CGRect(x: 0, y: 0, width: 28, height: 28)
+        addButton.layer.cornerRadius = 8
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         let rightBarButton = UIBarButtonItem(customView: addButton)
         navigationItem.rightBarButtonItem = rightBarButton
@@ -143,6 +142,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     }
     
     func setupTableView() {
+        tableView.separatorStyle = .none
         tableView.backgroundColor = .color1E1E1E
         tableView.dataSource = self
         tableView.delegate = self

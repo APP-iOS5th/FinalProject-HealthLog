@@ -83,27 +83,27 @@ class ExerciseEntryViewModel {
             // 운동 이름 중복 여부
             if entryExercise.hasDuplicateName {
                 entryExercise.isValidatedRequiredFields = false
-                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+//                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
                 return
             }
             
             // 운동 이름 비어있는지 여부
             if entryExercise.isNameEmpty {
                 entryExercise.isValidatedRequiredFields = false
-                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+//                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
                 return
             }
             
             // 운동 부위 비어있는지 여부
             if entryExercise.isBodyPartsEmpty {
                 entryExercise.isValidatedRequiredFields = false
-                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+//                print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
                 return
             }
             
             // 필수 요소 체크 끝, 정상이면 true
             entryExercise.isValidatedRequiredFields = true
-            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
+//            print("isValidatedRequiredExerciseFields - \(entryExercise.isValidatedRequiredFields)") // log
         }
     
     // MARK: - Realm Methods
@@ -161,14 +161,14 @@ class ExerciseEntryViewModel {
 
     private func update<T: Equatable>(_ property: inout T, with newValue: T) {
         if property != newValue {
-            print("realmUpdateExercise update - \(newValue)")
+//            print("realmUpdateExercise update - \(newValue)")
             property = newValue
         }
     }
     
     private func updateList<T: Equatable>(_ property: List<T>, with newValue: [T]) {
         if !property.elementsEqual(newValue) {
-            print("realmUpdateExercise updateList - \(newValue)")
+//            print("realmUpdateExercise updateList - \(newValue)")
             property.removeAll()
             property.append(objectsIn: newValue)
         }
@@ -178,7 +178,7 @@ class ExerciseEntryViewModel {
         let oldValue = Array(property) as [ExerciseImage]
         let equalImages = zip(oldValue, newValue).allSatisfy { $0.image == $1.image }
         if !equalImages || oldValue.count == 0 {
-            print("realmUpdateExercise updateImages - \(newValue)")
+//            print("realmUpdateExercise updateImages - \(newValue)")
             property.removeAll()
             property.append(objectsIn: newValue)
         }

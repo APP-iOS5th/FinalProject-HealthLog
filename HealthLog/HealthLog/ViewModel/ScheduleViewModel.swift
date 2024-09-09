@@ -41,7 +41,7 @@ class ScheduleViewModel: ObservableObject {
                 print("results.observe - initial")
                 self?.schedules = Array(collection)
             case .update(let collection, _, _, _):
-                print("results.observe - update")
+//                print("results.observe - update")
                 self?.schedules = Array(collection)
             case .error(let error):
                 print("results.observe - error: \(error)")
@@ -258,7 +258,7 @@ class ScheduleViewModel: ObservableObject {
                 exerciseVolume += set.weight * set.reps
             }
             if let exercise = exercises.first(where: { $0.name == scheduleExercise.exercise?.name }) {
-                let routineExercise = RoutineExercise(exercise: exercise, sets: routineExerciseSets)
+                let routineExercise = RoutineExercise(exercise: exercise, order: scheduleExercise.order, sets: routineExerciseSets)
                 routineExercises.append(routineExercise)
             }
         }

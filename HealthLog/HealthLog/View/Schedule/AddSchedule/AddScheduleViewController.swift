@@ -173,17 +173,17 @@ class AddScheduleViewController: UIViewController {
         tableView.tableHeaderView = headerView
         view.addSubview(tableView)
     }
-    
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             dividerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            dividerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            dividerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             dividerView.heightAnchor.constraint(equalToConstant: 1),
             
             tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
@@ -199,6 +199,7 @@ class AddScheduleViewController: UIViewController {
         }
         
         routineVC.modalPresentationStyle = .pageSheet
+        routineVC.sheetPresentationController?.prefersGrabberVisible = true
         self.present(routineVC, animated: true, completion: nil)
     }
     
@@ -281,7 +282,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
                 .sink { text in
-                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].reps = Int(text) ?? 0
+                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].reps = Int(text) ?? -1
                 }
                 .store(in: &cancellables)
         }
@@ -290,7 +291,7 @@ extension AddScheduleViewController: UITableViewDelegate, UITableViewDataSource 
             NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
                 .compactMap { ($0.object as? UITextField)?.text }
                 .sink { text in
-                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].weight = Int(text) ?? 0
+                    self.addScheduleViewModel.selectedExercises[indexPath.row].sets[i].weight = Int(text) ?? -1
                 }
                 .store(in: &cancellables)
         }

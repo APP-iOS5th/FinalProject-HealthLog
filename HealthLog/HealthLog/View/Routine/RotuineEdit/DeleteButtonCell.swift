@@ -7,8 +7,8 @@
 
 import UIKit
 
-class DeleteButtonCollectionViewCell: UICollectionViewCell {
-    static let identifier = "DeleteButtonCollectionViewCell"
+class DeleteButtonCell: UITableViewCell {
+    static let identifier = "DeleteButtonCell"
     var delete: (() -> Void)?
     private lazy var deleteButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
@@ -23,14 +23,20 @@ class DeleteButtonCollectionViewCell: UICollectionViewCell {
         
         return button
     }()
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0))
+//    override func layoutSublayers(of layer: CALayer) {
+//        super.layoutSublayers(of: layer)
+//        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0))
+//    }  
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+        
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.contentView.addSubview(self.deleteButton)
+   func setupUI() {
+       self.backgroundColor = .clear
+       self.contentView.addSubview(self.deleteButton)
         
         NSLayoutConstraint.activate([
             self.deleteButton.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),

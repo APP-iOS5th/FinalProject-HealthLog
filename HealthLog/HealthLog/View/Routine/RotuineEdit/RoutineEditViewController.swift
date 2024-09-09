@@ -9,11 +9,18 @@ import UIKit
 import RealmSwift
 import Combine
 
+
+enum EditSections: Int {
+    case name, execrises, deleteButone
+}
+
+
 class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
     let viewModel = RoutineEditViewModel()
     let index: Int
     let id: ObjectId
+    let name: String
     private var cancellables = Set<AnyCancellable>()
     
     init(routineViewModel: RoutineViewModel, index: Int) {
@@ -21,6 +28,8 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         self.index = index
         self.id = routineViewModel.routines[index].id
         self.viewModel.editNameTextField = viewModel.routine.name
+        self.name = viewModel.routine.name
+        self.viewModel.routineExecrises = self.viewModel.routine.exercises.map { $0 }
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -31,46 +40,25 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     var resultsViewController = RoutineSearchResultsViewController()
     
     
-    private lazy var nameTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "루틴 이름"
-        label.font = UIFont.font(.pretendardBold, ofSize: 18)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var nameVaildLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.font = UIFont.font(.pretendardRegular, ofSize: 14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .red
-        label.isHidden = viewModel.isValid
-        return label
-    }()
-    
-    private lazy var exerciseTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "루틴 운동"
-        label.font = UIFont.font(.pretendardBold, ofSize: 18)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var nameTextField: UITextField = {
-        let textField = UITextField()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.borderStyle = .roundedRect
-        textField.backgroundColor = .color2F2F2F
-        // 더 좋은 방법 있으면 수정
-        textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
-        textField.textColor = .white
-        textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
-        textField.autocorrectionType = .no
-        textField.spellCheckingType = .no
-        textField.text = viewModel.routine.name
-        return textField
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = UITableView.automaticDimension
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(SelectedExerciseCell.self, forCellReuseIdentifier: "selectedExerciseCell")
+        tableView.register(DeleteButtonCell.self, forCellReuseIdentifier: DeleteButtonCell.identifier)
+        tableView.register(RoutineEditNameTableViewCell.self, forCellReuseIdentifier: RoutineEditNameTableViewCell.identifier)
+        tableView.register(RoutineEditHeader.self, forHeaderFooterViewReuseIdentifier: RoutineEditHeader.cellId)
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
+        tableView.showsVerticalScrollIndicator = false
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
+        tableView.dragInteractionEnabled = true
         
+        return tableView
     }()
     
     private lazy var rightBarButtonItem : UIBarButtonItem = {
@@ -100,17 +88,6 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         return searchController
     }()
     
-    // MARK: CollectionView
-    private lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.headerReferenceSize = CGSize(width: view.bounds.width, height: 50)
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .color1E1E1E
-        
-        
-        return collectionView
-    }()
     
     private lazy var dividerView: UIView = {
         let view = UIView()
@@ -122,58 +99,31 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-            self.view.endEditing(true)
+        self.view.endEditing(true)
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupCollectionView()
-        setupObservers()
+        self.setupUI()
+        self.setupObservers()
         self.viewModel.validateExercise()
         self.hideKeyBoardWenTappedAround()
         
     }
     
     func setupObservers() {
-        nameTextField
-            .textPublisher
-            .receive(on: DispatchQueue.main)
-            .assign(to: \.editNameTextField, on: viewModel)
-            .store(in: &cancellables)
-        
-        Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
-            .map { !$0 && !$1 }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValid in
-                
-                self?.nameVaildLabel.isHidden = isValid
-                self?.viewModel.validateExercise()
-            }
-        
-            .store(in: &cancellables)
-        
-        // 루틴이 이름 존재 할 때
-        viewModel.isRoutineNameMatchingPulisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValid in
-                if let text = self?.nameTextField.text {
-                    if isValid && (text != self?.viewModel.routine.name) {
-                        self?.nameVaildLabel.text = "이름이 존재 합니다"
-                    } else if text.isEmpty && (text != self?.viewModel.routine.name){
-                        self?.nameVaildLabel.text = "이름이 비어 있습니다"
-                    } else {
-                        self?.nameVaildLabel.text = ""
-                    }
-                }
-            }
-            .store(in: &cancellables)
-        
         viewModel.$isAddRoutineValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
                 self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$routineExecrises
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadSections(IndexSet(integer: 1), with: .none)
             }
             .store(in: &cancellables)
     }
@@ -184,186 +134,53 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         self.navigationItem.title = "수정하기"
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
         self.navigationItem.hidesSearchBarWhenScrolling = false
-
+        
         self.view.backgroundColor = .color1E1E1E
         tabBarController?.tabBar.isHidden = true
         
         
         //MARK: - addSubview
         
-        
-        
-        
-        self.view.addSubview(nameTitleLabel)
-        self.view.addSubview(nameTextField)
-        self.view.addSubview(exerciseTitleLabel)
-        self.view.addSubview(dividerView)
-        self.view.addSubview(nameVaildLabel)
+        self.view.addSubview(tableView)
         
         
         
         
-        let padding: CGFloat = 24
+        //        let padding: CGFloat = 24
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
             
             
-            self.nameTitleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            self.nameTitleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
-            self.nameTextField.topAnchor.constraint(equalTo: self.nameTitleLabel.bottomAnchor, constant: 13),
-            self.nameTextField.leadingAnchor.constraint(equalTo: self.nameTitleLabel.leadingAnchor),
-            self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
-            self.nameTextField.heightAnchor.constraint(equalToConstant: 44),
+            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: 13),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,constant: -13),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor)
             
-            self.nameVaildLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor, constant: 5),
-            self.nameVaildLabel.leadingAnchor.constraint(equalTo: self.nameTextField.leadingAnchor),
-            
-            self.exerciseTitleLabel.topAnchor.constraint(equalTo: self.nameVaildLabel.bottomAnchor, constant: 20),
-            self.exerciseTitleLabel.leadingAnchor.constraint(equalTo: self.nameTitleLabel.leadingAnchor),
-            
-            self.dividerView.topAnchor.constraint(equalTo: self.exerciseTitleLabel.bottomAnchor, constant: 13),
-            self.dividerView.leadingAnchor.constraint(equalTo: self.nameTitleLabel.leadingAnchor),
-            self.dividerView.trailingAnchor.constraint(equalTo: self.nameTextField.trailingAnchor),
-            self.dividerView.heightAnchor.constraint(equalToConstant: 1),
             
             
             
         ])
     }
     
-    private func setupCollectionView() {
-        collectionView.register(SetCell.self, forCellWithReuseIdentifier: SetCell.identifier)
-        collectionView.register(SetCountHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SetCountHeaderView.identifier)
-        collectionView.register(SetDividerFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: SetDividerFooterView.identifier)
-        
-        collectionView.register(DeleteButtonCollectionViewCell.self,forCellWithReuseIdentifier: DeleteButtonCollectionViewCell.identifier)
-        self.view.addSubview(collectionView)
-        
-        
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 14),
-            collectionView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor),
-            
-        ])
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-    }
+    
     func didSelectItem(_ item: Exercise) {
         let routineExerciseSets: [RoutineExerciseSet] = (1...4).map { index in
-            RoutineExerciseSet(order: index, weight: 0, reps: 0)
+            RoutineExerciseSet(order: index, weight: -1, reps: -1)
         }
-        viewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
-        self.collectionView.reloadData()
+        viewModel.routineExecrises.append(RoutineExercise(exercise: item, order: viewModel.routineExecrises.count + 1, sets: routineExerciseSets))
+        self.tableView.reloadData()
         self.viewModel.validateExercise()
-
+        
     }
     
     @objc func doneTapped() {
-        if let text = nameTextField.text {
-            viewModel.routine.name = text
-        }
+
+        
         viewModel.updateRoutine(routine: viewModel.routine, index: index)
         self.navigationController?.popToRootViewController(animated: true)
         
     }
-    
-}
-
-// MARK: CollectionView
-
-extension RoutineEditViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        print(viewModel.routine.exercises.count)
-        return viewModel.routine.exercises.count + 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == viewModel.routine.exercises.count {
-            
-            return 1
-        }
-        
-        
-        return viewModel.routine.exercises[section].sets.count
-        
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print(indexPath.section)
-        
-        if indexPath.section == viewModel.routine.exercises.count {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeleteButtonCollectionViewCell.identifier, for: indexPath) as! DeleteButtonCollectionViewCell
-            cell.delete = {
-                self.viewModel.deleteRoutine(id: self.id)
-                self.navigationController?.popToRootViewController(animated: true)
-            }
-            return cell
-        }
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
-        cell.configure(with: viewModel.routine.exercises[indexPath.section].sets[indexPath.item])
-        cell.change = {
-            self.viewModel.validateExercise()
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if section == viewModel.routine.exercises.count {
-            return CGSize()
-        }
-        return CGSize(width: collectionView.bounds.width, height: 115)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if section == viewModel.routine.exercises.count {
-            return CGSize()
-        }
-        return CGSize(width: collectionView.bounds.width, height: 14)
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if indexPath.section == viewModel.routine.exercises.count {
-            return  CGSize(width: collectionView.bounds.width, height: 44)
-        }
-        return CGSize(width: collectionView.bounds.width, height: 40)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        if indexPath.section != viewModel.routine.exercises.count {
-            if kind == UICollectionView.elementKindSectionFooter {
-                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetDividerFooterView.identifier, for: indexPath) as! SetDividerFooterView
-                return footer
-            }
-            
-            if kind == UICollectionView.elementKindSectionHeader {  // 섹션 헤더에 대한 처리 추가
-                let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: SetCountHeaderView.identifier, for: indexPath) as! SetCountHeaderView
-                header.configure(with: viewModel.routine.exercises[indexPath.section])
-                
-                header.setCountDidChange = { [weak self] newSetCount in
-                    self?.viewModel.updateExerciseSetCount(for: indexPath.section, setCount: newSetCount)
-                    self?.collectionView.reloadSections(IndexSet(integer: indexPath.section))
-                }
-                
-                header.setDelete = {
-                    self.viewModel.deleteExercise(for: indexPath.section)
-                    self.collectionView.reloadData()
-                }
-                return header
-            }
-        }
-        
-        // 기본값으로 빈 UICollectionReusableView 반환 (예외 처리)
-        return UICollectionReusableView()
-    }
-    
     
 }
 
@@ -399,6 +216,247 @@ extension RoutineEditViewController: UISearchResultsUpdating, UISearchController
         }
     }
 }
+
+
+extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let editSection = EditSections(rawValue: section)
+        
+        switch editSection {
+        case .name:
+            return 1
+        case .execrises:
+            return viewModel.routineExecrises.count
+            
+        case .deleteButone:
+            return 1
+        default:
+            return 0
+            
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let editSection = EditSections(rawValue: indexPath.section)
+        
+        switch editSection {
+        case .name:
+            let cell = tableView.dequeueReusableCell(withIdentifier: RoutineEditNameTableViewCell.identifier, for: indexPath) as! RoutineEditNameTableViewCell
+            cell.nameTextField.text = self.viewModel.routine.name
+            cell.nameTextField
+                .textPublisher
+                .receive(on: DispatchQueue.main)
+                .assign(to: \.editNameTextField, on: viewModel)
+                .store(in: &cancellables)
+            
+            cell.nameTextField
+                .textPublisher
+                .receive(on:DispatchQueue.main)
+                .sink { [weak self] text in
+                    guard let self = self else { return }
+                    self.viewModel.routine.name = text
+                }
+                .store(in: &cancellables)
+            
+            
+            Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
+                .map { !$0 && !$1 }
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isValid in
+//                    cell.isValidhidden(isValid: isValid)
+                    self?.viewModel.validateExercise()
+                }
+                .store(in: &cancellables)
+            
+            // 루틴이 이름 존재 할 때
+            viewModel.isRoutineNameMatchingPulisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isValid in
+                    if let text = cell.nameTextField.text {
+                        if isValid && (text != self?.name) {
+                            cell.isValidText(text: "이름이 존재 합니다.",color: .red)
+                        } else if text.isEmpty && (text != self?.name){
+                            cell.isValidText(text: "이름이 비어 있습니다.", color: .red)
+                            
+                        } else if text == self?.name {
+                            cell.isValidText(text: "", color: .clear)
+                            
+                        }
+                        else {
+                            cell.isValidText(text: "사용 가능한 이름 입니다.", color: .green)
+                        }
+                        
+                    }
+                }
+                .store(in: &cancellables)
+            
+            cell.selectionStyle = .none
+            
+            return cell
+        case .execrises:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "selectedExerciseCell", for: indexPath) as! SelectedExerciseCell
+            let exercise = viewModel.routineExecrises[indexPath.row]
+            
+            cell.selectionStyle = .none
+            cell.backgroundColor = .clear
+            cell.configureRoutine(exercise)
+            cell.exerciseIndex = indexPath.row
+            
+            cell.stackView.repsTextFields.enumerated().forEach { i, repsTextField in
+                NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: repsTextField)
+                    .compactMap { ($0.object as? UITextField)?.text }
+                    .sink { text in
+                        self.viewModel.routineExecrises[indexPath.row].sets[i].reps = Int(text) ?? 0
+                        self.viewModel.validateExercise()
+                    }
+                    .store(in: &cancellables)
+            }
+            
+            
+            cell.stackView.weightTextFields.enumerated().forEach { i, weightTextField in
+                NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: weightTextField)
+                    .compactMap { ($0.object as? UITextField)?.text }
+                    .sink { text in
+                        self.viewModel.routineExecrises[indexPath.row].sets[i].weight = Int(text) ?? 0
+                        self.viewModel.validateExercise()
+                    }
+                    .store(in: &cancellables)
+            }
+            
+            cell.setCountDidChange = { [weak self] (newSetCount: Int) in
+                self?.viewModel
+                    .updateExerciseSetCount(
+                        for: indexPath.row, setCount: newSetCount)
+                self?.tableView.reloadRows(at: [indexPath], with: .none)
+            }
+            
+            cell.deleteButtonTapped = { [weak self] in
+                self?.viewModel.deleteExercise(at: indexPath.row)
+            }
+            return cell
+            
+        case .deleteButone:
+            let cell = tableView.dequeueReusableCell(withIdentifier: DeleteButtonCell.identifier, for: indexPath) as! DeleteButtonCell
+            
+            cell.delete = {
+                //                self.viewModel.deleteRoutine(id: self.id)
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+            cell.selectionStyle = .none
+            return cell
+        default:
+            return UITableViewCell()
+            
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let editSection = EditSections(rawValue: indexPath.section)
+        
+        switch editSection {
+        case.name:
+            return UITableView.automaticDimension
+        case.execrises:
+            return UITableView.automaticDimension
+        case.deleteButone:
+            return 50
+        default:
+            return 0
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let editSection = EditSections(rawValue: section)
+        
+        
+        switch editSection {
+        case.name:
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineEditHeader.cellId) as! RoutineEditHeader
+            header.configure(with: "루틴 이름")
+            return header
+        case.execrises:
+            let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: RoutineEditHeader.cellId) as! RoutineEditHeader
+            header.configure(with: "루틴 운동")
+            return header
+        case.deleteButone:
+            return nil
+        default:
+            return nil
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let editSection = EditSections(rawValue: section)
+        
+        switch editSection {
+        case.name, .execrises:
+            return 32
+      
+        case.deleteButone:
+            return 0
+        default:
+            return 0
+        }
+    }
+    
+}
+
+
+// MARK: Drag and Drop Delegate
+extension RoutineEditViewController: UITableViewDragDelegate, UITableViewDropDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let editSection = EditSections(rawValue: indexPath.section)
+        if editSection == .name || editSection == .deleteButone {
+            return []
+        }
+        
+        let dragItem = UIDragItem(itemProvider: NSItemProvider())
+        dragItem.localObject = viewModel.routineExecrises[indexPath.row]
+        return [dragItem]
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if let destinationIndexPath = destinationIndexPath, let editSection = EditSections(rawValue: destinationIndexPath.section) {
+            if editSection == .name || editSection == .deleteButone {
+                return UITableViewDropProposal(operation: .cancel)
+            }
+        }
+        
+        if session.localDragSession != nil {
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if let editSection = EditSections(rawValue: destinationIndexPath.section), editSection == .name || editSection == .deleteButone {
+            return
+        }
+        
+        
+        if let item = coordinator.items.first,
+           let sourceIndexPath = item.sourceIndexPath,
+           let _ = item.dragItem.localObject as? RoutineExercise {
+            viewModel.moveExercise(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+            coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+        }
+    }
+}
+
+
 
 
 extension RoutineEditViewController {
