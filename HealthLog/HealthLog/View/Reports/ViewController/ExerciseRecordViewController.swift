@@ -40,8 +40,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .clear
-        
+        view.backgroundColor = .color1E1E1E
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
                 
@@ -118,6 +117,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "muscle", for: indexPath) as! MuscleImageTableViewCell
             cell.backgroundColor = UIColor(named: "ColorSecondary")
+//            cell.backgroundColor = .color1E1E1E
             cell.selectionStyle = .none
             cell.configureCell(data: reportsVM.bodyPartDataList)
             return cell
@@ -127,10 +127,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 let maxTotalSets = reportsVM.maxTotalSets
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
+//            cell.backgroundColor = .color1E1E1E
                 cell.selectionStyle = .none
                 
                 
-                cell.configureCell(with: data, at: indexPath, maxTotalSets: maxTotalSets)
+            cell.configureCell(with: data, at: indexPath, maxTotalSets: maxTotalSets, index: indexPath.row+1)
                 
                 return cell
             
@@ -176,8 +177,8 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                     return 40
                 }
                 let data = reportsVM.bodyPartDataList[dataIndex]
-                let defaultCellHeight: CGFloat = 45
-                let exerciseViewHeight: CGFloat = 25
+                let defaultCellHeight: CGFloat = 46
+                let exerciseViewHeight: CGFloat = 27
                 
                 if data.isStackViewVisible {
                     let exercisesCount = data.exercises.count
@@ -203,7 +204,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         reportsVM.bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
         
-        tableView.reloadRows(at: [indexPath], with: .fade)
+        //        tableView.reloadRows(at: [indexPath], with: .fade)
+        tableView.beginUpdates()
+        tableView.endUpdates()
     }
     
     

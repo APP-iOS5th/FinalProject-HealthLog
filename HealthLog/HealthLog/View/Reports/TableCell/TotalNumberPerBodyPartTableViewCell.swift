@@ -20,7 +20,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
                     NSLayoutConstraint.activate([
                         exerciseStackView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
                         exerciseStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 80),
+                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 76),
                         exerciseStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -26)
                     ])
                 }
@@ -39,10 +39,20 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         }
     }
     
+    private let indexLabel: UILabel = {
+        let label = UILabel()
+        label.text = "01"
+        label.font = UIFont.font(.pretendardExtraBold, ofSize: 15)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
-        label.font = UIFont.font(.pretendardBold, ofSize: 16)
+        label.font = UIFont.font(.pretendardExtraBold, ofSize: 15)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -66,8 +76,8 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var totalNumberPerBodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "27세트"
-        label.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
-        label.textColor = .colorBBBDBD
+        label.font = UIFont.font(.pretendardBold, ofSize: 15)
+        label.textColor = .white
         label.textAlignment = .left
         return label
     }()
@@ -94,13 +104,14 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        contentView.addSubview(indexLabel)
         contentView.addSubview(bodyPartLabel)
         contentView.addSubview(progressView)
         contentView.addSubview(totalNumberPerBodyPartLabel)
         contentView.addSubview(foldingImage)
         
 
-        
+        indexLabel.translatesAutoresizingMaskIntoConstraints = false
         bodyPartLabel.translatesAutoresizingMaskIntoConstraints = false
         progressView.translatesAutoresizingMaskIntoConstraints = false
         totalNumberPerBodyPartLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -115,32 +126,29 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         progressView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         NSLayoutConstraint.activate([
-            bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
-//            bodyPartLabel.widthAnchor.constraint(equalToConstant: 85),
-            
-            totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            
-            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 11),
-//            totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
-//            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 45),
             
             
-            progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
+            indexLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            indexLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+            indexLabel.widthAnchor.constraint(equalToConstant: 30),
+            
+            bodyPartLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 24),
+            bodyPartLabel.centerYAnchor.constraint(equalTo: indexLabel.centerYAnchor),
+            bodyPartLabel.widthAnchor.constraint(equalToConstant: 80),
+            
             progressView.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
-            progressView.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
+            progressView.centerYAnchor.constraint(equalTo: indexLabel.centerYAnchor),
+            progressView.widthAnchor.constraint(equalToConstant: 60),
+            progressView.heightAnchor.constraint(equalToConstant: 22),
+            
+            totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: progressView.centerYAnchor),
+            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.leadingAnchor, constant: 11),
             
             
-            progressView.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
-            progressView.heightAnchor.constraint(equalToConstant: 10),
-            
-            
-            
-            foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
+            foldingImage.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 20),
+            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            foldingImage.centerYAnchor.constraint(equalTo: indexLabel.centerYAnchor),
             foldingImage.widthAnchor.constraint(equalToConstant: 20)
-            
-            
             
         ])
     }
@@ -163,8 +171,9 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         isStackViewVisibility.toggle()
     }
     
-    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath, maxTotalSets: Int) {
+    func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath, maxTotalSets: Int, index: Int) {
         
+        indexLabel.text = index < 10 ? "0\(index)" : "\(index)"
         bodyPartLabel.text = "\(data.bodyPart)"
         totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
         // 추후 최대 값에 맞출 예정
@@ -180,7 +189,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         
         for exercise in data.exercises {
             let exerciseView = HorizontalDetailStackView()
-            exerciseView.configure(index: index , name: exercise.name, setsCount: exercise.setsCount)
+            exerciseView.configure(name: exercise.name, setsCount: exercise.setsCount)
             exerciseStackView.addArrangedSubview(exerciseView)
             index += 1
         }
@@ -193,7 +202,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
 
 class HorizontalDetailStackView: UIView {
     
-    private let indexLabel = UILabel()
+//    private let indexLabel = UILabel()
     private let nameLabel = UILabel()
     private let setsLabel = UILabel()
     private let stackView = UIStackView()
@@ -209,14 +218,14 @@ class HorizontalDetailStackView: UIView {
     }
     
     private func changeLabelFontAndColor() {
-        indexLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-        indexLabel.textColor = .white
+//        indexLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
+//        indexLabel.textColor = .white
         
-        nameLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-        nameLabel.textColor = .white
+        nameLabel.font = UIFont.font(.pretendardRegular, ofSize: 14)
+        nameLabel.textColor = .colorBBBDBD
         
-        setsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-        setsLabel.textColor = .white
+        setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 14)
+        setsLabel.textColor = .colorBBBDBD
         setsLabel.textAlignment = .right
     }
     
@@ -225,23 +234,23 @@ class HorizontalDetailStackView: UIView {
         
         changeLabelFontAndColor()
         
-        indexLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//        indexLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         setsLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-        indexLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+//        indexLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         setsLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
         
-        stackView.addArrangedSubview(indexLabel)
+//        stackView.addArrangedSubview(indexLabel)
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(setsLabel)
         
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
-        stackView.spacing = 10
+        stackView.spacing = 16
         
         
         
@@ -256,7 +265,7 @@ class HorizontalDetailStackView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            indexLabel.widthAnchor.constraint(equalToConstant: 30), // indexLabel 고정 넓이
+//            indexLabel.widthAnchor.constraint(equalToConstant: 30), // indexLabel 고정 넓이
             nameLabel.widthAnchor.constraint(equalToConstant: 100),
             setsLabel.widthAnchor.constraint(equalToConstant: 60), // setsLabel 고정 넓이
             setsLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
@@ -265,8 +274,8 @@ class HorizontalDetailStackView: UIView {
         
     }
     
-    func configure(index: Int, name: String, setsCount: Int) {
-        indexLabel.text = "\(index)."
+    func configure(name: String, setsCount: Int) {
+//        indexLabel.text = "\(index)."
         nameLabel.text = name
         setsLabel.text = "\(setsCount) 세트"
     }
