@@ -42,7 +42,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
-        label.font = UIFont.font(.pretendardSemiBold, ofSize: 15)
+        label.font = UIFont.font(.pretendardBold, ofSize: 16)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -66,9 +66,9 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var totalNumberPerBodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "27세트"
-        label.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
+        label.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
         label.textColor = .colorBBBDBD
-        label.textAlignment = .right
+        label.textAlignment = .left
         return label
     }()
     
@@ -116,23 +116,28 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 13),
-            bodyPartLabel.widthAnchor.constraint(equalToConstant: 75),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+//            bodyPartLabel.widthAnchor.constraint(equalToConstant: 85),
+            
+            totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
+            
+            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 11),
+//            totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
+//            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 45),
+            
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 13),
+            progressView.leadingAnchor.constraint(equalTo: contentView.centerXAnchor),
+            progressView.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
             
             
             progressView.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
-            totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 13),
-            totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
-            totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 45),
+            
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -13),
+            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
             foldingImage.widthAnchor.constraint(equalToConstant: 20)
             
             
@@ -160,7 +165,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     
     func configureCell(with data: ReportBodyPartData, at indexPath: IndexPath, maxTotalSets: Int) {
         
-        bodyPartLabel.text = data.bodyPart
+        bodyPartLabel.text = "\(data.bodyPart)"
         totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
         // 추후 최대 값에 맞출 예정
         if maxTotalSets > 0 {
