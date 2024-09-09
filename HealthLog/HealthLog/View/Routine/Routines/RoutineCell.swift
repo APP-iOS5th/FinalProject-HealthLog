@@ -21,6 +21,7 @@ class RoutineCell: UITableViewCell {
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 

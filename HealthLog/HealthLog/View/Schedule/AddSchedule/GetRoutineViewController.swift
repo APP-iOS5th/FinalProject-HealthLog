@@ -96,7 +96,7 @@ class GetRoutineViewController: UIViewController {
 // MARK: TableViewDelegate, DataSource
 extension GetRoutineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 170
+        return 160
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
