@@ -33,8 +33,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        //stackView.alignment = .center
-        stackView.distribution = .equalSpacing
         stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -48,6 +46,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         calendar.layer.cornerRadius = 10
         // color of arrows and background of selected date
         calendar.tintColor = .colorAccent
+        calendar.locale = Locale(identifier: "ko_KR")
         calendar.delegate = self
         
         // selected date handler
@@ -117,9 +116,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             label.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             button.widthAnchor.constraint(equalToConstant: 120),
             button.heightAnchor.constraint(equalToConstant: 28),
+            button.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             view.heightAnchor.constraint(equalToConstant: 60),
@@ -137,7 +138,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
 
     lazy var tableView: UITableView = {
         let table = UITableView()
+        table.backgroundColor = .color1E1E1E
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.separatorStyle = .singleLine
         table.dataSource = self
         table.delegate = self
         table.register(ExerciseCheckCell.self, forCellReuseIdentifier: ExerciseCheckCell.identifier)
@@ -165,6 +168,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         setupUI()
         bindViewModel()
+        setupDragAndDrop()
         // 앱 첫 실행 시 오늘 날짜 선택된 상태
         let todayComponents = Calendar.current.dateComponents([.year, .month, .day], from: today)
             
@@ -180,8 +184,13 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
         didUpdateScheduleExercise()
+    }
+    
+    private func setupDragAndDrop() {
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
+        tableView.dragInteractionEnabled = true
     }
     
     private func setupUI() {
@@ -230,7 +239,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
             calendarView.heightAnchor.constraint(equalToConstant: 500),
@@ -257,8 +266,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             
             separatorLine2.heightAnchor.constraint(equalToConstant: 1),
             
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            tableView.topAnchor.constraint(equalTo: separatorLine2.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
         ])
         
         tableViewHeightConstraint =
@@ -309,30 +319,19 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc func didTapSaveRoutine() {
-        if viewModel.selectedDateSchedule != nil {
-            let saveRoutineVC = SaveRoutineViewController(schedule: viewModel.selectedDateSchedule!)
-            let navigationController = UINavigationController(rootViewController: saveRoutineVC)
-            
-            // transparent black background
-            let partialScreenVC = UIViewController()
-            partialScreenVC.modalPresentationStyle = .overFullScreen
-            partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-            
-            partialScreenVC.addChild(navigationController)
-            partialScreenVC.view.addSubview(navigationController.view)
-            
-            navigationController.view.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
-                navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
-                navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
-                navigationController.view.heightAnchor.constraint(equalToConstant: 200),
-            ])
-            
-            navigationController.didMove(toParent: partialScreenVC)
-            
-            present(partialScreenVC, animated: true, completion: nil)
+        guard let schedule = viewModel.selectedDateSchedule else { return }
+        let saveRoutineVC = SaveRoutineViewController(schedule: schedule)
+        saveRoutineVC.modalPresentationStyle = .pageSheet
+        
+        if let sheet = saveRoutineVC.sheetPresentationController {
+            let smallDetent = UISheetPresentationController.Detent.custom { context in
+                return 200
+            }
+            sheet.detents = [smallDetent]
+            sheet.preferredCornerRadius = 32
         }
+        
+        present(saveRoutineVC, animated: true, completion: nil)
     }
     
     private func updateTableView() {
@@ -352,36 +351,21 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             cell.configure(with: scheduleExercise)
             cell.delegate = self
         }
-        
-        cell.addSeparator()
-        
         return cell
     }
     
     func didTapEditExercise(_ exercise: ScheduleExercise) {
         let editExerciseVC = EditScheduleExerciseViewController(scheduleExercise: exercise, selectedDate: selectedDate ?? today)
         editExerciseVC.delegate = self
-        let navigationController = UINavigationController(rootViewController: editExerciseVC)
+        editExerciseVC.modalPresentationStyle = .formSheet
+        editExerciseVC.isModalInPresentation = true
         
-        // transparent black background
-        let partialScreenVC = UIViewController()
-        partialScreenVC.modalPresentationStyle = .overFullScreen
-        partialScreenVC.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        if let sheet = editExerciseVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.preferredCornerRadius = 32
+        }
         
-        partialScreenVC.addChild(navigationController)
-        partialScreenVC.view.addSubview(navigationController.view)
-        
-        navigationController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            navigationController.view.leadingAnchor.constraint(equalTo: partialScreenVC.view.leadingAnchor),
-            navigationController.view.trailingAnchor.constraint(equalTo: partialScreenVC.view.trailingAnchor),
-            navigationController.view.bottomAnchor.constraint(equalTo: partialScreenVC.view.bottomAnchor),
-            navigationController.view.heightAnchor.constraint(equalToConstant: 500),
-        ])
-        
-        navigationController.didMove(toParent: partialScreenVC)
-        
-        present(partialScreenVC, animated: true, completion: nil)
+        present(editExerciseVC, animated: true, completion: nil)
     }
     
     func didToggleExerciseCompletion(_ exercise: ScheduleExercise) {
@@ -471,5 +455,35 @@ extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSin
         updateTableView()
         highlightBodyPartsAtSelectedDate(date)
         updateUIBaseOnSchedule()
+    }
+}
+
+extension ScheduleViewController: UITableViewDropDelegate, UITableViewDragDelegate {
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dragItem = UIDragItem(itemProvider: NSItemProvider())
+        dragItem.localObject = viewModel.selectedDateSchedule?.exercises[indexPath.row]
+        return [dragItem]
+    }
+    
+    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if let item = coordinator.items.first,
+           let sourceIndexPath = item.sourceIndexPath,
+           let _ = item.dragItem.localObject as? ScheduleExercise {
+            
+            viewModel.moveExercise(from: sourceIndexPath.row, to: destinationIndexPath.row)
+            
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+            
+            coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        if session.localDragSession != nil {
+            return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        return UITableViewDropProposal(operation: .cancel, intent: .unspecified)
     }
 }

@@ -41,7 +41,7 @@ class ScheduleViewModel: ObservableObject {
                 print("results.observe - initial")
                 self?.schedules = Array(collection)
             case .update(let collection, _, _, _):
-//                print("results.observe - update")
+                //                print("results.observe - update")
                 self?.schedules = Array(collection)
             case .error(let error):
                 print("results.observe - error: \(error)")
@@ -273,6 +273,24 @@ class ScheduleViewModel: ObservableObject {
         } catch {
             print("Error saving routine: \(error)")
             return false
+        }
+    }
+    func moveExercise(from sourceIndex: Int, to destinationIndex: Int) {
+        guard let schedule = selectedDateSchedule, let realm = realm else { return }
+        
+        do {
+            try realm.write {
+                let exercise = schedule.exercises[sourceIndex]
+                schedule.exercises.remove(at: sourceIndex)
+                schedule.exercises.insert(exercise, at: destinationIndex)
+                
+                for (index, exercise) in schedule.exercises.enumerated() {
+                    exercise.order = index + 1
+                }
+            }
+            selectedDateSchedule = schedule
+        } catch {
+            print("Error moving exercise: \(error.localizedDescription)")
         }
     }
 }
