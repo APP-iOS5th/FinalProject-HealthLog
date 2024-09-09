@@ -114,18 +114,12 @@ class AddScheduleViewController: UIViewController {
         searchController.delegate = self
         searchController.searchBar.showsBookmarkButton = false
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "운동명 검색"
+        searchController.searchBar.placeholder = "운동 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
         searchController.showsSearchResultsController = true
-        
-        if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
-            if let leftView = textField.leftView as? UIImageView {
-                leftView.tintColor = .white
-            }
-        }
         
         navigationItem.searchController = searchController
         definesPresentationContext = true
