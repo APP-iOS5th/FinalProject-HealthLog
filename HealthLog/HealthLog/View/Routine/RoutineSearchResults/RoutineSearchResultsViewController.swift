@@ -136,7 +136,7 @@ class RoutineSearchResultsViewController: UIViewController, SearchResultCellDele
     func didTapButton(in cell: RoutineSearchResultCell) {
         if let indexPath = tableView.indexPath(for: cell) {
             let selectedItem = viewModel.filteredExercises[indexPath.row]
-            print("RoutinSearchReslutView: \(selectedItem)")
+           
             delegate?.didSelectItem(selectedItem)
             dismiss(animated: true, completion: nil)
         }

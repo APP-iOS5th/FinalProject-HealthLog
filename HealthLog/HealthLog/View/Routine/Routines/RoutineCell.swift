@@ -55,14 +55,14 @@ class RoutineCell: UITableViewCell {
         let label = UILabel()
         label.text = "운동 볼륨 : 0 kg"
         label.font = UIFont.font(.pretendardRegular, ofSize: 14)
-        label.textColor = .darkGray
+        label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.color1E1E1E
+        view.backgroundColor = .color767676
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -95,7 +95,7 @@ class RoutineCell: UITableViewCell {
     
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 10, right: 0))
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 13, right: 0))
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -117,12 +117,12 @@ class RoutineCell: UITableViewCell {
         self.contentView.addSubview(addExerciseButton)
         self.bodypartScrollView.addSubview(bodypartStackView)
         
-        let padding: CGFloat = 22
+        let padding: CGFloat = 17
         
         let safeArea = self.contentView.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 13),
+            self.titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 1),
             self.titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
             self.titleLabel.trailingAnchor.constraint(equalTo: addExerciseButton.leadingAnchor),
             
@@ -131,7 +131,7 @@ class RoutineCell: UITableViewCell {
             self.addExerciseButton.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
             self.addExerciseButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             
-            self.dividerView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 14),
+            self.dividerView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
             self.dividerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
             self.dividerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             self.dividerView.heightAnchor.constraint(equalToConstant: 1),
@@ -148,12 +148,13 @@ class RoutineCell: UITableViewCell {
             self.bodypartScrollView.topAnchor.constraint(equalTo: self.exercisesVolumLabel.bottomAnchor,constant: 4),
             self.bodypartScrollView.leadingAnchor.constraint(equalTo: self.exercisesVolumLabel.leadingAnchor),
             self.bodypartScrollView.trailingAnchor.constraint(equalTo: self.exercisesVolumLabel.trailingAnchor),
-            self.bodypartScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -13),
+            self.bodypartScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -1),
             
             self.bodypartStackView.topAnchor.constraint(equalTo: self.bodypartScrollView.topAnchor),
             self.bodypartStackView.leadingAnchor.constraint(equalTo: self.bodypartScrollView.leadingAnchor),
             self.bodypartStackView.trailingAnchor.constraint(equalTo: self.bodypartScrollView.trailingAnchor),
             self.bodypartStackView.bottomAnchor.constraint(equalTo: self.bodypartScrollView.bottomAnchor),
+            self.bodypartScrollView.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     
@@ -162,11 +163,6 @@ class RoutineCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(
-            by: UIEdgeInsets(top: 10, left: 17, bottom: 0, right: 17))
-    }
     
     @objc func buttonTapped() {
         addbutton?()
