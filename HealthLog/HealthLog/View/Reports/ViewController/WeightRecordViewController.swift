@@ -62,9 +62,9 @@ class WeightRecordViewController: UIViewController {
         return label
     }()
     
-    private lazy var weightBox = InfoBoxView(title: "몸무게", value: "84", unit: "kg")
-    private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "84", unit: "kg")
-    private lazy var fatBox = InfoBoxView(title: "체지방률", value: "84", unit: "%")
+    private lazy var weightBox = InfoBoxView(title: "몸무게", value: "0.0", unit: "kg")
+    private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "0.0", unit: "kg")
+    private lazy var fatBox = InfoBoxView(title: "체지방률", value: "0.0", unit: "%")
     
     
     
