@@ -154,6 +154,25 @@ class RoutinesViewController: UIViewController {
         let routineAddNameViewController = RoutineAddNameViewController()
         self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
     }
+    
+    
+    func showToast(message : String, font: UIFont = UIFont.font(.pretendardSemiBold, ofSize: 14.0)) {
+        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-150, width: 150, height: 35))
+            toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+            toastLabel.textColor = UIColor.white
+            toastLabel.font = font
+            toastLabel.textAlignment = .center;
+            toastLabel.text = message
+            toastLabel.alpha = 1.0
+            toastLabel.layer.cornerRadius = 10;
+            toastLabel.clipsToBounds  =  true
+            self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 2, delay: 0.3, options: .curveEaseOut, animations: {
+                 toastLabel.alpha = 0.0
+            }, completion: {(isCompleted) in
+                toastLabel.removeFromSuperview()
+            })
+        }
         
 }
 
@@ -175,7 +194,7 @@ extension RoutinesViewController: UISearchResultsUpdating {
 extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 155
+        return 160
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -187,11 +206,12 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineCell.cellId, for: indexPath) as! RoutineCell
         cell.selectionStyle = .none
-//        cell.configure(with: viewModel.routines[indexPath.row])
+        cell.configure(with: viewModel.routines[indexPath.row])
       
             cell.configure(with: viewModel.filteredRoutines[indexPath.row])
         cell.addbutton = {
             self.viewModel.addScheduleExercise(index: indexPath.row)
+            self.showToast(message: "추가 되었습니다.")
         }
         
         return cell
