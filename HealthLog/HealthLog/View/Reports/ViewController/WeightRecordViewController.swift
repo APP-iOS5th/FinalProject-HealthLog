@@ -34,7 +34,7 @@ class WeightRecordViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("인바디 정보 입력", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .colorSecondary
+        button.backgroundColor = .colorAccent
         button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(inputModalView), for: .touchUpInside)
         
@@ -62,9 +62,9 @@ class WeightRecordViewController: UIViewController {
         return label
     }()
     
-    private lazy var weightBox = InfoBoxView(title: "몸무게", value: "84", unit: "kg")
-    private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "84", unit: "kg")
-    private lazy var fatBox = InfoBoxView(title: "체지방률", value: "84", unit: "%")
+    private lazy var weightBox = InfoBoxView(title: "몸무게", value: "0.0", unit: "kg")
+    private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "0.0", unit: "kg")
+    private lazy var fatBox = InfoBoxView(title: "체지방률", value: "0.0", unit: "%")
     
     
     
@@ -118,15 +118,10 @@ class WeightRecordViewController: UIViewController {
 
         
         NSLayoutConstraint.activate([
-            inbodyinfoButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            inbodyinfoButton.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
-            inbodyinfoButton.widthAnchor.constraint(equalToConstant: 345),
-            inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            inbodyinfoLabel.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 20),
+            inbodyinfoLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             
-            dateinbodyLable.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 23),
+            dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 8),
             
             weightBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
@@ -144,7 +139,12 @@ class WeightRecordViewController: UIViewController {
             fatBox.widthAnchor.constraint(equalToConstant: 94),
             fatBox.heightAnchor.constraint(equalToConstant: 88),
             
-            hostingController!.view.topAnchor.constraint(equalTo: fatBox.bottomAnchor, constant: 12),
+            inbodyinfoButton.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 13),
+            inbodyinfoButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            inbodyinfoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            hostingController!.view.topAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 20),
             hostingController!.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             hostingController!.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             hostingController!.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
