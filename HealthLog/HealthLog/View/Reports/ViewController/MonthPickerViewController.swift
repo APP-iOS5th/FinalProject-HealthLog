@@ -34,7 +34,7 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         button.titleLabel?.textColor = .white
         button.backgroundColor = .colorAccent
         
-        button.layer.cornerRadius = 25
+        button.layer.cornerRadius = 12
         button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         button.translatesAutoresizingMaskIntoConstraints = false

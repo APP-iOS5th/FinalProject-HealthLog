@@ -23,12 +23,17 @@ class MuscleImageTableViewCell: UITableViewCell {
         
         
         NSLayoutConstraint.activate([
-            muscleImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            muscleImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: 13),
+//            muscleImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
+//            muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+//            muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            muscleImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: 13),
             
+            muscleImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            muscleImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             
+            muscleImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
+            muscleImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.8)
+
         ])
         
     }

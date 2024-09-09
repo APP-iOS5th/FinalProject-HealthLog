@@ -250,67 +250,85 @@ class MuscleImageView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             frontMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
-            frontMuscleImage.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            frontMuscleImage.trailingAnchor.constraint(equalTo: self.centerXAnchor),
+            frontMuscleImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.bounds.width * 0.125),
+            frontMuscleImage.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -self.bounds.width * 0.125),
             frontMuscleImage.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
-            backMuscleImage.leadingAnchor.constraint(equalTo: frontMuscleImage.trailingAnchor),
-            backMuscleImage.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            backMuscleImage.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: self.bounds.width * 0.125),
+            backMuscleImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -self.bounds.width * 0.125),
             
             frontMuscleChest.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleChest.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleChest.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleback.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleback.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleback.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleShoulders.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleShoulders.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleShoulders.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleShoulders.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleShoulders.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleShoulders.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleTriceps.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleTriceps.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleTriceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleBiceps.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleBiceps.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleBiceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleAbs.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleAbs.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleAbs.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleQuadriceps.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleQuadriceps.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleQuadriceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleHamstrings.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleHamstrings.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleHamstrings.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleGlutes.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleGlutes.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleGlutes.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleAdductors.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleAdductors.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleAdductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleAdductors.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleAdductors.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleAdductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleAbductors.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleAbductors.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleAbductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleAbductors.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleAbductors.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleAbductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleCalves.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleCalves.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleCalves.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleTrap.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleTrap.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleTrap.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleTrap.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleTrap.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
+            backMuscleTrap.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             frontMuscleForearms.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleForearms.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
+            frontMuscleForearms.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
         ])
     }
     

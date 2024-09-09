@@ -57,7 +57,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         exerciseRecordTableView.translatesAutoresizingMaskIntoConstraints = false
         
-        exerciseRecordTableView.layoutMargins = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+        exerciseRecordTableView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         exerciseRecordTableView.separatorInset = .zero
         // ipad와 같은 넓은 화면에서 테이블 뷰 셀이 전체 화면 너비를 사용하게 됨.
         exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
@@ -201,7 +201,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             if indexPath.row == 0 {
                 return 42
             } else {
-                return 329
+                return 303
             }
         case 1:
             if indexPath.row == 0 {
@@ -250,6 +250,12 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         reportsVM.bodyPartDataList[indexPath.row - 1].isStackViewVisible.toggle()
         
         tableView.reloadRows(at: [indexPath], with: .fade)
+    }
+    
+    
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 0
     }
     
 }
