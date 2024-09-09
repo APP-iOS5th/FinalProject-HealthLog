@@ -34,9 +34,11 @@ class RoutineSearchResultCell: UITableViewCell {
     private lazy var plusButton: UIButton = {
         let button = UIButton(type: .system)
         let config = UIImage.SymbolConfiguration(pointSize: 15, weight: .bold, scale: .large)
-        let plusImage = UIImage(systemName: "plus.square.fill")?.withTintColor(.colorAccent, renderingMode: .alwaysOriginal).withConfiguration(config)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
         button.setImage(plusImage, for: .normal)
+        button.backgroundColor = .colorAccent
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 8
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         

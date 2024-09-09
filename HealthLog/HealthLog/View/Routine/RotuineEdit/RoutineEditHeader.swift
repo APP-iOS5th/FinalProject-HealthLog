@@ -14,8 +14,8 @@ class RoutineEditHeader: UITableViewHeaderFooterView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Section"
-        label.font =  UIFont.font(.pretendardBold, ofSize: 16)
-        label.textColor = .white
+        label.font =  UIFont.font(.pretendardSemiBold, ofSize: 10)
+        label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -33,12 +33,10 @@ class RoutineEditHeader: UITableViewHeaderFooterView {
         
         self.addSubview(titleLabel)
         self.addSubview(divider)
-        let padding:CGFloat = 8
-        
         NSLayoutConstraint.activate([
             self.titleLabel.centerYAnchor.constraint(equalTo: self.safeAreaLayoutGuide.centerYAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor,constant: padding),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
             
             self.divider.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 3),
             self.divider.leadingAnchor.constraint(equalTo: self.titleLabel.leadingAnchor),
