@@ -32,6 +32,8 @@
 		1894013D2C528B2100533E0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1894013C2C528B2100533E0A /* Assets.xcassets */; };
 		18949EF02C82F8670068112A /* InfoBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18949EEF2C82F8670068112A /* InfoBoxView.swift */; };
 		18949F342C86A14A0068112A /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18949F332C86A14A0068112A /* ReportsViewModel.swift */; };
+		18CFC4A52C8F572700FB9D12 /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */; };
+		18CFC4A72C8F5A9D00FB9D12 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */; };
 		18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991232C7C1ACE0007F115 /* MuscleImageView.swift */; };
 		18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */; };
@@ -143,6 +145,8 @@
 		189401412C528B2100533E0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18949EEF2C82F8670068112A /* InfoBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoBoxView.swift; sourceTree = "<group>"; };
 		18949F332C86A14A0068112A /* ReportsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsViewModel.swift; sourceTree = "<group>"; };
+		18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountViewController.swift; sourceTree = "<group>"; };
+		18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		18D991232C7C1ACE0007F115 /* MuscleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleImageView.swift; sourceTree = "<group>"; };
 		18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataTableViewCell.swift; sourceTree = "<group>"; };
 		18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyChartView.swift; sourceTree = "<group>"; };
@@ -280,6 +284,15 @@
 			path = HealthLog;
 			sourceTree = "<group>";
 		};
+		18CFC4A32C8F570C00FB9D12 /* MyAccount */ = {
+			isa = PBXGroup;
+			children = (
+				18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */,
+				18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */,
+			);
+			path = MyAccount;
+			sourceTree = "<group>";
+		};
 		18F4F30E2C8032CD00F2006C /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -376,6 +389,7 @@
 				CEE623B92C6CAAEB00863699 /* Routine */,
 				CEE29BA52C6A026D00D82571 /* Temp */,
 				CEE29B9E2C69D43000D82571 /* Exercise */,
+				18CFC4A32C8F570C00FB9D12 /* MyAccount */,
 				184A589E2C69E42B009F2848 /* Reports */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
 			);
@@ -660,6 +674,7 @@
 				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
 				184A58C32C6C88D0009F2848 /* MostPerformedTableViewCell.swift in Sources */,
+				18CFC4A72C8F5A9D00FB9D12 /* UserInfoView.swift in Sources */,
 				3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */,
 				4B2A2A302C7F0E8E007F5F55 /* RoutineDetailHeaderView.swift in Sources */,
 				CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */,
@@ -696,6 +711,7 @@
 				7566B3212C69AC9800BDF142 /* AddScheduleViewController.swift in Sources */,
 				4B16457B2C69E482008B09C9 /* RoutineAddNameViewController.swift in Sources */,
 				CEE918AE2C741B9D00B8DEF7 /* InputBodyPartButton.swift in Sources */,
+				18CFC4A52C8F572700FB9D12 /* MyAccountViewController.swift in Sources */,
 				7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */,
 				4B2A2A342C804E31007F5F55 /* RoutineEditViewController.swift in Sources */,
 				CEA171BC2C7EF158000EB11A /* entryExercise.swift in Sources */,
