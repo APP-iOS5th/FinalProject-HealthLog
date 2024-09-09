@@ -28,7 +28,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let reportsViewController = ReportsViewController()
         let fourthNC = UINavigationController(rootViewController: reportsViewController)
         
-        let myAccountViewController = MyAccountViewController()
+        
+       
+        let myAccountViewController: MyAccountViewController = {
+            let vc = MyAccountViewController(inBodyInputVM: InBodyInputViewModel())
+            return vc
+        }()
         let fifthNC = UINavigationController(rootViewController: myAccountViewController)
         
         

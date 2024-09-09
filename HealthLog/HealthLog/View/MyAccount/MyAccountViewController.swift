@@ -6,8 +6,25 @@
 //
 
 import UIKit
+import Combine
 
 class MyAccountViewController: UIViewController {
+    
+    private var inBodyInputVM: InBodyInputViewModel
+    private let realm = RealmManager.shared.realm
+    
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(inBodyInputVM: InBodyInputViewModel) {
+        self.inBodyInputVM = inBodyInputVM
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     let userInfoView = UserInfoView()
     
@@ -52,7 +69,11 @@ class MyAccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
         setupUI()
+        setupBindings()
+        updateRecentInbodyDate()
     }
     
     
@@ -163,5 +184,45 @@ class MyAccountViewController: UIViewController {
             sheet.preferredCornerRadius = 32
         }
         present(vc, animated: true, completion: nil)
+    }
+    
+    // MARK: - (youngwoo) Bindings
+    // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
+    private func setupBindings() {
+        
+        // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
+        inBodyInputVM.$inbodyRecords
+            .sink { [weak self] inbodyRecords in
+                guard let self = self else { return }
+                
+                print("Received inbodyRecords: \(inbodyRecords)")
+                if let record = inbodyRecords.first {
+                    self.weightBox.updateValue(
+                        String(format: "%.1f", record.weight))
+                    self.musclesBox.updateValue(
+                        String(format: "%.1f", record.muscleMass))
+                    self.fatBox.updateValue(
+                        String(format: "%.1f", record.bodyFat))
+                }
+                self.updateRecentInbodyDate()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func updateRecentInbodyDate() {
+        guard let realm = realm else {
+            dateinbodyLable.text = ""
+            return
+        }
+        
+        if let recentRecord = realm.objects(InBody.self)
+            .sorted(byKeyPath: "date", ascending: false)
+            .first {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "(yyyy년 MM월 dd일)"
+            dateinbodyLable.text = formatter.string(from: recentRecord.date)
+        } else {
+            dateinbodyLable.text = ""
+        }
     }
 }

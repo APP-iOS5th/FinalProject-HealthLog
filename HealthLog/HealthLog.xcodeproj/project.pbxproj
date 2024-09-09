@@ -34,6 +34,7 @@
 		18949F342C86A14A0068112A /* ReportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18949F332C86A14A0068112A /* ReportsViewModel.swift */; };
 		18CFC4A52C8F572700FB9D12 /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */; };
 		18CFC4A72C8F5A9D00FB9D12 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */; };
+		18CFC4A92C8F620900FB9D12 /* InBodyInputViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CFC4A82C8F620900FB9D12 /* InBodyInputViewModel.swift */; };
 		18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991232C7C1ACE0007F115 /* MuscleImageView.swift */; };
 		18D991252C7C1FEA0007F115 /* ReportBodyPartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC672C65B43500E1D94F /* ReportBodyPartData.swift */; };
 		18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */; };
@@ -147,6 +148,7 @@
 		18949F332C86A14A0068112A /* ReportsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportsViewModel.swift; sourceTree = "<group>"; };
 		18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountViewController.swift; sourceTree = "<group>"; };
 		18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
+		18CFC4A82C8F620900FB9D12 /* InBodyInputViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyInputViewModel.swift; sourceTree = "<group>"; };
 		18D991232C7C1ACE0007F115 /* MuscleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MuscleImageView.swift; sourceTree = "<group>"; };
 		18D991262C7DA7D40007F115 /* NoDataTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataTableViewCell.swift; sourceTree = "<group>"; };
 		18F4F30A2C7EFBBB00F2006C /* InBodyChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InBodyChartView.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 			children = (
 				18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */,
 				18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */,
+				18CFC4A82C8F620900FB9D12 /* InBodyInputViewModel.swift */,
 			);
 			path = MyAccount;
 			sourceTree = "<group>";
@@ -648,6 +651,7 @@
 				184A58B92C6B28DD009F2848 /* WeightRecordViewController.swift in Sources */,
 				4BC4350B2C82FB6900D15717 /* RoutineAddViewModel.swift in Sources */,
 				CEA171B82C7DA311000EB11A /* FunctionInfoPrint.swift in Sources */,
+				18CFC4A92C8F620900FB9D12 /* InBodyInputViewModel.swift in Sources */,
 				CE4779222C7A284500F6DE74 /* ExerciseEntryViewModel.swift in Sources */,
 				18D991272C7DA7D40007F115 /* NoDataTableViewCell.swift in Sources */,
 				CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */,
