@@ -250,13 +250,13 @@ class MuscleImageView: UIView {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             frontMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
-            frontMuscleImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.bounds.width * 0.125),
-            frontMuscleImage.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -self.bounds.width * 0.125),
+            frontMuscleImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.bounds.width * 0.1),
+            frontMuscleImage.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -self.bounds.width * 0.1),
             frontMuscleImage.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
             
             backMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
-            backMuscleImage.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: self.bounds.width * 0.125),
-            backMuscleImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -self.bounds.width * 0.125),
+            backMuscleImage.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: self.bounds.width * 0.1),
+            backMuscleImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -self.bounds.width * 0.1),
             
             frontMuscleChest.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleChest.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),

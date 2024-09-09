@@ -58,8 +58,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.translatesAutoresizingMaskIntoConstraints = false
         
         exerciseRecordTableView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        exerciseRecordTableView.separatorInset = .zero
-        // ipad와 같은 넓은 화면에서 테이블 뷰 셀이 전체 화면 너비를 사용하게 됨.
+        exerciseRecordTableView.separatorInset = UIEdgeInsets(top: 0, left: 13, bottom: 0, right: 13)
         exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
         
         
@@ -121,7 +120,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 cell.configureMuscleCell()
                 return cell
             } else {
@@ -136,7 +134,6 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 cell.configureTotalCell()
                 return cell
             } else {
@@ -145,7 +142,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                
                 
                 cell.configureCell(with: data, at: indexPath, maxTotalSets: maxTotalSets)
                 
@@ -157,14 +154,13 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 let cell = tableView.dequeueReusableCell(withIdentifier: "sectionTitle", for: indexPath) as! SectionTitleTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
                 cell.configureMostPerformCell()
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "mostPerform", for: indexPath) as! MostPerformedTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                
                 cell.configureCell(data: reportsVM.top5Exercises[indexPath.row-1], index: indexPath.row)
                 return cell
             }
@@ -174,13 +170,13 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.configureMostChangedCell()
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "mostChanged", for: indexPath) as! MostChangedTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
-                cell.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+                
                 cell.configureCell(with: reportsVM.top3WeightChangeExercises[indexPath.row-1], index: indexPath.row)
                 return cell
             }

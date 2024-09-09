@@ -42,7 +42,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
-        label.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
+        label.font = UIFont.font(.pretendardSemiBold, ofSize: 15)
         label.textColor = .white
         label.textAlignment = .left
         return label
@@ -53,7 +53,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         view.trackTintColor = UIColor(named: "Color5A5A5A")
         view.progressTintColor = UIColor(named: "ColorAccent")
         view.progress = 0.5
-        // 모서리값 하드코딩 안하는 방법..?
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
         
@@ -113,27 +112,35 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         exerciseStackView.distribution = .equalSpacing
         exerciseStackView.translatesAutoresizingMaskIntoConstraints = false
         
+        progressView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
         NSLayoutConstraint.activate([
             bodyPartLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
-            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 13),
+            bodyPartLabel.widthAnchor.constraint(equalToConstant: 75),
             
             progressView.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
             progressView.leadingAnchor.constraint(equalTo: bodyPartLabel.trailingAnchor, constant: 13),
-            progressView.widthAnchor.constraint(equalToConstant: 120),
+            
+            
+            progressView.widthAnchor.constraint(greaterThanOrEqualToConstant: 60),
             progressView.heightAnchor.constraint(equalToConstant: 10),
             
             totalNumberPerBodyPartLabel.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 14),
+            totalNumberPerBodyPartLabel.leadingAnchor.constraint(equalTo: progressView.trailingAnchor, constant: 13),
             totalNumberPerBodyPartLabel.trailingAnchor.constraint(equalTo: foldingImage.leadingAnchor, constant: -13),
             totalNumberPerBodyPartLabel.widthAnchor.constraint(equalToConstant: 45),
             
             foldingImage.centerYAnchor.constraint(equalTo: bodyPartLabel.centerYAnchor),
-            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -22),
+            foldingImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -13),
             foldingImage.widthAnchor.constraint(equalToConstant: 20)
+            
+            
             
         ])
     }
+    
+    
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
