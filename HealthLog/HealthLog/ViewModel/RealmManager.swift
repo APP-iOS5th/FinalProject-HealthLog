@@ -5,14 +5,14 @@
 //  Created by user on 8/12/24.
 //
 
-import Network
 import RealmSwift
 import Foundation
 
 class RealmManager {
     static let shared = RealmManager()
     private(set) var realm: Realm?
-    //    var bodyParts: Results<BodyPart>
+    var initializeTask: Task<Void, Never>?
+    var asyncTransactionId : AsyncTransactionId?
     
     private init() {
 //        if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
@@ -27,7 +27,7 @@ class RealmManager {
 //        
 //        addInBodySampleData()
         
-        Task{ await self.initializeRealmExerciseImages() }
+        initializeTask = Task{ await self.initializeRealmExerciseImages() }
     }
     
     
@@ -162,6 +162,8 @@ extension RealmManager {
     
     @MainActor
     func initializeRealmExerciseImages() async {
+        defer { initializeTask = nil }
+            
         //        print("initializeRealmExerciseImages")
         guard let realm = realm else { return }
         
@@ -207,16 +209,18 @@ extension RealmManager {
                     let (imageData, _) = try await URLSession.shared.data(from: url)
                     //                    print(imageData)
                     //                    print("image \(index) write realm")
-                    realm.writeAsync {
+                    asyncTransactionId = realm.writeAsync {
                         exerciseImage.image = imageData
                         exerciseImage.urlAccessCount = -1
                     }
+                     // url 하나씩 loop 돌면서 읽으면서 다운받고 writeAsync 비동기로 하나씩 넣고 있습니다.
                     
                 } catch {
                     print("image\(index) 이미지 다운로드 실패: \(error)")
-                    realm.writeAsync {
+                    asyncTransactionId = realm.writeAsync {
                         exerciseImage.urlAccessCount = accessCount + 1
                     }
+//                    asyncTransactionId = nil
                 }
                 
                 //                print("--end exerciseImage \(index) --")
@@ -691,5 +695,12 @@ extension RealmManager {
         }
 //        print()
         return exercises
+    }
+}
+
+extension RealmManager {
+    func cancelInitializeTask() {
+        initializeTask?.cancel() // 현재 실행 중인 Task를 취소
+        initializeTask = nil // Task 객체 초기화
     }
 }

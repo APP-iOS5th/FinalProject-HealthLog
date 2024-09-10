@@ -78,6 +78,22 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideSearchArea))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
+        
+        // MARK: tempButton
+        let tempButton = UIButton(type: .system)
+        let config2 = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .small)
+        let plusImage2 = UIImage(systemName: "arrow.counterclockwise.circle")?
+            .withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        tempButton.setImage(plusImage2, for: .normal)
+        tempButton.backgroundColor = .colorAccent
+        tempButton.frame = CGRect(x: 0, y: 0, width: 28, height: 28)
+        tempButton.layer.cornerRadius = 8
+        tempButton.addAction(UIAction { _ in
+            let vc = DataResetViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }, for: .touchUpInside)
+        let leftBarButton = UIBarButtonItem(customView: tempButton)
+        navigationItem.leftBarButtonItem = leftBarButton
     }
     
     private func setupSearchController() {

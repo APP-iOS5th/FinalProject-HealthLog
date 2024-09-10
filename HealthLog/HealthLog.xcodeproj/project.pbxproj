@@ -82,6 +82,7 @@
 		8D0B39912C7F6B7A004C4863 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1894013E2C528B2100533E0A /* LaunchScreen.storyboard */; };
 		8D0CA37F2C781B9700727F18 /* WeightRecordModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */; };
 		CE1609E52C8AF5B900017D18 /* ExerciseData.csv in Resources */ = {isa = PBXBuildFile; fileRef = CE1609E42C8AF5B900017D18 /* ExerciseData.csv */; };
+		CE3600022C906CC600A7755A /* DataResetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3600012C906CC600A7755A /* DataResetViewController.swift */; };
 		CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */; };
 		CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */; };
 		CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */; };
@@ -194,6 +195,7 @@
 		75D9AF712C90312C00B2DFBB /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
 		8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightRecordModalViewController.swift; sourceTree = "<group>"; };
 		CE1609E42C8AF5B900017D18 /* ExerciseData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ExerciseData.csv; sourceTree = "<group>"; };
+		CE3600012C906CC600A7755A /* DataResetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataResetViewController.swift; sourceTree = "<group>"; };
 		CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesDetailViewController.swift; sourceTree = "<group>"; };
 		CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailViewModel.swift; sourceTree = "<group>"; };
 		CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartStackView.swift; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				18CFC4A42C8F572700FB9D12 /* MyAccountViewController.swift */,
 				18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */,
 				18CFC4A82C8F620900FB9D12 /* InBodyInputViewModel.swift */,
+				CE3600012C906CC600A7755A /* DataResetViewController.swift */,
 			);
 			path = MyAccount;
 			sourceTree = "<group>";
@@ -673,6 +676,7 @@
 				4B403D092C8B3B99004961B9 /* RoutineEditHeader.swift in Sources */,
 				CEE29B8A2C69950900D82571 /* ScheduleViewModel.swift in Sources */,
 				CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */,
+				CE3600022C906CC600A7755A /* DataResetViewController.swift in Sources */,
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */,
 				4B89D3642C6C6C180094C852 /* RoutineSearchResultCell.swift in Sources */,
