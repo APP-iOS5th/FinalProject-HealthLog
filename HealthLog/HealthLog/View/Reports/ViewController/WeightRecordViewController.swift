@@ -62,9 +62,7 @@ class WeightRecordViewController: UIViewController {
         return label
     }()
     
-    private lazy var weightBox = InfoBoxView(title: "몸무게", value: "0.0", unit: "kg")
-    private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "0.0", unit: "kg")
-    private lazy var fatBox = InfoBoxView(title: "체지방률", value: "0.0", unit: "%")
+    private let infoBoxView = InfoBoxView()
     
     
     
@@ -80,7 +78,8 @@ class WeightRecordViewController: UIViewController {
     
     func setupUI() {
         view.backgroundColor = .color1E1E1E
-        
+        view.addSubview(infoBoxView)
+
         // MARK: chartView (SwiftUI) 삽입
         let chartView = InBodyChartView(viewModel: inBodyVM)
         hostingController = UIHostingController(rootView: chartView)
@@ -101,45 +100,29 @@ class WeightRecordViewController: UIViewController {
         contentView.addSubview(inbodyinfoButton)
         contentView.addSubview(inbodyinfoLabel)
         contentView.addSubview(dateinbodyLable)
-        contentView.addSubview(weightBox)
-        contentView.addSubview(musclesBox)
-        contentView.addSubview(fatBox)
         contentView.addSubview(hostingController!.view)
         
         inbodyinfoButton.translatesAutoresizingMaskIntoConstraints = false
         inbodyinfoLabel.translatesAutoresizingMaskIntoConstraints = false
         dateinbodyLable.translatesAutoresizingMaskIntoConstraints = false
-        weightBox.translatesAutoresizingMaskIntoConstraints = false
-        musclesBox.translatesAutoresizingMaskIntoConstraints = false
-        fatBox.translatesAutoresizingMaskIntoConstraints = false
 
 
         hostingController?.view.translatesAutoresizingMaskIntoConstraints = false
 
         
         NSLayoutConstraint.activate([
-            inbodyinfoLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
-            inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+//            inbodyinfoLabel.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
+//            inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             
-            dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
-            dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 8),
+            dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 15),
+            dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 15),
             
-            weightBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
-            weightBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            weightBox.widthAnchor.constraint(equalToConstant: 94),
-            weightBox.heightAnchor.constraint(equalToConstant: 88),
+            infoBoxView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            infoBoxView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            infoBoxView.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 17),
+            infoBoxView.heightAnchor.constraint(equalToConstant: 100),
             
-            musclesBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
-            musclesBox.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            musclesBox.widthAnchor.constraint(equalToConstant: 94),
-            musclesBox.heightAnchor.constraint(equalToConstant: 88),
-            
-            fatBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
-            fatBox.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            fatBox.widthAnchor.constraint(equalToConstant: 94),
-            fatBox.heightAnchor.constraint(equalToConstant: 88),
-            
-            inbodyinfoButton.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 13),
+            inbodyinfoButton.topAnchor.constraint(equalTo: infoBoxView.bottomAnchor, constant: 230),
             inbodyinfoButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             inbodyinfoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
@@ -190,12 +173,11 @@ class WeightRecordViewController: UIViewController {
                 guard let self = self else { return }
                 
                 if let record = inbodyRecords.first {
-                    self.weightBox.updateValue(
-                        String(format: "%.1f", record.weight))
-                    self.musclesBox.updateValue(
-                        String(format: "%.1f", record.muscleMass))
-                    self.fatBox.updateValue(
-                        String(format: "%.1f", record.bodyFat))
+                    self.infoBoxView.updateValues(
+                        weight: Double(record.weight),
+                        muscleMass: Double(record.muscleMass),
+                        bodyFat: Double(record.bodyFat)
+                    )
                 }
                 self.updateRecentInbodyDate()
             }
