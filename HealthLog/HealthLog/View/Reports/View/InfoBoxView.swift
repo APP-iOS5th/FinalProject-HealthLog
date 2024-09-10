@@ -13,9 +13,9 @@ class InfoBoxView: UIView {
     private let fatBoxContentView = InbodyContentView()
     
     func updateValues(weight: Double, muscleMass: Double, bodyFat: Double) {
-        weightBoxContentView.reloadValueLabel(unit: "kg", value: String(format: "%.1f", weight))
-        musclesBoxContentView.reloadValueLabel(unit: "kg", value: String(format: "%.1f", muscleMass))
-        fatBoxContentView.reloadValueLabel(unit: "%", value: String(format: "%.1f", bodyFat))
+        weightBoxContentView.reloadValueLabel(value: String(format: "%.1f", weight))
+        musclesBoxContentView.reloadValueLabel(value: String(format: "%.1f", muscleMass))
+        fatBoxContentView.reloadValueLabel(value: String(format: "%.1f", bodyFat))
     }
     
     init() {
@@ -48,9 +48,9 @@ class InfoBoxView: UIView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15)
         ])
         
-        weightBoxContentView.configure(symbolName: "square.stack.3d.up", title: "몸무게")
-        musclesBoxContentView.configure(symbolName: "scalemass", title: "골격근량")
-        fatBoxContentView.configure(symbolName: "flame", title: "체지방률")
+        weightBoxContentView.configure(symbolName: "square.stack.3d.up", title: "몸무게 [KG]")
+        musclesBoxContentView.configure(symbolName: "scalemass", title: "골격근량 [KG]")
+        fatBoxContentView.configure(symbolName: "flame", title: "체지방률 [%]")
     }
 }
 
@@ -83,10 +83,10 @@ class InbodyContentView: UIView {
         addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 15),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15)
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
         ])
         
         symbolImageContentView.contentMode = .scaleAspectFit
@@ -102,11 +102,10 @@ class InbodyContentView: UIView {
             symbolImageBorderView.centerYAnchor.constraint(equalTo: symbolImageContentView.centerYAnchor),
         ])
         
-        titleLabel.font = UIFont(name: "Pretendard-Bold", size: 15)
+        titleLabel.font = UIFont(name: "Pretendard-Bold", size: 13)
         titleLabel.textColor = .white
         titleLabel.textAlignment = .center
-        titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.minimumScaleFactor = 0.5
+        titleLabel.adjustsFontSizeToFitWidth = false
         
         dividerView.backgroundColor = .color525252
         NSLayoutConstraint.activate([
@@ -125,11 +124,11 @@ class InbodyContentView: UIView {
         imageConfigure(symbolName: symbolName)
     }
     
-    func reloadValueLabel(unit: String, value: String) {
-        valueLabel.attributedText = attributedString(value: value, unit: unit)
+    func reloadValueLabel(value: String) {
+        valueLabel.attributedText = attributedString(value: value)
     }
     
-    private func attributedString(value: String, unit: String) -> NSMutableAttributedString {
+    private func attributedString(value: String) -> NSMutableAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.85
         
@@ -138,14 +137,9 @@ class InbodyContentView: UIView {
             .paragraphStyle: paragraphStyle]
         let valueString = NSAttributedString(string: value, attributes: valueAttributes)
         
-        let kgAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont(name: "Pretendard-Bold", size: 12) ?? UIFont.systemFont(ofSize: 12, weight: .bold)]
-        let kgString = NSAttributedString(string: unit, attributes: kgAttributes)
-        
         let attributedString = NSMutableAttributedString()
         attributedString.append(valueString)
         attributedString.append(NSAttributedString(string: " "))
-        attributedString.append(kgString)
         return attributedString
     }
     
