@@ -13,10 +13,8 @@ import Foundation
 class InBodyChartViewModel: ObservableObject {
     
     @Published var inBodyData: [InBody] = []
-//    @Published var inbodyRecords: [InBody] = []
     
     private var realm: Realm?
-//    private var inputNotificationToken: NotificationToken?
     private var monthNotificationToken: NotificationToken?
     private var cancellables = Set<AnyCancellable>()
     

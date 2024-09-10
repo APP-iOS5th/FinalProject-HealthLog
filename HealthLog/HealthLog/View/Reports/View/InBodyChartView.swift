@@ -69,14 +69,14 @@ struct InBodyChartView: View {
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 4)
                                                 .background(RoundedRectangle(cornerRadius: 4)
-                                                    .fill(Color("ColorAccent").opacity(0.2)))
+                                                    .fill(Color("ColorAccent")))
                                             }
                                         }
                                 }
                                 
                             }
                             .chartXAxis {
-                                AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                                AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                     if let date = value.as(Date.self) {
                                         AxisValueLabel {
                                             Text("\(date, format: .dateTime.day())일")
@@ -117,7 +117,7 @@ struct InBodyChartView: View {
                                 
                             }
                             .chartXAxis {
-                                AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                                AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                     if let date = value.as(Date.self) {
                                         AxisValueLabel {
                                             Text("\(date, format: .dateTime.day())일")
@@ -197,14 +197,14 @@ struct InBodyChartView: View {
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 4)
                                             .background(RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color("ColorAccent").opacity(0.2)))
+                                                .fill(Color("ColorAccent")))
                                         }
                                     }
                             }
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
@@ -245,7 +245,7 @@ struct InBodyChartView: View {
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
@@ -321,14 +321,14 @@ struct InBodyChartView: View {
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 4)
                                             .background(RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color("ColorAccent").opacity(0.2)))
+                                                .fill(Color("ColorAccent")))
                                         }
                                     }
                             }
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
@@ -369,7 +369,7 @@ struct InBodyChartView: View {
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
