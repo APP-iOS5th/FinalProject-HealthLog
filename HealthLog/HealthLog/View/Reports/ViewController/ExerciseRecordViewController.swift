@@ -51,6 +51,10 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
         exerciseRecordTableView.register(MostChangedTableViewCell.self, forCellReuseIdentifier: "mostChanged")
         exerciseRecordTableView.register(NoDataTableViewCell.self, forCellReuseIdentifier: NoDataTableViewCell.identifier)
+        exerciseRecordTableView.register(TotalNumberSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section01")
+        exerciseRecordTableView.register(MostPerformedSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section02")
+        exerciseRecordTableView.register(MostChangedSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section03")
+        
         
         self.view.addSubview(exerciseRecordTableView)
         
@@ -92,11 +96,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return 1
         case 1:
-            return reportsVM.bodyPartDataList.count
+            return reportsVM.bodyPartDataList.count + 1
         case 2:
-            return reportsVM.top5Exercises.count
+            return reportsVM.top5Exercises.count + 1
         case 3:
-            return reportsVM.top3WeightChangeExercises.count
+            return reportsVM.top3WeightChangeExercises.count + 1
         default:
             return 0
         }
@@ -122,37 +126,60 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
             cell.configureCell(data: reportsVM.bodyPartDataList)
             return cell
         case 1:
-            
-                let data = reportsVM.bodyPartDataList[indexPath.row]
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "section01", for: indexPath) as! TotalNumberSectionSubtitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                return cell
+                
+            } else {
+                
+                let data = reportsVM.bodyPartDataList[indexPath.row-1]
                 let maxTotalSets = reportsVM.maxTotalSets
                 let cell = tableView.dequeueReusableCell(withIdentifier: "totalNumber", for: indexPath) as! TotalNumberPerBodyPartTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
-//            cell.backgroundColor = .color1E1E1E
+//                            cell.backgroundColor = .color1E1E1E
                 cell.selectionStyle = .none
                 
                 
-            cell.configureCell(with: data, at: indexPath, maxTotalSets: maxTotalSets, index: indexPath.row+1)
+                cell.configureCell(with: data, at: indexPath, maxTotalSets: maxTotalSets, index: indexPath.row)
                 
                 return cell
-            
+            }
             
         case 2:
-            
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "section02", for: indexPath) as! MostPerformedSectionSubtitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                return cell
+                
+            } else {
+                
                 let cell = tableView.dequeueReusableCell(withIdentifier: "mostPerform", for: indexPath) as! MostPerformedTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 
-                cell.configureCell(data: reportsVM.top5Exercises[indexPath.row], index: indexPath.row + 1)
+                cell.configureCell(data: reportsVM.top5Exercises[indexPath.row-1], index: indexPath.row)
                 return cell
+            }
             
         case 3:
-            
+            if indexPath.row == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "section03", for: indexPath) as! MostChangedSectionSubtitleTableViewCell
+                cell.backgroundColor = UIColor(named: "ColorSecondary")
+                cell.selectionStyle = .none
+                return cell
+                
+            } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "mostChanged", for: indexPath) as! MostChangedTableViewCell
                 cell.backgroundColor = UIColor(named: "ColorSecondary")
                 cell.selectionStyle = .none
                 
-                cell.configureCell(with: reportsVM.top3WeightChangeExercises[indexPath.row], index: indexPath.row + 1)
+                cell.configureCell(with: reportsVM.top3WeightChangeExercises[indexPath.row-1], index: indexPath.row)
                 return cell
+            }
+                
             
         default:
             return UITableViewCell()
@@ -170,13 +197,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         case 0:
             return 303
         case 1:
-            
+            if indexPath.row == 0 {
+                return 35
+            } else {
                 let dataIndex = indexPath.row
-                // 데이터가 없을 경우의 기본 높이
-                guard dataIndex < reportsVM.bodyPartDataList.count else {
-                    return 40
-                }
-                let data = reportsVM.bodyPartDataList[dataIndex]
+                let data = reportsVM.bodyPartDataList[dataIndex-1]
                 let defaultCellHeight: CGFloat = 46
                 let exerciseViewHeight: CGFloat = 27
                 
@@ -187,12 +212,22 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                     return defaultCellHeight
                 }
                 
-            
+            }
             
         case 2:
-            return 40
+            
+            if indexPath.row == 0 {
+                return 35
+            } else {
+                return 45
+            }
+            
         case 3:
-            return 45
+            if indexPath.row == 0 {
+                return 35
+            } else {
+                return 47
+            }
             
         default:
             return 40
@@ -201,10 +236,10 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.section == 1 else {return}
+        guard indexPath.row != 0 else {return}
         
-        reportsVM.bodyPartDataList[indexPath.row].isStackViewVisible.toggle()
-        
-        //        tableView.reloadRows(at: [indexPath], with: .fade)
+        reportsVM.bodyPartDataList[indexPath.row-1].isStackViewVisible.toggle()
+
         tableView.beginUpdates()
         tableView.endUpdates()
     }

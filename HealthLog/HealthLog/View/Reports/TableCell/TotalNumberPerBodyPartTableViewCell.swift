@@ -42,7 +42,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private let indexLabel: UILabel = {
         let label = UILabel()
         label.text = "01"
-        label.font = UIFont.font(.pretendardExtraBold, ofSize: 15)
+        label.font = UIFont.font(.pretendardBold, ofSize: 15)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +52,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private lazy var bodyPartLabel: UILabel = {
         let label = UILabel()
         label.text = "삼두"
-        label.font = UIFont.font(.pretendardExtraBold, ofSize: 15)
+        label.font = UIFont.font(.pretendardBold, ofSize: 15)
         label.textColor = .white
         label.textAlignment = .left
         return label
