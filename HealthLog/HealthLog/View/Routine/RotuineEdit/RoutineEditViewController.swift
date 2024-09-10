@@ -78,7 +78,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.delegate = self
-        searchController.searchBar.placeholder = "운동명 검색"
+        searchController.searchBar.placeholder = "운동 검색"
         searchController.searchResultsUpdater = self
         searchController.showsSearchResultsController = true
         searchController.searchBar.showsBookmarkButton = false
