@@ -62,17 +62,13 @@ class MyAccountViewController: UIViewController {
         return label
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
+       
         setupUI()
         setupBindings()
         updateRecentInbodyDate()
     }
-    
     
     func setupUI() {
         
@@ -84,7 +80,6 @@ class MyAccountViewController: UIViewController {
         scrollView.showsVerticalScrollIndicator = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        
         
         let contentView = UIView()
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -124,35 +119,23 @@ class MyAccountViewController: UIViewController {
                 userInfoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 userInfoView.heightAnchor.constraint(equalToConstant: 80),
                 
-      
-                inbodyinfoLabel.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 13),
-                inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+                inbodyinfoLabel.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 20),
+                inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 13),
                 
-                dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 15),
-                dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 15),
+                dateinbodyLable.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 23),
+                dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 8),
                 
-                infoBoxView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-                infoBoxView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-                infoBoxView.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 17),
-                infoBoxView.heightAnchor.constraint(equalToConstant: 100),
+                infoBoxView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                infoBoxView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+                infoBoxView.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
                 
-                inbodyinfoButton.topAnchor.constraint(equalTo: infoBoxView.bottomAnchor, constant: 230),
+                inbodyinfoButton.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 200),
                 inbodyinfoButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 inbodyinfoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
-                
-                
-                
-                
-                
             ])
     }
-    
-    
-    
-    
-    
-    
+ 
     // MARK: - Actions
     @objc private func inputModalView() {
         let vc = WeightRecordModalViewController()
@@ -181,6 +164,12 @@ class MyAccountViewController: UIViewController {
                             muscleMass: Double(record.muscleMass),
                             bodyFat: Double(record.bodyFat)
                         )
+                    } else {
+                            self.infoBoxView.updateValues(
+                                weight: 0.0,
+                                muscleMass: 0.0,
+                                bodyFat: 0.0
+                            )
                     }
                     self.updateRecentInbodyDate()
                 }
