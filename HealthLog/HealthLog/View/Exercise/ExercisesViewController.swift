@@ -89,24 +89,15 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         
         let searchBar = searchController.searchBar
         searchBar.delegate = self
-        searchBar.showsCancelButton = true
         searchBar.showsBookmarkButton = true // 북마크 버튼
-        searchBar.setImage(UIImage(), for: .search, state: .normal)
-        let clearIconImage = UIImage(systemName: "delete.left")?
-            .withTintColor(.systemGray2, renderingMode: .alwaysOriginal)
-        searchBar.setImage(clearIconImage, for: .clear, state: .normal)
         searchBar.searchBarStyle = .minimal
         searchBar.barStyle = .black
         let attributes = [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
-        let placeHolder = NSAttributedString(string: "운동명 입력", attributes: attributes)
+        let placeHolder = NSAttributedString(string: "운동 검색", attributes: attributes)
         searchBar.searchTextField.attributedPlaceholder = placeHolder
         searchBar.searchTextField.textColor = .white
         
         definesPresentationContext = true
-        
-//        // searchBar Text 변경 - KVO. 오래된 방식이라 조금 위험?
-//        searchBar.setValue("닫기", forKey: "cancelButtonText")
-        
     }
     
     private func setupSearchOptionStackView() {
@@ -123,7 +114,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
     }
     
     func setupDivider() {
-        dividerView.backgroundColor = .color525252
+        dividerView.backgroundColor = .colorSecondary
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(dividerView)
         
@@ -132,10 +123,10 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
                 equalTo: searchOptionStackView.bottomAnchor),
             dividerView.leadingAnchor.constraint(
                 equalTo: view.leadingAnchor,
-                constant: 17),
+                constant: 16),
             dividerView.trailingAnchor.constraint(
                 equalTo: view.trailingAnchor,
-                constant: -17),
+                constant: -16),
             dividerView.heightAnchor.constraint(
                 equalToConstant: 1)
         ])

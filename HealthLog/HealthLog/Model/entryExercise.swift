@@ -15,7 +15,7 @@ class EntryExercise: ObservableObject {
     @Published var bodyParts: [BodyPart] = []
     var recentWeight: Int = 0
     var maxWeight: Int = 0
-    var description: String = ""
+    @Published var description: String = ""
     @Published var images: [Data] = [Data(), Data()]
     
     @Published var isValidatedRequiredFields: Bool = false
