@@ -69,10 +69,10 @@ class ExerciseListCell: UITableViewCell {
                 constant: -20),
             containerView.leadingAnchor.constraint(
                 equalTo: contentView.leadingAnchor,
-                constant: 17),
+                constant: 16),
             containerView.trailingAnchor.constraint(
                 equalTo: contentView.trailingAnchor,
-                constant: -17),
+                constant: -16),
         ])
         
         // MARK: stackView
