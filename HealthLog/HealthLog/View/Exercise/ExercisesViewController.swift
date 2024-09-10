@@ -107,9 +107,9 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
             searchOptionStackView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor),
             searchOptionStackView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor, constant: 13),
+                equalTo: view.leadingAnchor, constant: 16),
             searchOptionStackView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor, constant: -13),
+                equalTo: view.trailingAnchor, constant: -16),
         ])
     }
     
