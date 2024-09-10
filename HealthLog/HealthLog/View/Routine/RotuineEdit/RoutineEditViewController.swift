@@ -78,7 +78,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.delegate = self
-        searchController.searchBar.placeholder = "운동명 검색"
+        searchController.searchBar.placeholder = "운동 검색"
         searchController.searchResultsUpdater = self
         searchController.showsSearchResultsController = true
         searchController.searchBar.showsBookmarkButton = false
@@ -178,8 +178,6 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
-
-        
         viewModel.updateRoutine(routine: viewModel.routine, index: index)
         self.navigationController?.popToRootViewController(animated: true)
         
@@ -263,7 +261,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                 .receive(on:DispatchQueue.main)
                 .sink { [weak self] text in
                     guard let self = self else { return }
-                    self.viewModel.routine.name = text
+                    self.viewModel.routine.name = text.trimmingCharacters(in: .whitespaces)
                 }
                 .store(in: &cancellables)
             
@@ -284,7 +282,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                     if let text = cell.nameTextField.text {
                         if isValid && (text != self?.name) {
                             cell.isValidText(text: "이름이 존재 합니다.",color: .red)
-                        } else if text.isEmpty && (text != self?.name){
+                        } else if text.trimmingCharacters(in: .whitespaces).isEmpty && (text != self?.name){
                             cell.isValidText(text: "이름이 비어 있습니다.", color: .red)
                             
                         } else if text == self?.name {

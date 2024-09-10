@@ -56,7 +56,6 @@ class RoutineEditNameTableViewCell: UITableViewCell {
         self.contentView.addSubview(nameTextField)
         self.contentView.addSubview(nameVaildLabel)
         
-        let padding: CGFloat = 22
         let safeArea = self.contentView.safeAreaLayoutGuide
         
         

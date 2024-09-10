@@ -469,9 +469,11 @@ extension RealmManager {
         return routine
     }
     
-    func updetaRoutine(newRoutine: Routine, index: Int) {
+    func updetaRoutine(newRoutine: Routine, routineExercise: [RoutineExercise], index: Int) {
         guard let realm = realm else { return }
         let oldRoutine = fetchRoutine()[index]
+        newRoutine.exercises.removeAll()
+        newRoutine.exercises.append(objectsIn: routineExercise)
         
         
         do {
