@@ -263,7 +263,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                 .receive(on:DispatchQueue.main)
                 .sink { [weak self] text in
                     guard let self = self else { return }
-                    self.viewModel.routine.name = text
+                    self.viewModel.routine.name = text.trimmingCharacters(in: .whitespaces)
                 }
                 .store(in: &cancellables)
             
@@ -284,7 +284,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                     if let text = cell.nameTextField.text {
                         if isValid && (text != self?.name) {
                             cell.isValidText(text: "이름이 존재 합니다.",color: .red)
-                        } else if text.isEmpty && (text != self?.name){
+                        } else if text.trimmingCharacters(in: .whitespaces).isEmpty && (text != self?.name){
                             cell.isValidText(text: "이름이 비어 있습니다.", color: .red)
                             
                         } else if text == self?.name {
