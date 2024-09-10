@@ -20,7 +20,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
                     NSLayoutConstraint.activate([
                         exerciseStackView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
                         exerciseStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 76),
+                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60),
                         exerciseStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -26)
                     ])
                 }
@@ -29,7 +29,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
             }
             
             updateFoldingImage()
-            
             
             if let tableView = superview as? UITableView {
                 tableView.beginUpdates()
@@ -132,7 +131,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
             indexLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             indexLabel.widthAnchor.constraint(equalToConstant: 30),
             
-            bodyPartLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 24),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 13),
             bodyPartLabel.centerYAnchor.constraint(equalTo: indexLabel.centerYAnchor),
             bodyPartLabel.widthAnchor.constraint(equalToConstant: 80),
             
@@ -175,7 +174,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         
         indexLabel.text = index < 10 ? "0\(index)" : "\(index)"
         bodyPartLabel.text = "\(data.bodyPart)"
-        totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
+        totalNumberPerBodyPartLabel.text = "\(data.totalSets) 세트"
         // 추후 최대 값에 맞출 예정
         if maxTotalSets > 0 {
             progressView.progress = Float(data.totalSets) / Float(maxTotalSets)
@@ -200,6 +199,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     }
 }
 
+
 class HorizontalDetailStackView: UIView {
     
     private let nameLabel = UILabel()
@@ -223,7 +223,7 @@ class HorizontalDetailStackView: UIView {
         
         setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 14)
         setsLabel.textColor = .colorBBBDBD
-        setsLabel.textAlignment = .right
+        setsLabel.textAlignment = .left
     }
     
     
@@ -244,7 +244,7 @@ class HorizontalDetailStackView: UIView {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
-        stackView.spacing = 16
+        stackView.spacing = 8
         
         
         
@@ -259,7 +259,7 @@ class HorizontalDetailStackView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-            nameLabel.widthAnchor.constraint(equalToConstant: 100),
+            nameLabel.widthAnchor.constraint(equalToConstant: 125),
             setsLabel.widthAnchor.constraint(equalToConstant: 60),
             setsLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
@@ -268,7 +268,7 @@ class HorizontalDetailStackView: UIView {
     
     func configure(name: String, setsCount: Int) {
         nameLabel.text = name
-        setsLabel.text = "\(setsCount) 세트"
+        setsLabel.text = "\(setsCount)세트"
     }
 }
 

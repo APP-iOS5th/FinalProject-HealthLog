@@ -56,9 +56,21 @@ class MyInfomationViewController: UIViewController {
         updateRecentInbodyDate()
     }
     
+    
     func setupUI() {
         
-        userInfoView.configure(image: UIImage(systemName: "person.circle.fill"), name: "홍길동")
+        self.title = "내 정보"
+        if let navigationBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = .color1E1E1E
+            appearance.titleTextAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
+            ]
+            appearance.shadowColor = nil
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
         
         self.view.backgroundColor = .color1E1E1E
         
@@ -134,33 +146,49 @@ class MyInfomationViewController: UIViewController {
         }
         present(vc, animated: true, completion: nil)
     }
-
+    
     // MARK: - (youngwoo) Bindings
-        // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
-        private func setupBindings() {
-
-            // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
-            viewModel.$inbodyRecords
-                .sink { [weak self] inbodyRecords in
-                    guard let self = self else { return }
-
-                    if let record = inbodyRecords.first {
-                        self.infoBoxView.updateValues(
-                            weight: Double(record.weight),
-                            muscleMass: Double(record.muscleMass),
-                            bodyFat: Double(record.bodyFat)
-                        )
-                    } else {
-                            self.infoBoxView.updateValues(
-                                weight: 0.0,
-                                muscleMass: 0.0,
-                                bodyFat: 0.0
-                            )
-                    }
-                    self.updateRecentInbodyDate()
+    // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
+    private func setupBindings() {
+        
+        // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
+        viewModel.$inbodyRecords
+            .sink { [weak self] inbodyRecords in
+                guard let self = self else { return }
+                
+                if let record = inbodyRecords.first {
+                    self.infoBoxView.updateValues(
+                        weight: Double(record.weight),
+                        muscleMass: Double(record.muscleMass),
+                        bodyFat: Double(record.bodyFat)
+                    )
+                } else {
+                    self.infoBoxView.updateValues(
+                        weight: 0.0,
+                        muscleMass: 0.0,
+                        bodyFat: 0.0
+                    )
                 }
-                .store(in: &cancellables)
-        }
+                self.updateRecentInbodyDate()
+            }
+            .store(in: &cancellables)
+        
+        
+        viewModel.$daysCount
+            .receive(on: RunLoop.main)
+            .sink { [weak self] count in
+                self?.userInfoView.configure(
+                    image: UIImage(systemName: "person.circle.fill"),
+                    name: "사용자",
+                    days: count)
+            }
+            .store(in: &cancellables)
+    }
+    
+
+    
+    
+    
     
     private func updateRecentInbodyDate() {
         guard let realm = realm else {

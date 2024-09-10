@@ -14,6 +14,7 @@ class UserInfoView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 30
         imageView.clipsToBounds = true
+        imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -69,8 +70,9 @@ class UserInfoView: UIView {
     }
     
     
-    func configure(image: UIImage?, name: String) {
+    func configure(image: UIImage?, name: String, days: Int) {
         profileImageView.image = image
         nameLabel.text = name
+        completionLabel.text = "총 \(days)일 운동 하였습니다."
     }
 }

@@ -290,14 +290,14 @@
 			path = HealthLog;
 			sourceTree = "<group>";
 		};
-		18CFC4A32C8F570C00FB9D12 /* MyAccount */ = {
+		18CFC4A32C8F570C00FB9D12 /* MyInfomation */ = {
 			isa = PBXGroup;
 			children = (
 				18CFC4A42C8F572700FB9D12 /* MyInfomationViewController.swift */,
 				18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */,
 				18CFC4A82C8F620900FB9D12 /* MyInfomationViewModel.swift */,
 			);
-			path = MyAccount;
+			path = MyInfomation;
 			sourceTree = "<group>";
 		};
 		18F4F30E2C8032CD00F2006C /* View */ = {
@@ -395,7 +395,7 @@
 				CEE623B92C6CAAEB00863699 /* Routine */,
 				CEE29BA52C6A026D00D82571 /* Temp */,
 				CEE29B9E2C69D43000D82571 /* Exercise */,
-				18CFC4A32C8F570C00FB9D12 /* MyAccount */,
+				18CFC4A32C8F570C00FB9D12 /* MyInfomation */,
 				184A589E2C69E42B009F2848 /* Reports */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
 			);
