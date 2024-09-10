@@ -79,8 +79,45 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         headerLabel.textColor = .label
         headerLabel.text = self.headerDateFormatter.string(from: Date())
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.isUserInteractionEnabled = true
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHeaderLabel))
+        headerLabel.addGestureRecognizer(tapGesture)
+        
         return headerLabel
     }()
+    
+    @objc private func didTapHeaderLabel() {
+        let currentYear = Calendar.current.component(.year, from: selectedDate ?? Date())
+        let currentMonth = Calendar.current.component(.month, from: selectedDate ?? Date())
+        let yearMonthPickerVC = CalendarPickerViewController(defaultYear: currentYear, defaultMonth: currentMonth)
+        
+        yearMonthPickerVC.yearMonthSelectionHandler = { [weak self] year, month in
+            guard let self = self else { return }
+            
+            var components = DateComponents()
+            components.year = year
+            components.month = month
+            components.day = 1
+            if let newDate = Calendar.current.date(from: components) {
+                self.selectedDate = newDate
+                self.calendarView.select(newDate)
+                self.viewModel.loadSelectedDateSchedule(newDate.toKoreanTime())
+                self.updateTableView()
+                self.highlightBodyPartsAtSelectedDate(newDate)
+                self.updateUIBaseOnSchedule()
+                self.headerLabel.text = self.headerDateFormatter.string(from: newDate)
+                self.calendarView.setCurrentPage(newDate, animated: true)
+            }
+        }
+        
+        yearMonthPickerVC.modalPresentationStyle = .pageSheet
+        if let sheet = yearMonthPickerVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.preferredCornerRadius = 25
+        }
+        self.present(yearMonthPickerVC, animated: true, completion: nil)
+    }
     
     private lazy var leftButton: UIButton = {
         let leftButton = UIButton()
