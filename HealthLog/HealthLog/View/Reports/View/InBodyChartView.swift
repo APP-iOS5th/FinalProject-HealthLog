@@ -17,14 +17,19 @@ struct InBodyChartView: View {
     @State private var fatChartSelection: Date?
     
     var body: some View {
-        VStack{
+        VStack(alignment: .leading){
+            Text("한 달간 인바디 변화")
+                .font(.custom("Pretendard-Black", size: 22))
+                .foregroundStyle(Color.white)
+                
+            Divider()
             // MARK: 몸무게 차트
             VStack(alignment: .leading) {
                 Text("몸무게")
                     .font(.custom("Pretendard-Bold", size: 16))
                     .foregroundStyle(Color.white)
                     .padding(.leading, 12)
-                    .padding(.top, 12)
+                    .padding(.top, 8)
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 15)
