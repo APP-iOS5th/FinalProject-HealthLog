@@ -28,6 +28,8 @@ class MyAccountViewController: UIViewController {
     
     let userInfoView = UserInfoView()
     
+    private let infoBoxView = InfoBoxView()
+    
     private lazy var inbodyinfoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("인바디 정보 입력", for: .normal)
@@ -61,11 +63,6 @@ class MyAccountViewController: UIViewController {
     }()
     
     
-    private lazy var weightBox = InfoBoxView(title: "몸무게", value: "0.0", unit: "kg")
-    private lazy var musclesBox = InfoBoxView(title: "골격근량", value: "0.0", unit: "kg")
-    private lazy var fatBox = InfoBoxView(title: "체지방률", value: "0.0", unit: "%")
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -96,21 +93,17 @@ class MyAccountViewController: UIViewController {
         contentView.addSubview(inbodyinfoButton)
         contentView.addSubview(inbodyinfoLabel)
         contentView.addSubview(dateinbodyLable)
-        contentView.addSubview(weightBox)
-        contentView.addSubview(musclesBox)
-        contentView.addSubview(fatBox)
+        contentView.addSubview(infoBoxView)
         
         contentView.addSubview(userInfoView)
         
         inbodyinfoButton.translatesAutoresizingMaskIntoConstraints = false
         inbodyinfoLabel.translatesAutoresizingMaskIntoConstraints = false
         dateinbodyLable.translatesAutoresizingMaskIntoConstraints = false
-        weightBox.translatesAutoresizingMaskIntoConstraints = false
-        musclesBox.translatesAutoresizingMaskIntoConstraints = false
-        fatBox.translatesAutoresizingMaskIntoConstraints = false
+
         
         userInfoView.translatesAutoresizingMaskIntoConstraints = false
-        
+        infoBoxView.translatesAutoresizingMaskIntoConstraints = false
                 
         NSLayoutConstraint.activate([
                 scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -135,35 +128,22 @@ class MyAccountViewController: UIViewController {
                 inbodyinfoLabel.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 13),
                 inbodyinfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
                 
-
-                dateinbodyLable.topAnchor.constraint(equalTo: userInfoView.bottomAnchor, constant: 13),
-                dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 8),
+                dateinbodyLable.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 15),
+                dateinbodyLable.leadingAnchor.constraint(equalTo: inbodyinfoLabel.trailingAnchor, constant: 15),
                 
-
-                weightBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
-                weightBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-                weightBox.widthAnchor.constraint(equalToConstant: 94),
-                weightBox.heightAnchor.constraint(equalToConstant: 88),
+                infoBoxView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+                infoBoxView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+                infoBoxView.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 17),
+                infoBoxView.heightAnchor.constraint(equalToConstant: 100),
                 
-
-                musclesBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
-                musclesBox.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-                musclesBox.widthAnchor.constraint(equalToConstant: 94),
-                musclesBox.heightAnchor.constraint(equalToConstant: 88),
-                
-
-                fatBox.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
-                fatBox.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-                fatBox.widthAnchor.constraint(equalToConstant: 94),
-                fatBox.heightAnchor.constraint(equalToConstant: 88),
-                
-
-                inbodyinfoButton.topAnchor.constraint(equalTo: weightBox.bottomAnchor, constant: 13),
+                inbodyinfoButton.topAnchor.constraint(equalTo: infoBoxView.bottomAnchor, constant: 230),
                 inbodyinfoButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 inbodyinfoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
                 
-
+                
+                
+                
                 
             ])
     }
@@ -185,29 +165,27 @@ class MyAccountViewController: UIViewController {
         }
         present(vc, animated: true, completion: nil)
     }
-    
+
     // MARK: - (youngwoo) Bindings
-    // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
-    private func setupBindings() {
-        
-        // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
-        inBodyInputVM.$inbodyRecords
-            .sink { [weak self] inbodyRecords in
-                guard let self = self else { return }
-                
-                print("Received inbodyRecords: \(inbodyRecords)")
-                if let record = inbodyRecords.first {
-                    self.weightBox.updateValue(
-                        String(format: "%.1f", record.weight))
-                    self.musclesBox.updateValue(
-                        String(format: "%.1f", record.muscleMass))
-                    self.fatBox.updateValue(
-                        String(format: "%.1f", record.bodyFat))
+        // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
+        private func setupBindings() {
+
+            // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
+            inBodyInputVM.$inbodyRecords
+                .sink { [weak self] inbodyRecords in
+                    guard let self = self else { return }
+
+                    if let record = inbodyRecords.first {
+                        self.infoBoxView.updateValues(
+                            weight: Double(record.weight),
+                            muscleMass: Double(record.muscleMass),
+                            bodyFat: Double(record.bodyFat)
+                        )
+                    }
+                    self.updateRecentInbodyDate()
                 }
-                self.updateRecentInbodyDate()
-            }
-            .store(in: &cancellables)
-    }
+                .store(in: &cancellables)
+        }
     
     private func updateRecentInbodyDate() {
         guard let realm = realm else {

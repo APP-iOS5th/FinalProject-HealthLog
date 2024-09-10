@@ -97,7 +97,7 @@ class ExerciseCheckCell: UITableViewCell {
             setsContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             setsContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             setsContainer.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            setsContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
+            setsContainer.heightAnchor.constraint(greaterThanOrEqualToConstant: 37),
         ])
     }
     
@@ -122,34 +122,22 @@ class ExerciseCheckCell: UITableViewCell {
         exerciseEditButton.addTarget(self, action: #selector(editExercise), for: .touchUpInside)
         
         checkboxButton.isSelected = scheduleExercise.isCompleted
-        [exerciseEditButton, checkboxButton].forEach {
-            $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-            $0.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        }
-        let stackView = UIStackView(arrangedSubviews: [
-            exerciseEditButton, checkboxButton
-        ])
-        
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 15
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        exerciseEditContainer.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: exerciseEditContainer.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: exerciseEditContainer.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor),
-            
-            stackView.heightAnchor.constraint(equalToConstant: 24),
-            
-            exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
-            checkboxButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
-            checkboxButton.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
-        ])
+        exerciseEditContainer.addSubview(exerciseEditButton)
+                exerciseEditContainer.addSubview(checkboxButton)
+
+                NSLayoutConstraint.activate([
+                    exerciseEditButton.leadingAnchor.constraint(equalTo: exerciseEditContainer.leadingAnchor),
+                    exerciseEditButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
+                    exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
+                    exerciseEditButton.heightAnchor.constraint(equalToConstant: 24),
+
+                    checkboxButton.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
+                    checkboxButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
+                    checkboxButton.widthAnchor.constraint(equalToConstant: 28),
+                    checkboxButton.heightAnchor.constraint(equalToConstant: 28),
+
+                    exerciseEditContainer.heightAnchor.constraint(equalToConstant: 28)
+                ])
     }
     
     private func createSetView(set: ScheduleExerciseSet) -> UIView {
@@ -197,13 +185,14 @@ class ExerciseCheckCell: UITableViewCell {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 12),
+            stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -12),
-            stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackView.heightAnchor.constraint(equalToConstant: 37),
             
             setNumber.trailingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 46),
+            setNumber.centerYAnchor.constraint(equalTo: stackView.centerYAnchor),
             
             weightLabel.trailingAnchor.constraint(equalTo: repsLabel.trailingAnchor, constant: -80),
             weightLabel.topAnchor.constraint(equalTo: setNumber.topAnchor),
@@ -215,8 +204,6 @@ class ExerciseCheckCell: UITableViewCell {
             checkboxBtn.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
             checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
-            
-            view.heightAnchor.constraint(equalToConstant: 37),
         ])
 
         return view

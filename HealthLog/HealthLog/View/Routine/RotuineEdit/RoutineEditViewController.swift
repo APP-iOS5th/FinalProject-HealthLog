@@ -41,7 +41,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero,style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
@@ -57,6 +57,9 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         tableView.dragDelegate = self
         tableView.dropDelegate = self
         tableView.dragInteractionEnabled = true
+        tableView.sectionHeaderTopPadding = 0
+        tableView.sectionFooterHeight = 0
+        
         
         return tableView
     }()
@@ -345,7 +348,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: DeleteButtonCell.identifier, for: indexPath) as! DeleteButtonCell
             
             cell.delete = {
-                //                self.viewModel.deleteRoutine(id: self.id)
+                self.viewModel.deleteRoutine(id: self.id)
                 self.navigationController?.popToRootViewController(animated: true)
             }
             cell.selectionStyle = .none

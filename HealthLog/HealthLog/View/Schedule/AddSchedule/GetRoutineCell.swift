@@ -18,7 +18,7 @@ class GetRoutineCell: UITableViewCell {
         label.font = UIFont.font(.pretendardBold, ofSize: 20)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -57,7 +57,7 @@ class GetRoutineCell: UITableViewCell {
     
     private lazy var dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.color1E1E1E
+        view.backgroundColor = .color767676
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -99,13 +99,13 @@ class GetRoutineCell: UITableViewCell {
         self.contentView.addSubview(addExerciseButton)
         self.bodypartScrollView.addSubview(bodypartStackView)
         
-        let padding: CGFloat = 22
+        let padding: CGFloat = 17
         let safeArea = self.contentView.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 13),
+            self.titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 15),
             self.titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
-            self.titleLabel.trailingAnchor.constraint(equalTo: addExerciseButton.leadingAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: addExerciseButton.leadingAnchor, constant: -10),
             
             
             self.addExerciseButton.topAnchor.constraint(equalTo: self.titleLabel.topAnchor),
@@ -128,7 +128,7 @@ class GetRoutineCell: UITableViewCell {
             self.bodypartScrollView.topAnchor.constraint(equalTo: self.exercisesVolumLabel.bottomAnchor,constant: 4),
             self.bodypartScrollView.leadingAnchor.constraint(equalTo: self.exercisesVolumLabel.leadingAnchor),
             self.bodypartScrollView.trailingAnchor.constraint(equalTo: self.exercisesVolumLabel.trailingAnchor),
-            self.bodypartScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -13),
+            self.bodypartScrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -10),
             
             self.bodypartStackView.topAnchor.constraint(equalTo: self.bodypartScrollView.topAnchor),
             self.bodypartStackView.leadingAnchor.constraint(equalTo: self.bodypartScrollView.leadingAnchor),

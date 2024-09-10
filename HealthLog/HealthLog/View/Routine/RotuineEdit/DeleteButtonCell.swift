@@ -12,7 +12,7 @@ class DeleteButtonCell: UITableViewCell {
     var delete: (() -> Void)?
     private lazy var deleteButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
-        configuration.title = "삭제"
+        configuration.title = "루틴 삭제"
         configuration.baseForegroundColor = .red
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 11, leading: 0, bottom: 11, trailing: 0)
         configuration.attributedTitle?.font = UIFont.font(.pretendardBold, ofSize: 14)
@@ -40,8 +40,8 @@ class DeleteButtonCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             self.deleteButton.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
-            self.deleteButton.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor, constant: 24),
-            self.deleteButton.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            self.deleteButton.leadingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.leadingAnchor),
+            self.deleteButton.trailingAnchor.constraint(equalTo: self.contentView.safeAreaLayoutGuide.trailingAnchor),
             self.deleteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
         
         ])

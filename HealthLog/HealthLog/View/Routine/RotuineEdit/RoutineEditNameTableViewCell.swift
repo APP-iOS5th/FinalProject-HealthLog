@@ -24,10 +24,15 @@ class RoutineEditNameTableViewCell: UITableViewCell {
     lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.borderStyle = .roundedRect
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 10
         textField.backgroundColor = .color2F2F2F
         // 더 좋은 방법 있으면 수정
-        textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        textField.leftViewMode = .always
+        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        textField.rightViewMode = .always
+        textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray, NSAttributedString.Key.font: UIFont.font(.pretendardRegular, ofSize: 14)])
         textField.textColor = .white
         textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
         textField.autocorrectionType = .no
@@ -56,9 +61,10 @@ class RoutineEditNameTableViewCell: UITableViewCell {
         
         
         NSLayoutConstraint.activate([
-            self.nameTextField.topAnchor.constraint(equalTo: safeArea.topAnchor,constant: 13),
-            self.nameTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,constant: padding),
-            self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
+            self.nameTextField.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.nameTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            self.nameTextField.heightAnchor.constraint(equalToConstant: 44),
             
             self.nameVaildLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor,constant: 3),
             self.nameVaildLabel.leadingAnchor.constraint(equalTo: self.nameTextField.leadingAnchor),

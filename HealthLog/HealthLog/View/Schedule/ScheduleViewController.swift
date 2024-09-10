@@ -33,7 +33,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = 20
+        //stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -72,11 +72,20 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var exerciseVolumeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "오늘의 볼륨량: \(viewModel.selectedDateExerciseVolume) kg"
+        label.text = "오늘의 볼륨량"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    //    lazy var volumeLabel: UILabel = {
+    //        let label = UILabel()
+    //        label.textColor = .white
+    //        label.text = "\(viewModel.selectedDateExerciseVolume) kg"
+    //        label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+    //        label.translatesAutoresizingMaskIntoConstraints = false
+    //        return label
+    //    }()
     
     lazy var separatorLine1: UIView = {
         let view = UIView()
@@ -93,7 +102,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.textColor = .white
         label.text = "오늘 할 운동"
         label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-        label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         let button = UIButton(type: .system)
@@ -105,27 +113,19 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         button.addTarget(self, action: #selector(didTapSaveRoutine), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
-        let stackView = UIStackView(arrangedSubviews: [label, button])
-        stackView.axis = .horizontal
-        stackView.spacing = 12
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(stackView)
+        view.addSubview(label)
+        view.addSubview(button)
         
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: 120),
-            button.heightAnchor.constraint(equalToConstant: 28),
-            button.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            view.heightAnchor.constraint(equalToConstant: 60),
+            button.heightAnchor.constraint(equalToConstant: 28)
         ])
-
+        
         return view
     }()
     
@@ -135,7 +135,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
+    
     lazy var tableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = .color1E1E1E
@@ -158,8 +158,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         viewModel.$selectedDateExerciseVolume
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] volume in
-                self?.exerciseVolumeLabel.text = "오늘의 볼륨량: \(volume) kg"
+            .sink { [weak self] _ in
+                self?.exerciseVolumeLabel.text = "오늘의 볼륨량"
             }
             .store(in: &cancellables)
     }
@@ -171,7 +171,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         setupDragAndDrop()
         // 앱 첫 실행 시 오늘 날짜 선택된 상태
         let todayComponents = Calendar.current.dateComponents([.year, .month, .day], from: today)
-            
+        
         if let selection = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
             selection.setSelected(todayComponents, animated: false)
         }
@@ -207,7 +207,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         button.addTarget(self, action: #selector(addSchedule), for: .touchUpInside)
         
         let barButtonItem = UIBarButtonItem(customView: button)
-                
+        
         navigationItem.rightBarButtonItem = barButtonItem
         
         self.navigationController?.setupBarAppearance()
@@ -216,63 +216,69 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         view.backgroundColor = .color1E1E1E
         
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        contentView.addArrangedSubview(calendarView)
-        contentView.addArrangedSubview(addExerciseButton)
-        contentView.addArrangedSubview(exerciseVolumeLabel)
-        contentView.addArrangedSubview(separatorLine1)
-        contentView.addArrangedSubview(muscleImageView)
-        contentView.addArrangedSubview(labelContainer)
-        contentView.addArrangedSubview(separatorLine2)
-        contentView.addArrangedSubview(tableView)
-        
-        let safeArea = view.safeAreaLayoutGuide
-        
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
-            calendarView.heightAnchor.constraint(equalToConstant: 500),
-            calendarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            calendarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            
-            addExerciseButton.leadingAnchor.constraint(equalTo: calendarView.leadingAnchor),
-            addExerciseButton.trailingAnchor.constraint(equalTo: calendarView.trailingAnchor),
-            addExerciseButton.heightAnchor.constraint(equalToConstant: 44),
-            
-            exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
-            exerciseVolumeLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            exerciseVolumeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
-            separatorLine1.heightAnchor.constraint(equalToConstant: 1),
-            
-            muscleImageView.heightAnchor.constraint(equalToConstant: 300),
-            muscleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            muscleImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
-            
-            labelContainer.heightAnchor.constraint(equalToConstant: 30),
-            labelContainer.widthAnchor.constraint(equalToConstant: 207),
-            labelContainer.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            
-            separatorLine2.heightAnchor.constraint(equalToConstant: 1),
-            
-            tableView.topAnchor.constraint(equalTo: separatorLine2.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
-        ])
+                scrollView.addSubview(calendarView)
+                scrollView.addSubview(addExerciseButton)
+                scrollView.addSubview(labelContainer)
+                scrollView.addSubview(separatorLine2)
+                scrollView.addSubview(contentView)
+                contentView.addArrangedSubview(tableView)
+                scrollView.addSubview(exerciseVolumeLabel)
+                scrollView.addSubview(separatorLine1)
+                scrollView.addSubview(muscleImageView)
+                
+                let safeArea = view.safeAreaLayoutGuide
+                NSLayoutConstraint.activate([
+                    scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+                    scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+                    scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+                    scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+                    
+                    calendarView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
+                    calendarView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+                    calendarView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+                    calendarView.heightAnchor.constraint(equalToConstant: 500),
+                    
+                    addExerciseButton.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
+                    addExerciseButton.leadingAnchor.constraint(equalTo: calendarView.leadingAnchor),
+                    addExerciseButton.trailingAnchor.constraint(equalTo: calendarView.trailingAnchor),
+                    addExerciseButton.heightAnchor.constraint(equalToConstant: 44),
+                    
+                    labelContainer.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
+                    labelContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+                    labelContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+                    labelContainer.heightAnchor.constraint(equalToConstant: 30),
+                    
+                    separatorLine2.topAnchor.constraint(equalTo: labelContainer.bottomAnchor, constant: 15),
+                    separatorLine2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+                    separatorLine2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+                    separatorLine2.heightAnchor.constraint(equalToConstant: 1),
+                    
+                    contentView.topAnchor.constraint(equalTo: separatorLine2.bottomAnchor),
+                    contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
+                    contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+                    contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
+                    
+                    exerciseVolumeLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 20),
+                    exerciseVolumeLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+                    exerciseVolumeLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+                    exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
+                    
+                    separatorLine1.topAnchor.constraint(equalTo: exerciseVolumeLabel.bottomAnchor, constant: 15),
+                    separatorLine1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+                    separatorLine1.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+                    separatorLine1.heightAnchor.constraint(equalToConstant: 1),
+                    
+                    muscleImageView.topAnchor.constraint(equalTo: separatorLine1.bottomAnchor, constant: 20),
+                    muscleImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+                    muscleImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+                    muscleImageView.heightAnchor.constraint(equalToConstant: 300),
+                    muscleImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -40)
+                ])
         
         tableViewHeightConstraint =
-        tableView.heightAnchor.constraint(equalToConstant: 100)
+        tableView.heightAnchor.constraint(equalToConstant: 200)
         tableViewHeightConstraint?.isActive = true
         
         // check if no schedule
@@ -305,10 +311,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func updateTableViewHeight() {
-            tableView.layoutIfNeeded()
-            let height = self.tableView.contentSize.height
-            tableViewHeightConstraint?.constant = height
-            view.layoutIfNeeded()
+        tableView.layoutIfNeeded()
+        let height = self.tableView.contentSize.height
+        tableViewHeightConstraint?.constant = height
+        view.layoutIfNeeded()
     }
     
     @objc func addSchedule() {
@@ -376,7 +382,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func didUpdateScheduleExercise() {
-
+        
         // MARK: 영우 - loadSelectedDateSchedule의 selectedDate, today를 한국시간으로
         viewModel.loadSelectedDateSchedule((selectedDate ?? today).toKoreanTime())
         let calendar = Calendar.current

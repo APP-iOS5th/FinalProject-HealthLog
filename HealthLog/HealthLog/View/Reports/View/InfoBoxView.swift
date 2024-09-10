@@ -6,76 +6,216 @@
 //
 
 import UIKit
+import Combine
 
 // MARK: - InfoBox
 class InfoBoxView: UIView {
-    private let titleLabel: UILabel
-    private let valueLabel: UILabel
-    private let unitLabel: UILabel
+    private let stackView = UIStackView()
+    private let inbodyLabel = UILabel()
+    private let inbodyStackView = UIStackView()
+    private let weightBoxContentStackView = InbodyContentStackView()
+    private let musclesBoxContentStackView = InbodyContentStackView()
+    private let fatBoxContentStackView = InbodyContentStackView()
     
-    init(title: String, value: String, unit: String) {
-        titleLabel = UILabel()
-        valueLabel = UILabel()
-        unitLabel = UILabel()
-        
+    func updateValues(weight: Double, muscleMass: Double, bodyFat: Double) {
+        weightBoxContentStackView.reloadValueLabel(unit: "kg", value: String(format: "%.1f", weight))
+        musclesBoxContentStackView.reloadValueLabel(unit: "kg", value: String(format: "%.1f", muscleMass))
+        fatBoxContentStackView.reloadValueLabel(unit: "%", value: String(format: "%.1f", bodyFat))
+    }
+    init() {
         super.init(frame: .zero)
-        
-        setupView(title: title, value: value, unit: unit)
-    }
-    required init(coder: NSCoder) {
-        fatalError("init(coder:)")
+        setupInfoBoxGroup()
     }
     
-    private func setupView(title: String, value: String, unit: String) {
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupInfoBoxGroup()
+    }
+    
+    func setupInfoBoxGroup() {
         backgroundColor = .color2F2F2F
         layer.cornerRadius = 7
         
-        titleLabel.text = title
-        titleLabel.textColor = .white
-        titleLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 14)
-        titleLabel.textAlignment = .center
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.spacing = 15
+        stackView.alignment = .fill
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(
+            top: 13, left: 30, bottom: 13, right: 30)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stackView)
         
-        let dividerView = UIView()
-        dividerView.backgroundColor = .color3E3E3E
+        inbodyLabel.text = "  최근 인바디 정보"
+        inbodyLabel.textColor = .white
+        inbodyLabel.font = UIFont(name: "Pretendard-Bold", size: 16)
+        stackView.addArrangedSubview(inbodyLabel)
         
-        valueLabel.text = value
-        valueLabel.textColor = .white
-        valueLabel.font = UIFont.font(.pretendardBold, ofSize: 25)
-        valueLabel.textAlignment = .center
+        inbodyStackView.axis = .horizontal
+        inbodyStackView.alignment = .center
+        inbodyStackView.distribution = .fillEqually
+        inbodyStackView.spacing = 15
+        inbodyStackView.layer.cornerRadius = 10
+        inbodyStackView.clipsToBounds = true
+        inbodyStackView.isLayoutMarginsRelativeArrangement = true
+        inbodyStackView.layoutMargins = UIEdgeInsets(
+            top: 15, left: 15, bottom: 15, right: 15)
+        inbodyStackView.backgroundColor = .color3E3E3E
+        stackView.addArrangedSubview(inbodyStackView)
         
-        unitLabel.text = unit
-        unitLabel.textColor = .white
-        unitLabel.font = UIFont.font(.pretendardRegular, ofSize: 12)
-        unitLabel.textAlignment = .center
+        weightBoxContentStackView
+            .configure(symbolName: "square.stack.3d.up", title: "몸무게")
+        inbodyStackView.addArrangedSubview(weightBoxContentStackView)
         
-        addSubview(titleLabel)
-        addSubview(dividerView)
-        addSubview(valueLabel)
-        addSubview(unitLabel)
+        musclesBoxContentStackView
+            .configure(symbolName: "scalemass", title: "골격근량")
+        inbodyStackView.addArrangedSubview(musclesBoxContentStackView)
         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
-        unitLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 13),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            dividerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            dividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            dividerView.heightAnchor.constraint(equalToConstant: 1),
-            
-            valueLabel.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 8),
-            valueLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            unitLabel.leadingAnchor.constraint(equalTo: valueLabel.trailingAnchor, constant: 2),
-            unitLabel.bottomAnchor.constraint(equalTo: valueLabel.bottomAnchor, constant: -3),
-        ])
+        fatBoxContentStackView
+            .configure(symbolName: "flame", title: "체지방률")
+        inbodyStackView.addArrangedSubview(fatBoxContentStackView)
     }
     
-    func updateValue(_ newValue: String) {
-        valueLabel.text = newValue
+    
+    // MARK: - InbodyContentStackView
+    private class InbodyContentStackView: UIStackView {
+        
+        // MARK: Properties
+        
+        private let symbolImageContentView = UIImageView()
+        private let symbolImageBorderView = UIImageView()
+        private let titleLabel = UILabel()
+        private let dividerView = UIView()
+        private let valueLabel = UILabel()
+        
+        // MARK: Initializers
+        
+        init() {
+            super.init(frame: .zero)
+            setupUI()
+        }
+        
+        required init(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        // MARK: Setup
+        
+        private func setupUI() {
+            axis = .vertical
+            alignment = .center
+            spacing = 9
+            distribution = .equalSpacing
+            layer.cornerRadius = 10
+            clipsToBounds = true
+            isLayoutMarginsRelativeArrangement = true
+            layoutMargins = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+            backgroundColor = .color2F2F2F
+            
+            // MARK: symbolImageView
+            symbolImageContentView.contentMode = .scaleAspectFit
+            symbolImageContentView.tintColor = .colorAccent
+            addArrangedSubview(symbolImageContentView)
+            
+            symbolImageBorderView.contentMode = .scaleAspectFit
+            symbolImageBorderView.tintColor = .white
+            symbolImageContentView.addSubview(symbolImageBorderView)
+            symbolImageBorderView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                symbolImageBorderView.centerXAnchor.constraint(
+                    equalTo: symbolImageContentView.centerXAnchor),
+                symbolImageBorderView.centerYAnchor.constraint(
+                    equalTo: symbolImageContentView.centerYAnchor),
+            ])
+            
+            
+            // MARK: titleLabel
+            titleLabel.font = UIFont(name: "Pretendard-Bold", size: 15)
+            titleLabel.textColor = .white
+            titleLabel.textAlignment = .center
+            titleLabel.adjustsFontSizeToFitWidth = true
+            titleLabel.minimumScaleFactor = 0.5
+            addArrangedSubview(titleLabel)
+            
+            // MARK: dividerView
+            dividerView.backgroundColor = .color525252
+            addArrangedSubview(dividerView)
+            dividerView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                dividerView.heightAnchor.constraint(
+                    equalToConstant: 1),
+                dividerView.widthAnchor.constraint(
+                    equalTo: widthAnchor, constant: -20),
+            ])
+            
+            // MARK: valueLabel
+            valueLabel.textColor = .white
+            valueLabel.textAlignment = .center
+            valueLabel.adjustsFontSizeToFitWidth = true
+            valueLabel.minimumScaleFactor = 0.7
+            valueLabel.translatesAutoresizingMaskIntoConstraints = false
+            addArrangedSubview(valueLabel)
+        }
+        
+        func configure(symbolName: String, title: String) {
+            titleLabel.text = title
+            imageConfigure(symbolName: symbolName)
+        }
+        
+        func reloadValueLabel(unit: String, value: String) {
+            valueLabel.attributedText = attributedString(value: value, unit: unit)
+        }
+        
+        // MARK: Sub Methods
+        
+        private func attributedString(value: String, unit: String) -> NSMutableAttributedString {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 0.85
+            
+            let valueAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont(name: "Pretendard-Bold", size: 25) ??
+                UIFont.systemFont(ofSize: 25, weight: .bold),
+                .paragraphStyle: paragraphStyle]
+            let valueString = NSAttributedString(
+                string: value, attributes: valueAttributes)
+            
+            let kgAttributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont(name: "Pretendard-Bold", size: 12) ??
+                UIFont.systemFont(ofSize: 12, weight: .bold)]
+            let kgString = NSAttributedString(
+                string: unit, attributes: kgAttributes)
+            
+            let attributedString = NSMutableAttributedString()
+            attributedString.append(valueString)
+            attributedString.append(NSAttributedString(string: " "))
+            attributedString.append(kgString)
+            return attributedString
+        }
+        
+        private func imageConfigure(symbolName: String) {
+            symbolImageContentView.image = UIImage(
+                systemName: symbolName + ".fill",
+                withConfiguration: UIImage.SymbolConfiguration(pointSize: 30))
+            
+            symbolImageBorderView.image = UIImage(
+                systemName: symbolName,
+                withConfiguration: UIImage.SymbolConfiguration(pointSize: 30))
+            
+            guard symbolName == "scalemass" else { return }
+            let symbolImageContentKGLabel = UILabel()
+            symbolImageContentKGLabel.text = "KG"
+            symbolImageContentKGLabel.textColor = .white
+            symbolImageContentKGLabel.font = UIFont(name: "Pretendard-Bold", size: 10)
+            symbolImageBorderView.addSubview(symbolImageContentKGLabel)
+            symbolImageContentKGLabel
+                .translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                symbolImageContentKGLabel.centerXAnchor.constraint(
+                    equalTo: symbolImageBorderView.centerXAnchor),
+                symbolImageContentKGLabel.centerYAnchor.constraint(
+                    equalTo: symbolImageBorderView.centerYAnchor,
+                    constant: 5),
+            ])
+        }
     }
 }

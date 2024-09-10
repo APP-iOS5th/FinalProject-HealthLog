@@ -29,7 +29,6 @@ class WeightRecordViewController: UIViewController {
     
     private let realm = RealmManager.shared.realm
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -40,7 +39,8 @@ class WeightRecordViewController: UIViewController {
     
     func setupUI() {
         view.backgroundColor = .color1E1E1E
-        
+//        view.addSubview(infoBoxView)
+
         // MARK: chartView (SwiftUI) 삽입
         let chartView = InBodyChartView(viewModel: inBodyVM)
         hostingController = UIHostingController(rootView: chartView)
@@ -58,7 +58,9 @@ class WeightRecordViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.addSubview(contentView)
         
+
         contentView.addSubview(hostingController!.view)
+
 
 
         hostingController?.view.translatesAutoresizingMaskIntoConstraints = false
@@ -89,58 +91,5 @@ class WeightRecordViewController: UIViewController {
     }
     
     
-//    // MARK: - Actions
-//    @objc private func inputModalView() {
-//        let vc = WeightRecordModalViewController()
-//        vc.modalPresentationStyle = .formSheet
-//        
-//        if let sheet = vc.sheetPresentationController {
-//            sheet.detents = [.medium()]
-//            sheet.prefersGrabberVisible = true
-//            sheet.preferredCornerRadius = 32
-//        }
-//        present(vc, animated: true, completion: nil)
-//    }
-//    
-//    // MARK: - (youngwoo) Bindings
-//    // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
-//    private func setupBindings() {
-//        
-//        // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
-//        inBodyVM.$inbodyRecords
-//            .sink { [weak self] inbodyRecords in
-//                guard let self = self else { return }
-//                
-//                if let record = inbodyRecords.first {
-//                    self.weightBox.updateValue(
-//                        String(format: "%.1f", record.weight))
-//                    self.musclesBox.updateValue(
-//                        String(format: "%.1f", record.muscleMass))
-//                    self.fatBox.updateValue(
-//                        String(format: "%.1f", record.bodyFat))
-//                }
-//                self.updateRecentInbodyDate()
-//            }
-//            .store(in: &cancellables)
-//    }
-//    
-//    private func updateRecentInbodyDate() {
-//        guard let realm = realm else {
-//            dateinbodyLable.text = ""
-//            return
-//        }
-//        
-//        if let recentRecord = realm.objects(InBody.self)
-//            .sorted(byKeyPath: "date", ascending: false)
-//            .first {
-//            let formatter = DateFormatter()
-//            formatter.dateFormat = "(yyyy년 MM월 dd일)"
-//            dateinbodyLable.text = formatter.string(from: recentRecord.date)
-//        } else {
-//            dateinbodyLable.text = ""
-//        }
-//    }
-    
-
     
 }

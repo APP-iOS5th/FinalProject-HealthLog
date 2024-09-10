@@ -26,7 +26,7 @@ class SaveRoutineViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("취소", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.titleLabel?.font =  UIFont.font(.pretendardMedium, ofSize: 16)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -37,7 +37,7 @@ class SaveRoutineViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.titleLabel?.font =  UIFont.font(.pretendardMedium, ofSize: 16)
         button.isEnabled = true
         button.translatesAutoresizingMaskIntoConstraints = false
         

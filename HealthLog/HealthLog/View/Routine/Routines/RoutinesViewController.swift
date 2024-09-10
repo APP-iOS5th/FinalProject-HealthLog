@@ -36,15 +36,27 @@ class RoutinesViewController: UIViewController {
     }()
     
     private lazy var addButton: UIBarButtonItem = {
-        let buttonAction = UIAction { [weak self] _ in
-            print("addButton 클릭")
-            let routineAddNameViewController = RoutineAddNameViewController()
-            self?.navigationController?.pushViewController(routineAddNameViewController, animated: true)
-        }
-        
-        let barButton = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill")?.withTintColor(.white, renderingMode: .alwaysTemplate), primaryAction: buttonAction)
+        // MARK: addButton
+        let addButton = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .bold, scale: .small)
+        let plusImage = UIImage(systemName: "plus")?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(config)
+        addButton.setImage(plusImage, for: .normal)
+        addButton.backgroundColor = .colorAccent
+        addButton.frame = CGRect(x: 0, y: 0, width: 28, height: 28)
+        addButton.layer.cornerRadius = 8
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        let barButton = UIBarButtonItem(customView: addButton)
+
         barButton.tintColor = UIColor(named: "ColorAccent")
         return barButton
+    }()
+    
+    private lazy var dividerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .colorSecondary
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
     }()
     
     private lazy var tableView: UITableView = {
@@ -55,7 +67,7 @@ class RoutinesViewController: UIViewController {
         tableView.backgroundColor = .color1E1E1E
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(RoutineCell.self, forCellReuseIdentifier: RoutineCell.cellId)
-        
+        tableView.sectionFooterHeight = 13
        return tableView
     }()
     
@@ -112,14 +124,22 @@ class RoutinesViewController: UIViewController {
         //MARK: - addSubview
         self.view.addSubview(textLabel)
         self.view.addSubview(tableView)
+        self.view.addSubview(dividerView)
+        
         self.navigationItem.rightBarButtonItem = self.addButton
         
         let safeArea = self.view.safeAreaLayoutGuide
         //MARK: - NSLayoutconstraint
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            
+            self.dividerView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            self.dividerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.dividerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
+            self.dividerView.heightAnchor.constraint(equalToConstant: 1),
+            
+            self.tableView.topAnchor.constraint(equalTo: self.dividerView.bottomAnchor, constant: 13),
+            self.tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor),
             
             
@@ -129,6 +149,30 @@ class RoutinesViewController: UIViewController {
         ])
         
     }
+    
+    @objc func addButtonTapped() {
+        let routineAddNameViewController = RoutineAddNameViewController()
+        self.navigationController?.pushViewController(routineAddNameViewController, animated: true)
+    }
+    
+    
+    func showToast(message : String, font: UIFont = UIFont.font(.pretendardSemiBold, ofSize: 14.0)) {
+        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-150, width: 150, height: 35))
+            toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+            toastLabel.textColor = UIColor.white
+            toastLabel.font = font
+            toastLabel.textAlignment = .center;
+            toastLabel.text = message
+            toastLabel.alpha = 1.0
+            toastLabel.layer.cornerRadius = 10;
+            toastLabel.clipsToBounds  =  true
+            self.view.addSubview(toastLabel)
+        UIView.animate(withDuration: 2, delay: 0.3, options: .curveEaseOut, animations: {
+                 toastLabel.alpha = 0.0
+            }, completion: {(isCompleted) in
+                toastLabel.removeFromSuperview()
+            })
+        }
         
 }
 
@@ -150,7 +194,7 @@ extension RoutinesViewController: UISearchResultsUpdating {
 extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 170
+        return 160
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -162,11 +206,16 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RoutineCell.cellId, for: indexPath) as! RoutineCell
         cell.selectionStyle = .none
-//        cell.configure(with: viewModel.routines[indexPath.row])
+        cell.configure(with: viewModel.routines[indexPath.row])
       
             cell.configure(with: viewModel.filteredRoutines[indexPath.row])
         cell.addbutton = {
             self.viewModel.addScheduleExercise(index: indexPath.row)
+            self.showToast(message: "스케줄에 추가 되었습니다.")
+            cell.addExerciseButton.isEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                cell.addExerciseButton.isEnabled = true
+                    }
         }
         
         return cell
