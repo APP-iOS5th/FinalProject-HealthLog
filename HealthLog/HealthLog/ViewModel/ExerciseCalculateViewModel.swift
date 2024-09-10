@@ -39,7 +39,7 @@ class ExerciseCalculateViewModel {
                     case .update(let collection, _, _,
                                  modifications: let modifications):
 
-                        print("업데이트 발생!")
+                        //print("업데이트 발생!")
                         
                         guard let realm = RealmManager.shared.realm
                         else { return }

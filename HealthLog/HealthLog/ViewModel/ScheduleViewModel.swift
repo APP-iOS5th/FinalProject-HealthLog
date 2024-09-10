@@ -38,7 +38,7 @@ class ScheduleViewModel: ObservableObject {
         scheduleNotificationToken = results.observe { [weak self] changes in
             switch changes {
             case .initial(let collection):
-                print("results.observe - initial")
+                // print("results.observe - initial")
                 self?.schedules = Array(collection)
             case .update(let collection, _, _, _):
                 //                print("results.observe - update")

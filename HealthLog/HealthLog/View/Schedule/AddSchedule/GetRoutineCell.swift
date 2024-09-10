@@ -107,9 +107,7 @@ class GetRoutineCell: UITableViewCell {
             self.titleLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
             self.titleLabel.trailingAnchor.constraint(equalTo: addExerciseButton.leadingAnchor, constant: -10),
             
-            
             self.addExerciseButton.topAnchor.constraint(equalTo: self.titleLabel.topAnchor),
-            self.addExerciseButton.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor),
             self.addExerciseButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -padding),
             
             self.dividerView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 14),

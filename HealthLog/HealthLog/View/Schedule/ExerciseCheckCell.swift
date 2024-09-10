@@ -129,14 +129,13 @@ class ExerciseCheckCell: UITableViewCell {
                     exerciseEditButton.leadingAnchor.constraint(equalTo: exerciseEditContainer.leadingAnchor),
                     exerciseEditButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
                     exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
-                    exerciseEditButton.heightAnchor.constraint(equalToConstant: 24),
+                    exerciseEditButton.topAnchor.constraint(equalTo: exerciseEditContainer.topAnchor, constant: 2),
+                    exerciseEditButton.bottomAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor, constant: -2),
+                    //exerciseEditButton.heightAnchor.constraint(equalToConstant: 24),
 
                     checkboxButton.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
                     checkboxButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
                     checkboxButton.widthAnchor.constraint(equalToConstant: 28),
-                    checkboxButton.heightAnchor.constraint(equalToConstant: 28),
-
-                    exerciseEditContainer.heightAnchor.constraint(equalToConstant: 28)
                 ])
     }
     
@@ -177,9 +176,6 @@ class ExerciseCheckCell: UITableViewCell {
         stackView.addSubview(repsLabel)
         stackView.addSubview(checkboxBtn)
         stackView.axis = .horizontal
-        //stackView.alignment = .center
-        //stackView.distribution = .equalSpacing
-        //stackView.spacing = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
