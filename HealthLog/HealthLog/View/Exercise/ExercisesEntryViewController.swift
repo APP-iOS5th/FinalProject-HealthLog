@@ -17,6 +17,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITex
     private let entryViewModel: ExerciseEntryViewModel
     private let viewModel: ExerciseViewModel
     
+    private var preloadedPicker: PHPickerViewController?
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
     
@@ -95,6 +96,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITex
         setupBindingsUpdateMode()
         setupBindingsUpdateUI()
         setupBindingsUpdateData()
+        
+        preloadedPicker = initPHPickerViewController()
     }
     
     // MARK: - Setup UI
@@ -855,13 +858,11 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITex
     
     // 이미지 선택 버튼 눌렀을 때 호출되는 함수
     @objc private func selectTapImageButton() {
-        //        print("selectTapImageButton")
-        var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 2
-        configuration.filter = .images
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        present(picker, animated: true, completion: nil)
+        if let picker = preloadedPicker {
+            present(picker, animated: true, completion: nil)
+        } else {
+            present(initPHPickerViewController(), animated: true, completion: nil)
+        }
     }
     
     @objc private func tapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
@@ -902,6 +903,15 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITex
     
     
     // MARK: - Methods
+    
+    private func initPHPickerViewController() -> PHPickerViewController {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 2
+        configuration.filter = .images
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        return picker
+    }
     
     // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (중복 실행시 고장남)
     private func warningLabelAnimation(_ targetView: UILabel?, isWarning: Bool) {

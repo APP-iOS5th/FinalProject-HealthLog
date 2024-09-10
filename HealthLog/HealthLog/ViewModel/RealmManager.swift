@@ -15,9 +15,9 @@ class RealmManager {
     //    var bodyParts: Results<BodyPart>
     
     private init() {
-        if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
-            print("open \(realmFileURL)")
-        }
+//        if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
+//            print("open \(realmFileURL)")
+//        }
         openRealm()
         
         initializeRealmExercise()
@@ -37,6 +37,9 @@ class RealmManager {
             let config = Realm.Configuration(schemaVersion: 1)
             Realm.Configuration.defaultConfiguration = config
             realm = try Realm()
+            if let url = realm?.configuration.fileURL {
+                print("open \(url))")
+            }
             
         } catch {
             print("Failed to initialize Realm: \(error.localizedDescription)")
@@ -647,7 +650,6 @@ extension RealmManager {
     func jsonToRealmObject(exercisesJson: [[String: String]])  -> [Exercise] {
         var exercises: [Exercise] = []
         
-        
         for json in exercisesJson {
             if let name = json["이름"],
                let bodyPart = json["부위"],
@@ -683,11 +685,11 @@ extension RealmManager {
                     ],
                     totalReps: 0, recentWeight: 0, maxWeight: 0,
                     isCustom: false)
-                print(exercise)
+//                print(exercise)
                 exercises.append(exercise)
             }
         }
-        print()
+//        print()
         return exercises
     }
 }

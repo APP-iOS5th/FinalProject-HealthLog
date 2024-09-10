@@ -109,7 +109,7 @@ class SearchBodyPartStackView: UIStackView {
     
     // 가로폭이 넘쳤나 확인 후, 새로운 Row(버튼 가로줄) 생성
     private func checkCreateAfterRow(buttonAddAfterWidth: CGFloat) {
-        if buttonAddAfterWidth > UIScreen.main.bounds.width - 26 {
+        if buttonAddAfterWidth > UIScreen.main.bounds.width - 34 {
             currentRow = RowStackView()
             addArrangedSubview(currentRow)
         }
