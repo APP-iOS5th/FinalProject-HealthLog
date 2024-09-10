@@ -21,11 +21,12 @@ class RoutineCell: UITableViewCell {
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 
     
-    private lazy var addExerciseButton: UIButton = {
+    lazy var addExerciseButton: UIButton = {
         let button = UIButton(type: .system)
         
         var configuration = UIButton.Configuration.plain()
