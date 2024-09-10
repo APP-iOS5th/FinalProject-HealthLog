@@ -8,6 +8,7 @@
 import UIKit
 import RealmSwift
 import Combine
+import FSCalendar
 
 class ScheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ExerciseCheckCellDelegate, EditScheduleExerciseViewControllerDelegate, UIScrollViewDelegate {
     
@@ -33,28 +34,158 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     lazy var contentView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        //stackView.spacing = 20
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
-    lazy var calendarView: UICalendarView = {
-        let calendar = UICalendarView()
-        calendar.translatesAutoresizingMaskIntoConstraints = false
-        calendar.wantsDateDecorations = true
+    private let calendarView: FSCalendar = {
+        let calendar = FSCalendar()
         calendar.backgroundColor = .colorSecondary
         calendar.layer.cornerRadius = 10
-        // color of arrows and background of selected date
-        calendar.tintColor = .colorAccent
+        calendar.layer.masksToBounds = true
         calendar.locale = Locale(identifier: "ko_KR")
-        calendar.delegate = self
-        
-        // selected date handler
-        let selection = UICalendarSelectionSingleDate(delegate: self)
-        calendar.selectionBehavior = selection
-        
+        calendar.appearance.headerDateFormat = "YYYY년 MM월"
+        calendar.scope = .month
+        calendar.placeholderType = .none
+        calendar.appearance.headerTitleColor = .clear
+        calendar.appearance.headerTitleAlignment = .center
+        calendar.headerHeight = 0
+        calendar.appearance.headerMinimumDissolvedAlpha = 0.0
+        calendar.appearance.weekdayTextColor = .gray
+        calendar.appearance.weekdayFont = UIFont.font(.pretendardRegular, ofSize: 12)
+        calendar.appearance.titleDefaultColor = .white
+        calendar.appearance.titleTodayColor = .colorAccent
+        calendar.appearance.titleFont = UIFont.font(.pretendardRegular, ofSize: 16)
+        calendar.appearance.subtitleFont = UIFont.font(.pretendardMedium, ofSize: 11)
+        calendar.appearance.todaySelectionColor = .colorAccent
+        calendar.appearance.todayColor = .none
+        calendar.appearance.selectionColor = .colorAccent
+        calendar.appearance.eventOffset = CGPoint(x: 0, y: 5)
+        calendar.translatesAutoresizingMaskIntoConstraints = false
         return calendar
     }()
+    
+    let headerDateFormatter: DateFormatter = {
+        let header = DateFormatter()
+        header.dateFormat = "YYYY년 MM월"
+        header.locale = Locale(identifier: "ko_kr")
+        header.timeZone = TimeZone(identifier: "KST")
+        return header
+    }()
+    
+    private lazy var headerLabel: UILabel = {
+        let headerLabel = UILabel()
+        headerLabel.font = .systemFont(ofSize: 16.0, weight: .bold)
+        headerLabel.textColor = .label
+        headerLabel.text = self.headerDateFormatter.string(from: Date())
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.isUserInteractionEnabled = true
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapHeaderLabel))
+        headerLabel.addGestureRecognizer(tapGesture)
+        
+        return headerLabel
+    }()
+    
+    @objc private func didTapHeaderLabel() {
+        let currentYear = Calendar.current.component(.year, from: selectedDate ?? Date())
+        let currentMonth = Calendar.current.component(.month, from: selectedDate ?? Date())
+        let yearMonthPickerVC = CalendarPickerViewController(defaultYear: currentYear, defaultMonth: currentMonth)
+        
+        yearMonthPickerVC.yearMonthSelectionHandler = { [weak self] year, month in
+            guard let self = self else { return }
+            
+            var components = DateComponents()
+            components.year = year
+            components.month = month
+            components.day = 1
+            if let newDate = Calendar.current.date(from: components) {
+                self.selectedDate = newDate
+                self.calendarView.select(newDate)
+                self.viewModel.loadSelectedDateSchedule(newDate.toKoreanTime())
+                self.updateTableView()
+                self.highlightBodyPartsAtSelectedDate(newDate)
+                self.updateUIBaseOnSchedule()
+                self.headerLabel.text = self.headerDateFormatter.string(from: newDate)
+                self.calendarView.setCurrentPage(newDate, animated: true)
+            }
+        }
+        
+        yearMonthPickerVC.modalPresentationStyle = .pageSheet
+        if let sheet = yearMonthPickerVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.preferredCornerRadius = 25
+        }
+        self.present(yearMonthPickerVC, animated: true, completion: nil)
+    }
+    
+    private lazy var leftButton: UIButton = {
+        let leftButton = UIButton()
+        leftButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        leftButton.tintColor = .colorAccent
+        leftButton.addTarget(self, action: #selector(tapBeforeMonth), for: .touchUpInside)
+        leftButton.translatesAutoresizingMaskIntoConstraints = false
+        return leftButton
+    }()
+    
+    private lazy var rightButton: UIButton = {
+        let rightButton = UIButton()
+        rightButton.setImage(UIImage(systemName: "chevron.right"), for: .normal)
+        rightButton.tintColor = .colorAccent
+        rightButton.addTarget(self, action: #selector(tapNextMonth), for: .touchUpInside)
+        rightButton.translatesAutoresizingMaskIntoConstraints = false
+        return rightButton
+    }()
+    
+    @objc func tapNextMonth() {
+        let nextMonth = Calendar.current.date(byAdding: .month, value: 1, to: calendarView.currentPage)!
+        calendarView.setCurrentPage(nextMonth, animated: true)
+    }
+    
+    @objc func tapBeforeMonth() {
+        let previousMonth = Calendar.current.date(byAdding: .month, value: -1, to: calendarView.currentPage)!
+        calendarView.setCurrentPage(previousMonth, animated: true)
+    }
+    
+    private lazy var toggleButton: UIButton = {
+        let toggleButton = UIButton()
+        toggleButton.titleLabel?.font = .systemFont(ofSize: 16.0)
+        toggleButton.setTitleColor(.label, for: .normal)
+        toggleButton.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+        toggleButton.tintColor = .colorAccent
+        toggleButton.layer.cornerRadius = 4.0
+        toggleButton.addTarget(self, action: #selector(tapToggleButton), for: .touchUpInside)
+        toggleButton.translatesAutoresizingMaskIntoConstraints = false
+        return toggleButton
+    }()
+    
+    @objc func tapToggleButton() {
+        if calendarView.isHidden {
+            calendarView.isHidden = false
+            rightButton.isHidden = false
+            leftButton.isHidden = false
+            headerDateFormatter.dateFormat = "YYYY년 MM월"
+            toggleButton.setImage(UIImage(systemName: "chevron.up"), for: .normal)
+            headerLabel.text = headerDateFormatter.string(from: calendarView.currentPage)
+        } else {
+            calendarView.isHidden = true
+            rightButton.isHidden = true
+            leftButton.isHidden = true
+            headerDateFormatter.dateFormat = "YYYY년 MM월 dd일"
+            toggleButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+            headerLabel.text = headerDateFormatter.string(from: selectedDate ?? Date())
+        }
+        updateCalendarHeight()
+    }
+    
+    private func updateCalendarHeight() {
+        if let constraint = calendarView.constraints.first(where: { $0.firstAttribute == .height }) {
+            constraint.constant = calendarView.isHidden ? 0 : 350
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
     
     lazy var addExerciseButton: UIButton = {
         let button = UIButton(type: .system)
@@ -77,15 +208,6 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    //    lazy var volumeLabel: UILabel = {
-    //        let label = UILabel()
-    //        label.textColor = .white
-    //        label.text = "\(viewModel.selectedDateExerciseVolume) kg"
-    //        label.font = UIFont(name: "Pretendard-SemiBold", size: 16)
-    //        label.translatesAutoresizingMaskIntoConstraints = false
-    //        return label
-    //    }()
     
     lazy var separatorLine1: UIView = {
         let view = UIView()
@@ -172,13 +294,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         setupDragAndDrop()
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 1000
-        // 앱 첫 실행 시 오늘 날짜 선택된 상태
-        let todayComponents = Calendar.current.dateComponents([.year, .month, .day], from: today)
-        
-        if let selection = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
-            selection.setSelected(todayComponents, animated: false)
-        }
-        
+        calendarView.dataSource = self
+        calendarView.delegate = self
+        calendarView.select(Date())
+        headerLabel.text = headerDateFormatter.string(from: Date())
         // MARK: 영우 - loadSelectedDateSchedule의 today를 한국시간으로
         viewModel.loadSelectedDateSchedule(today.toKoreanTime())
         
@@ -226,6 +345,10 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(scrollView)
+        scrollView.addSubview(headerLabel)
+        scrollView.addSubview(leftButton)
+        scrollView.addSubview(rightButton)
+        scrollView.addSubview(toggleButton)
         scrollView.addSubview(calendarView)
         scrollView.addSubview(addExerciseButton)
         scrollView.addSubview(labelContainer)
@@ -243,10 +366,22 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             
-            calendarView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
+            headerLabel.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            headerLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            
+            toggleButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -25),
+            toggleButton.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            
+            rightButton.trailingAnchor.constraint(equalTo: toggleButton.leadingAnchor, constant: -20),
+            rightButton.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            
+            leftButton.trailingAnchor.constraint(equalTo: rightButton.leadingAnchor, constant: -20),
+            leftButton.centerYAnchor.constraint(equalTo: headerLabel.centerYAnchor),
+            
+            calendarView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 10),
             calendarView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
             calendarView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-            calendarView.heightAnchor.constraint(equalToConstant: 500),
+            calendarView.heightAnchor.constraint(equalToConstant: 350),
             
             addExerciseButton.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
             addExerciseButton.leadingAnchor.constraint(equalTo: calendarView.leadingAnchor),
@@ -393,10 +528,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // MARK: 영우 - loadSelectedDateSchedule의 selectedDate, today를 한국시간으로
         viewModel.loadSelectedDateSchedule((selectedDate ?? today).toKoreanTime())
-        let calendar = Calendar.current
-        let selectedComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate ?? today)
-        calendarView.reloadDecorations(forDateComponents: [selectedComponents], animated: true)
-        
+        calendarView.reloadData()
         updateTableView()
         highlightBodyPartsAtSelectedDate(selectedDate ?? today)
         updateUIBaseOnSchedule()
@@ -411,64 +543,80 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 }
 
-extension ScheduleViewController: UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
-    func calendarView(_ calendarView: UICalendarView, decorationFor dateComponents: DateComponents) -> UICalendarView.Decoration? {
-        guard let date = dateComponents.date else { return nil }
-        
-        // selected date color
-        if let schedule = viewModel.getScheduleForDate(date), !schedule.exercises.isEmpty {
-            let numberOfExercises = "\(schedule.exercises.count)"
-            let bgColor: UIColor = isScheduleCompleted(schedule) ? .colorAccent : .color525252
-            
-            return .customView {
-                let label = self.calendarDecoLabel(text: numberOfExercises, bgColor: bgColor)
-                
-                return label
+extension ScheduleViewController: FSCalendarDataSource, FSCalendarDelegate, FSCalendarDelegateAppearance {
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, eventDefaultColorsFor date: Date) -> [UIColor]? {
+        if let schedule = viewModel.getScheduleForDate(date) {
+            if !schedule.exercises.isEmpty {
+                if isScheduleCompleted(schedule) {
+                    return [.colorAccent]
+                } else {
+                    return [.color767676]
+                }
             }
         }
-        
         return nil
     }
     
-    private func calendarDecoLabel(text: String, bgColor: UIColor) -> UIView {
-        let label = UILabel()
-        label.text = text
-        label.textAlignment = .center
-        label.font = UIFont(name: "Pretendard-SemiBold", size: 12)
-        label.textColor = .white
-        
-        let size: CGFloat = 17.0
-        label.frame = CGRect(x: 0, y: 0, width: size, height: size)
-        
-        let containerView = UIView(frame: CGRect(x: 0, y: 0, width: size, height: size))
-        
-        containerView.layer.cornerRadius = size / 2
-        containerView.layer.masksToBounds = true
-        containerView.backgroundColor = bgColor
-        
-        containerView.addSubview(label)
-        label.center = containerView.center
-        
-        return containerView
+    func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, eventSelectionColorsFor date: Date) -> [UIColor]? {
+        if let schedule = viewModel.getScheduleForDate(date) {
+            if !schedule.exercises.isEmpty {
+                if isScheduleCompleted(schedule) {
+                    return [.colorAccent]
+                } else {
+                    return [.color767676]
+                }
+            }
+        }
+        return nil
     }
     
-    func highlightBodyPartsAtSelectedDate(_ date: Date) {
-        let bodyPartsWithCompletedSets = viewModel.getBodyPartsWithCompletedSets(for: date.toKoreanTime())
-        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        if let schedule = viewModel.getScheduleForDate(date), !schedule.exercises.isEmpty {
+            return 1
+        }
+        return 0
     }
     
-    private func isScheduleCompleted(_ schedule: Schedule) -> Bool {
-        return schedule.exercises.contains { $0.isCompleted == true }
+    func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
+        if let constraint = calendarView.constraints.first(where: { $0.firstAttribute == .height }) {
+            constraint.constant = bounds.height
+        } else {
+            calendarView.heightAnchor.constraint(equalToConstant: bounds.height).isActive = true
+        }
+        self.view.layoutIfNeeded()
     }
     
-    func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
-        guard let dateComponents = dateComponents,
-              let date = dateComponents.date else { return }
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         selectedDate = date
         viewModel.loadSelectedDateSchedule(date.toKoreanTime())
         updateTableView()
         highlightBodyPartsAtSelectedDate(date)
         updateUIBaseOnSchedule()
+        if calendarView.isHidden {
+            headerLabel.text = headerDateFormatter.string(from: date)
+        }
+    }
+    
+    func calendarCurrentPageDidChange(_ calendar: FSCalendar) {
+        let currentPage = calendar.currentPage
+        let components = Calendar.current.dateComponents([.year, .month], from: currentPage)
+        guard let firstDayOfMonth = Calendar.current.date(from: components) else { return }
+        calendar.select(firstDayOfMonth)
+        selectedDate = firstDayOfMonth
+        viewModel.loadSelectedDateSchedule(firstDayOfMonth.toKoreanTime())
+        updateTableView()
+        highlightBodyPartsAtSelectedDate(firstDayOfMonth)
+        updateUIBaseOnSchedule()
+        headerLabel.text = headerDateFormatter.string(from: currentPage)
+    }
+    
+    private func isScheduleCompleted(_ schedule: Schedule) -> Bool {
+        return schedule.exercises.allSatisfy { $0.isCompleted }
+    }
+    
+    func highlightBodyPartsAtSelectedDate(_ date: Date) {
+        let bodyPartsWithCompletedSets = viewModel.getBodyPartsWithCompletedSets(for: date.toKoreanTime())
+        muscleImageView.highlightBodyParts(bodyPartsWithCompletedSets: bodyPartsWithCompletedSets)
     }
 }
 
@@ -487,9 +635,7 @@ extension ScheduleViewController: UITableViewDropDelegate, UITableViewDragDelega
            let _ = item.dragItem.localObject as? ScheduleExercise {
             
             viewModel.moveExercise(from: sourceIndexPath.row, to: destinationIndexPath.row)
-            
             tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
-            
             coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
         }
     }
