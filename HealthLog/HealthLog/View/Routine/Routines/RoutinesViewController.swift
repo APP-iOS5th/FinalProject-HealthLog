@@ -53,7 +53,7 @@ class RoutinesViewController: UIViewController {
     
     private lazy var dividerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .color525252
+        view.backgroundColor = .colorSecondary
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -211,7 +211,11 @@ extension RoutinesViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(with: viewModel.filteredRoutines[indexPath.row])
         cell.addbutton = {
             self.viewModel.addScheduleExercise(index: indexPath.row)
-            self.showToast(message: "추가 되었습니다.")
+            self.showToast(message: "스케줄에 추가 되었습니다.")
+            cell.addExerciseButton.isEnabled = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                cell.addExerciseButton.isEnabled = true
+                    }
         }
         
         return cell
