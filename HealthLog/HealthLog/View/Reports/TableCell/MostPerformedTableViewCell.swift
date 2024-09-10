@@ -12,10 +12,10 @@ class MostPerformedTableViewCell: UITableViewCell {
     private let exerciseIndexLabel: UILabel = {
         let label = UILabel()
         label.text = "1."
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
+        label.textAlignment = .center
         return label
     }()
     
@@ -24,7 +24,7 @@ class MostPerformedTableViewCell: UITableViewCell {
     private let exerciseNameLabel: UILabel = {
         let label = UILabel()
         label.text = "데드리프트"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
@@ -34,7 +34,7 @@ class MostPerformedTableViewCell: UITableViewCell {
     private let setsLabel: UILabel = {
         let label = UILabel()
         label.text = "30세트"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
@@ -45,10 +45,10 @@ class MostPerformedTableViewCell: UITableViewCell {
     private let dayLabel: UILabel = {
         let label = UILabel()
         label.text = "7일"
-        label.font = UIFont.font(.pretendardMedium, ofSize: 14)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .right
+        label.textAlignment = .center
         return label
     }()
     
@@ -64,10 +64,13 @@ class MostPerformedTableViewCell: UITableViewCell {
         contentView.addSubview(setsLabel)
         contentView.addSubview(dayLabel)
         
+        exerciseNameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        exerciseNameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        
         NSLayoutConstraint.activate([
             
             exerciseIndexLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            exerciseIndexLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            exerciseIndexLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             exerciseIndexLabel.trailingAnchor.constraint(equalTo: exerciseNameLabel.leadingAnchor, constant: -13),
             exerciseIndexLabel.widthAnchor.constraint(equalToConstant: 30),
             
@@ -76,11 +79,11 @@ class MostPerformedTableViewCell: UITableViewCell {
             exerciseNameLabel.trailingAnchor.constraint(equalTo: setsLabel.leadingAnchor, constant: -13),
             
             setsLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            setsLabel.trailingAnchor.constraint(equalTo: dayLabel.leadingAnchor, constant: -18),
+            setsLabel.trailingAnchor.constraint(equalTo: dayLabel.leadingAnchor, constant: -20),
             
             
             dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            dayLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
+            dayLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             dayLabel.widthAnchor.constraint(equalToConstant: 35)
             
         ])
