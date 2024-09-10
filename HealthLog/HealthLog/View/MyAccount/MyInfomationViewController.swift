@@ -8,26 +8,13 @@
 import UIKit
 import Combine
 
-class MyAccountViewController: UIViewController {
+class MyInfomationViewController: UIViewController {
     
-    private var inBodyInputVM: InBodyInputViewModel
+    private let viewModel = MyInfomationViewModel()
     private let realm = RealmManager.shared.realm
-    
-    
     private var cancellables = Set<AnyCancellable>()
     
-    init(inBodyInputVM: InBodyInputViewModel) {
-        self.inBodyInputVM = inBodyInputVM
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    let userInfoView = UserInfoView()
-    
+    private let userInfoView = UserInfoView()
     private let infoBoxView = InfoBoxView()
     
     private lazy var inbodyinfoButton: UIButton = {
@@ -38,7 +25,6 @@ class MyAccountViewController: UIViewController {
         button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(inputModalView), for: .touchUpInside)
         
-        // 커스텀 폰트 적용
         let customfont = UIFont.font(.pretendardSemiBold, ofSize: 18)
         button.titleLabel?.font = customfont
         
@@ -154,7 +140,7 @@ class MyAccountViewController: UIViewController {
         private func setupBindings() {
 
             // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
-            inBodyInputVM.$inbodyRecords
+            viewModel.$inbodyRecords
                 .sink { [weak self] inbodyRecords in
                     guard let self = self else { return }
 

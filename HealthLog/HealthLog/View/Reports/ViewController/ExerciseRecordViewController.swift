@@ -31,7 +31,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
 
         // 테이믈 가장 맨위 여백 지우기 (insetGroup)
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
@@ -44,36 +44,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         exerciseRecordTableView.dataSource = self
         exerciseRecordTableView.delegate = self
                 
+        registerTableCell()
+        setupUI()
         
-        exerciseRecordTableView.register(MuscleImageTableViewCell.self, forCellReuseIdentifier: "muscle")
-        exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
-        exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
-        exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
-        exerciseRecordTableView.register(MostChangedTableViewCell.self, forCellReuseIdentifier: "mostChanged")
-        exerciseRecordTableView.register(NoDataTableViewCell.self, forCellReuseIdentifier: NoDataTableViewCell.identifier)
-        exerciseRecordTableView.register(TotalNumberSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section01")
-        exerciseRecordTableView.register(MostPerformedSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section02")
-        exerciseRecordTableView.register(MostChangedSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section03")
-        
-        
-        self.view.addSubview(exerciseRecordTableView)
-        
-        exerciseRecordTableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        exerciseRecordTableView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        exerciseRecordTableView.separatorInset = UIEdgeInsets(top: 0, left: 13, bottom: 0, right: 13)
-        exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
-        
-        
-        
-        NSLayoutConstraint.activate([
-            exerciseRecordTableView.topAnchor.constraint(equalTo: view.topAnchor),
-            exerciseRecordTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            exerciseRecordTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            exerciseRecordTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-        
-        exerciseRecordTableView.reloadData()
 
     }
     
@@ -196,6 +169,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         switch indexPath.section {
         case 0:
             return 303
+            
         case 1:
             if indexPath.row == 0 {
                 return 35
@@ -211,11 +185,9 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
                 } else {
                     return defaultCellHeight
                 }
-                
             }
             
         case 2:
-            
             if indexPath.row == 0 {
                 return 35
             } else {
@@ -239,7 +211,7 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         guard indexPath.row != 0 else {return}
         
         reportsVM.bodyPartDataList[indexPath.row-1].isStackViewVisible.toggle()
-
+        
         tableView.beginUpdates()
         tableView.endUpdates()
     }
@@ -257,7 +229,11 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
         
         switch section {
         case 0:
-            label.text = "부위별 운동 강도"
+            if reportsVM.bodyPartDataList.isEmpty {
+                label.text = ""
+            } else {
+                label.text = "부위별 운동 강도"
+            }
         case 1:
             label.text = "부위별 운동 내역"
         case 2:
@@ -284,3 +260,40 @@ class ExerciseRecordViewController: UIViewController, UITableViewDelegate, UITab
     
 }
 
+
+extension ExerciseRecordViewController {
+    
+    
+    func registerTableCell() {
+        
+        exerciseRecordTableView.register(MuscleImageTableViewCell.self, forCellReuseIdentifier: "muscle")
+        exerciseRecordTableView.register(TotalNumberPerBodyPartTableViewCell.self, forCellReuseIdentifier: "totalNumber")
+        exerciseRecordTableView.register(SectionTitleTableViewCell.self, forCellReuseIdentifier: "sectionTitle")
+        exerciseRecordTableView.register(MostPerformedTableViewCell.self, forCellReuseIdentifier: "mostPerform")
+        exerciseRecordTableView.register(MostChangedTableViewCell.self, forCellReuseIdentifier: "mostChanged")
+        exerciseRecordTableView.register(NoDataTableViewCell.self, forCellReuseIdentifier: NoDataTableViewCell.identifier)
+        exerciseRecordTableView.register(TotalNumberSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section01")
+        exerciseRecordTableView.register(MostPerformedSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section02")
+        exerciseRecordTableView.register(MostChangedSectionSubtitleTableViewCell.self, forCellReuseIdentifier: "section03")
+        
+    }
+    
+    func setupUI() {
+        
+        self.view.addSubview(exerciseRecordTableView)
+        
+        exerciseRecordTableView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        exerciseRecordTableView.separatorInset = UIEdgeInsets(top: 0, left: 13, bottom: 0, right: 13)
+        exerciseRecordTableView.cellLayoutMarginsFollowReadableWidth = false
+        
+        NSLayoutConstraint.activate([
+            exerciseRecordTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            exerciseRecordTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            exerciseRecordTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            exerciseRecordTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+        
+        exerciseRecordTableView.reloadData()
+        
+    }
+}

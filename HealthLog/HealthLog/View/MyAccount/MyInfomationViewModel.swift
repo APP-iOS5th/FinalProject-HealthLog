@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-class InBodyInputViewModel {
+class MyInfomationViewModel {
     
     @Published var inbodyRecords: [InBody] = []
     

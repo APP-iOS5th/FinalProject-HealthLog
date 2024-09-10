@@ -19,7 +19,7 @@ struct InBodyChartView: View {
     var body: some View {
         VStack(alignment: .leading){
             Text("한 달간 인바디 변화")
-                .font(.custom("Pretendard-Black", size: 22))
+                .font(.custom("Pretendard-Black", size: 18))
                 .foregroundStyle(Color.white)
                 
             Divider()
@@ -38,7 +38,7 @@ struct InBodyChartView: View {
                     
                     if viewModel.inBodyData.isEmpty {
                         Text("몸무게 데이터가 없습니다")
-                            .font(.custom("Pretendard-ExtraBold", size: 22))
+                            .font(.custom("Pretendard-ExtraBold", size: 18))
                             .foregroundStyle(.color969696)
                     } else {
                         
@@ -149,7 +149,9 @@ struct InBodyChartView: View {
                 }
             }
         }
+        Divider()
         .padding(.bottom, 18)
+        
         
         // MARK: - 골격근량 차트
         VStack(alignment: .leading) {
@@ -165,7 +167,7 @@ struct InBodyChartView: View {
                 
                 if viewModel.inBodyData.isEmpty {
                     Text("골격근 데이터가 없습니다")
-                        .font(.custom("Pretendard-ExtraBold", size: 22))
+                        .font(.custom("Pretendard-ExtraBold", size: 18))
                         .foregroundStyle(.color969696)
                 } else {
                     
@@ -273,6 +275,7 @@ struct InBodyChartView: View {
                     }
                 }}
         }
+        Divider()
         .padding(.bottom, 18)
         
         // MARK: - 체지방률 차트
@@ -281,7 +284,6 @@ struct InBodyChartView: View {
                 .font(.custom("Pretendard-Bold", size: 16))
                 .foregroundStyle(Color.white)
                 .padding(.leading, 12)
-            
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color.color2F2F2F)
@@ -289,7 +291,7 @@ struct InBodyChartView: View {
                 
                 if viewModel.inBodyData.isEmpty {
                     Text("체지방 데이터가 없습니다")
-                        .font(.custom("Pretendard-ExtraBold", size: 22))
+                        .font(.custom("Pretendard-ExtraBold", size: 18))
                         .foregroundStyle(.color969696)
                 } else {
                     

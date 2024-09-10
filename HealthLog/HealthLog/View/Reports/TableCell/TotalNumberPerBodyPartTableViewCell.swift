@@ -42,7 +42,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private let indexLabel: UILabel = {
         let label = UILabel()
         label.text = "01"
-        label.font = UIFont.font(.pretendardBold, ofSize: 15)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -202,7 +202,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
 
 class HorizontalDetailStackView: UIView {
     
-//    private let indexLabel = UILabel()
     private let nameLabel = UILabel()
     private let setsLabel = UILabel()
     private let stackView = UIStackView()
@@ -218,8 +217,6 @@ class HorizontalDetailStackView: UIView {
     }
     
     private func changeLabelFontAndColor() {
-//        indexLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-//        indexLabel.textColor = .white
         
         nameLabel.font = UIFont.font(.pretendardRegular, ofSize: 14)
         nameLabel.textColor = .colorBBBDBD
@@ -234,16 +231,13 @@ class HorizontalDetailStackView: UIView {
         
         changeLabelFontAndColor()
         
-//        indexLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         setsLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-//        indexLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         setsLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
-        
-//        stackView.addArrangedSubview(indexLabel)
+
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(setsLabel)
         
@@ -265,17 +259,14 @@ class HorizontalDetailStackView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-//            indexLabel.widthAnchor.constraint(equalToConstant: 30), // indexLabel 고정 넓이
             nameLabel.widthAnchor.constraint(equalToConstant: 100),
-            setsLabel.widthAnchor.constraint(equalToConstant: 60), // setsLabel 고정 넓이
+            setsLabel.widthAnchor.constraint(equalToConstant: 60),
             setsLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
-            // nameLabel은 비율에 따라 자동으로 늘어남
         ])
         
     }
     
     func configure(name: String, setsCount: Int) {
-//        indexLabel.text = "\(index)."
         nameLabel.text = name
         setsLabel.text = "\(setsCount) 세트"
     }
