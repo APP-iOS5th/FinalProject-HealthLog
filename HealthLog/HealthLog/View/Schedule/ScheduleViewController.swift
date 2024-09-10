@@ -123,7 +123,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             button.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             button.widthAnchor.constraint(equalToConstant: 120),
-            button.heightAnchor.constraint(equalToConstant: 28)
+            button.topAnchor.constraint(equalTo: view.topAnchor, constant: 1),
+            button.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -1),
         ])
         
         return view
@@ -169,6 +170,8 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         setupUI()
         bindViewModel()
         setupDragAndDrop()
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 1000
         // 앱 첫 실행 시 오늘 날짜 선택된 상태
         let todayComponents = Calendar.current.dateComponents([.year, .month, .day], from: today)
         
@@ -185,6 +188,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         didUpdateScheduleExercise()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateTableView()
     }
     
     private func setupDragAndDrop() {
@@ -218,64 +226,68 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(scrollView)
-                scrollView.addSubview(calendarView)
-                scrollView.addSubview(addExerciseButton)
-                scrollView.addSubview(labelContainer)
-                scrollView.addSubview(separatorLine2)
-                scrollView.addSubview(contentView)
-                contentView.addArrangedSubview(tableView)
-                scrollView.addSubview(exerciseVolumeLabel)
-                scrollView.addSubview(separatorLine1)
-                scrollView.addSubview(muscleImageView)
-                
-                let safeArea = view.safeAreaLayoutGuide
-                NSLayoutConstraint.activate([
-                    scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-                    scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-                    scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-                    scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-                    
-                    calendarView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
-                    calendarView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-                    calendarView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-                    calendarView.heightAnchor.constraint(equalToConstant: 500),
-                    
-                    addExerciseButton.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
-                    addExerciseButton.leadingAnchor.constraint(equalTo: calendarView.leadingAnchor),
-                    addExerciseButton.trailingAnchor.constraint(equalTo: calendarView.trailingAnchor),
-                    addExerciseButton.heightAnchor.constraint(equalToConstant: 44),
-                    
-                    labelContainer.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
-                    labelContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-                    labelContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-                    labelContainer.heightAnchor.constraint(equalToConstant: 30),
-                    
-                    separatorLine2.topAnchor.constraint(equalTo: labelContainer.bottomAnchor, constant: 15),
-                    separatorLine2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-                    separatorLine2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-                    separatorLine2.heightAnchor.constraint(equalToConstant: 1),
-                    
-                    contentView.topAnchor.constraint(equalTo: separatorLine2.bottomAnchor),
-                    contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
-                    contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
-                    contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
-                    
-                    exerciseVolumeLabel.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 20),
-                    exerciseVolumeLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-                    exerciseVolumeLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
-                    exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
-                    
-                    separatorLine1.topAnchor.constraint(equalTo: exerciseVolumeLabel.bottomAnchor, constant: 15),
-                    separatorLine1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
-                    separatorLine1.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
-                    separatorLine1.heightAnchor.constraint(equalToConstant: 1),
-                    
-                    muscleImageView.topAnchor.constraint(equalTo: separatorLine1.bottomAnchor, constant: 20),
-                    muscleImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
-                    muscleImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
-                    muscleImageView.heightAnchor.constraint(equalToConstant: 300),
-                    muscleImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -40)
-                ])
+        scrollView.addSubview(calendarView)
+        scrollView.addSubview(addExerciseButton)
+        scrollView.addSubview(labelContainer)
+        scrollView.addSubview(separatorLine2)
+        scrollView.addSubview(contentView)
+        contentView.addArrangedSubview(tableView)
+        scrollView.addSubview(exerciseVolumeLabel)
+        scrollView.addSubview(separatorLine1)
+        scrollView.addSubview(muscleImageView)
+        
+        let safeArea = view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            
+            calendarView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 8),
+            calendarView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            calendarView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            calendarView.heightAnchor.constraint(equalToConstant: 500),
+            
+            addExerciseButton.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
+            addExerciseButton.leadingAnchor.constraint(equalTo: calendarView.leadingAnchor),
+            addExerciseButton.trailingAnchor.constraint(equalTo: calendarView.trailingAnchor),
+            addExerciseButton.heightAnchor.constraint(equalToConstant: 44),
+            
+            labelContainer.topAnchor.constraint(equalTo: calendarView.bottomAnchor, constant: 20),
+            labelContainer.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            labelContainer.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            labelContainer.heightAnchor.constraint(equalToConstant: 30),
+            
+            separatorLine2.topAnchor.constraint(equalTo: labelContainer.bottomAnchor, constant: 15),
+            separatorLine2.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            separatorLine2.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            separatorLine2.heightAnchor.constraint(equalToConstant: 1),
+            
+            contentView.topAnchor.constraint(equalTo: separatorLine2.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
+            contentView.bottomAnchor.constraint(equalTo: exerciseVolumeLabel.topAnchor, constant: -20),
+            
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            
+            exerciseVolumeLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            exerciseVolumeLabel.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            exerciseVolumeLabel.heightAnchor.constraint(equalToConstant: 20),
+            
+            separatorLine1.topAnchor.constraint(equalTo: exerciseVolumeLabel.bottomAnchor, constant: 15),
+            separatorLine1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+            separatorLine1.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -16),
+            separatorLine1.heightAnchor.constraint(equalToConstant: 1),
+            
+            muscleImageView.topAnchor.constraint(equalTo: separatorLine1.bottomAnchor, constant: 20),
+            muscleImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 20),
+            muscleImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -20),
+            muscleImageView.heightAnchor.constraint(equalToConstant: 300),
+            muscleImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -40)
+        ])
         
         tableViewHeightConstraint =
         tableView.heightAnchor.constraint(equalToConstant: 200)
@@ -305,16 +317,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     // MARK: - Methods
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        updateTableViewHeight()
-    }
-    
     private func updateTableViewHeight() {
-        tableView.layoutIfNeeded()
         let height = self.tableView.contentSize.height
         tableViewHeightConstraint?.constant = height
-        view.layoutIfNeeded()
     }
     
     @objc func addSchedule() {
@@ -341,8 +346,11 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func updateTableView() {
-        tableView.reloadData()
-        updateTableViewHeight()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+            self?.view.layoutIfNeeded()
+            self?.updateTableViewHeight()
+        }
     }
     
     // MARK: - UITableViewDataSource
@@ -399,7 +407,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 1000
     }
 }
 
