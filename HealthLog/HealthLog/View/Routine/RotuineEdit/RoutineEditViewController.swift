@@ -178,8 +178,6 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
-
-        
         viewModel.updateRoutine(routine: viewModel.routine, index: index)
         self.navigationController?.popToRootViewController(animated: true)
         
