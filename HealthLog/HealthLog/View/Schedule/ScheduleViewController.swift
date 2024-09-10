@@ -267,7 +267,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 10),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -10),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -20),
-            contentView.bottomAnchor.constraint(equalTo: exerciseVolumeLabel.topAnchor, constant: -20),
+            contentView.bottomAnchor.constraint(equalTo: exerciseVolumeLabel.topAnchor, constant: -30),
             
             tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -360,7 +360,7 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ExerciseCheckCell.identifier, for: indexPath) as! ExerciseCheckCell
-        
+        cell.selectionStyle = .none
         if let scheduleExercise = viewModel.selectedDateSchedule?.exercises[indexPath.row] {
             cell.configure(with: scheduleExercise)
             cell.delegate = self
