@@ -21,7 +21,7 @@ class RealmManager {
         openRealm()
         
         initializeRealmExercise()
-        Task{ await self.initializeRealmExerciseImages() }
+        initializeTask = Task{ await self.initializeRealmExerciseImages() }
         
         //        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
         
