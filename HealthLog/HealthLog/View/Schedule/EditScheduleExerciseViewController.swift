@@ -33,6 +33,29 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         fatalError("init(coder:) has not been implemented")
     }
     
+    private let cancelButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font =  UIFont.font(.pretendardMedium, ofSize: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        return button
+    }()
+    
+    private let completeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("완료", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont.font(.pretendardMedium, ofSize: 16)
+        button.isEnabled = false
+        button.alpha = 0.4
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     lazy var nameLabel: UILabel  = {
         let label = UILabel()
         label.textColor = .white
@@ -109,6 +132,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         
         var configuration = UIButton.Configuration.filled()
         configuration.title = "삭제"
+        configuration.attributedTitle?.font = UIFont.font(.pretendardMedium, ofSize: 16)
         configuration.baseBackgroundColor = .colorSecondary
         configuration.baseForegroundColor = .red
         configuration.cornerStyle = .medium
@@ -137,70 +161,66 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         setupUI()
         updateSets()
         bindViewModel()
+        setupKeyboard()
+        hideKeyBoardWhenTappedScreen()
     }
     
     private func bindViewModel() {
         viewModel.$isInputValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
-                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+                self?.completeButton.isEnabled = isValid
+                self?.completeButton.alpha = isValid ? 1.0 : 0.5
             }
             .store(in: &cancellables)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // add observer of keyboard notification
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // delete observer of keyboard notification
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    private func setupKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        scrollContainer.keyboardDismissMode = .interactive
     }
     
     // MARK: - Methods
     @objc private func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
-        let keyboardHeight = keyboardFrame.cgRectValue.height
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardSize.height, right: 0.0)
+        scrollContainer.contentInset = contentInsets
+        scrollContainer.scrollIndicatorInsets = contentInsets
         
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
+        if let activeField = view.currentFirstResponder() as? UITextField {
+            let activeRect = activeField.convert(activeField.bounds, to: scrollContainer)
+            scrollContainer.scrollRectToVisible(activeRect, animated: true)
         }
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
-        guard let userInfo = notification.userInfo,
-              let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval else { return }
-        
-        if let parentVC = self.parent {
-            UIView.animate(withDuration: animationDuration) {
-                parentVC.view.transform = .identity
-            }
-        }
+        let contentInsets = UIEdgeInsets.zero
+        scrollContainer.contentInset = contentInsets
+        scrollContainer.scrollIndicatorInsets = contentInsets
     }
+    
+    func hideKeyBoardWhenTappedScreen() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func tapHandler() {
+        self.view.endEditing(true)
+    }
+    
     private func setupUI() {
         view.backgroundColor = .colorPrimary
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelEdit))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(saveEdit))
-        
-        navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationItem.rightBarButtonItem?.tintColor = .white
         
         stepperContainer.addSubview(stepperLabel)
         stepperContainer.addSubview(stepperCountLabel)
         stepperContainer.addSubview(stepper)
         scrollContainer.addSubview(setsContainer)
         
+        view.addSubview(cancelButton)
+        view.addSubview(completeButton)
         view.addSubview(nameLabel)
         view.addSubview(stepperContainer)
         view.addSubview(scrollContainer)
@@ -209,13 +229,19 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let safeArea = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+            cancelButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            
+            completeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 17),
+            completeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
+            nameLabel.topAnchor.constraint(equalTo: cancelButton.bottomAnchor, constant: 13),
+            nameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 28),
             
             stepperContainer.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 13),
             stepperContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             stepperContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            stepperContainer.heightAnchor.constraint(equalToConstant: 44),
+            stepperContainer.heightAnchor.constraint(equalToConstant: 50),
             
             stepperLabel.leadingAnchor.constraint(equalTo: stepperContainer.leadingAnchor, constant: 16),
             stepperLabel.centerYAnchor.constraint(equalTo: stepperContainer.centerYAnchor),
@@ -227,22 +253,24 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             stepper.centerYAnchor.constraint(equalTo: stepperContainer.centerYAnchor),
             
             scrollContainer.topAnchor.constraint(equalTo: stepperContainer.bottomAnchor, constant: 10),
-            scrollContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
-            scrollContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            scrollContainer.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollContainer.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollContainer.bottomAnchor.constraint(equalTo: deleteButton.topAnchor, constant: -10),
             
             setsContainer.topAnchor.constraint(equalTo: scrollContainer.topAnchor),
             setsContainer.leadingAnchor.constraint(equalTo: scrollContainer.leadingAnchor),
             setsContainer.trailingAnchor.constraint(equalTo: scrollContainer.trailingAnchor),
-            setsContainer.bottomAnchor.constraint(equalTo: scrollContainer.bottomAnchor),
+            setsContainer.bottomAnchor.constraint(equalTo: scrollContainer.bottomAnchor, constant: -10),
             setsContainer.widthAnchor.constraint(equalTo: scrollContainer.widthAnchor),
             
             deleteButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
             deleteButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
-            deleteButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            deleteButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -20),
             deleteButton.heightAnchor.constraint(equalToConstant: 50),
             
         ])
+        cancelButton.addTarget(self, action: #selector(cancelEdit), for: .touchUpInside)
+        completeButton.addTarget(self, action: #selector(saveEdit), for: .touchUpInside)
     }
     
     private func updateSets() {
@@ -262,6 +290,11 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             let set = i < setValues.count ? setValues[i] : nil
             let setView = createSetView(set)
             setsContainer.addArrangedSubview(setView)
+            
+            NSLayoutConstraint.activate([
+                setView.leadingAnchor.constraint(equalTo: setsContainer.leadingAnchor, constant: 26),
+                setView.trailingAnchor.constraint(equalTo: setsContainer.trailingAnchor, constant: -26)
+            ])
         }
         
         stepperCountLabel.text = "\(stepperValue)"
@@ -281,6 +314,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
             }
         }
     }
+    
     private func createSetView(_ set: (order: Int, weight: String, reps: String)?) -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -335,6 +369,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         let repsLabel = UILabel()
         repsLabel.text = "회"
         repsLabel.textColor = .white
+        repsLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
         repsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         setNumber.text = "\(setsContainer.arrangedSubviews.count + 1) 세트"
@@ -355,25 +390,25 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
         NSLayoutConstraint.activate([
             view.heightAnchor.constraint(equalToConstant: 35),
             
-            setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            setNumber.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             setNumber.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            weightTextField.leadingAnchor.constraint(equalTo: setNumber.trailingAnchor, constant: 45),
+            weightTextField.trailingAnchor.constraint(equalTo: weightLabel.leadingAnchor, constant: -8),
             weightTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             weightTextField.widthAnchor.constraint(equalToConstant: 58),
             weightTextField.heightAnchor.constraint(equalToConstant: 35),
             
-            weightLabel.leadingAnchor.constraint(equalTo: weightTextField.trailingAnchor, constant: 8),
+            weightLabel.trailingAnchor.constraint(equalTo: repsTextField.leadingAnchor, constant: -38),
             weightLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            repsTextField.leadingAnchor.constraint(equalTo: weightLabel.trailingAnchor, constant: 38),
+            repsTextField.trailingAnchor.constraint(equalTo: repsLabel.leadingAnchor, constant: -8),
             repsTextField.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             repsTextField.widthAnchor.constraint(equalToConstant: 58),
             repsTextField.heightAnchor.constraint(equalToConstant: 35),
             
-            repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
+            //repsLabel.leadingAnchor.constraint(equalTo: repsTextField.trailingAnchor, constant: 8),
             repsLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            repsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            repsLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
         ])
         
         return view
@@ -393,7 +428,7 @@ class EditScheduleExerciseViewController: UIViewController, UITextFieldDelegate 
     }
     
     @objc private func cancelEdit() {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func saveEdit() {

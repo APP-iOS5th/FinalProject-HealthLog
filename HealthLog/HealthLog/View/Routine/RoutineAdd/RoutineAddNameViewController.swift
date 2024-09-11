@@ -16,18 +16,21 @@ class RoutineAddNameViewController: UIViewController {
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.borderStyle = .roundedRect
+        textField.borderStyle = .none
+        textField.layer.cornerRadius = 10
         textField.backgroundColor = .color2F2F2F
         // 더 좋은 방법 있으면 수정
-        textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray])
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        textField.leftViewMode = .always
+        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
+        textField.rightViewMode = .always
+        textField.attributedPlaceholder = NSAttributedString(string: "루틴 이름 입력", attributes: [NSAttributedString.Key.foregroundColor :  UIColor.systemGray, NSAttributedString.Key.font: UIFont.font(.pretendardRegular, ofSize: 14)])
         textField.textColor = .white
         textField.font = UIFont.font(.pretendardRegular, ofSize: 14)
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         
-        
         return textField
-        
     }()
     
     private lazy var subTextLabel: UILabel = {
@@ -52,6 +55,7 @@ class RoutineAddNameViewController: UIViewController {
             self.navigationController?.pushViewController(routineAddExerciseViewController, animated: true)
             print("확인 버튼 눌림")
         })
+        button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = UIColor(named: "ColorAccent")
         return button
@@ -60,7 +64,7 @@ class RoutineAddNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("addName")
-        self.hideKeyBoardWenTappedAround()
+//        self.hideKeyBoardWenTappedAround()
         setupUI()
         setupObservers()
     }
@@ -95,9 +99,9 @@ class RoutineAddNameViewController: UIViewController {
                 if isRoutineNameEmptyPulisher {
                     return ""
                 } else if !isRoutineNameMatchingPulisher {
-                    return "이미 사용준인 루틴 이름입니다."
+                    return "이미 사용 중인 이름입니다."
                 }
-                return "사용 가능한 루틴입니다."
+                return "사용 가능한 이름입니다."
             }
             .receive(on: DispatchQueue.main)
             .assign(to:\.validMessage ,on:subTextLabel)
@@ -130,8 +134,8 @@ class RoutineAddNameViewController: UIViewController {
            
             
             self.nameTextField.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 10),
-            self.nameTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
+            self.nameTextField.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            self.nameTextField.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             self.nameTextField.heightAnchor.constraint(equalToConstant: 44),
             self.subTextLabel.topAnchor.constraint(equalTo: self.nameTextField.bottomAnchor, constant: 5),
             self.subTextLabel.leadingAnchor.constraint(equalTo: self.nameTextField.leadingAnchor),
@@ -166,6 +170,7 @@ extension UITextField {
             .compactMap{ $0.object as? UITextField}
         // String 가져옴
             .map{ $0.text ?? ""}
+            .map{ $0.trimmingCharacters(in: .whitespaces) }
 //            .print()
             .eraseToAnyPublisher()
     }

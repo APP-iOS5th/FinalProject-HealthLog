@@ -11,7 +11,6 @@ import Combine
 class ReportsViewController: UIViewController {
     
     private var reportsVM = ReportsViewModel()
-    
     private var inBodyVM = InBodyChartViewModel()
     
     private lazy var exerciseRecordVC: ExerciseRecordViewController = {
@@ -26,7 +25,7 @@ class ReportsViewController: UIViewController {
     
     
     private var currentVC: UIViewController?
-    
+
     private var currentYear: Int {
         return reportsVM.currentYear
     }
@@ -37,55 +36,37 @@ class ReportsViewController: UIViewController {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private lazy var navigationBarLabel: UILabel = {
-        let label = UILabel()
-        label.text = "월간 리포트"
-        label.font = UIFont(name: "Pretendard-SemiBold", size: 20)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
-    private lazy var titleStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-//        stackView.spacing = 18
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-        
-    }()
-    
-    private lazy var moveToPreviousMonthButton: UIButton = {
-        let button = createMonthButton(action: UIAction {[weak self] _ in
-            self?.didTapPreviousMonth()
-        }, imageName: "chevron.left")
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
     private lazy var titleMonthLabel: UILabel = {
         let label = UILabel()
         label.text = "2024년 7월"
-        label.font = UIFont(name: "Pretendard-SemiBold", size: 20)
+        label.font = UIFont.font(.pretendardMedium, ofSize: 16)
         label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTitleMonthLabel))
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(tapGesture)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    
-    private lazy var moveToNextMonthButton: UIButton = {
-        let button = createMonthButton(action: UIAction {[weak self] _ in
-            self?.didTapNextMonth()
-        }, imageName: "chevron.right")
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private lazy var foldingImage: UIImageView = {
+        let imageView = UIImageView()
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
+        let symbolName =  "chevron.down"
+        let symbol = UIImage(systemName: symbolName, withConfiguration: symbolConfig)
+        imageView.image = symbol
+        
+        imageView.tintColor = .white
+        imageView.contentMode = .scaleAspectFit
+        
+        
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
+    
     
     private lazy var segmentedControl: UISegmentedControl = {
         let control = UISegmentedControl()
@@ -151,45 +132,7 @@ class ReportsViewController: UIViewController {
     }
     
     
-    private func didTapPreviousMonth() {
-        let newYear: Int
-        let newMonth: Int
-        
-        if currentMonth == 1 {
-            newYear = currentYear - 1
-            newMonth = 12
-        } else {
-            newYear = currentYear
-            newMonth = currentMonth - 1
-        }
-        
-        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
-        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
-        
-        
-        updateTitleMonthLabel()
-        exerciseRecordVC.fetchDataAndUpdateUI()
-    }
     
-    private func didTapNextMonth() {
-        let newYear: Int
-        let newMonth: Int
-        
-        if currentMonth == 12 {
-            newYear = currentYear + 1
-            newMonth = 1
-        } else {
-            newYear = currentYear
-            newMonth = currentMonth + 1
-        }
-        
-        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
-        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
-        
-        
-        updateTitleMonthLabel()
-        exerciseRecordVC.fetchDataAndUpdateUI()
-    }
     
     
     
@@ -266,28 +209,24 @@ extension ReportsViewController {
     private func setupUI() {
         self.view.backgroundColor = .color1E1E1E
         
-        titleStackView.addArrangedSubview(moveToPreviousMonthButton)
-        titleStackView.addArrangedSubview(titleMonthLabel)
-        titleStackView.addArrangedSubview(moveToNextMonthButton)
-    
-//        self.view.addSubview(navigationBarLabel)
-        self.view.addSubview(titleStackView)
+        self.view.addSubview(titleMonthLabel)
         self.view.addSubview(segmentedControl)
-        
+        self.view.addSubview(foldingImage)
         
         let safeArea = self.view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-//            navigationBarLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
-//            navigationBarLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             
-            titleStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
-            titleStackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            titleStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
+            titleMonthLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 3),
+            titleMonthLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
             
-            segmentedControl.topAnchor.constraint(equalTo: titleStackView.bottomAnchor, constant: 13),
-            segmentedControl.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 24),
-            segmentedControl.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -24),
+            foldingImage.centerYAnchor.constraint(equalTo: titleMonthLabel.centerYAnchor),
+            foldingImage.leadingAnchor.constraint(equalTo: titleMonthLabel.trailingAnchor, constant: 6),
+            
+            
+            segmentedControl.topAnchor.constraint(equalTo: titleMonthLabel.bottomAnchor, constant: 13),
+            segmentedControl.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 16),
+            segmentedControl.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -16),
             
         ])
         
@@ -329,6 +268,52 @@ extension ReportsViewController {
 
         ])
     }
+    
+}
+
+extension ReportsViewController {
+    
+    
+    // 버튼 삭제로 인해 사용 안함
+//    private func didTapPreviousMonth() {
+//        let newYear: Int
+//        let newMonth: Int
+//        
+//        if currentMonth == 1 {
+//            newYear = currentYear - 1
+//            newMonth = 12
+//        } else {
+//            newYear = currentYear
+//            newMonth = currentMonth - 1
+//        }
+//        
+//        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        
+//        
+//        updateTitleMonthLabel()
+//        exerciseRecordVC.fetchDataAndUpdateUI()
+//    }
+//    
+//    private func didTapNextMonth() {
+//        let newYear: Int
+//        let newMonth: Int
+//        
+//        if currentMonth == 12 {
+//            newYear = currentYear + 1
+//            newMonth = 1
+//        } else {
+//            newYear = currentYear
+//            newMonth = currentMonth + 1
+//        }
+//        
+//        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        
+//        
+//        updateTitleMonthLabel()
+//        exerciseRecordVC.fetchDataAndUpdateUI()
+//    }
     
 }
 

@@ -47,11 +47,11 @@ class RoutineAddViewModel {
     
     lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
         .CombineLatest($rutineNameinput, $routines)
-        .map( {(rutineNameinput: String, rutines: [Routine]) in
-            if rutineNameinput.isEmpty {
+        .map( {(routineNameinput: String, routines: [Routine]) in
+            if routineNameinput.isEmpty {
                 return false
             }
-            if (rutines.contains{ $0.name == rutineNameinput}) {
+            if (routines.contains{ $0.name == routineNameinput}) {
                 return false
             } else {
                 return true
@@ -118,7 +118,7 @@ class RoutineAddViewModel {
         routineNotificationToken = results.observe { [weak self] changes in
             switch changes {
             case .initial(let collection):
-                print("results.observe - initial")
+//                print("results.observe - initial")
                 self?.routines = Array(collection)
             case .update(let collection, _, _, _):
                 // print("results.observe - update")

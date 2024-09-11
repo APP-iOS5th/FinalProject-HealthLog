@@ -9,7 +9,7 @@ import Combine
 import UIKit
 import PhotosUI
 
-class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPickerViewControllerDelegate {
+class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate, PHPickerViewControllerDelegate {
     
     // MARK: - Properties
     
@@ -17,6 +17,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let entryViewModel: ExerciseEntryViewModel
     private let viewModel: ExerciseViewModel
     
+    private var preloadedPicker: PHPickerViewController?
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
     
@@ -46,6 +47,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     private let descriptionStackView = UIStackView()
     private let descriptionLabel = UILabel()
     private let descriptionTextView = UITextView()
+    let descriptionTextViewCountLabel = UILabel()
     
     private let imageStackView = UIStackView()
     private let imageLabel = UILabel()
@@ -94,6 +96,8 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         setupBindingsUpdateMode()
         setupBindingsUpdateUI()
         setupBindingsUpdateData()
+        
+        preloadedPicker = initPHPickerViewController()
     }
     
     // MARK: - Setup UI
@@ -200,6 +204,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
+        titleTextField.tintColor = .colorAccent
         titleTextField.borderStyle = .none
         titleTextField.font = UIFont(name: "Pretendard-Medium", size: 16)
         titleTextField.tag = ViewTag.titleTextField.rawValue
@@ -214,7 +219,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 equalTo: stackView.trailingAnchor,
                 constant: -10),
         ])
-
+        
         // MARK: titleDuplicateWarningLabel
         titleDuplicateWarningLabel.text = "  이미 존재하는 운동 이름입니다."
         titleDuplicateWarningLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
@@ -293,6 +298,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightStackView.addArrangedSubview(recentWeightTextFieldStackView)
         
         // MARK: recentWeightTextField
+        recentWeightTextField.tintColor = .colorAccent
         recentWeightTextField.borderStyle = .none
         recentWeightTextField.font = UIFont(name: "Pretendard-Medium", size: 16)
         recentWeightTextField.tag = ViewTag.recentWeightTextField.rawValue
@@ -337,6 +343,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightStackView.addArrangedSubview(maxWeightTextFieldStackView)
         
         // MARK: maxWeightTextField
+        maxWeightTextField.tintColor = .colorAccent
         maxWeightTextField.borderStyle = .none
         maxWeightTextField.tag = ViewTag.maxWeightTextField.rawValue
         maxWeightTextField.delegate = self
@@ -368,15 +375,18 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         
         // MARK: descriptionTextView
         descriptionTextView.textColor = .white
+        descriptionTextView.tintColor = .colorAccent
         descriptionTextView.backgroundColor = .color2F2F2F
         descriptionTextView.layer.cornerRadius = 12
         descriptionTextView.layer.masksToBounds = true
-        descriptionTextView.isScrollEnabled = false
+        descriptionTextView.isScrollEnabled = true
         descriptionTextView.font = UIFont(name: "Pretendard-Medium", size: 16)
         descriptionTextView.textContainerInset = UIEdgeInsets(
             top: 13, left: 13, bottom: 13, right: 13)
+        descriptionTextView.delegate = self
         descriptionStackView.addArrangedSubview(descriptionTextView)
         descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        let height = ((descriptionTextView.font?.lineHeight ?? 0) * 5) + 27
         NSLayoutConstraint.activate([
             descriptionTextView.leadingAnchor.constraint(
                 equalTo: stackView.leadingAnchor,
@@ -384,6 +394,18 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             descriptionTextView.trailingAnchor.constraint(
                 equalTo: stackView.trailingAnchor,
                 constant: -10),
+            descriptionTextView.heightAnchor.constraint(
+                equalToConstant: height),
+        ])
+        
+        descriptionTextViewCountLabel.textAlignment = .right
+        descriptionStackView.addArrangedSubview(descriptionTextViewCountLabel)
+        descriptionTextViewCountLabel
+            .translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            descriptionTextViewCountLabel.trailingAnchor.constraint(
+                equalTo: stackView.trailingAnchor,
+                constant: -20),
         ])
     }
     
@@ -413,7 +435,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             imageView.clipsToBounds = true
             imageView.addGestureRecognizer(
                 UITapGestureRecognizer(
-                    target: self, 
+                    target: self,
                     action: #selector(tapImageViewShowPHPicker(_:)))
             )
             imageView.isUserInteractionEnabled = true
@@ -498,9 +520,9 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         guard let deleteButton = deleteButton else { return }
         
         deleteButton.backgroundColor = .color2F2F2F
-        deleteButton.setTitle("운동 삭제하기", for: .normal)
+        deleteButton.setTitle("삭제", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 20)
+        deleteButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
         deleteButton.layer.cornerRadius = 12
         deleteButton.layer.masksToBounds = true
         deleteButton.addTarget(
@@ -578,7 +600,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: recentWeightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-//                print("recentWeightTextField change")
+                //                print("recentWeightTextField change")
                 self.entryViewModel.entryExercise.recentWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
@@ -587,7 +609,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification, object: maxWeightTextField)
             .compactMap { ($0.object as? UITextField)?.text }
             .sink { text in
-//                print("maxWeightTextField change")
+                //                print("maxWeightTextField change")
                 self.entryViewModel.entryExercise.maxWeight = Int(text) ?? 0
             }
             .store(in: &cancellables)
@@ -596,11 +618,11 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         NotificationCenter.default.publisher(for: UITextView.textDidChangeNotification, object: descriptionTextView)
             .compactMap { ($0.object as? UITextView)?.text }
             .sink { text in
-//                print("descriptionTextView change")
+                //                print("descriptionTextView change")
                 self.entryViewModel.entryExercise.description = text
             }
             .store(in: &cancellables)
-
+        
     }
     
     private func setupBindingsUpdateUI() {
@@ -626,7 +648,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 }
             }
             .store(in: &cancellables)
-        
         
         // MARK: UI Duplicate ExerciseName Warning
         self.entryViewModel.entryExercise.$hasDuplicateName
@@ -659,6 +680,30 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                     .isEnabled = isValidated
             }
             .store(in: &cancellables)
+        
+        // MARK: Description Input Count
+        self.entryViewModel.entryExercise.$description
+            .sink { [weak self] text in
+                // 폰트와 색상 설정
+                let font = UIFont(name: "Pretendard-Medium", size: 16) ?? UIFont.systemFont(ofSize: 16)
+                
+                let attributedString = NSMutableAttributedString(
+                    string: "\(text.count)/200")
+                attributedString.addAttribute(
+                    .font, value: font, range: NSRange(
+                        location: 0, length: attributedString.length))
+                
+                let countRange = (attributedString.string as NSString)
+                    .range(of: "\(text.count)")
+                attributedString.addAttribute(
+                    .font, value: font, range: countRange)
+                attributedString.addAttribute(
+                    .foregroundColor, value: UIColor.colorAccent,
+                    range: countRange)
+                self?.descriptionTextViewCountLabel.attributedText = attributedString
+            }
+            .store(in: &cancellables)
+        
     }
     
     private func setupBindingsUpdateMode() {
@@ -720,16 +765,46 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
                 return true
         }
     }
-
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.colorAccent.cgColor
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.layer.borderWidth = 0
+    }
+    
+    // MARK: - UITextViewDelegate
+    
+    /// 입력수 제한, CountLabel 업데이트
+    func textViewDidChange(_ textView: UITextView) {
+        if descriptionTextView.text.count > 200 {
+            descriptionTextView.deleteBackward()
+        }
+        
+    }
+    
+    /// 텍스트뷰 입력 시 테두리 생기게 하기
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.layer.borderWidth = 1
+        textView.layer.borderColor = UIColor.colorAccent.cgColor
+    }
+    
+    /// 텍스트뷰 입력 완료시 테두리 없애기
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.layer.borderWidth = 0
+    }
+    
     // MARK: - PHPickerViewControllerDelegate
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         picker.dismiss(animated: true, completion: nil)
-        guard let result = results.first 
+        guard let result = results.first
         else { return }
         
         // UIImage로 변환
-        result.itemProvider.loadObject(ofClass: UIImage.self) { 
+        result.itemProvider.loadObject(ofClass: UIImage.self) {
             [weak self] image, error in
             DispatchQueue.main.async {
                 guard let uiImage = image as? UIImage,
@@ -763,7 +838,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     // MARK: - Selector Methods
     
     @objc func doneButtonTapped() {
-//        print("doneButtonTapped!")
+        //        print("doneButtonTapped!")
         switch entryViewModel.mode {
             case .add: entryViewModel.realmAddExercise()
             case .update(let detailViewModel):
@@ -777,19 +852,17 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
     }
     
     @objc func deleteButtonTapped() {
-//        print("deleteButtonTapped!")
+        //        print("deleteButtonTapped!")
         deleteAlertAction()
     }
     
     // 이미지 선택 버튼 눌렀을 때 호출되는 함수
     @objc private func selectTapImageButton() {
-//        print("selectTapImageButton")
-        var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 2
-        configuration.filter = .images
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        present(picker, animated: true, completion: nil)
+        if let picker = preloadedPicker {
+            present(picker, animated: true, completion: nil)
+        } else {
+            present(initPHPickerViewController(), animated: true, completion: nil)
+        }
     }
     
     @objc private func tapImageViewShowPHPicker(_ sender: UITapGestureRecognizer) {
@@ -823,13 +896,22 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
              isTappedInsideMaxWeightTextField ||
              isTappedInsideRecentWeightTextField ||
              isTappedInsideDescriptionTextView)  {
-//            print("Tap detected outside input area")
+            //            print("Tap detected outside input area")
             view.endEditing(true)
         }
     }
     
     
     // MARK: - Methods
+    
+    private func initPHPickerViewController() -> PHPickerViewController {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 2
+        configuration.filter = .images
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        return picker
+    }
     
     // 경고 라벨 hidden 애니메이션, 중복 애니메이션 방지 (중복 실행시 고장남)
     private func warningLabelAnimation(_ targetView: UILabel?, isWarning: Bool) {
@@ -853,17 +935,13 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
             preferredStyle: .alert
         )
         
-        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color767676
-        alertController.view.layer.cornerRadius = 15
-        
-        
         let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
             // 삭제 처리 코드
             self.entryViewModel.realmExerciseIsDeleted()
             self.navigationController?.popToRootViewController(animated: true)
         }
-
+        
         alertController.addAction(cancelAction)
         alertController.addAction(deleteAction)
         
@@ -884,7 +962,7 @@ private class PaddedTextField: UITextField {
         super.init(coder: coder)
         setupUI()
     }
-
+    
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         return bounds.inset(by: padding)
     }

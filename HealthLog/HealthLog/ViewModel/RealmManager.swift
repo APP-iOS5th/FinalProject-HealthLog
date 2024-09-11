@@ -5,29 +5,29 @@
 //  Created by user on 8/12/24.
 //
 
-import Network
 import RealmSwift
 import Foundation
+
 
 class RealmManager {
     static let shared = RealmManager()
     private(set) var realm: Realm?
-    //    var bodyParts: Results<BodyPart>
+    var initializeTask: Task<Void, Never>?
     
     private init() {
-        if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
-            print("open \(realmFileURL)")
-        }
+//        if let realmFileURL = Realm.Configuration.defaultConfiguration.fileURL {
+//            print("open \(realmFileURL)")
+//        }
         openRealm()
         
         initializeRealmExercise()
+        initializeTask = Task{ await self.initializeRealmExerciseImages() }
+        
         //        initializeRealmSchedule() // 5,6월 데이터 넣기 위해 잠시 주석처리 해놨습니다 _ 허원열
         
-//        generateScheduleSampleData()
-//        
-//        addInBodySampleData()
-        
-        Task{ await self.initializeRealmExerciseImages() }
+        //        generateScheduleSampleData()
+        //
+        //        addInBodySampleData()
     }
     
     
@@ -37,6 +37,9 @@ class RealmManager {
             let config = Realm.Configuration(schemaVersion: 1)
             Realm.Configuration.defaultConfiguration = config
             realm = try Realm()
+            if let url = realm?.configuration.fileURL {
+                print("open \(url))")
+            }
             
         } catch {
             print("Failed to initialize Realm: \(error.localizedDescription)")
@@ -159,6 +162,8 @@ extension RealmManager {
     
     @MainActor
     func initializeRealmExerciseImages() async {
+        defer { initializeTask = nil }
+        
         //        print("initializeRealmExerciseImages")
         guard let realm = realm else { return }
         
@@ -210,7 +215,10 @@ extension RealmManager {
                     }
                     
                 } catch {
-                    print("image\(index) 이미지 다운로드 실패: \(error)")
+                    guard initializeTask?.isCancelled == false
+                    else { return print("initializeRealmExerciseImages loop 탈출") }
+                    
+                    print("exercisesIndex - \(exercisesIndex), image \(index) catch")
                     realm.writeAsync {
                         exerciseImage.urlAccessCount = accessCount + 1
                     }
@@ -221,7 +229,7 @@ extension RealmManager {
             
             //            print("--end exercise \(exercise.name) --")
         }
-        
+        print("end - initializeRealmExerciseImages")
     }
     
     
@@ -469,9 +477,11 @@ extension RealmManager {
         return routine
     }
     
-    func updetaRoutine(newRoutine: Routine, index: Int) {
+    func updetaRoutine(newRoutine: Routine, routineExercise: [RoutineExercise], index: Int) {
         guard let realm = realm else { return }
         let oldRoutine = fetchRoutine()[index]
+        newRoutine.exercises.removeAll()
+        newRoutine.exercises.append(objectsIn: routineExercise)
         
         
         do {
@@ -645,7 +655,6 @@ extension RealmManager {
     func jsonToRealmObject(exercisesJson: [[String: String]])  -> [Exercise] {
         var exercises: [Exercise] = []
         
-        
         for json in exercisesJson {
             if let name = json["이름"],
                let bodyPart = json["부위"],
@@ -681,11 +690,19 @@ extension RealmManager {
                     ],
                     totalReps: 0, recentWeight: 0, maxWeight: 0,
                     isCustom: false)
-                print(exercise)
+//                print(exercise)
                 exercises.append(exercise)
             }
         }
-        print()
+//        print()
         return exercises
+    }
+}
+
+extension RealmManager {
+    func cancelInitializeTask() {
+        initializeTask?.cancel() // 현재 실행 중인 Task를 취소
+        print("cancel - \(String(describing: initializeTask?.isCancelled))")
+        initializeTask = nil // Task 객체 초기화
     }
 }

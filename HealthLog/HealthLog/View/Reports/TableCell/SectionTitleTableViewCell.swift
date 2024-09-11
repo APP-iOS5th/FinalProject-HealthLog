@@ -37,7 +37,7 @@ class SectionTitleTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "가장 많이 한 운동"
-        label.font = UIFont.font(.pretendardBold, ofSize: 16)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         return label
     }()
@@ -56,14 +56,14 @@ class SectionTitleTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             titleBackgroundImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleBackgroundImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 22),
+            titleBackgroundImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 13),
             
             titleImage.centerYAnchor.constraint(equalTo: titleBackgroundImage.centerYAnchor),
             titleImage.centerXAnchor.constraint(equalTo: titleBackgroundImage.centerXAnchor),
             
             
-            titleLabel.centerYAnchor.constraint(equalTo: titleImage.centerYAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: titleImage.trailingAnchor, constant: 13)
+            titleLabel.bottomAnchor.constraint(equalTo: titleBackgroundImage.bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: titleBackgroundImage.trailingAnchor, constant: 8)
         ])
         
         

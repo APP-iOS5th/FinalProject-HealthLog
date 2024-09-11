@@ -108,10 +108,10 @@ class ExercisesDetailViewController: UIViewController {
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             scrollView.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor,
-                constant: 17),
+                constant: 16),
             scrollView.trailingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.trailingAnchor,
-                constant: -17),
+                constant: -16),
         ])
         
         // MARK: stackView
@@ -199,7 +199,7 @@ class ExercisesDetailViewController: UIViewController {
         // MARK: descriptionLabel
         descriptionLabel.textColor = .white
         descriptionLabel.numberOfLines = 0
-        descriptionLabel.font = UIFont(name: "Pretendard-Medium", size: 19)
+        descriptionLabel.font = UIFont(name: "Pretendard-Medium", size: 17)
         profileStackView.addArrangedSubview(descriptionLabel)
     }
     

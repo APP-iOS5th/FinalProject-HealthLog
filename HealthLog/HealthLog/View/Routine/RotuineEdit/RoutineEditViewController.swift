@@ -41,7 +41,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     
     
     private lazy var tableView: UITableView = {
-        let tableView = UITableView()
+        let tableView = UITableView(frame: .zero,style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = UITableView.automaticDimension
@@ -57,6 +57,9 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         tableView.dragDelegate = self
         tableView.dropDelegate = self
         tableView.dragInteractionEnabled = true
+        tableView.sectionHeaderTopPadding = 0
+        tableView.sectionFooterHeight = 0
+        
         
         return tableView
     }()
@@ -75,7 +78,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         resultsViewController.delegate = self
         let searchController = UISearchController(searchResultsController: resultsViewController)
         searchController.delegate = self
-        searchController.searchBar.placeholder = "운동명 검색"
+        searchController.searchBar.placeholder = "운동 검색"
         searchController.searchResultsUpdater = self
         searchController.showsSearchResultsController = true
         searchController.searchBar.showsBookmarkButton = false
@@ -175,8 +178,6 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
     }
     
     @objc func doneTapped() {
-
-        
         viewModel.updateRoutine(routine: viewModel.routine, index: index)
         self.navigationController?.popToRootViewController(animated: true)
         
@@ -260,7 +261,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                 .receive(on:DispatchQueue.main)
                 .sink { [weak self] text in
                     guard let self = self else { return }
-                    self.viewModel.routine.name = text
+                    self.viewModel.routine.name = text.trimmingCharacters(in: .whitespaces)
                 }
                 .store(in: &cancellables)
             
@@ -281,7 +282,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
                     if let text = cell.nameTextField.text {
                         if isValid && (text != self?.name) {
                             cell.isValidText(text: "이름이 존재 합니다.",color: .red)
-                        } else if text.isEmpty && (text != self?.name){
+                        } else if text.trimmingCharacters(in: .whitespaces).isEmpty && (text != self?.name){
                             cell.isValidText(text: "이름이 비어 있습니다.", color: .red)
                             
                         } else if text == self?.name {
@@ -345,7 +346,7 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: DeleteButtonCell.identifier, for: indexPath) as! DeleteButtonCell
             
             cell.delete = {
-                //                self.viewModel.deleteRoutine(id: self.id)
+                self.viewModel.deleteRoutine(id: self.id)
                 self.navigationController?.popToRootViewController(animated: true)
             }
             cell.selectionStyle = .none

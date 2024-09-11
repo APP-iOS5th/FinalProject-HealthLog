@@ -106,6 +106,7 @@ class AddScheduleViewController: UIViewController {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.onExerciseSelected = { [weak self] exercise in
                 self?.addSelectedExercise(exercise)
+                self?.navigationItem.leftBarButtonItem?.isHidden = false
             }
             searchResultsController.viewModel = exerciseViewModel
             searchController.searchBar.delegate = searchResultsController
@@ -113,18 +114,12 @@ class AddScheduleViewController: UIViewController {
         searchController.delegate = self
         searchController.searchBar.showsBookmarkButton = false
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "운동명 검색"
+        searchController.searchBar.placeholder = "운동 검색"
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.barStyle = .black
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
         searchController.showsSearchResultsController = true
-        
-        if let textField = searchController.searchBar.value(forKey: "searchField") as? UITextField {
-            if let leftView = textField.leftView as? UIImageView {
-                leftView.tintColor = .white
-            }
-        }
         
         navigationItem.searchController = searchController
         definesPresentationContext = true
@@ -149,22 +144,22 @@ class AddScheduleViewController: UIViewController {
         tableView.dropDelegate = self
         tableView.dragInteractionEnabled = true
         
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
         headerView.backgroundColor = .clear
         
         let getRoutineButton = UIButton(type: .system)
         getRoutineButton.setTitle("루틴 불러오기", for: .normal)
         getRoutineButton.backgroundColor = .colorAccent
-        getRoutineButton.layer.cornerRadius = 12
-        getRoutineButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 16)
+        getRoutineButton.layer.cornerRadius = 7
+        getRoutineButton.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
         getRoutineButton.tintColor = .white
         getRoutineButton.translatesAutoresizingMaskIntoConstraints = false
         getRoutineButton.addTarget(self, action: #selector(routineButtonTapped), for: .touchUpInside)
         headerView.addSubview(getRoutineButton)
-        
+
         NSLayoutConstraint.activate([
             getRoutineButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
-            getRoutineButton.heightAnchor.constraint(equalToConstant: 44),
+            getRoutineButton.heightAnchor.constraint(equalToConstant: 30),
             getRoutineButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 13),
             getRoutineButton.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
             getRoutineButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor)
@@ -184,7 +179,7 @@ class AddScheduleViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: dividerView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
         ])
     }
     
@@ -322,12 +317,14 @@ extension AddScheduleViewController: UISearchResultsUpdating, UISearchController
             searchResultsController.bodypartOptionShowUIChange(true)
             searchResultsController.prepareForDismissal(false)
         }
+        navigationItem.leftBarButtonItem?.isHidden = true
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
         if let searchResultsController = searchController.searchResultsController as? SearchResultsViewController {
             searchResultsController.prepareForDismissal(true)
         }
+        navigationItem.leftBarButtonItem?.isHidden = false
     }
     
     func didDismissSearchController(_ searchController: UISearchController) {

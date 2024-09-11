@@ -8,15 +8,25 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
         
+        if UserDefaults.standard.bool(forKey: "HasCompletedOnboarding") {
+            let tabBarController = createTabBarController()
+            window?.rootViewController = tabBarController
+        } else {
+            window?.rootViewController = OnboardingViewController()
+        }
+        
+        self.window?.makeKeyAndVisible()
+        window?.overrideUserInterfaceStyle = .dark
+    }
+
+    func createTabBarController() -> UITabBarController {
         let scheduleViewController = ScheduleViewController()
         let firstNC = UINavigationController(rootViewController: scheduleViewController)
         let routinesViewController = RoutinesViewController()
@@ -28,22 +38,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let reportsViewController = ReportsViewController()
         let fourthNC = UINavigationController(rootViewController: reportsViewController)
         
+        let myInformationViewController = MyInfomationViewController()
+        let fifthNC = UINavigationController(rootViewController: myInformationViewController)
         
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [firstNC, secondNC, thirdNC, fourthNC]
+        tabBarController.viewControllers = [firstNC, secondNC, thirdNC, fourthNC, fifthNC]
         
         firstNC.tabBarItem = UITabBarItem(title: "스케줄", image: UIImage(systemName: "calendar"), tag: 0)
         secondNC.tabBarItem = UITabBarItem(title: "루틴", image: UIImage(systemName: "repeat"), tag: 1)
         thirdNC.tabBarItem = UITabBarItem(title: "운동리스트", image: UIImage(systemName: "dumbbell"), tag: 2)
         fourthNC.tabBarItem = UITabBarItem(title: "리포트", image: UIImage(systemName: "chart.xyaxis.line"), tag: 3)
-        
-        self.window?.rootViewController = tabBarController
-        self.window?.makeKeyAndVisible()
-        window?.overrideUserInterfaceStyle = .dark
+        fifthNC.tabBarItem = UITabBarItem(title: "내 정보", image: UIImage(systemName: "person"), tag: 4)
         
         setupTabBarAppearance(tabBarController: tabBarController)
+        
+        return tabBarController
     }
-
+    
     func setupTabBarAppearance(tabBarController: UITabBarController) {
         let tabBar = tabBarController.tabBar
         tabBar.layer.shadowColor = UIColor.black.cgColor
