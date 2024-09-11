@@ -127,7 +127,7 @@ class MyInfomationViewController: UIViewController {
                 infoBoxView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 infoBoxView.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 13),
                 
-                inbodyinfoButton.topAnchor.constraint(equalTo: inbodyinfoLabel.bottomAnchor, constant: 200),
+                inbodyinfoButton.topAnchor.constraint(equalTo: infoBoxView.bottomAnchor, constant: 13),
                 inbodyinfoButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 inbodyinfoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
