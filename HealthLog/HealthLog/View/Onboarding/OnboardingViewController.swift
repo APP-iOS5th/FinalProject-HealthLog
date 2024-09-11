@@ -1,3 +1,4 @@
+//
 //  OnboardingViewController.swift
 //  HealthLog
 //
@@ -60,16 +61,16 @@ class OnboardingViewController: UIViewController {
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            skipButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            skipButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            skipButton.heightAnchor.constraint(equalToConstant: 44),
             
             nextButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             nextButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             nextButton.heightAnchor.constraint(equalToConstant: 44),
             
-            skipButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            skipButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            skipButton.heightAnchor.constraint(equalToConstant: 44)
+            pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
         setupPages()

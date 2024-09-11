@@ -16,11 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         
         if UserDefaults.standard.bool(forKey: "HasCompletedOnboarding") {
-            print("SceneDelegate: Onboarding completed, showing main screen")
             let tabBarController = createTabBarController()
             window?.rootViewController = tabBarController
         } else {
-            print("SceneDelegate: Showing onboarding screen")
             window?.rootViewController = OnboardingViewController()
         }
         

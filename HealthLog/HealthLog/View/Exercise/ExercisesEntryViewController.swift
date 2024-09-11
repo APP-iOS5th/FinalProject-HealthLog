@@ -522,7 +522,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITex
         deleteButton.backgroundColor = .color2F2F2F
         deleteButton.setTitle("삭제", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 20)
+        deleteButton.titleLabel?.font = UIFont(name: "Pretendard-Medium", size: 16)
         deleteButton.layer.cornerRadius = 12
         deleteButton.layer.masksToBounds = true
         deleteButton.addTarget(
