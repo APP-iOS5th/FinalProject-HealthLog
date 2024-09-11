@@ -104,7 +104,7 @@ class DataResetViewController : UIViewController {
         
         RealmManager.shared.cancelInitializeTask()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             do {
                 try realm.write {
                     realm.deleteAll()
@@ -113,7 +113,9 @@ class DataResetViewController : UIViewController {
                 print("realm write 오류")
             }
             RealmManager.shared.initializeRealmExercise()
-            RealmManager.shared.initializeTask = Task { await RealmManager.shared.initializeRealmExerciseImages() }
+            RealmManager.shared.initializeTask = Task {
+                await RealmManager.shared.initializeRealmExerciseImages()
+            }
         }
     }
     
