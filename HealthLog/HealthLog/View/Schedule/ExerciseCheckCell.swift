@@ -22,7 +22,7 @@ class ExerciseCheckCell: UITableViewCell {
     lazy var exerciseNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.font(.pretendardBold, ofSize: 20)
+        label.font = UIFont.font(.pretendardBold, ofSize: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -35,13 +35,20 @@ class ExerciseCheckCell: UITableViewCell {
     
     lazy var exerciseEditButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("수정", for: .normal)
-        button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-        button.backgroundColor = .color3E3E3E
-        button.tintColor = .white
-        button.layer.cornerRadius = 7
+        var config = UIButton.Configuration.filled()
+        config.baseBackgroundColor = .color3E3E3E
+        config.baseForegroundColor = .white
+        config.background.cornerRadius = 7
+        config.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 8, bottom: 3, trailing: 8)
+        
+        let titleAttr: [NSAttributedString.Key: Any] = [
+            .font: UIFont(name: "Pretendard-SemiBold", size: 14) ?? .systemFont(ofSize: 14, weight: .semibold)
+        ]
+        config.attributedTitle = AttributedString("수정", attributes: AttributeContainer(titleAttr))
+        
+        button.configuration = config
         button.translatesAutoresizingMaskIntoConstraints = false
-
+        
         return button
     }()
     
@@ -123,21 +130,19 @@ class ExerciseCheckCell: UITableViewCell {
         
         checkboxButton.isSelected = scheduleExercise.isCompleted
         exerciseEditContainer.addSubview(exerciseEditButton)
-                exerciseEditContainer.addSubview(checkboxButton)
-
-                NSLayoutConstraint.activate([
-                    exerciseEditButton.leadingAnchor.constraint(equalTo: exerciseEditContainer.leadingAnchor),
-                    exerciseEditButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
-                    exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
-                    exerciseEditButton.heightAnchor.constraint(equalToConstant: 24),
-
-                    checkboxButton.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
-                    checkboxButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
-                    checkboxButton.widthAnchor.constraint(equalToConstant: 28),
-                    checkboxButton.heightAnchor.constraint(equalToConstant: 28),
-
-                    exerciseEditContainer.heightAnchor.constraint(equalToConstant: 28)
-                ])
+        exerciseEditContainer.addSubview(checkboxButton)
+        
+        NSLayoutConstraint.activate([
+            exerciseEditButton.leadingAnchor.constraint(equalTo: exerciseEditContainer.leadingAnchor),
+            exerciseEditButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
+            exerciseEditButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 55),
+            exerciseEditButton.topAnchor.constraint(equalTo: exerciseEditContainer.topAnchor, constant: 2),
+            exerciseEditButton.bottomAnchor.constraint(equalTo: exerciseEditContainer.bottomAnchor, constant: -2),
+            
+            checkboxButton.trailingAnchor.constraint(equalTo: exerciseEditContainer.trailingAnchor),
+            checkboxButton.centerYAnchor.constraint(equalTo: exerciseEditContainer.centerYAnchor),
+            checkboxButton.widthAnchor.constraint(equalToConstant: 28),
+        ])
     }
     
     private func createSetView(set: ScheduleExerciseSet) -> UIView {
@@ -177,9 +182,6 @@ class ExerciseCheckCell: UITableViewCell {
         stackView.addSubview(repsLabel)
         stackView.addSubview(checkboxBtn)
         stackView.axis = .horizontal
-        //stackView.alignment = .center
-        //stackView.distribution = .equalSpacing
-        //stackView.spacing = 15
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(stackView)
@@ -205,7 +207,7 @@ class ExerciseCheckCell: UITableViewCell {
             checkboxBtn.widthAnchor.constraint(greaterThanOrEqualToConstant: 28),
             checkboxBtn.heightAnchor.constraint(greaterThanOrEqualToConstant: 28),
         ])
-
+        
         return view
     }
     
@@ -216,7 +218,7 @@ class ExerciseCheckCell: UITableViewCell {
         
         let setOrder = sender.tag
         viewModel.toggleSetCompletion(for: exercise, setOrder: setOrder, isCompleted: sender.isSelected)
-                
+        
         // Update UI
         checkboxButton.isSelected = exercise.isCompleted
         

@@ -29,13 +29,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let fourthNC = UINavigationController(rootViewController: reportsViewController)
         
         
+        let myAccountViewController = MyInfomationViewController()
+        let fifthNC = UINavigationController(rootViewController: myAccountViewController)
+        
+        
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [firstNC, secondNC, thirdNC, fourthNC]
+        tabBarController.viewControllers = [firstNC, secondNC, thirdNC, fourthNC, fifthNC]
         
         firstNC.tabBarItem = UITabBarItem(title: "스케줄", image: UIImage(systemName: "calendar"), tag: 0)
         secondNC.tabBarItem = UITabBarItem(title: "루틴", image: UIImage(systemName: "repeat"), tag: 1)
         thirdNC.tabBarItem = UITabBarItem(title: "운동리스트", image: UIImage(systemName: "dumbbell"), tag: 2)
         fourthNC.tabBarItem = UITabBarItem(title: "리포트", image: UIImage(systemName: "chart.xyaxis.line"), tag: 3)
+        fifthNC.tabBarItem = UITabBarItem(title: "내 정보", image: UIImage(systemName: "person"), tag: 4)
         
         self.window?.rootViewController = tabBarController
         self.window?.makeKeyAndVisible()

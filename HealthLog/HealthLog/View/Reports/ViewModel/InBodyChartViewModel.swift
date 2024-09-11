@@ -13,14 +13,9 @@ import Foundation
 class InBodyChartViewModel: ObservableObject {
     
     @Published var inBodyData: [InBody] = []
-    @Published var inbodyRecords: [InBody] = []
     
     private var realm: Realm?
-    
-    
-    private var inputNotificationToken: NotificationToken?
     private var monthNotificationToken: NotificationToken?
-    
     private var cancellables = Set<AnyCancellable>()
     
     var currentYear: Int
@@ -37,30 +32,9 @@ class InBodyChartViewModel: ObservableObject {
         self.fetchAndLoadData()
         
         observeInBodyDataChanges()
-        observeRealmData()
     }
     
-    private func observeRealmData() {
-        guard let realm = realm else { return }
-        
-        // MARK: (youngwoo) RealmCombine 03. 데이터 불러옴
-        let results = realm.objects(InBody.self)
-            .sorted(byKeyPath: "date", ascending: false)
-        
-        // result에 담은 Realm DB 데이터를 observe로 감시, DB 값 변경시 안에 있는 실행
-        inputNotificationToken = results.observe { [weak self] changes in
-            switch changes {
-            case .initial(let collection):
-                self?.inbodyRecords = Array(collection)
-                
-                //                    print(self?.inbodyRecords ?? [])
-            case .update(let collection, _, _, _):
-                self?.inbodyRecords = Array(collection)
-            case .error(let error):
-                print("results.observe - error: \(error)")
-            }
-        }
-    }
+
     
     func updateYearAndMonth(year: Int, month: Int) {
         self.currentYear = year
@@ -71,7 +45,6 @@ class InBodyChartViewModel: ObservableObject {
     
     
     func fetchAndLoadData() {
-        
         fetchInBodyData(year: currentYear, month: currentMonth)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -84,6 +57,7 @@ class InBodyChartViewModel: ObservableObject {
             })
             .store(in: &cancellables)
     }
+    
     
     private func fetchInBodyData(year: Int, month: Int) -> Future<[InBody], Error> {
         return Future { result in
@@ -135,6 +109,7 @@ class InBodyChartViewModel: ObservableObject {
    
     
     
+    // MARK: - Chart label
     
     func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()

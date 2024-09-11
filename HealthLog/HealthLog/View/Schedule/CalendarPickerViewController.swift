@@ -1,13 +1,13 @@
 //
-//  MonthPickerViewController.swift
+//  CalendarPickerViewController.swift
 //  HealthLog
 //
-//  Created by wonyoul heo on 9/5/24.
+//  Created by seokyung on 9/10/24.
 //
 
 import UIKit
 
-class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class CalendarPickerViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
     private let realm = RealmManager.shared.realm
     
     private lazy var pickerView: UIPickerView = {
@@ -30,7 +30,7 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         button.addTarget(self, action: #selector(didTapSelectButton), for: .touchUpInside)
         button.setTitleColor(.white, for: .normal)
         
-
+        
         button.titleLabel?.textColor = .white
         button.backgroundColor = .colorAccent
         
@@ -79,8 +79,7 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         
         
         // Realm에서 데이터를 가져와서 초기화
-        let fetchedData = fetchYearsInRange
-        self.years = fetchedData()
+        self.years = fetchYearsInRange()
         
         // PickerView의 기본 선택값 설정
         if let yearIndex = years.firstIndex(of: selectedYear) {
@@ -93,8 +92,6 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            
-            
             pickerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pickerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 13),
             pickerView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48),
@@ -103,8 +100,6 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
             selectButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -13),
             selectButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             selectButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -48),
-            
-            
         ])
     }
     
@@ -155,26 +150,22 @@ class MonthPickerViewController: UIViewController, UIPickerViewDelegate, UIPicke
         guard let realm = realm else { return [] }
         let schedules = realm.objects(Schedule.self)
         
-        guard let firstSchedule = schedules.first,
-              let lastSchedule = schedules.last else {
-            return []
-        }
-        
         let calendar = Calendar.current
-        
-        // 첫 데이터와 마지막 데이터의 연도와 월 추출
-        let firstYear = calendar.component(.year, from: firstSchedule.date)
-        let lastYear = calendar.component(.year, from: lastSchedule.date)
-        
+        let currentYear = calendar.component(.year, from: Date())
         
         var years = Set<Int>()
         
-        // 첫 데이터의 연도부터 마지막 데이터의 연도까지 반복
-        for year in firstYear...lastYear {
+        years.insert(currentYear - 1)
+        years.insert(currentYear)
+        years.insert(currentYear + 1)
+        
+        for schedule in schedules {
+            let year = calendar.component(.year, from: schedule.date)
             years.insert(year)
         }
         
         return Array(years).sorted()
     }
-
+    
 }
+
