@@ -72,6 +72,8 @@
 		756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 756E39182C74755D00EDDBC6 /* AddScheduleViewModel.swift */; };
 		7573384B2C7EE1CF00AB05B2 /* GetRoutineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573384A2C7EE1CF00AB05B2 /* GetRoutineViewController.swift */; };
 		7573384D2C7EE35900AB05B2 /* GetRoutineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7573384C2C7EE35900AB05B2 /* GetRoutineCell.swift */; };
+		75744B502C917A3100135A93 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75744B4F2C917A3100135A93 /* OnboardingViewController.swift */; };
+		75744B522C917A8C00135A93 /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75744B512C917A8C00135A93 /* OnboardingPageView.swift */; };
 		7590BFFF2C69EC9D004CB285 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */; };
 		7590C0012C69FE05004CB285 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0002C69FE05004CB285 /* SearchResultCell.swift */; };
 		7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */; };
@@ -186,6 +188,8 @@
 		756E39182C74755D00EDDBC6 /* AddScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddScheduleViewModel.swift; sourceTree = "<group>"; };
 		7573384A2C7EE1CF00AB05B2 /* GetRoutineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRoutineViewController.swift; sourceTree = "<group>"; };
 		7573384C2C7EE35900AB05B2 /* GetRoutineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRoutineCell.swift; sourceTree = "<group>"; };
+		75744B4F2C917A3100135A93 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		75744B512C917A8C00135A93 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		7590BFFE2C69EC9D004CB285 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		7590C0002C69FE05004CB285 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		7590C0022C6AF69B004CB285 /* SelectedExerciseCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedExerciseCell.swift; sourceTree = "<group>"; };
@@ -398,6 +402,7 @@
 				18CFC4A32C8F570C00FB9D12 /* MyInfomation */,
 				184A589E2C69E42B009F2848 /* Reports */,
 				7566B32A2C69C53D00BDF142 /* Schedule */,
+				75744B4E2C9179EE00135A93 /* Onboarding */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -413,6 +418,15 @@
 				75D9AF712C90312C00B2DFBB /* CalendarPickerViewController.swift */,
 			);
 			path = Schedule;
+			sourceTree = "<group>";
+		};
+		75744B4E2C9179EE00135A93 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				75744B4F2C917A3100135A93 /* OnboardingViewController.swift */,
+				75744B512C917A8C00135A93 /* OnboardingPageView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		757ED8C82C86986100EADC90 /* AddSchedule */ = {
@@ -685,6 +699,7 @@
 				4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */,
 				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
+				75744B502C917A3100135A93 /* OnboardingViewController.swift in Sources */,
 				184A58C32C6C88D0009F2848 /* MostPerformedTableViewCell.swift in Sources */,
 				18CFC4A72C8F5A9D00FB9D12 /* UserInfoView.swift in Sources */,
 				3C8CD5882C731AB90025B059 /* EditScheduleExerciseViewController.swift in Sources */,
@@ -731,6 +746,7 @@
 				CE4779202C777F2800F6DE74 /* SearchBodyPartButton.swift in Sources */,
 				18CFC4AD2C900C5600FB9D12 /* SectionSubtitleTableViewCell.swift in Sources */,
 				CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */,
+				75744B522C917A8C00135A93 /* OnboardingPageView.swift in Sources */,
 				7590C0032C6AF69B004CB285 /* SelectedExerciseCell.swift in Sources */,
 				CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */,
 			);
