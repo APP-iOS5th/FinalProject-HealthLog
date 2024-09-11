@@ -935,10 +935,6 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, UITex
             preferredStyle: .alert
         )
         
-        alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = .color767676
-        alertController.view.layer.cornerRadius = 15
-        
-        
         let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
         let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { _ in
             // 삭제 처리 코드
