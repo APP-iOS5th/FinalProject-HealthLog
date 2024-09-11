@@ -144,7 +144,7 @@ class AddScheduleViewController: UIViewController {
         tableView.dropDelegate = self
         tableView.dragInteractionEnabled = true
         
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 70))
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
         headerView.backgroundColor = .clear
         
         let getRoutineButton = UIButton(type: .system)
@@ -156,7 +156,7 @@ class AddScheduleViewController: UIViewController {
         getRoutineButton.translatesAutoresizingMaskIntoConstraints = false
         getRoutineButton.addTarget(self, action: #selector(routineButtonTapped), for: .touchUpInside)
         headerView.addSubview(getRoutineButton)
-        
+
         NSLayoutConstraint.activate([
             getRoutineButton.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
             getRoutineButton.heightAnchor.constraint(equalToConstant: 30),
