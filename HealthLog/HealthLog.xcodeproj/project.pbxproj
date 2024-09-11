@@ -95,7 +95,6 @@
 		CEE29B952C69A90B00D82571 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B942C69A90B00D82571 /* RealmManager.swift */; };
 		CEE29BA02C69DCE000D82571 /* ExercisesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */; };
 		CEE29BA22C69F65400D82571 /* CustomBodyPartLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */; };
-		CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE29BA32C6A01F100D82571 /* TempViewController.swift */; };
 		CEE8BC3B2C65ACD300E1D94F /* BodyPart.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */; };
 		CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC612C65B1B800E1D94F /* Exercise.swift */; };
 		CEE8BC642C65B25B00E1D94F /* Routine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE8BC632C65B25B00E1D94F /* Routine.swift */; };
@@ -207,7 +206,6 @@
 		CEE29B942C69A90B00D82571 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesListCell.swift; sourceTree = "<group>"; };
 		CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBodyPartLabel.swift; sourceTree = "<group>"; };
-		CEE29BA32C6A01F100D82571 /* TempViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempViewController.swift; sourceTree = "<group>"; };
 		CEE8BC3A2C65ACD300E1D94F /* BodyPart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyPart.swift; sourceTree = "<group>"; };
 		CEE8BC612C65B1B800E1D94F /* Exercise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exercise.swift; sourceTree = "<group>"; };
 		CEE8BC632C65B25B00E1D94F /* Routine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routine.swift; sourceTree = "<group>"; };
@@ -396,7 +394,6 @@
 			children = (
 				CEE623BA2C6CAAF600863699 /* Extension */,
 				CEE623B92C6CAAEB00863699 /* Routine */,
-				CEE29BA52C6A026D00D82571 /* Temp */,
 				CEE29B9E2C69D43000D82571 /* Exercise */,
 				18CFC4A32C8F570C00FB9D12 /* MyInfomation */,
 				184A589E2C69E42B009F2848 /* Reports */,
@@ -447,25 +444,9 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		CEA171B92C7EA210000EB11A /* CustomViews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CustomViews;
-			sourceTree = "<group>";
-		};
-		CEA171BA2C7EA319000EB11A /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
 		CEE29B9E2C69D43000D82571 /* Exercise */ = {
 			isa = PBXGroup;
 			children = (
-				CEA171BA2C7EA319000EB11A /* Utils */,
-				CEA171B92C7EA210000EB11A /* CustomViews */,
 				CEE29B9F2C69DCE000D82571 /* ExercisesListCell.swift */,
 				CEE29BA12C69F65400D82571 /* CustomBodyPartLabel.swift */,
 				184A58B22C6A3409009F2848 /* ExercisesViewController.swift */,
@@ -478,14 +459,6 @@
 				CEA171B72C7DA311000EB11A /* FunctionInfoPrint.swift */,
 			);
 			path = Exercise;
-			sourceTree = "<group>";
-		};
-		CEE29BA52C6A026D00D82571 /* Temp */ = {
-			isa = PBXGroup;
-			children = (
-				CEE29BA32C6A01F100D82571 /* TempViewController.swift */,
-			);
-			path = Temp;
 			sourceTree = "<group>";
 		};
 		CEE623B72C6CAA9A00863699 /* TableCell */ = {
@@ -687,7 +660,6 @@
 				4BE243C52C78642E00FD2BA5 /* SetCountHeaderView.swift in Sources */,
 				7573384D2C7EE35900AB05B2 /* GetRoutineCell.swift in Sources */,
 				4B89D3602C6B27110094C852 /* Extension+UIFont.swift in Sources */,
-				CEE29BA42C6A01F100D82571 /* TempViewController.swift in Sources */,
 				7566B3292C69C4E300BDF142 /* ScheduleViewController.swift in Sources */,
 				184A58C32C6C88D0009F2848 /* MostPerformedTableViewCell.swift in Sources */,
 				18CFC4A72C8F5A9D00FB9D12 /* UserInfoView.swift in Sources */,
