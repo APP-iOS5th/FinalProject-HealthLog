@@ -246,11 +246,6 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    @objc private func tempStepperButtonTapped() {
-        print("tempButtonTapped!")
-        let vc = TempViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
     
     @objc private func handleTapOutsideSearchArea(_ sender: UITapGestureRecognizer) {
         let isTappedInsideStackView = searchOptionStackView.frame.contains(sender.location(in: view))
