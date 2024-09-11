@@ -81,6 +81,7 @@
 		8D0B39912C7F6B7A004C4863 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1894013E2C528B2100533E0A /* LaunchScreen.storyboard */; };
 		8D0CA37F2C781B9700727F18 /* WeightRecordModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */; };
 		CE1609E52C8AF5B900017D18 /* ExerciseData.csv in Resources */ = {isa = PBXBuildFile; fileRef = CE1609E42C8AF5B900017D18 /* ExerciseData.csv */; };
+		CE3600042C916D0C00A7755A /* DataManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3600032C916D0C00A7755A /* DataManagementViewController.swift */; };
 		CE47791A2C76C96100F6DE74 /* ExercisesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */; };
 		CE47791C2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */; };
 		CE47791E2C777CE000F6DE74 /* SearchBodyPartStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */; };
@@ -192,6 +193,7 @@
 		75D9AF712C90312C00B2DFBB /* CalendarPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPickerViewController.swift; sourceTree = "<group>"; };
 		8D0CA37E2C781B9700727F18 /* WeightRecordModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightRecordModalViewController.swift; sourceTree = "<group>"; };
 		CE1609E42C8AF5B900017D18 /* ExerciseData.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ExerciseData.csv; sourceTree = "<group>"; };
+		CE3600032C916D0C00A7755A /* DataManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagementViewController.swift; sourceTree = "<group>"; };
 		CE4779192C76C96100F6DE74 /* ExercisesDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExercisesDetailViewController.swift; sourceTree = "<group>"; };
 		CE47791B2C76CC1200F6DE74 /* ExerciseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseDetailViewModel.swift; sourceTree = "<group>"; };
 		CE47791D2C777CDF00F6DE74 /* SearchBodyPartStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBodyPartStackView.swift; sourceTree = "<group>"; };
@@ -296,6 +298,7 @@
 				18CFC4A42C8F572700FB9D12 /* MyInfomationViewController.swift */,
 				18CFC4A62C8F5A9D00FB9D12 /* UserInfoView.swift */,
 				18CFC4A82C8F620900FB9D12 /* MyInfomationViewModel.swift */,
+				CE3600032C916D0C00A7755A /* DataManagementViewController.swift */,
 			);
 			path = MyInfomation;
 			sourceTree = "<group>";
@@ -673,6 +676,7 @@
 				CEE8BC622C65B1B800E1D94F /* Exercise.swift in Sources */,
 				756E39192C74755D00EDDBC6 /* AddScheduleViewModel.swift in Sources */,
 				4B89D3642C6C6C180094C852 /* RoutineSearchResultCell.swift in Sources */,
+				CE3600042C916D0C00A7755A /* DataManagementViewController.swift in Sources */,
 				3C8CD58A2C7418920025B059 /* SaveRoutineViewController.swift in Sources */,
 				18949F342C86A14A0068112A /* ReportsViewModel.swift in Sources */,
 				18D991242C7C1ACE0007F115 /* MuscleImageView.swift in Sources */,

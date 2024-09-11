@@ -89,7 +89,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         
         let searchBar = searchController.searchBar
         searchBar.delegate = self
-        searchBar.showsBookmarkButton = true // 북마크 버튼
+        searchBar.showsBookmarkButton = false // 북마크 버튼
         searchBar.searchBarStyle = .minimal
         searchBar.barStyle = .black
         let attributes = [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
@@ -217,6 +217,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
         if !viewModel.bodypartOptionShow {
             viewModel.bodypartOptionShow = true
         }
+        searchController.searchBar.showsBookmarkButton = true
     }
     
     // 취소 버튼 터치
@@ -226,6 +227,7 @@ class ExercisesViewController: UIViewController, UISearchResultsUpdating, UISear
             viewModel.bodypartOptionShow = false
         }
         resetBodyPartsOption()
+        searchController.searchBar.showsBookmarkButton = false
     }
     
     // 북마크 버튼(검색바 우측 끝) 터치

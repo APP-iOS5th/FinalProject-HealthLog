@@ -17,6 +17,7 @@ class MyInfomationViewController: UIViewController {
     private let userInfoView = UserInfoView()
     private let infoBoxView = InfoBoxView()
     
+    // MARK: Inbody Group
     private lazy var inbodyinfoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("인바디 정보 입력", for: .normal)
@@ -48,6 +49,47 @@ class MyInfomationViewController: UIViewController {
         return label
     }()
     
+    // MARK: dataManagementGroup
+    private lazy var dataManagementRollbackButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = .colorSecondary
+        button.layer.cornerRadius = 12
+        
+        button.addAction(UIAction { [weak self] _ in
+            let vc = DataManagementViewController()
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }, for: .touchUpInside)
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "데이터 관리"
+        titleLabel.font = UIFont.font(.pretendardSemiBold, ofSize: 16)
+        button.addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.centerYAnchor.constraint(
+            equalTo: button.centerYAnchor)
+        .isActive = true
+        titleLabel.leadingAnchor.constraint(
+            equalTo: button.leadingAnchor, constant: 16)
+        .isActive = true
+        
+        let arrowImage = UIImageView()
+        arrowImage.image = UIImage(systemName: "chevron.right")
+        arrowImage.tintColor = .white
+        let configuration = UIImage.SymbolConfiguration(
+            pointSize: 16, weight: .medium)
+        arrowImage.preferredSymbolConfiguration = configuration
+        button.addSubview(arrowImage)
+        arrowImage.translatesAutoresizingMaskIntoConstraints = false
+        arrowImage.centerYAnchor.constraint(
+            equalTo: button.centerYAnchor)
+        .isActive = true
+        arrowImage.trailingAnchor.constraint(
+            equalTo: button.trailingAnchor, constant: -16)
+        .isActive = true
+        
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -56,6 +98,10 @@ class MyInfomationViewController: UIViewController {
         updateRecentInbodyDate()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
     
     func setupUI() {
         
@@ -73,6 +119,10 @@ class MyInfomationViewController: UIViewController {
         }
         
         self.view.backgroundColor = .color1E1E1E
+        
+        let backbarButtonItem = UIBarButtonItem(
+            title: "", style: .plain, target: self, action: nil)
+        self.navigationItem.backBarButtonItem = backbarButtonItem
         
         let scrollView = UIScrollView()
         scrollView.showsVerticalScrollIndicator = false
@@ -110,8 +160,6 @@ class MyInfomationViewController: UIViewController {
                 contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
                 contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
                 
-                contentView.bottomAnchor.constraint(equalTo: inbodyinfoButton.bottomAnchor, constant: 20),
-                
                 userInfoView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
                 userInfoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
                 userInfoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
@@ -132,6 +180,30 @@ class MyInfomationViewController: UIViewController {
                 inbodyinfoButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 inbodyinfoButton.heightAnchor.constraint(equalToConstant: 44),
             ])
+        
+        // MARK: dataManagementGroup
+        
+        contentView.addSubview(dataManagementRollbackButton)
+        dataManagementRollbackButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            dataManagementRollbackButton.topAnchor.constraint(
+                equalTo: inbodyinfoButton.bottomAnchor,
+                constant: 50),
+            dataManagementRollbackButton.leadingAnchor.constraint(
+                equalTo: contentView.leadingAnchor),
+            dataManagementRollbackButton.trailingAnchor.constraint(
+                equalTo: contentView.trailingAnchor),
+            dataManagementRollbackButton.heightAnchor.constraint(
+                equalToConstant: 44),
+        ])
+        
+        // MARK: contentView's last view setting
+        
+        contentView.bottomAnchor.constraint(
+            equalTo: dataManagementRollbackButton.bottomAnchor,
+            constant: 20)
+        .isActive = true
     }
  
     // MARK: - Actions
@@ -146,6 +218,25 @@ class MyInfomationViewController: UIViewController {
         }
         present(vc, animated: true, completion: nil)
     }
+    
+//    @objc private func tapDataManagementRollbackButton() {
+//        let alertController = UIAlertController(
+//            title: "데이터를 초기화 하시겠습니까?",
+//            message: "지금까지 작성한 데이터가 모두 삭제됩니다.",
+//            preferredStyle: .alert
+//        )
+//        
+//        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+//        let confirmAction = UIAlertAction(title: "초기화", style: .destructive) {
+//            [weak self] _ in self?.resetData()
+//        }
+//        
+//        alertController.addAction(cancelAction)
+//        alertController.addAction(confirmAction)
+//        
+//        present(alertController, animated: true, completion: nil)
+//    }
+    
     
     // MARK: - (youngwoo) Bindings
     // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
