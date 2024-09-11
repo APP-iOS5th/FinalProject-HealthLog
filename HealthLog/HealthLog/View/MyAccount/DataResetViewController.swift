@@ -103,15 +103,8 @@ class DataResetViewController : UIViewController {
         else { return }
         
         RealmManager.shared.cancelInitializeTask()
-
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//
-//            RealmManager.shared.asyncTransactionIdList.forEach { id in
-//                print("asyncTransactionIdList id = \(id)")
-//                try? realm.cancelAsyncWrite(id)
-//            }
-            
             do {
                 try realm.write {
                     realm.deleteAll()
@@ -119,14 +112,9 @@ class DataResetViewController : UIViewController {
             } catch {
                 print("realm write 오류")
             }
-            
-            // 운동데이터 DB 입력
             RealmManager.shared.initializeRealmExercise()
-            // 운동데이터 이미지 다운 및 DB 입력
             RealmManager.shared.initializeTask = Task { await RealmManager.shared.initializeRealmExerciseImages() }
-            
         }
-        
     }
     
     func cancelTask() {
