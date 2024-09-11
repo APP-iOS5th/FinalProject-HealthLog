@@ -252,7 +252,7 @@ class MuscleImageView: UIView {
             frontMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
             frontMuscleImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.bounds.width * 0.1),
             frontMuscleImage.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -self.bounds.width * 0.1),
-            frontMuscleImage.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleImage.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleImage.topAnchor.constraint(equalTo: self.topAnchor),
             backMuscleImage.leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: self.bounds.width * 0.1),
@@ -260,23 +260,23 @@ class MuscleImageView: UIView {
             
             frontMuscleChest.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleChest.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleChest.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleChest.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleback.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleback.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleback.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleback.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleShoulders.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleShoulders.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleShoulders.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleShoulders.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleShoulders.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleShoulders.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleShoulders.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleShoulders.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleTriceps.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleTriceps.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleTriceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleTriceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleBiceps.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleBiceps.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
@@ -284,51 +284,51 @@ class MuscleImageView: UIView {
             
             frontMuscleAbs.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleAbs.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleAbs.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleAbs.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleQuadriceps.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleQuadriceps.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleQuadriceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleQuadriceps.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleHamstrings.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleHamstrings.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleHamstrings.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleHamstrings.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleGlutes.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleGlutes.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleGlutes.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleGlutes.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleAdductors.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleAdductors.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleAdductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleAdductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleAdductors.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleAdductors.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleAdductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleAdductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleAbductors.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleAbductors.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleAbductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleAbductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleAbductors.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleAbductors.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleAbductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleAbductors.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleCalves.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleCalves.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleCalves.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleCalves.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleTrap.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleTrap.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleTrap.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleTrap.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             backMuscleTrap.centerXAnchor.constraint(equalTo: backMuscleImage.centerXAnchor),
             backMuscleTrap.centerYAnchor.constraint(equalTo: backMuscleImage.centerYAnchor),
-            backMuscleTrap.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            backMuscleTrap.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor),
             
             frontMuscleForearms.centerXAnchor.constraint(equalTo: frontMuscleImage.centerXAnchor),
             frontMuscleForearms.centerYAnchor.constraint(equalTo: frontMuscleImage.centerYAnchor),
-            frontMuscleForearms.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), // 추가
+            frontMuscleForearms.widthAnchor.constraint(equalTo: backMuscleImage.widthAnchor), 
         ])
     }
     
@@ -406,7 +406,7 @@ class MuscleImageView: UIView {
                 continue
             }
 
-            // totalSets에 따른 이미지 파일 이름을 결정
+            // 색칠 단계 설정
             if bodyPartData.totalSets > 0 {
                 var imageSuffix = "_01"
                 
@@ -425,7 +425,6 @@ class MuscleImageView: UIView {
                     break
                 }
                 
-                // 해당 이미지 뷰들을 보이게 하고 이미지 이름 설정
                 for (index, imageView) in imageViews.enumerated() {
                     imageView.isHidden = false
                     imageView.image = UIImage(named: "\(imageNamePrefixes[index])\(imageSuffix)")
@@ -490,12 +489,26 @@ class MuscleImageView: UIView {
             case .other, .none:
                 continue
             }
+            
+            
+            
 
             if sets > 0 {
                 // apply number of sets to the body parts
-                var imageSuffix = "_0\(sets)"
-                if sets >= 5 {
+                var imageSuffix = "_01"
+                
+                if sets > 0 && sets <= 3 {
+                    imageSuffix = "_01"
+                } else if sets > 3 && sets <= 7 {
+                    imageSuffix = "_02"
+                } else if sets > 7 && sets <= 12 {
+                    imageSuffix = "_03"
+                } else if sets > 12 && sets <= 17 {
+                    imageSuffix = "_04"
+                } else if sets > 17 {
                     imageSuffix = "_05"
+                } else {
+                    imageSuffix = "_01"
                 }
                 
                 // highlight body parts

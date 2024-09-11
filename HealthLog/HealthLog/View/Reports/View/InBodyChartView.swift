@@ -19,7 +19,7 @@ struct InBodyChartView: View {
     var body: some View {
         VStack(alignment: .leading){
             Text("한 달간 인바디 변화")
-                .font(.custom("Pretendard-Black", size: 22))
+                .font(.custom("Pretendard-Black", size: 18))
                 .foregroundStyle(Color.white)
                 
             Divider()
@@ -38,7 +38,7 @@ struct InBodyChartView: View {
                     
                     if viewModel.inBodyData.isEmpty {
                         Text("몸무게 데이터가 없습니다")
-                            .font(.custom("Pretendard-ExtraBold", size: 22))
+                            .font(.custom("Pretendard-ExtraBold", size: 18))
                             .foregroundStyle(.color969696)
                     } else {
                         
@@ -69,14 +69,14 @@ struct InBodyChartView: View {
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 4)
                                                 .background(RoundedRectangle(cornerRadius: 4)
-                                                    .fill(Color("ColorAccent").opacity(0.2)))
+                                                    .fill(Color("ColorAccent")))
                                             }
                                         }
                                 }
                                 
                             }
                             .chartXAxis {
-                                AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                                AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                     if let date = value.as(Date.self) {
                                         AxisValueLabel {
                                             Text("\(date, format: .dateTime.day())일")
@@ -117,7 +117,7 @@ struct InBodyChartView: View {
                                 
                             }
                             .chartXAxis {
-                                AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                                AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                     if let date = value.as(Date.self) {
                                         AxisValueLabel {
                                             Text("\(date, format: .dateTime.day())일")
@@ -149,7 +149,9 @@ struct InBodyChartView: View {
                 }
             }
         }
+        Divider()
         .padding(.bottom, 18)
+        
         
         // MARK: - 골격근량 차트
         VStack(alignment: .leading) {
@@ -165,7 +167,7 @@ struct InBodyChartView: View {
                 
                 if viewModel.inBodyData.isEmpty {
                     Text("골격근 데이터가 없습니다")
-                        .font(.custom("Pretendard-ExtraBold", size: 22))
+                        .font(.custom("Pretendard-ExtraBold", size: 18))
                         .foregroundStyle(.color969696)
                 } else {
                     
@@ -195,14 +197,14 @@ struct InBodyChartView: View {
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 4)
                                             .background(RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color("ColorAccent").opacity(0.2)))
+                                                .fill(Color("ColorAccent")))
                                         }
                                     }
                             }
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
@@ -243,7 +245,7 @@ struct InBodyChartView: View {
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
@@ -273,6 +275,7 @@ struct InBodyChartView: View {
                     }
                 }}
         }
+        Divider()
         .padding(.bottom, 18)
         
         // MARK: - 체지방률 차트
@@ -281,7 +284,6 @@ struct InBodyChartView: View {
                 .font(.custom("Pretendard-Bold", size: 16))
                 .foregroundStyle(Color.white)
                 .padding(.leading, 12)
-            
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color.color2F2F2F)
@@ -289,7 +291,7 @@ struct InBodyChartView: View {
                 
                 if viewModel.inBodyData.isEmpty {
                     Text("체지방 데이터가 없습니다")
-                        .font(.custom("Pretendard-ExtraBold", size: 22))
+                        .font(.custom("Pretendard-ExtraBold", size: 18))
                         .foregroundStyle(.color969696)
                 } else {
                     
@@ -319,14 +321,14 @@ struct InBodyChartView: View {
                                             .padding(.horizontal, 8)
                                             .padding(.vertical, 4)
                                             .background(RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color("ColorAccent").opacity(0.2)))
+                                                .fill(Color("ColorAccent")))
                                         }
                                     }
                             }
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")
@@ -367,7 +369,7 @@ struct InBodyChartView: View {
                             
                         }
                         .chartXAxis {
-                            AxisMarks(values: .stride(by: .day, count: 5)) { value in
+                            AxisMarks(values: .stride(by: .day, count: 3)) { value in
                                 if let date = value.as(Date.self) {
                                     AxisValueLabel {
                                         Text("\(date, format: .dateTime.day())일")

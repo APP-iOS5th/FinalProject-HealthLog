@@ -7,20 +7,23 @@
 
 import Foundation
 import RealmSwift
+import Combine
 
-class InBodyInputViewModel {
+class MyInfomationViewModel {
     
     @Published var inbodyRecords: [InBody] = []
+    @Published var daysCount: Int = 0
     
     private var realm: Realm?
-    
     private var inputNotificationToken: NotificationToken?
+    private var dayCountNotificationToken: NotificationToken?
+    
     
     
     init() {
         self.realm = RealmManager.shared.getRealm()
         observeRealmData()
-        
+        observeSchedule()
     }
     
     
@@ -46,6 +49,27 @@ class InBodyInputViewModel {
         }
     }
     
+    private func observeSchedule() {
+        guard let realm = realm else {return}
+        
+        let days = realm.objects(Schedule.self)
+        
+        dayCountNotificationToken = days.observe { [weak self] changes in
+            switch changes {
+            case .initial(let results):
+                self?.daysCount = results.count
+            case .update(let results, _, _, _):
+                self?.daysCount = results.count 
+            case .error(let error):
+                print("Error observing schedules: \(error.localizedDescription)")
+            }
+        }
+    }
     
+    
+    deinit {
+        dayCountNotificationToken?.invalidate()
+        inputNotificationToken?.invalidate()
+    }
     
 }
