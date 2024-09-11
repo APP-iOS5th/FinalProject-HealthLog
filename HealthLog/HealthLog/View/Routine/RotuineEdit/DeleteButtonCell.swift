@@ -15,7 +15,7 @@ class DeleteButtonCell: UITableViewCell {
         configuration.title = "루틴 삭제"
         configuration.baseForegroundColor = .red
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
-        configuration.attributedTitle?.font = UIFont.font(.pretendardBold, ofSize: 16)
+        configuration.attributedTitle?.font = UIFont.font(.pretendardMedium, ofSize: 16)
         let button = UIButton(configuration: configuration)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .color2F2F2F
