@@ -20,7 +20,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
                     NSLayoutConstraint.activate([
                         exerciseStackView.topAnchor.constraint(equalTo: bodyPartLabel.bottomAnchor, constant: 13),
                         exerciseStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -13),
-                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 76),
+                        exerciseStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60),
                         exerciseStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -26)
                     ])
                 }
@@ -29,7 +29,6 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
             }
             
             updateFoldingImage()
-            
             
             if let tableView = superview as? UITableView {
                 tableView.beginUpdates()
@@ -42,7 +41,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     private let indexLabel: UILabel = {
         let label = UILabel()
         label.text = "01"
-        label.font = UIFont.font(.pretendardBold, ofSize: 15)
+        label.font = UIFont.font(.pretendardBold, ofSize: 14)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -132,7 +131,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
             indexLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             indexLabel.widthAnchor.constraint(equalToConstant: 30),
             
-            bodyPartLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 24),
+            bodyPartLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 13),
             bodyPartLabel.centerYAnchor.constraint(equalTo: indexLabel.centerYAnchor),
             bodyPartLabel.widthAnchor.constraint(equalToConstant: 80),
             
@@ -175,7 +174,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         
         indexLabel.text = index < 10 ? "0\(index)" : "\(index)"
         bodyPartLabel.text = "\(data.bodyPart)"
-        totalNumberPerBodyPartLabel.text = "\(data.totalSets)세트"
+        totalNumberPerBodyPartLabel.text = "\(data.totalSets) 세트"
         // 추후 최대 값에 맞출 예정
         if maxTotalSets > 0 {
             progressView.progress = Float(data.totalSets) / Float(maxTotalSets)
@@ -200,9 +199,9 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
     }
 }
 
+
 class HorizontalDetailStackView: UIView {
     
-//    private let indexLabel = UILabel()
     private let nameLabel = UILabel()
     private let setsLabel = UILabel()
     private let stackView = UIStackView()
@@ -218,15 +217,13 @@ class HorizontalDetailStackView: UIView {
     }
     
     private func changeLabelFontAndColor() {
-//        indexLabel.font = UIFont.font(.pretendardMedium, ofSize: 14)
-//        indexLabel.textColor = .white
         
         nameLabel.font = UIFont.font(.pretendardRegular, ofSize: 14)
         nameLabel.textColor = .colorBBBDBD
         
         setsLabel.font = UIFont.font(.pretendardRegular, ofSize: 14)
         setsLabel.textColor = .colorBBBDBD
-        setsLabel.textAlignment = .right
+        setsLabel.textAlignment = .left
     }
     
     
@@ -234,23 +231,20 @@ class HorizontalDetailStackView: UIView {
         
         changeLabelFontAndColor()
         
-//        indexLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
         setsLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         
-//        indexLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         setsLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         
-        
-//        stackView.addArrangedSubview(indexLabel)
+
         stackView.addArrangedSubview(nameLabel)
         stackView.addArrangedSubview(setsLabel)
         
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
-        stackView.spacing = 16
+        stackView.spacing = 8
         
         
         
@@ -265,19 +259,16 @@ class HorizontalDetailStackView: UIView {
         ])
         
         NSLayoutConstraint.activate([
-//            indexLabel.widthAnchor.constraint(equalToConstant: 30), // indexLabel 고정 넓이
-            nameLabel.widthAnchor.constraint(equalToConstant: 100),
-            setsLabel.widthAnchor.constraint(equalToConstant: 60), // setsLabel 고정 넓이
+            nameLabel.widthAnchor.constraint(equalToConstant: 125),
+            setsLabel.widthAnchor.constraint(equalToConstant: 60),
             setsLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
-            // nameLabel은 비율에 따라 자동으로 늘어남
         ])
         
     }
     
     func configure(name: String, setsCount: Int) {
-//        indexLabel.text = "\(index)."
         nameLabel.text = name
-        setsLabel.text = "\(setsCount) 세트"
+        setsLabel.text = "\(setsCount)세트"
     }
 }
 

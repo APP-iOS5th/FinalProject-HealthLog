@@ -32,7 +32,6 @@ class MuscleImageTableViewCell: UITableViewCell {
         
         muscleImageView.translatesAutoresizingMaskIntoConstraints = false
 
-        // muscleImageView 제약 조건
         NSLayoutConstraint.activate([
             muscleImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             muscleImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -40,13 +39,11 @@ class MuscleImageTableViewCell: UITableViewCell {
             muscleImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor, multiplier: 0.8)
         ])
         
-        // levelStackView 제약 조건 (muscleImageView의 왼쪽 상단에 배치)
         NSLayoutConstraint.activate([
             levelStackView.bottomAnchor.constraint(equalTo: muscleImageView.bottomAnchor, constant: 40),
             levelStackView.trailingAnchor.constraint(equalTo: muscleImageView.trailingAnchor, constant: 24)
         ])
 
-        // 원형과 레이블을 스택뷰에 추가
         setupLevelCircles()
     }
 
@@ -71,12 +68,11 @@ class MuscleImageTableViewCell: UITableViewCell {
 
     private func createCircleView(colorName: String) -> UIView {
         let circleView = UIView()
-        circleView.backgroundColor = UIColor(named: colorName) // Asset에서 색상 불러오기
+        circleView.backgroundColor = UIColor(named: colorName)
         circleView.translatesAutoresizingMaskIntoConstraints = false
-        circleView.layer.cornerRadius = 6 // 원형이 작아지도록 크기 줄이기
+        circleView.layer.cornerRadius = 6
         circleView.layer.masksToBounds = true
         
-        // 크기 설정 (16x16)
         NSLayoutConstraint.activate([
             circleView.widthAnchor.constraint(equalToConstant: 12),
             circleView.heightAnchor.constraint(equalToConstant: 12)
@@ -88,7 +84,7 @@ class MuscleImageTableViewCell: UITableViewCell {
         let label = UILabel()
         label.text = text
         label.font = UIFont.font(.pretendardLight, ofSize: 8)
-        label.textColor = .white // 글자색을 흰색으로 설정
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }

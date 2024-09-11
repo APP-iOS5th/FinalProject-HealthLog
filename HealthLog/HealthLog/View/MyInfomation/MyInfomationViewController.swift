@@ -8,26 +8,13 @@
 import UIKit
 import Combine
 
-class MyAccountViewController: UIViewController {
+class MyInfomationViewController: UIViewController {
     
-    private var inBodyInputVM: InBodyInputViewModel
+    private let viewModel = MyInfomationViewModel()
     private let realm = RealmManager.shared.realm
-    
-    
     private var cancellables = Set<AnyCancellable>()
     
-    init(inBodyInputVM: InBodyInputViewModel) {
-        self.inBodyInputVM = inBodyInputVM
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    let userInfoView = UserInfoView()
-    
+    private let userInfoView = UserInfoView()
     private let infoBoxView = InfoBoxView()
     
     private lazy var inbodyinfoButton: UIButton = {
@@ -38,7 +25,6 @@ class MyAccountViewController: UIViewController {
         button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(inputModalView), for: .touchUpInside)
         
-        // 커스텀 폰트 적용
         let customfont = UIFont.font(.pretendardSemiBold, ofSize: 18)
         button.titleLabel?.font = customfont
         
@@ -70,9 +56,21 @@ class MyAccountViewController: UIViewController {
         updateRecentInbodyDate()
     }
     
+    
     func setupUI() {
         
-        userInfoView.configure(image: UIImage(systemName: "person.circle.fill"), name: "홍길동")
+        self.title = "내 정보"
+        if let navigationBar = navigationController?.navigationBar {
+            let appearance = UINavigationBarAppearance()
+            appearance.backgroundColor = .color1E1E1E
+            appearance.titleTextAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                .font: UIFont(name: "Pretendard-Semibold", size: 20) as Any
+            ]
+            appearance.shadowColor = nil
+            navigationBar.standardAppearance = appearance
+            navigationBar.scrollEdgeAppearance = appearance
+        }
         
         self.view.backgroundColor = .color1E1E1E
         
@@ -148,33 +146,49 @@ class MyAccountViewController: UIViewController {
         }
         present(vc, animated: true, completion: nil)
     }
-
+    
     // MARK: - (youngwoo) Bindings
-        // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
-        private func setupBindings() {
-
-            // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
-            inBodyInputVM.$inbodyRecords
-                .sink { [weak self] inbodyRecords in
-                    guard let self = self else { return }
-
-                    if let record = inbodyRecords.first {
-                        self.infoBoxView.updateValues(
-                            weight: Double(record.weight),
-                            muscleMass: Double(record.muscleMass),
-                            bodyFat: Double(record.bodyFat)
-                        )
-                    } else {
-                            self.infoBoxView.updateValues(
-                                weight: 0.0,
-                                muscleMass: 0.0,
-                                bodyFat: 0.0
-                            )
-                    }
-                    self.updateRecentInbodyDate()
+    // youngwoo - 03. UI에서 업데이트할 코드를 Init에 서 호출
+    private func setupBindings() {
+        
+        // youngwoo - Combine Published 변수 inbodyRecords 변경 구독
+        viewModel.$inbodyRecords
+            .sink { [weak self] inbodyRecords in
+                guard let self = self else { return }
+                
+                if let record = inbodyRecords.first {
+                    self.infoBoxView.updateValues(
+                        weight: Double(record.weight),
+                        muscleMass: Double(record.muscleMass),
+                        bodyFat: Double(record.bodyFat)
+                    )
+                } else {
+                    self.infoBoxView.updateValues(
+                        weight: 0.0,
+                        muscleMass: 0.0,
+                        bodyFat: 0.0
+                    )
                 }
-                .store(in: &cancellables)
-        }
+                self.updateRecentInbodyDate()
+            }
+            .store(in: &cancellables)
+        
+        
+        viewModel.$daysCount
+            .receive(on: RunLoop.main)
+            .sink { [weak self] count in
+                self?.userInfoView.configure(
+                    image: UIImage(systemName: "person.circle.fill"),
+                    name: "사용자",
+                    days: count)
+            }
+            .store(in: &cancellables)
+    }
+    
+
+    
+    
+    
     
     private func updateRecentInbodyDate() {
         guard let realm = realm else {

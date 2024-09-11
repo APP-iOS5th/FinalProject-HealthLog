@@ -11,7 +11,6 @@ import Combine
 class ReportsViewController: UIViewController {
     
     private var reportsVM = ReportsViewModel()
-    
     private var inBodyVM = InBodyChartViewModel()
     
     private lazy var exerciseRecordVC: ExerciseRecordViewController = {
@@ -26,7 +25,7 @@ class ReportsViewController: UIViewController {
     
     
     private var currentVC: UIViewController?
-    
+
     private var currentYear: Int {
         return reportsVM.currentYear
     }
@@ -133,45 +132,7 @@ class ReportsViewController: UIViewController {
     }
     
     
-    private func didTapPreviousMonth() {
-        let newYear: Int
-        let newMonth: Int
-        
-        if currentMonth == 1 {
-            newYear = currentYear - 1
-            newMonth = 12
-        } else {
-            newYear = currentYear
-            newMonth = currentMonth - 1
-        }
-        
-        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
-        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
-        
-        
-        updateTitleMonthLabel()
-        exerciseRecordVC.fetchDataAndUpdateUI()
-    }
     
-    private func didTapNextMonth() {
-        let newYear: Int
-        let newMonth: Int
-        
-        if currentMonth == 12 {
-            newYear = currentYear + 1
-            newMonth = 1
-        } else {
-            newYear = currentYear
-            newMonth = currentMonth + 1
-        }
-        
-        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
-        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
-        
-        
-        updateTitleMonthLabel()
-        exerciseRecordVC.fetchDataAndUpdateUI()
-    }
     
     
     
@@ -248,7 +209,6 @@ extension ReportsViewController {
     private func setupUI() {
         self.view.backgroundColor = .color1E1E1E
         
-        
         self.view.addSubview(titleMonthLabel)
         self.view.addSubview(segmentedControl)
         self.view.addSubview(foldingImage)
@@ -308,6 +268,52 @@ extension ReportsViewController {
 
         ])
     }
+    
+}
+
+extension ReportsViewController {
+    
+    
+    // 버튼 삭제로 인해 사용 안함
+//    private func didTapPreviousMonth() {
+//        let newYear: Int
+//        let newMonth: Int
+//        
+//        if currentMonth == 1 {
+//            newYear = currentYear - 1
+//            newMonth = 12
+//        } else {
+//            newYear = currentYear
+//            newMonth = currentMonth - 1
+//        }
+//        
+//        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        
+//        
+//        updateTitleMonthLabel()
+//        exerciseRecordVC.fetchDataAndUpdateUI()
+//    }
+//    
+//    private func didTapNextMonth() {
+//        let newYear: Int
+//        let newMonth: Int
+//        
+//        if currentMonth == 12 {
+//            newYear = currentYear + 1
+//            newMonth = 1
+//        } else {
+//            newYear = currentYear
+//            newMonth = currentMonth + 1
+//        }
+//        
+//        reportsVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        inBodyVM.updateYearAndMonth(year: newYear, month: newMonth)
+//        
+//        
+//        updateTitleMonthLabel()
+//        exerciseRecordVC.fetchDataAndUpdateUI()
+//    }
     
 }
 

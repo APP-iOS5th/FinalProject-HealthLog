@@ -58,7 +58,7 @@ class TotalNumberSectionSubtitleTableViewCell: UITableViewCell {
             indexLabel.widthAnchor.constraint(equalToConstant: 30),
             
             // exerciseNameLabel constraints
-            exerciseNameLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 24),
+            exerciseNameLabel.leadingAnchor.constraint(equalTo: indexLabel.trailingAnchor, constant: 13),
             exerciseNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             exerciseNameLabel.widthAnchor.constraint(equalToConstant: 80),
             
