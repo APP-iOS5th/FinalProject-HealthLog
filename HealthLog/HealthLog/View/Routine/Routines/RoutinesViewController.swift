@@ -82,7 +82,6 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        print("viewWillApper")
         setupObservers()
         self.navigationController?.navigationBar.prefersLargeTitles = false
         

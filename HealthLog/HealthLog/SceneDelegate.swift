@@ -8,15 +8,27 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
-
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
         
+        if UserDefaults.standard.bool(forKey: "HasCompletedOnboarding") {
+            print("SceneDelegate: Onboarding completed, showing main screen")
+            let tabBarController = createTabBarController()
+            window?.rootViewController = tabBarController
+        } else {
+            print("SceneDelegate: Showing onboarding screen")
+            window?.rootViewController = OnboardingViewController()
+        }
+        
+        self.window?.makeKeyAndVisible()
+        window?.overrideUserInterfaceStyle = .dark
+    }
+
+    func createTabBarController() -> UITabBarController {
         let scheduleViewController = ScheduleViewController()
         let firstNC = UINavigationController(rootViewController: scheduleViewController)
         let routinesViewController = RoutinesViewController()
@@ -28,10 +40,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let reportsViewController = ReportsViewController()
         let fourthNC = UINavigationController(rootViewController: reportsViewController)
         
-        
-        let myAccountViewController = MyInfomationViewController()
-        let fifthNC = UINavigationController(rootViewController: myAccountViewController)
-        
+        let myInformationViewController = MyInfomationViewController()
+        let fifthNC = UINavigationController(rootViewController: myInformationViewController)
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [firstNC, secondNC, thirdNC, fourthNC, fifthNC]
@@ -42,13 +52,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         fourthNC.tabBarItem = UITabBarItem(title: "리포트", image: UIImage(systemName: "chart.xyaxis.line"), tag: 3)
         fifthNC.tabBarItem = UITabBarItem(title: "내 정보", image: UIImage(systemName: "person"), tag: 4)
         
-        self.window?.rootViewController = tabBarController
-        self.window?.makeKeyAndVisible()
-        window?.overrideUserInterfaceStyle = .dark
-        
         setupTabBarAppearance(tabBarController: tabBarController)
+        
+        return tabBarController
     }
-
+    
     func setupTabBarAppearance(tabBarController: UITabBarController) {
         let tabBar = tabBarController.tabBar
         tabBar.layer.shadowColor = UIColor.black.cgColor
