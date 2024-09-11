@@ -48,7 +48,7 @@ class UserInfoView: UIView {
         
         NSLayoutConstraint.activate([
             
-            profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 13),
+            profileImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: 60),
             profileImageView.heightAnchor.constraint(equalToConstant: 60),
