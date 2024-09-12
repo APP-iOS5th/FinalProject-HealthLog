@@ -347,7 +347,9 @@ extension RoutineEditViewController: UITableViewDelegate, UITableViewDataSource 
             
             cell.delete = {
                 self.viewModel.deleteRoutine(id: self.id)
-                self.navigationController?.popToRootViewController(animated: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
             }
             cell.selectionStyle = .none
             return cell

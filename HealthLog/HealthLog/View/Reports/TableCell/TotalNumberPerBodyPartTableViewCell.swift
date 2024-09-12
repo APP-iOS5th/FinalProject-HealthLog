@@ -126,7 +126,7 @@ class TotalNumberPerBodyPartTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             
-            
+
             indexLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             indexLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 13),
             indexLabel.widthAnchor.constraint(equalToConstant: 30),
