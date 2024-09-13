@@ -39,7 +39,7 @@ struct InBodyChartView: View {
                     if viewModel.inBodyData.isEmpty {
                         Text("몸무게 데이터가 없습니다")
                             .font(.custom("Pretendard-ExtraBold", size: 18))
-                            .foregroundStyle(.color969696)
+                            .foregroundStyle(Color.color969696)
                     } else {
                         
                         
@@ -49,7 +49,7 @@ struct InBodyChartView: View {
                                          y: .value("Weight", $0.weight))
                                 .symbol(.circle)
                                 .interpolationMethod(.linear)
-                                .foregroundStyle(.colorAccent)
+                                .foregroundStyle(Color.colorAccent)
                                 
                                 if let weightChartSelection {
                                     RuleMark(x: .value("Day", weightChartSelection, unit: .day))
@@ -113,7 +113,7 @@ struct InBodyChartView: View {
                                          y: .value("Weight", $0.weight))
                                 .symbol(.circle)
                                 .interpolationMethod(.linear)
-                                .foregroundStyle(.colorAccent)
+                                .foregroundStyle(Color.colorAccent)
                                 
                             }
                             .chartXAxis {
@@ -168,7 +168,7 @@ struct InBodyChartView: View {
                 if viewModel.inBodyData.isEmpty {
                     Text("골격근 데이터가 없습니다")
                         .font(.custom("Pretendard-ExtraBold", size: 18))
-                        .foregroundStyle(.color969696)
+                        .foregroundStyle(Color.color969696)
                 } else {
                     
                     if #available(iOS 17.0, *) {
@@ -177,7 +177,7 @@ struct InBodyChartView: View {
                                      y: .value("Muscle", $0.muscleMass))
                             .symbol(.circle)
                             .interpolationMethod(.linear)
-                            .foregroundStyle(.colorAccent)
+                            .foregroundStyle(Color.colorAccent)
                             
                             if let musleChartSelection {
                                 RuleMark(x: .value("Day", musleChartSelection, unit: .day))
@@ -241,7 +241,7 @@ struct InBodyChartView: View {
                                      y: .value("Muscle", $0.muscleMass))
                             .symbol(.circle)
                             .interpolationMethod(.linear)
-                            .foregroundStyle(.colorAccent)
+                            .foregroundStyle(Color.colorAccent)
                             
                         }
                         .chartXAxis {
@@ -292,7 +292,7 @@ struct InBodyChartView: View {
                 if viewModel.inBodyData.isEmpty {
                     Text("체지방 데이터가 없습니다")
                         .font(.custom("Pretendard-ExtraBold", size: 18))
-                        .foregroundStyle(.color969696)
+                        .foregroundStyle(Color.color969696)
                 } else {
                     
                     if #available(iOS 17.0, *) {
@@ -301,7 +301,7 @@ struct InBodyChartView: View {
                                      y: .value("BodyFat", $0.bodyFat))
                             .symbol(.circle)
                             .interpolationMethod(.linear)
-                            .foregroundStyle(.colorAccent)
+                            .foregroundStyle(Color.colorAccent)
                             
                             if let fatChartSelection {
                                 RuleMark(x: .value("Day", fatChartSelection, unit: .day))
@@ -365,7 +365,7 @@ struct InBodyChartView: View {
                                      y: .value("Muscle", $0.bodyFat))
                             .symbol(.circle)
                             .interpolationMethod(.linear)
-                            .foregroundStyle(.colorAccent)
+                            .foregroundStyle(Color.colorAccent)
                             
                         }
                         .chartXAxis {
