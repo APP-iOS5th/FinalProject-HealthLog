@@ -60,7 +60,7 @@ let project = Project(
             destinations: [.iPhone]
             product: .app,
             bundleId: "kr.co.wnyl.HealthLog",
-            deploymentTargets: .iOS(version: "16.0"),
+            deploymentTargets: .iOS("16.0"),
             infoPlist: infoPlist,
             sources: ["HealthLog/Sources/**"],
             resources: ["HealthLog/Resources/**"],
