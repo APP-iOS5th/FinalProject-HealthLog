@@ -1,39 +1,29 @@
 /// Project.swift
 import ProjectDescription
 
-let infoPlist: InfoPlist = .extendingDefault(with: [
-    "UILaunchStoryboardName": .string("LaunchScreen.storyboard"), // 안쓰면 없어도 됨
-    "UIApplicationSceneManifest": .dictionary([
-        "UIApplicationSupportsMultipleScenes": .boolean(false),
-        "UISceneConfigurations": .dictionary([
-            "UIWindowSceneSessionRoleApplication": .array([
-                .dictionary([
-                    "UISceneConfigurationName": .string(
-                        "Default Configuration"
-                    ),
-                    "UISceneDelegateClassName": .string(
-                        "$(PRODUCT_MODULE_NAME).SceneDelegate"
-                    ), // UIKit은 SceneDelegate 설정 필수, 안되면 검은화면인채 동작 없음
-                ])
-            ])
-        ])
-    ]),
-//    "UISupportedDevices": .array([
-//        .string("iPhone"),
-//    ]), // 적용이 안되는 것 같음
-    "UISupportedInterfaceOrientations": .array([
-        .string("UIInterfaceOrientationPortrait")
-    ])
-//    ,
-//    "UISupportedInterfaceOrientations~ipad": .array([
-//        .string("UIInterfaceOrientationPortrait"),
-//        .string("UIInterfaceOrientationLandscapeLeft"),
-//    ])
-])
+let infoPlist: [String: Plist.Value] = [
+    "UILaunchStoryboardName": "LaunchScreen.storyboard",
+    "CFBundleShortVersionString": "1.1", // Target - Identify - Version
+    "CFBundleVersion": "1", // Target - Identify - Build
+    "UIApplicationSceneManifest": [
+        "UIApplicationSupportsMultipleScenes": false,
+        "UISceneConfigurations": [
+            "UIWindowSceneSessionRoleApplication": [
+                [
+                    "UISceneConfigurationName": "Default Configuration",
+                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                ]
+            ]
+        ]
+    ],
+    "UISupportedInterfaceOrientations": [ // iPhone - 방향 설정
+        "UIInterfaceOrientationPortrait"
+    ],
+]
 
 let project = Project(
     name: "HealthLog",
-    packages: [
+    packages: [ // Project 설정 - Package Dependencies 항목
         .remote(
             url: "https://github.com/realm/realm-swift",
             requirement: .branch("master")
@@ -43,10 +33,14 @@ let project = Project(
             requirement: .upToNextMajor(from: "2.8.4")
         ),
     ],
-    settings: .settings(
+    settings: .settings( // Project 설정 - Build Settings 항목
         base: [
             "DEVELOPMENT_TEAM": "59FP2PXRXK", // Team 멤버쉽 아이디 - Codegrove Inc.
             "CODE_SIGN_STYLE": "Automatic",
+        ],
+        configurations: [
+            .debug(name: "Debug", xcconfig: "./xcconfigs/HealthLog-Project.xcconfig"),
+            .release(name: "Release", xcconfig: "./xcconfigs/HealthLog-Project.xcconfig"),
         ]
     ),
     targets: [
@@ -56,13 +50,13 @@ let project = Project(
             product: .app,
             bundleId: "kr.co.wnyl.HealthLog",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: infoPlist,
+            infoPlist: .extendingDefault(with: infoPlist),
             sources: ["HealthLog/Sources/**"],
             resources: ["HealthLog/Resources/**"],
             dependencies: [
                 .package(product: "RealmSwift"),
                 .package(product: "FSCalendar"),
-            ] // Package.swift로 라이브러리 관리하는 경우 .external로 써야할지도
+            ]
         ),
     ]
 )
