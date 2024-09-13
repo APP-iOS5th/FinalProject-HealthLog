@@ -57,7 +57,7 @@ let project = Project(
     targets: [
         .target(
             name: "HealthLog",
-            destinations: [.iPhone]
+            destinations: [.iPhone],
             product: .app,
             bundleId: "kr.co.wnyl.HealthLog",
             deploymentTargets: .iOS("16.0"),
@@ -66,7 +66,7 @@ let project = Project(
             resources: ["HealthLog/Resources/**"],
             dependencies: [
                 .package(product: "RealmSwift"),
-                .package(product: "FSCalendar")
+                .package(product: "FSCalendar"),
             ] // Package.swift로 라이브러리 관리하는 경우 .external로 써야할지도
         ),
     ]
