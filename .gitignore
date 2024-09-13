@@ -135,3 +135,19 @@ iOSInjectionProject/
 *.xcuserstate
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,swift,xcode
+
+### Start of Tuist ###
+
+# .xcodeproj 확장자를 가진 모든 파일 무시
+*.xcodeproj/
+
+# .xcworkspace 확장자를 가진 모든 파일 무시
+*.xcworkspace/
+
+# 자동 생성된 Derived 폴더 무시
+/Derived/
+
+# 자동 생성된 .package.resolved 파일 무시
+/.package.resolved
+
+### End of Tuist ###
