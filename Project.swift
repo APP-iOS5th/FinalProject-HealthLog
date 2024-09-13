@@ -47,13 +47,13 @@ let project = Project(
         base: [
             "DEVELOPMENT_TEAM": "59FP2PXRXK", // Team 멤버쉽 아이디 - Codegrove Inc.
             "CODE_SIGN_STYLE": "Automatic",
-        ],
-//        configurations: [
+        ]
+        configurations: [
 //            .debug(name: "Debug", xcconfig: "./xcconfigs/HealthLog-Project.xcconfig"),
 //            .release(name: "Release", xcconfig: "./xcconfigs/HealthLog-Project.xcconfig"),
-//        ]// tuist migration settings-to-xcconfig -p .../project.xcodeproj -x .../output.xcconfig 명령 후 필요한 설정
+        ]// tuist migration settings-to-xcconfig -p .../project.xcodeproj -x .../output.xcconfig 명령 후 필요한 설정
         // || -p 뒤는 원본 프로젝트 경로 || -x 뒤는 생성할 경로이며 .xcconfig로 쓸 파일 이름 맞춰주기 ||
-    ),
+    )
     targets: [
         .target(
             name: "HealthLog",
