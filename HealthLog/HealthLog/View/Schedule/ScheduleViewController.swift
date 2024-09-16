@@ -162,7 +162,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
         if let selection = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
             selection.setSelected(todayComponents, animated: false)
         }
-        viewModel.loadSelectedDateSchedule(today)
+        
+        // MARK: 영우 - loadSelectedDateSchedule의 today를 한국시간으로
+        viewModel.loadSelectedDateSchedule(today.toKoreanTime())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -347,7 +349,9 @@ class ScheduleViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func didUpdateScheduleExercise() {
-        viewModel.loadSelectedDateSchedule(selectedDate ?? today)
+
+        // MARK: 영우 - loadSelectedDateSchedule의 selectedDate, today를 한국시간으로
+        viewModel.loadSelectedDateSchedule((selectedDate ?? today).toKoreanTime())
         let calendar = Calendar.current
         let selectedComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate ?? today)
         calendarView.reloadDecorations(forDateComponents: [selectedComponents], animated: true)
