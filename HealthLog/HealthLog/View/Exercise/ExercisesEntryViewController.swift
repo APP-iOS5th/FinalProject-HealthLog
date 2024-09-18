@@ -199,6 +199,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         titleStackView.addArrangedSubview(titleLabel)
         
         // MARK: titleTextField
+        titleTextField.borderStyle = .none
         titleTextField.tag = ViewTag.titleTextField.rawValue
         titleTextField.delegate = self
         titleStackView.addArrangedSubview(titleTextField)
@@ -287,6 +288,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         recentWeightStackView.addArrangedSubview(recentWeightTextFieldStackView)
         
         // MARK: recentWeightTextField
+        recentWeightTextField.borderStyle = .none
         recentWeightTextField.tag = ViewTag.recentWeightTextField.rawValue
         recentWeightTextField.delegate = self
         recentWeightTextField.textColor = .white
@@ -327,6 +329,7 @@ class ExercisesEntryViewController: UIViewController, UITextFieldDelegate, PHPic
         maxWeightStackView.addArrangedSubview(maxWeightTextFieldStackView)
         
         // MARK: maxWeightTextField
+        maxWeightTextField.borderStyle = .none
         maxWeightTextField.tag = ViewTag.maxWeightTextField.rawValue
         maxWeightTextField.delegate = self
         maxWeightTextField.textColor = .white
