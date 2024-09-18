@@ -62,8 +62,20 @@ class ExercisesDetailViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         detailViewModel.timer?.invalidate()
         detailViewModel.startImageRotation()
+        
+        let images = detailViewModel.exercise.images
+        if images.isEmpty {
+            imageView.isHidden = true // 이미지 없음
+        } else {
+            if(images.first?.image?.isEmpty == true) {
+                imageView.isHidden = true // 이미지 없음
+            } else {
+                imageView.isHidden = false // 이미지 있음
+            }
+        }
     }
     
     // MARK: - Setup
@@ -144,8 +156,8 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupProfileGroup() {
         // MARK: profileLabel
-        profileLabel.text = "정보"
-        profileLabel.textColor = .color767676
+        profileLabel.text = "운동 정보"
+        profileLabel.textColor = .white
         profileLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         stackView.addArrangedSubview(profileLabel)
         
@@ -189,8 +201,8 @@ class ExercisesDetailViewController: UIViewController {
     
     func setupLogGroup() {
         // MARK: logLabel
-        logLabel.text = "기록"
-        logLabel.textColor = .color767676
+        logLabel.text = "운동 기록"
+        logLabel.textColor = .white
         logLabel.font = UIFont(name: "Pretendard-Bold", size: 20)
         stackView.addArrangedSubview(logLabel)
         
@@ -325,7 +337,7 @@ private class LogContentStackView: UIStackView {
         
         // MARK: titleLabel
         titleLabel.font = UIFont(name: "Pretendard-Bold", size: 15)
-        titleLabel.textColor = .color767676
+        titleLabel.textColor = .white
         titleLabel.textAlignment = .center
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
@@ -343,7 +355,7 @@ private class LogContentStackView: UIStackView {
         ])
 
         // MARK: valueLabel
-        valueLabel.textColor = .color767676
+        valueLabel.textColor = .white
         valueLabel.textAlignment = .center
         valueLabel.adjustsFontSizeToFitWidth = true
         valueLabel.minimumScaleFactor = 0.7
@@ -470,6 +482,7 @@ private class DetailBodyPartStackView: UIStackView {
             currentLabel = CustomBodyPartLabel()
             currentLabel.text = bodypart.rawValue
             currentLabel.font = UIFont(name: "Pretendard-Medium", size: 16)
+            currentLabel.backgroundColor = .colorAccent
             
             let width = calculatorLabelAddAfterWidth()
             checkCreateAfterRow(labelAddAfterWidth: width)
