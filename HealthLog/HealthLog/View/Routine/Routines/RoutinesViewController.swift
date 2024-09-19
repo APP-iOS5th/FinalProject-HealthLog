@@ -62,9 +62,7 @@ class RoutinesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        isRoutineData()
         setupUI()
-        viewModel.syncRotuine() //임시 사용
         setupObservers()
     }
     
@@ -72,15 +70,9 @@ class RoutinesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
-        isRoutineData()
         print("viewWillApper")
-        
-        viewModel.syncRotuine() //임시 사용
         setupObservers()
-        self.tableView.reloadData()
         self.navigationController?.navigationBar.prefersLargeTitles = false
-        print("루틴\(viewModel.routines)")
-        print("필터\(viewModel.filteredRoutines)")
         
     }
     
@@ -92,14 +84,18 @@ class RoutinesViewController: UIViewController {
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
-    }
-    
-    func isRoutineData() {
-        if viewModel.routines.isEmpty {
-            self.tableView.isHidden = true
-        } else {
-            self.tableView.isHidden = false
-        }
+        
+        viewModel.$routines
+            .receive(on: DispatchQueue.main)
+            .sink{ [weak self] routines in
+                if routines.isEmpty {
+                    self?.tableView.isHidden = true
+                } else {
+                    self?.tableView.isHidden = false
+                }
+            }.store(in: &cancellables)
+        
+        
     }
     func setupUI() {
         

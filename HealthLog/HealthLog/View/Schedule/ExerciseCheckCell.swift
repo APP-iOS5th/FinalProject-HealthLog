@@ -14,13 +14,10 @@ protocol ExerciseCheckCellDelegate: AnyObject {
 }
 
 class ExerciseCheckCell: UITableViewCell {
-    //    let realm = try! Realm()
-    let realm = RealmManager.shared.realm
-    
     static let identifier = "ExerciseCheckCell"
-    
     weak var delegate: ExerciseCheckCellDelegate?
     private var currentExercise: ScheduleExercise?
+    private var viewModel = ScheduleViewModel()
     
     lazy var exerciseNameLabel: UILabel = {
         let label = UILabel()
@@ -80,7 +77,7 @@ class ExerciseCheckCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.backgroundColor = .colorPrimary
+        contentView.backgroundColor = .color1E1E1E
         contentView.addSubview(exerciseNameLabel)
         contentView.addSubview(exerciseEditContainer)
         contentView.addSubview(separatorLine)
@@ -221,54 +218,33 @@ class ExerciseCheckCell: UITableViewCell {
     @objc private func didToggleCheckboxSet(_ sender: UIButton) {
         sender.isSelected.toggle()
         // save it to the database
-        guard let exercise = currentExercise, let realm = realm else { return }
+        guard let exercise = currentExercise else { return }
         
         let setOrder = sender.tag
-        if let setIndex = exercise.sets.firstIndex(where: { $0.order == setOrder }) {
-            do {
-                if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {
-                    // update scheduleExerciseSet
-                    try realm.write {
-                        scheduleExercise.sets[setIndex].isCompleted = sender.isSelected
-                    }
-                    
-                    // update ScheduleExercise
-                    let allSetsCompleted = scheduleExercise.sets.allSatisfy { $0.isCompleted }
-                    checkboxButton.isSelected = allSetsCompleted
-                    try realm.write {
-                        scheduleExercise.isCompleted = allSetsCompleted
-                    }
-                    
-                    // update calendar and bodyparts image
-                    // notice scheduleExercise changed
-                    delegate?.didToggleExerciseCompletion(scheduleExercise)
-                }
-            } catch {
-                print("Error update ScheduleExerciseSet")
-            }
-        }
+        viewModel.toggleSetCompletion(for: exercise, setOrder: setOrder, isCompleted: sender.isSelected)
+                
+        // Update UI
+        checkboxButton.isSelected = exercise.isCompleted
+        
+        // Notify delegate
+        delegate?.didToggleExerciseCompletion(exercise)
     }
     
     @objc private func didToggleCheckboxExercise(_ sender: UIButton) {
         sender.isSelected.toggle()
-        // save it to the database
-        guard let exercise = currentExercise, let realm = realm else { return } // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
+        guard let exercise = currentExercise else { return }
         
-        do {
-            if let scheduleExercise = realm.object(ofType: ScheduleExercise.self, forPrimaryKey: exercise.id) {
-                // update scheduleExercise and the sets
-                try realm.write {
-                    scheduleExercise.isCompleted = sender.isSelected
-                    scheduleExercise.sets.forEach { $0.isCompleted = sender.isSelected }
-                }
-                
-                // update calendar and bodyparts image
-                // notice scheduleExercise changed
-                delegate?.didToggleExerciseCompletion(scheduleExercise)
+        viewModel.toggleExerciseCompletion(for: exercise, isCompleted: sender.isSelected)
+        
+        // Update UI
+        for view in setsContainer.arrangedSubviews {
+            if let checkboxBtn = view.subviews.first(where: { $0 is UIButton }) as? UIButton {
+                checkboxBtn.isSelected = sender.isSelected
             }
-        } catch {
-            print("Error update ScheduleExercise")
         }
+        
+        // Notify delegate
+        delegate?.didToggleExerciseCompletion(exercise)
     }
     
     @objc private func editExercise() {

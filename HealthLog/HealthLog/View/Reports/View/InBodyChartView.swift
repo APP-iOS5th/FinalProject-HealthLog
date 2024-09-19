@@ -19,12 +19,9 @@ struct InBodyChartView: View {
     var body: some View {
         VStack{
             // MARK: 몸무게 차트
-            Button("응애") {
-                print(viewModel.inBodyData)
-            }
             VStack(alignment: .leading) {
                 Text("몸무게")
-                    .font(.custom("Pretendard-Bold", size: 18))
+                    .font(.custom("Pretendard-Bold", size: 16))
                     .foregroundStyle(Color.white)
                     .padding(.leading, 12)
                 
@@ -49,7 +46,6 @@ struct InBodyChartView: View {
                                         ZStack {
                                             VStack(spacing: 0){
                                                 Text("\(viewModel.formatDate(weightChartSelection))")
-//                                                Text("\(viewModel. weightChartSelection)")
                                                     .font(.custom("Pretendard-Regular", size: 12))
                                                     .foregroundStyle(Color.white)
                                                 Text("\(viewModel.getWeight(for: weightChartSelection)) KG")
@@ -141,10 +137,10 @@ struct InBodyChartView: View {
         }
         .padding(.bottom, 18)
         
-        // MARK: 근골격량 차트
+        // MARK: - 근골격량 차트
         VStack(alignment: .leading) {
             Text("근골격량")
-                .font(.custom("Pretendard-Bold", size: 18))
+                .font(.custom("Pretendard-Bold", size: 16))
                 .foregroundStyle(Color.white)
                 .padding(.leading, 12)
             
@@ -259,10 +255,10 @@ struct InBodyChartView: View {
         }
         .padding(.bottom, 18)
         
-        // MARK: 체지방률 차트
+        // MARK: - 체지방률 차트
         VStack(alignment: .leading) {
             Text("체지방률")
-                .font(.custom("Pretendard-Bold", size: 18))
+                .font(.custom("Pretendard-Bold", size: 16))
                 .foregroundStyle(Color.white)
                 .padding(.leading, 12)
             

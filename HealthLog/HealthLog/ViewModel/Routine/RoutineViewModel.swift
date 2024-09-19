@@ -19,82 +19,25 @@ class RoutineViewModel {
     private var routineNotificationToken: NotificationToken?
     
     // RoutineAddName
-    @Published var rutineNameinput: String = ""
-    @Published var rutineNameConfirmation: String = " "
-    @Published var isValid: Bool = false
-    @Published var isAddRoutineValid: Bool = false
-    
     private var cancellables = Set<AnyCancellable>()
     
     // Routine 배열
     @Published var routines: [Routine] = []
-    
-    @Published var routine: Routine = Routine()
+
     // 검색된 값 추가
     @Published var filteredRoutines: [Routine] = []
     init() {
         realm = RealmManager.shared.realm
         observeRealmData()
-        
         $routines.assign(to: &$filteredRoutines)
         
-    }
-    
-    lazy var isRoutineNameEmptyPulisher: AnyPublisher<Bool, Never> = {
-        $rutineNameinput
-            .map(\.isEmpty)
-//            .print("Empty")
-            .eraseToAnyPublisher()
-    }()
-    lazy var isRoutineNameMatchingPulisher: AnyPublisher<Bool, Never> = {
-        Publishers
-            .CombineLatest($rutineNameinput, $routines)
-            .map { rutineNameinput, rutines in
-                !rutines.contains { $0.name == rutineNameinput}
-            }
-//            .print("Matching")
-            .eraseToAnyPublisher()
         
-    }()
-    
-    
-    lazy var isMatchNameInput: AnyPublisher<Bool,Never> = Publishers
-        .CombineLatest($rutineNameinput, $routines)
-        .map( {(rutineNameinput: String, rutines: [Routine]) in
-            if rutineNameinput.isEmpty {
-                return false
-            }
-            if (rutines.contains{ $0.name == rutineNameinput}) {
-                return false
-            } else {
-                return true
-            }
-            
-        })
-        .print()
-        .eraseToAnyPublisher()
-    
+        
+    }
+   
     func addScheduleExercise(index: Int) {
-       
         realmManger.updateSchedule(index: index)
-        
     }
-    
-    
-    func getSelectedSchedule() -> Schedule {
-        let date = realmManger.makeDate(year: 2024, month: 6, day: 30)
-        return realmManger.hasSchedule(date: date)
-        
-    }
-    
-    func addRoutine(routine: Routine) {
-        realmManger.addRoutine(routine: routine)
-    }
-    //임시 사용 우선순위: 3
-    func syncRotuine() {
-        filteredRoutines = routines
-    }
-    
     
     func fillteRoutines(by searchText: String) {
         if searchText.isEmpty {
@@ -105,35 +48,7 @@ class RoutineViewModel {
             }
         }
     }
-    
-    func updateExerciseSetCount(for section: Int, setCount: Int) {
-        if self.routine.exercises[section].sets.count < setCount {
-                self.routine.exercises[section].sets.append(RoutineExerciseSet(order: setCount, weight: 0, reps: 0))
-        } else {
-                self.routine.exercises[section].sets.removeLast()
 
-        }
-        validateExercise()
-    }
-    
-    func deleteExercise(for setcion: Int) {
-        self.routine.exercises.remove(at: setcion)
-        validateExercise()
-    }
-    
-    func validateExercise() {
-        let isExercise = !routine.exercises.isEmpty
-        let allFieldsFilled = routine.exercises.allSatisfy { exercise in
-            exercise.sets.allSatisfy { set in
-                set.weight > 0 && set.reps > 0
-            }
-        }
-        
-        isAddRoutineValid = isExercise && allFieldsFilled
-        
-    }
-    
-    
     private func observeRealmData() {
         guard let realm = realm else {return} // realm 에러처리 때문에 이부분 코드 삽입 했습니다 _허원열
         let results = realm.objects(Routine.self)

@@ -122,6 +122,7 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         setupUI()
         setupCollectionView()
         setupObservers()
+        self.viewModel.validateExercise()
         self.hideKeyBoardWenTappedAround()
         
     }
@@ -135,25 +136,33 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
         
         Publishers.CombineLatest(viewModel.isRoutineNameEmptyPulisher, viewModel.isRoutineNameMatchingPulisher)
             .map { !$0 && !$1 }
-            .print("유효성 검사")
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
+    
                 self?.nameVaildLabel.isHidden = isValid
+                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
             }
             .store(in: &cancellables)
         
-        viewModel.isRoutineNameEmptyPulisher
+        // 루틴이 이름 존재 할 때
+        viewModel.isRoutineNameMatchingPulisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
-                if isValid {
-                    self?.nameVaildLabel.text = "이름이 비어 있습니다."
-                } else {
-                    self?.nameVaildLabel.text = ""
+                if let text = self?.nameTextField.text {
+                    if isValid && text != self?.viewModel.routine.name {
+                        self?.nameVaildLabel.text = "이름이 존재 합니다"
+                    }
+                    
                 }
             }
             .store(in: &cancellables)
-
         
+        viewModel.$isAddRoutineValid
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                self?.navigationItem.rightBarButtonItem?.isEnabled = isValid
+            }
+            .store(in: &cancellables)
     }
     
     func setupUI() {
@@ -234,9 +243,9 @@ class RoutineEditViewController: UIViewController, SerchResultDelegate {
             RoutineExerciseSet(order: index, weight: 0, reps: 0)
         }
         viewModel.routine.exercises.append(RoutineExercise(exercise: item, sets: routineExerciseSets))
-        
         self.collectionView.reloadData()
-        //        print("RoutinAddView: \(routineViewModel.routine.exercises.count)")
+        self.viewModel.validateExercise()
+
     }
     
     @objc func doneTapped() {
@@ -278,14 +287,15 @@ extension RoutineEditViewController: UICollectionViewDataSource, UICollectionVie
             cell.delete = {
                 self.viewModel.deleteRoutine(id: self.id)
                 self.navigationController?.popToRootViewController(animated: true)
-
             }
             return cell
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SetCell.identifier, for: indexPath) as! SetCell
         cell.configure(with: viewModel.routine.exercises[indexPath.section].sets[indexPath.item])
-        
+        cell.change = {
+            self.viewModel.validateExercise()
+        }
         return cell
     }
     
